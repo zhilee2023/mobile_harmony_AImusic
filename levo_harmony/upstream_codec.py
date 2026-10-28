@@ -20,9 +20,12 @@ def load_official_mixed_codec(checkout, checkpoint, vae_config, vae_checkpoint, 
     sys.path.insert(0, str(root))
     sys.path.insert(0, str(root / "codeclm/tokenizer/Flow1dVAE"))
     from codeclm.tokenizer.Flow1dVAE.generate_1rvq import Tango
-    return Tango(model_path=str(Path(checkpoint).resolve()),
-                 vae_config=str(Path(vae_config).resolve()),
-                 vae_model=str(Path(vae_checkpoint).resolve()), device=device)
+    codec = Tango(model_path=str(Path(checkpoint).resolve()),
+                  vae_config=str(Path(vae_config).resolve()),
+                  vae_model=str(Path(vae_checkpoint).resolve()), device=device)
+    if not hasattr(codec.model, "cfm_wrapper"):
+        raise RuntimeError("Upstream Mixed codec lacks cfm_wrapper construction; do not accept a partial strict=False load")
+    return codec
 
 
 @torch.inference_mode()

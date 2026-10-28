@@ -1,8 +1,11 @@
 import unittest
+import tempfile
+from pathlib import Path
 import torch
 from transformers import Qwen3Config, Qwen3ForCausalLM
 from levo_harmony.model import MixedSongStudent, MusicConfig
 from levo_harmony.contracts import CodecContract, kv_cache_bytes
+from levo_harmony.pruning import prune_backbone_depth
 
 
 class StudentTests(unittest.TestCase):
@@ -49,6 +52,22 @@ class StudentTests(unittest.TestCase):
         c.validate()
         self.assertEqual(c.frames(30), 750)
         self.assertEqual(kv_cache_bytes(28, 8, 128, 100), 11468800)
+
+    def test_pretrained_backbone_save_load_is_exact(self):
+        # Test the actual from_pretrained path without downloading a full model.
+        # Tiny random saved checkpoint, never labeled public pretrained weights.
+        with tempfile.TemporaryDirectory() as directory:
+            self.model.backbone.save_pretrained(directory)
+            loaded = MixedSongStudent.from_pretrained(directory, self.model.config)
+            torch.testing.assert_close(loaded.backbone.get_input_embeddings().weight,
+                                       self.model.backbone.get_input_embeddings().weight)
+            self.assertFalse(loaded.music_trained)
+
+    def test_pruned_cache_indices_remain_valid(self):
+        report = prune_backbone_depth(self.model, (0,))
+        self.assertEqual(report['remaining_layers'], 1)
+        self.assertEqual(self.model.backbone.model.layers[0].self_attn.layer_idx, 0)
+        self.test_cached_decode_matches_full_forward()
 
 
 if __name__ == "__main__":

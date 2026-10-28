@@ -29,6 +29,12 @@ flowchart LR
 
 官方VAE路线为48kHz双声道、64维latent、25Hz，压缩率1920，stride为2/4/4/6/10。这和CosyVoice的Mel/HiFT不是同一接口。生成只需要decoder；不使用参考音频时无需常驻完整音频encoder。
 
+已读取Runtime官方VAE配置：Oobleck encoder/decoder，base channels128，channel multipliers=[1,2,4,8,16]，使用Snake激活；encoder输出128通道用于VAE瓶颈，decoder输入64通道，输出2声道，final_tanh=false。decoder按逆序上采样10/6/4/4/2。不是HiFiGAN，也不能复用CosyVoice HiFT权重。
+
+已读Mixed codec真实safetensors头而非下载全部权重：其DiT为39层、宽度1200，QKV合并矩阵[1200,3600]、FFN中间维4800。这是Mixed路线，不能套用Dual-Track的16层/2200维配置。精确权重头统计见统一测试报告。
+
+检查的公开源码快照`653cbcf4716101834900c75b7d5da43b07e15d5b`中，`model_1rvq.py`的`cfm_wrapper`构造被注释，但推理仍调用它。适配器显式拒绝这种未构造完整DiT的实例；尚未修复并完成端到端权重验证。
+
 `codec.py`只定义待导出的接口及形状检查；它的显式Euler调用合同尚未与官方实际采样器对应验证，不能将官方权重直接塞进该接口后宣称可用。必须编写官方codec导出适配器，并对同种子latent/波形做一致性测试。
 
 ## 内存与鸿蒙

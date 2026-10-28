@@ -1,0 +1,62 @@
+{
+  "version": "0.1.0",
+  "student": {
+    "actual_parameters": 629640192,
+    "backbone_parameters": 596049920,
+    "music_adapter_trained": false,
+    "shape_only_not_weight_load": true,
+    "lyrics_max_tokens": 512,
+    "style_prefix_tokens": 1,
+    "music_codebooks": 1,
+    "kv_fp16_bytes": {
+      "30": 144965632,
+      "60": 230981632,
+      "180": 575045632,
+      "300": 919109632
+    },
+    "note": "KV includes max lyric prefix; no CFG duplication, activation or packing overhead",
+    "optional_26_layer_pruning_experiment": {
+      "removed_layers": [
+        9,
+        18
+      ],
+      "remaining_layers": 26,
+      "parameters": 598178304,
+      "recovery_training_required": true,
+      "music_quality_validated": false
+    }
+  },
+  "reference_tests": {
+    "passed": true,
+    "count": 8,
+    "uses_tiny_random_fixtures": true,
+    "trained_music_quality_tested": false
+  },
+  "harmony": {
+    "build_success": true,
+    "signed": false,
+    "mnn_adapter_arm64_compile_success": true,
+    "music_runtime_linked_and_run": false
+  },
+  "public_mixed_codec_header": {
+    "url": "https://huggingface.co/lglg666/SongGeneration-Runtime/resolve/main/ckpt/model_1rvq/model_2_fixed.safetensors",
+    "read_header_only": true,
+    "dit_layers": 39,
+    "dit_width": 1200,
+    "dit_ffn_width": 4800,
+    "cfm_parameters_from_header": 751534224,
+    "full_weights_loaded": false,
+    "source_constructor_missing_cfm_wrapper": true,
+    "source_revision": "653cbcf4716101834900c75b7d5da43b07e15d5b"
+  },
+  "generation": {
+    "real_song_generated": false,
+    "rtf_measured": false,
+    "blocking_work": [
+      "music adapter training",
+      "complete official Mixed DiT construction",
+      "DiT/VAE export and PC alignment",
+      "Harmony music runtime and signing"
+    ]
+  }
+}

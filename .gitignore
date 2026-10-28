@@ -13,6 +13,7 @@ reports/local/
 *.weight
 *.hap
 *.log
+*.o
 *.p12
 *.p7b
 *.cer
