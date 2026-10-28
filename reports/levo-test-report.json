@@ -58,5 +58,15 @@
       "DiT/VAE export and PC alignment",
       "Harmony music runtime and signing"
     ]
+  },
+  "synthetic_training_smoke": {
+    "synthetic_only": true,
+    "steps": 60,
+    "loss_first": 3.0137248039245605,
+    "loss_last": 0.16449391841888428,
+    "optimizer_path_passed": true,
+    "public_0_6b_weights_loaded": false,
+    "music_training_or_quality_validated": false,
+    "audio_generated": false
   }
 }
