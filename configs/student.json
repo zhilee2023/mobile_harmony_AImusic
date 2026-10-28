@@ -1,0 +1,20 @@
+{
+  "name": "levo-harmony-mixed-student",
+  "backbone": "Qwen/Qwen3-0.6B",
+  "max_lyric_tokens": 512,
+  "style_slots": 32,
+  "style_prefix_tokens": 1,
+  "music_codebook_size": 16384,
+  "music_codebooks": 1,
+  "music_frame_rate": 25,
+  "latent_channels": 64,
+  "sample_rate": 48000,
+  "audio_channels": 2,
+  "max_music_tokens": 750,
+  "kv_policy": "reset-per-song",
+  "backbone_pretrained": true,
+  "music_adapter_trained": false,
+  "codec_id": "UNVERIFIED_LEVO_MIXED_1RVQ",
+  "output_mode": "mixed-song",
+  "architecture_is_official_levo": false
+}

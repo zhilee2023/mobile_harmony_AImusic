@@ -1,0 +1,1 @@
+{ "name": "entry", "version": "0.1.0", "description": "Mixed song prototype", "main": "", "author": "zhilee2023", "license": "MIT", "dependencies": { "libentry.so": "file:./src/main/cpp/types/libentry" } }

@@ -8,13 +8,14 @@ reports/local/
 *.safetensors
 *.pt
 *.pth
+*.ckpt
 *.mnn
 *.weight
 *.hap
+*.log
 *.p12
 *.p7b
 *.cer
-*.log
 app/.hvigor/
 app/oh_modules/
 app/local.properties

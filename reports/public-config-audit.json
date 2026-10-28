@@ -1,0 +1,16 @@
+{
+  "sources": {
+    "qwen": "https://huggingface.co/Qwen/Qwen3-0.6B/resolve/main/config.json",
+    "levo": "https://huggingface.co/lglg666/SongGeneration-base/resolve/main/config.yaml"
+  },
+  "qwen_hidden_size": 1024,
+  "qwen_layers": 28,
+  "qwen_text_weights_directly_loadable": true,
+  "qwen_text_weights_are_music_weights": false,
+  "levo_base_main_hidden_1536_confirmed": true,
+  "levo_mixed_1rvq_present": true,
+  "direct_levo_to_qwen_state_dict_load": false,
+  "reason": "Different backbone family, hidden width, FFN size, embeddings and music head",
+  "released_compatible_0_6b_music_checkpoint_found": false,
+  "publication_claim": "Config compatibility audit only; no full weight load or listening test"
+}
