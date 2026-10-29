@@ -17,6 +17,9 @@
 #include <unistd.h>
 #include <dirent.h>
 #include "VaeBench.hpp"
+#ifdef LEVO_VAE_VECTOR_SIN
+#include "VaeVectorSin.hpp"
+#endif
 using Json=nlohmann::json;
 using Clock=std::chrono::steady_clock;
 static double elapsed(Clock::time_point t){return std::chrono::duration<double>(Clock::now()-t).count();}
@@ -44,7 +47,7 @@ static double relative(const std::vector<float>& a,const std::vector<float>& b){
   if(a.size()!=b.size())throw std::runtime_error("Numerical sink length mismatch");
   double error=0,energy=0;for(size_t i=0;i<a.size();++i){if(!std::isfinite(a[i]))throw std::runtime_error("Non-finite decoder PCM");double d=double(a[i])-b[i];error+=d*d;energy+=double(b[i])*b[i];}return std::sqrt(error/std::max(energy,1e-30));
 }
-std::string LevoRunVaeBench(const std::string& dir,const std::string& precision,int threads,bool performanceCores){
+std::string LevoRunVaeBench(const std::string& dir,const std::string& precision,int threads,bool performanceCores,const std::string& modelVariant,bool normalMemory){
   Json result={{"success",false},{"scope","Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback"},
                {"mnnVersion","3.6.1"},{"backend","CPU"},{"threadsRequested",threads},{"memoryMode","Low"},
                {"sampleIntervalMs",20},{"fullCodecValidated",false},{"speakerPlaybackTested",false}};
@@ -52,6 +55,14 @@ std::string LevoRunVaeBench(const std::string& dir,const std::string& precision,
   try{
     if(precision!="high"&&precision!="low")throw std::runtime_error("Invalid precision");
     if(threads<1||threads>8)throw std::runtime_error("Invalid CPU thread count");
+    const bool vectorSin=modelVariant=="fp32-vsin"||modelVariant=="w8-vsin";
+    const std::string diskVariant=modelVariant.rfind("w8",0)==0?"w8":"fp32";
+    if(modelVariant!="fp32"&&modelVariant!="w8"&&!vectorSin)throw std::runtime_error("Invalid model variant");
+    result["vectorSinRequested"]=vectorSin;
+#ifndef LEVO_VAE_VECTOR_SIN
+    if(vectorSin)throw std::runtime_error("Vector SIN is available only in the dedicated standalone probe");
+#endif
+    result["weightVariant"]=modelVariant;result["memoryMode"]=normalMemory?"Normal":"Low";
     result["powerHint"]=performanceCores?"High":"Normal";
     result["frequencyBeforeLoad"]=frequencies();
     Json manifest;std::ifstream fixture(dir+"/fixture.json");fixture>>manifest;
@@ -62,16 +73,22 @@ std::string LevoRunVaeBench(const std::string& dir,const std::string& precision,
     result["windowFrames"]=frames;result["chunks"]=chunks;
     if(available()<2*1024*1024)throw std::runtime_error("Less than2GiB system available; not started");
     result["precision"]=precision;result["rssBeforeKiB"]=rss();
-    const std::string modelName="vae-"+std::to_string(frames)+"-fp32.mnn";
+    const std::string modelName="vae-"+std::to_string(frames)+"-"+diskVariant+".mnn";
     auto tick=Clock::now();std::unique_ptr<MNN::Interpreter> net(MNN::Interpreter::createFromFile((dir+"/"+modelName).c_str()));
     if(!net)throw std::runtime_error("Cannot read real decoder graph");
     std::string external=dir+"/"+modelName+".weight";net->setExternalFile(external.c_str());net->setSessionMode(MNN::Interpreter::Session_Resize_Defer);
     net->setSessionHint(MNN::Interpreter::CPU_ENABLE_KLEIDIAI,0);result["readSeconds"]=elapsed(tick);
-    MNN::BackendConfig backend;backend.precision=precision=="high"?MNN::BackendConfig::Precision_High:MNN::BackendConfig::Precision_Low;backend.memory=MNN::BackendConfig::Memory_Low;
+    MNN::BackendConfig backend;backend.precision=precision=="high"?MNN::BackendConfig::Precision_High:MNN::BackendConfig::Precision_Low;backend.memory=normalMemory?MNN::BackendConfig::Memory_Normal:MNN::BackendConfig::Memory_Low;
     backend.power=performanceCores?MNN::BackendConfig::Power_High:MNN::BackendConfig::Power_Normal;
     MNN::ScheduleConfig config;config.type=MNN_FORWARD_CPU;config.numThread=threads;config.backendConfig=&backend;
     tick=Clock::now();auto* session=net->createSession(config);if(!session)throw std::runtime_error("Decoder session failed");result["createSeconds"]=elapsed(tick);
+#ifdef LEVO_VAE_VECTOR_SIN
+    LevoVaeSin::Scope sinScope(vectorSin);
+#endif
     tick=Clock::now();net->resizeSession(session);net->releaseModel();result["resizeSeconds"]=elapsed(tick);result["rssAfterResizeKiB"]=rss();samples.sample();
+#ifdef LEVO_VAE_VECTOR_SIN
+    sinScope.restore();
+#endif
     int backends[2]={-1,-1};if(net->getSessionInfo(session,MNN::Interpreter::BACKENDS,backends))result["mainPipelineBackend"]=backends[0];
     constexpr size_t frameSamples=1920;const size_t full=frames*frameSamples,overlap=overlapFrames*frameSamples;
     std::vector<float> pcm(2*full),tail;size_t emittedSamples=0;double computeSeconds=0;
@@ -87,6 +104,8 @@ std::string LevoRunVaeBench(const std::string& dir,const std::string& precision,
       MNN::Tensor host(output,MNN::Tensor::CAFFE,true);if(host.elementSize()!=pcm.size()||!output->copyToHostTensor(&host))throw std::runtime_error("PCM shape/copy failed");
       std::memcpy(pcm.data(),host.host<float>(),pcm.size()*4);double run=elapsed(tick);computeSeconds+=run;
       auto reference=load(dir+"/pcm-"+std::to_string(index)+".f32",2*full);double l2=relative(pcm,reference);
+      if(vectorSin){auto baseline=load(dir+"/runtime-"+diskVariant+"-"+std::to_string(index)+".f32",2*full);result["vsOriginalPhoneKernelL2"].push_back(relative(pcm,baseline));}
+      else {std::ofstream runtime(dir+"/runtime-"+diskVariant+"-"+std::to_string(index)+".f32",std::ios::binary);runtime.write(reinterpret_cast<const char*>(pcm.data()),pcm.size()*4);if(!runtime.good())throw std::runtime_error("Cannot save numeric comparison sink");}
       if(index){if(tail.size()!=2*overlap)throw std::runtime_error("Missing previous PCM tail");for(size_t channel=0;channel<2;++channel)for(size_t i=0;i<overlap;++i){float alpha=float(i)/float(overlap-1);pcm[channel*full+i]=tail[channel*overlap+i]*(1-alpha)+pcm[channel*full+i]*alpha;}}
       size_t count=index==chunks-1?full:full-overlap;std::vector<float> piece(2*count);
       for(size_t channel=0;channel<2;++channel)std::copy_n(pcm.begin()+channel*full,count,piece.begin()+channel*count);
@@ -99,6 +118,9 @@ std::string LevoRunVaeBench(const std::string& dir,const std::string& precision,
     }
     if(emittedSamples!=640*frameSamples)throw std::runtime_error("Duplicated or dropped PCM at stream end");
     result["rows"]=rows;result["decoderComputeSeconds"]=computeSeconds;result["validPcmSeconds"]=25.6;result["decoderOnlyComputeRtf"]=computeSeconds/25.6;
+#ifdef LEVO_VAE_VECTOR_SIN
+    result["vectorSinKernelCalls"]=LevoVaeSin::calls.load();
+#endif
     result["oneSessionReused"]=true;result["pcmAccumulatedAcrossWholeSong"]=false;result["retainedOverlapFrames"]=overlapFrames;
     net->releaseSession(session);net.reset();result["rssAfterReleaseKiB"]=rss();result["success"]=true;
   }catch(const std::exception& error){result["error"]=error.what();}
@@ -107,11 +129,15 @@ std::string LevoRunVaeBench(const std::string& dir,const std::string& precision,
 }
 #ifndef LEVO_VAE_LIBRARY
 int main(int argc,char** argv){
-  if(argc<3||argc>5){std::cerr<<"Usage: levo_vae_bench fixtureDir high|low [threads] [normal|high]\n";return 2;}
+#ifdef LEVO_VAE_VECTOR_SIN
+  if(argc==2&&std::string(argv[1])=="--sin-selftest"){auto r=LevoVaeSin::selfTest();std::cout<<"LEVO_SIN_SELFTEST "<<Json({{"finiteInputs",r.finite},{"differentFp16Outputs",r.different},{"maxAbsoluteError",r.maxAbsoluteError}}).dump()<<std::endl;return 0;}
+#endif
+  if(argc<3||argc>7){std::cerr<<"Usage: levo_vae_bench fixtureDir high|low [threads] [normal|high] [fp32|w8] [low|normal]\n";return 2;}
   try{
     int threads=argc>3?std::stoi(argv[3]):4;std::string power=argc>4?argv[4]:"normal";
     if(power!="normal"&&power!="high")throw std::runtime_error("Invalid power hint");
-    auto result=LevoRunVaeBench(argv[1],argv[2],threads,power=="high");std::cout<<"LEVO_VAE_REPORT "<<result<<std::endl;
+    std::string memory=argc>6?argv[6]:"low";if(memory!="normal"&&memory!="low")throw std::runtime_error("Invalid memory mode");
+    auto result=LevoRunVaeBench(argv[1],argv[2],threads,power=="high",argc>5?argv[5]:"fp32",memory=="normal");std::cout<<"LEVO_VAE_REPORT "<<result<<std::endl;
     return Json::parse(result)["success"].get<bool>()?0:1;
   }catch(const std::exception& error){std::cerr<<error.what()<<std::endl;return 2;}
 }

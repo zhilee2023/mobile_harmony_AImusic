@@ -1,5 +1,7 @@
 # LeVo Harmony：给接手Agent的模型适配指南
 
+> 最新v0.1.6：先看[VAE优化结果](VAE_OPTIMIZATION.md)。手机新入口连续5块VAE W8＋NEON，量化卷积采样命中ARMV86 INT8→FP16；转置卷积仍有FP16计算。仅在VAE建图期间挂接正弦selector，立即恢复，5块命中1080次，不能把LLM的Sin也改掉。63,488个有限FP16正弦输入逐一对齐原kernel，三窗PCM对同手机W8 L2=0；W8本身对PyTorch约6%，未听测。CLI整链2.272，签名App2.431，生产music_trained仍false。CANN单算子8组COMMON=1，匹配CPU更快；并非全图指定NPU性能结论。Snake回调融合首轮捕获未完成已停止独立PID；修正后45秒有界重测在系数捕获门槛停止，未得到融合性能，不接入App。未来应从原图提取有界常量并做真实图重写，不能从广播后的巨大callback Tensor盲目复制系数。
+
 更新时间：2026-10-29。本文是交接文档，不代表下列未完成项已验收。
 
 > 最新v0.1.5五块连续测试已完成：同一LLM KV跨codec暂停/恢复，256新码＋4×192新码=1024，KV终态1537；同一DiT/VAE会话，64帧latent context和有界PCM交叉渐变。有效40.96秒，113.107秒，RTF2.761，峰值2324MiB。详见FIVE_CHUNK_VALIDATION.md和统一报告`five_chunk_validation_2026_10_29`。目标1.5尚未实现，不能假定只优化DiT就够：把DiT38.015秒全部去掉，其他阶段不变仍RTF约1.83。

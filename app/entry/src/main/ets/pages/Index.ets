@@ -5,14 +5,14 @@ import { fileIo as fs, picker } from '@kit.CoreFileKit';
 interface VaeResult { success: boolean; error?: string; decoderOnlyComputeRtf?: number; sampledPeakRssKiB?: number; }
 interface ChainResult { success: boolean; error?: string; policy: string; totalSeconds?: number; sampledPeakRssKiB?: number; pipelineRtfThroughPcm?: number; validPcmSeconds?: number; strictNumericalParityPassed?: boolean; }
 interface AppMemoryInfo { totalKiB: number; availableKiB: number; appRssLimitKiB: number; appVssLimitKiB: number; processPssKiB: number; processRssKiB: number; }
-interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; chainSerial?: ChainResult; chainKeepLlm?: ChainResult; chainAll?: ChainResult; chainAllW4?: ChainResult; chunks5?: ChainResult; chunks5Tuned?: ChainResult; llmShort?: ChainResult; llmLong?: ChainResult; memory?: AppMemoryInfo; memoryBeforeRun?: AppMemoryInfo; lastRunId?: string; }
+interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; chainSerial?: ChainResult; chainKeepLlm?: ChainResult; chainAll?: ChainResult; chainAllW4?: ChainResult; chunks5?: ChainResult; chunks5Tuned?: ChainResult; chunks5W8Vsin?: ChainResult; llmShort?: ChainResult; llmLong?: ChainResult; memory?: AppMemoryInfo; memoryBeforeRun?: AppMemoryInfo; lastRunId?: string; }
 
 @Entry
 @Component
 struct Index {
   @State lyrics: string = '[Verse]\n晚风轻轻吹过窗台\n星光落在你的眼海';
   @State style: number = 0;
-  @State status: string = 'v0.1.5 · 数值与内存诊断；尚无训练好的0.6B音乐权重';
+  @State status: string = 'v0.1.6 · 数值与内存诊断；尚无训练好的0.6B音乐权重';
   @State memory: string = '';
   @State assets: string = '尚未检查测试文件';
   @State busy: boolean = false;
@@ -35,7 +35,7 @@ struct Index {
       AppStorage.delete('levoDiagnosticPrecision');
       AppStorage.delete('levoDiagnosticRunId');
       this.runVae(precision);
-    } else if (precision === 'chain-serial' || precision === 'chain-keep-llm' || precision === 'chain-all' || precision === 'chain-all-w4' || precision === 'chain-llm-short' || precision === 'chain-llm-long' || precision === 'chain-chunks-5' || precision === 'chain-chunks-5-tuned') {
+    } else if (precision === 'chain-serial' || precision === 'chain-keep-llm' || precision === 'chain-all' || precision === 'chain-all-w4' || precision === 'chain-llm-short' || precision === 'chain-llm-long' || precision === 'chain-chunks-5' || precision === 'chain-chunks-5-tuned' || precision === 'chain-chunks-5-w8-vsin') {
       this.diagnosticRunId = AppStorage.get<string>('levoDiagnosticRunId') ?? '';
       AppStorage.delete('levoDiagnosticPrecision');
       AppStorage.delete('levoDiagnosticRunId');
@@ -66,9 +66,9 @@ struct Index {
       const raw: string = await native.runVaeStream(this.modelDir(), precision);
       const report = JSON.parse(raw) as VaeResult;
       const reportPath = `${this.context().filesDir}/levo-test-report.json`;
-      let archive: TestArchive = { version: '0.1.5', scope: 'VAE-only numerical stream; no DiT/LLM or speaker playback' };
+      let archive: TestArchive = { version: '0.1.6', scope: 'VAE-only numerical stream; no DiT/LLM or speaker playback' };
       try { archive = JSON.parse(fs.readTextSync(reportPath)) as TestArchive; } catch (_) {}
-      archive.version = '0.1.5';
+      archive.version = '0.1.6';
       archive.scope = 'Diagnostic module results; each case declares its scope; no trained music-quality proof';
       archive.memoryBeforeRun = memoryBeforeRun;
       archive.lastRunId = this.diagnosticRunId;
@@ -99,9 +99,9 @@ struct Index {
       const raw: string = await native.runThreeModuleChain(`${this.context().filesDir}/three-module`, policy);
       const result = JSON.parse(raw) as ChainResult;
       const reportPath = `${this.context().filesDir}/levo-test-report.json`;
-      let archive: TestArchive = { version: '0.1.5', scope: 'Diagnostic module flow and memory; untrained music adapters, no quality validation' };
+      let archive: TestArchive = { version: '0.1.6', scope: 'Diagnostic module flow and memory; untrained music adapters, no quality validation' };
       try { archive = JSON.parse(fs.readTextSync(reportPath)) as TestArchive; } catch (_) {}
-      archive.version = '0.1.5';
+      archive.version = '0.1.6';
       archive.scope = 'Diagnostic module results; each case declares its scope; no trained music-quality proof';
       if (policy === 'serial') archive.chainSerial = result;
       else if (policy === 'keep-llm') archive.chainKeepLlm = result;
@@ -110,6 +110,7 @@ struct Index {
       else if (policy === 'llm-long') archive.llmLong = result;
       else if (policy === 'chunks-5') archive.chunks5 = result;
       else if (policy === 'chunks-5-tuned') archive.chunks5Tuned = result;
+      else if (policy === 'chunks-5-w8-vsin') archive.chunks5W8Vsin = result;
       else archive.chainAll = result;
       archive.memoryBeforeRun = memoryBeforeRun;
       archive.memory = JSON.parse(native.memoryProbe()) as AppMemoryInfo;
@@ -148,7 +149,7 @@ struct Index {
         Button('三模块 · 全部共驻').enabled(!this.busy).width('100%').onClick(() => { this.runChain('all'); })
         Button('三模块 · DiT W4全部共驻').enabled(!this.busy).width('100%').onClick(() => { this.runChain('all-w4'); })
         Button('连续5块 · 同一KV与三模型共驻').enabled(!this.busy).width('100%').onClick(() => { this.runChain('chunks-5'); })
-        Button('连续5块 · Low算子与8线程对照').enabled(!this.busy).width('100%').onClick(() => { this.runChain('chunks-5-tuned'); })
+        Button('连续5块 · VAE W8＋NEON正弦').enabled(!this.busy).width('100%').onClick(() => { this.runChain('chunks-5-w8-vsin'); })
         Button('导出统一测试报告').enabled(!this.busy).width('100%').onClick(() => { this.exportReport(); })
         Text('当前实验使用真实VAE和合成latent；先测数值与有界内存，不是完整DiT/LLM生成，也未验证播放器。')
           .fontColor('#A9B9D2').fontSize(13).width('100%')

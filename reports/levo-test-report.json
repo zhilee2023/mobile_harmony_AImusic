@@ -1,5 +1,5 @@
 {
-  "version": "0.1.5-five-chunk-diagnostic",
+  "version": "0.1.6-vae-optimization",
   "student": {
     "actual_parameters": 629640192,
     "backbone_parameters": 596049920,
@@ -12470,5 +12470,5753 @@
       "count": 15,
       "scope": "Tiny KV/scheduler/student guards; not music-quality proof"
     }
+  },
+  "vae_optimization_2026_10_29": {
+    "asOfUtc": "2026-10-29T09:37:08.246365+00:00",
+    "scope": "Real VAE optimization; synthetic latents/untrained music adapters, no listening acceptance",
+    "modelValidationPc": {
+      "scope": "PC CPU High numeric validation; no trained music or listening acceptance",
+      "rows": [
+        {
+          "variant": "fp32",
+          "setupSeconds": 0.383466800005408,
+          "rows": [
+            {
+              "chunk": 1,
+              "seconds": 7.483110800007125,
+              "l2VsPytorch": 3.8107387452600663e-06
+            },
+            {
+              "chunk": 2,
+              "seconds": 8.136752800026443,
+              "l2VsPytorch": 4.338293950571649e-06
+            },
+            {
+              "chunk": 3,
+              "seconds": 8.023217100009788,
+              "l2VsPytorch": 4.95845555187734e-06
+            }
+          ],
+          "files": {
+            "vae-256-fp32.mnn": {
+              "bytes": 194016,
+              "sha256": "67961cbf83b69dee16ab7e00fe5e7716fba8176a9dd7f9604300d34328ed713e"
+            },
+            "vae-256-fp32.mnn.weight": {
+              "bytes": 337468424,
+              "sha256": "704c456d6a9d6f1e7fc9ad857dee84251df1dfad1d633dbf7b85a0187e22bc99"
+            }
+          }
+        },
+        {
+          "variant": "w8",
+          "setupSeconds": 0.37461669999174774,
+          "rows": [
+            {
+              "chunk": 1,
+              "seconds": 12.243975899997167,
+              "l2VsPytorch": 0.0603661195550918
+            },
+            {
+              "chunk": 2,
+              "seconds": 10.592709200020181,
+              "l2VsPytorch": 0.06510908730817014
+            },
+            {
+              "chunk": 3,
+              "seconds": 11.649776900012512,
+              "l2VsPytorch": 0.06476049117095976
+            }
+          ],
+          "files": {
+            "vae-256-w8.mnn": {
+              "bytes": 196296,
+              "sha256": "ee5b6ed843b7b6ec2305ef14dbfab4cd24165ac75c7d9d357f61ed350556f083"
+            },
+            "vae-256-w8.mnn.weight": {
+              "bytes": 84569334,
+              "sha256": "c07840873f10ecd6949b4a2e8f3ea4a481c37aabf5e33417a59933989862925f"
+            }
+          }
+        }
+      ]
+    },
+    "vaeModuleCases": {
+      "fp32Low6": {
+        "backend": "CPU",
+        "chunks": 3,
+        "createSeconds": 0.005943438,
+        "decoderComputeSeconds": 30.533506406,
+        "decoderOnlyComputeRtf": 1.192715093984375,
+        "firstNumericalPacketSeconds": 10.110939063,
+        "frequencyBeforeLoad": {
+          "policy0": {
+            "currentKHz": 558000,
+            "maximumKHz": 1530000,
+            "relatedCpus": "0 1 2 3 "
+          },
+          "policy1": {
+            "currentKHz": 1000000,
+            "maximumKHz": 1770000,
+            "relatedCpus": "4 5 6 7 8 9 10 11 "
+          },
+          "policy2": {
+            "currentKHz": 1200000,
+            "maximumKHz": 1925000,
+            "relatedCpus": "12 13 "
+          }
+        },
+        "fullCodecValidated": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6358016,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "powerHint": "High",
+        "precision": "low",
+        "readSeconds": 0.001571875,
+        "resizeSeconds": 1.044385312,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.035125520351352045,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 840000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1280000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.03361041459581474,
+            "rssKiB": 831368,
+            "runAndReadSeconds": 9.03810125,
+            "systemAvailableKiB": 6391808,
+            "wallSeconds": 10.110459531
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.030210288167328042,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.03998061804977247,
+            "rssKiB": 831360,
+            "runAndReadSeconds": 8.551512656,
+            "systemAvailableKiB": 6422528,
+            "wallSeconds": 18.675549375
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.0461475442306433,
+            "emittedSeconds": 10.24,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1580000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.0464051967410791,
+            "rssKiB": 833300,
+            "runAndReadSeconds": 12.9438925,
+            "systemAvailableKiB": 6421504,
+            "wallSeconds": 31.642206406
+          }
+        ],
+        "rssAfterReleaseKiB": 13400,
+        "rssAfterResizeKiB": 198452,
+        "rssBeforeKiB": 6148,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 833300,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 6,
+        "totalSeconds": 31.8651625,
+        "validPcmSeconds": 25.6,
+        "weightVariant": "fp32",
+        "windowFrames": 256
+      },
+      "w8Low6First": {
+        "backend": "CPU",
+        "chunks": 3,
+        "createSeconds": 0.005474375,
+        "decoderComputeSeconds": 20.474301407000002,
+        "decoderOnlyComputeRtf": 0.7997773987109376,
+        "firstNumericalPacketSeconds": 7.660062656,
+        "frequencyBeforeLoad": {
+          "policy0": {
+            "currentKHz": 418000,
+            "maximumKHz": 1530000,
+            "relatedCpus": "0 1 2 3 "
+          },
+          "policy1": {
+            "currentKHz": 1000000,
+            "maximumKHz": 1770000,
+            "relatedCpus": "4 5 6 7 8 9 10 11 "
+          },
+          "policy2": {
+            "currentKHz": 1200000,
+            "maximumKHz": 1925000,
+            "relatedCpus": "12 13 "
+          }
+        },
+        "fullCodecValidated": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6401024,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "powerHint": "High",
+        "precision": "low",
+        "readSeconds": 0.001632187,
+        "resizeSeconds": 0.909513593,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.061062962948715355,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 1040000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1280000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.060636870612963266,
+            "rssKiB": 773920,
+            "runAndReadSeconds": 6.724192344,
+            "systemAvailableKiB": 6438912,
+            "wallSeconds": 7.659577969
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.06076141694803823,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.062237213282861255,
+            "rssKiB": 773920,
+            "runAndReadSeconds": 7.002762969,
+            "systemAvailableKiB": 6445056,
+            "wallSeconds": 14.67232125
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.061732383082257855,
+            "emittedSeconds": 10.24,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 558000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.06186530195057017,
+            "rssKiB": 775872,
+            "runAndReadSeconds": 6.747346094,
+            "systemAvailableKiB": 6401024,
+            "wallSeconds": 21.43076125
+          }
+        ],
+        "rssAfterReleaseKiB": 13464,
+        "rssAfterResizeKiB": 140912,
+        "rssBeforeKiB": 6192,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 775872,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 6,
+        "totalSeconds": 21.5503025,
+        "validPcmSeconds": 25.6,
+        "weightVariant": "w8",
+        "windowFrames": 256
+      },
+      "w8Low6Repeat": {
+        "backend": "CPU",
+        "chunks": 3,
+        "createSeconds": 0.006345157,
+        "decoderComputeSeconds": 21.475820155999997,
+        "decoderOnlyComputeRtf": 0.8388992248437499,
+        "firstNumericalPacketSeconds": 8.128137656,
+        "frequencyBeforeLoad": {
+          "policy0": {
+            "currentKHz": 750000,
+            "maximumKHz": 1530000,
+            "relatedCpus": "0 1 2 3 "
+          },
+          "policy1": {
+            "currentKHz": 1000000,
+            "maximumKHz": 1770000,
+            "relatedCpus": "4 5 6 7 8 9 10 11 "
+          },
+          "policy2": {
+            "currentKHz": 1200000,
+            "maximumKHz": 1925000,
+            "relatedCpus": "12 13 "
+          }
+        },
+        "fullCodecValidated": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6395904,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "powerHint": "High",
+        "precision": "low",
+        "readSeconds": 0.001616093,
+        "resizeSeconds": 0.916736562,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.061062962948715355,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 1040000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1280000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.060636870612963266,
+            "rssKiB": 774004,
+            "runAndReadSeconds": 7.182267187,
+            "systemAvailableKiB": 6395904,
+            "wallSeconds": 8.127709844
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.06076141694803823,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 558000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.062237213282861255,
+            "rssKiB": 774020,
+            "runAndReadSeconds": 7.0801775,
+            "systemAvailableKiB": 6400000,
+            "wallSeconds": 15.223674062
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.061732383082257855,
+            "emittedSeconds": 10.24,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.06186530195057017,
+            "rssKiB": 775972,
+            "runAndReadSeconds": 7.213375469,
+            "systemAvailableKiB": 6419456,
+            "wallSeconds": 22.466914062
+          }
+        ],
+        "rssAfterReleaseKiB": 13572,
+        "rssAfterResizeKiB": 141004,
+        "rssBeforeKiB": 6236,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 775972,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 6,
+        "totalSeconds": 22.604747969,
+        "validPcmSeconds": 25.6,
+        "vectorSinKernelCalls": 0,
+        "vectorSinRequested": false,
+        "weightVariant": "w8",
+        "windowFrames": 256
+      },
+      "w8VectorSin6": {
+        "backend": "CPU",
+        "chunks": 3,
+        "createSeconds": 0.006339843,
+        "decoderComputeSeconds": 17.258540312,
+        "decoderOnlyComputeRtf": 0.6741617309375,
+        "firstNumericalPacketSeconds": 7.053699531,
+        "frequencyBeforeLoad": {
+          "policy0": {
+            "currentKHz": 418000,
+            "maximumKHz": 1530000,
+            "relatedCpus": "0 1 2 3 "
+          },
+          "policy1": {
+            "currentKHz": 1150000,
+            "maximumKHz": 1770000,
+            "relatedCpus": "4 5 6 7 8 9 10 11 "
+          },
+          "policy2": {
+            "currentKHz": 1200000,
+            "maximumKHz": 1925000,
+            "relatedCpus": "12 13 "
+          }
+        },
+        "fullCodecValidated": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6426624,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "powerHint": "High",
+        "precision": "low",
+        "readSeconds": 0.001676875,
+        "resizeSeconds": 0.889144062,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.061062962948715355,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 1160000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.060636870612963266,
+            "rssKiB": 774068,
+            "runAndReadSeconds": 6.130366562,
+            "systemAvailableKiB": 6426624,
+            "wallSeconds": 7.053285468
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.06076141694803823,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.062237213282861255,
+            "rssKiB": 774068,
+            "runAndReadSeconds": 5.665855469,
+            "systemAvailableKiB": 6427648,
+            "wallSeconds": 12.739153593
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.061732383082257855,
+            "emittedSeconds": 10.24,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 558000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.06186530195057017,
+            "rssKiB": 775996,
+            "runAndReadSeconds": 5.462318281,
+            "systemAvailableKiB": 6426624,
+            "wallSeconds": 18.223019843
+          }
+        ],
+        "rssAfterReleaseKiB": 13640,
+        "rssAfterResizeKiB": 141088,
+        "rssBeforeKiB": 6232,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 775996,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 6,
+        "totalSeconds": 18.329291562,
+        "validPcmSeconds": 25.6,
+        "vectorSinKernelCalls": 648,
+        "vectorSinRequested": true,
+        "vsOriginalPhoneKernelL2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "weightVariant": "w8-vsin",
+        "windowFrames": 256
+      },
+      "w8VectorSin2": {
+        "backend": "CPU",
+        "chunks": 3,
+        "createSeconds": 0.004337968,
+        "decoderComputeSeconds": 29.178518905,
+        "decoderOnlyComputeRtf": 1.1397858947265624,
+        "firstNumericalPacketSeconds": 8.553759531,
+        "frequencyBeforeLoad": {
+          "policy0": {
+            "currentKHz": 418000,
+            "maximumKHz": 1530000,
+            "relatedCpus": "0 1 2 3 "
+          },
+          "policy1": {
+            "currentKHz": 1580000,
+            "maximumKHz": 1770000,
+            "relatedCpus": "4 5 6 7 8 9 10 11 "
+          },
+          "policy2": {
+            "currentKHz": 1200000,
+            "maximumKHz": 1925000,
+            "relatedCpus": "12 13 "
+          }
+        },
+        "fullCodecValidated": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6861824,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "powerHint": "High",
+        "precision": "low",
+        "readSeconds": 0.001873594,
+        "resizeSeconds": 0.777825781,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.061062962948715355,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 418000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 558000,
+                "maximumKHz": 640000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 2470000,
+                "maximumKHz": 2470000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 920000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 640000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.060636870612963266,
+            "rssKiB": 773972,
+            "runAndReadSeconds": 7.741271875,
+            "systemAvailableKiB": 6861824,
+            "wallSeconds": 8.553404062
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.06076141694803823,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 558000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 418000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 558000,
+                "maximumKHz": 640000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 2470000,
+                "maximumKHz": 2470000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.062237213282861255,
+            "rssKiB": 773972,
+            "runAndReadSeconds": 8.424680468,
+            "systemAvailableKiB": 6867968,
+            "wallSeconds": 16.997770625
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.061732383082257855,
+            "emittedSeconds": 10.24,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 558000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1440000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 558000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.06186530195057017,
+            "rssKiB": 775904,
+            "runAndReadSeconds": 13.012566562,
+            "systemAvailableKiB": 6897664,
+            "wallSeconds": 30.042772343
+          }
+        ],
+        "rssAfterReleaseKiB": 13676,
+        "rssAfterResizeKiB": 141020,
+        "rssBeforeKiB": 6252,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 775912,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 2,
+        "totalSeconds": 30.182132343,
+        "validPcmSeconds": 25.6,
+        "vectorSinKernelCalls": 216,
+        "vectorSinRequested": true,
+        "vsOriginalPhoneKernelL2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "weightVariant": "w8-vsin",
+        "windowFrames": 256
+      },
+      "w8VectorSin4": {
+        "backend": "CPU",
+        "chunks": 3,
+        "createSeconds": 0.004669219,
+        "decoderComputeSeconds": 20.749485938,
+        "decoderOnlyComputeRtf": 0.8105267944531249,
+        "firstNumericalPacketSeconds": 8.02226875,
+        "frequencyBeforeLoad": {
+          "policy0": {
+            "currentKHz": 418000,
+            "maximumKHz": 1530000,
+            "relatedCpus": "0 1 2 3 "
+          },
+          "policy1": {
+            "currentKHz": 1280000,
+            "maximumKHz": 1770000,
+            "relatedCpus": "4 5 6 7 8 9 10 11 "
+          },
+          "policy2": {
+            "currentKHz": 1200000,
+            "maximumKHz": 1925000,
+            "relatedCpus": "12 13 "
+          }
+        },
+        "fullCodecValidated": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6874112,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "powerHint": "High",
+        "precision": "low",
+        "readSeconds": 0.00113875,
+        "resizeSeconds": 0.814454687,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.061062962948715355,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1580000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 920000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1280000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.060636870612963266,
+            "rssKiB": 774028,
+            "runAndReadSeconds": 7.174137032,
+            "systemAvailableKiB": 6894592,
+            "wallSeconds": 8.021851719
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.06076141694803823,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 1160000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1580000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1580000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.062237213282861255,
+            "rssKiB": 774032,
+            "runAndReadSeconds": 6.846076406,
+            "systemAvailableKiB": 6974464,
+            "wallSeconds": 14.888042032
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.061732383082257855,
+            "emittedSeconds": 10.24,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1480000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 558000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.06186530195057017,
+            "rssKiB": 775956,
+            "runAndReadSeconds": 6.7292725,
+            "systemAvailableKiB": 6874112,
+            "wallSeconds": 21.638383438
+          }
+        ],
+        "rssAfterReleaseKiB": 13640,
+        "rssAfterResizeKiB": 141060,
+        "rssBeforeKiB": 6320,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 775956,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 21.740457969,
+        "validPcmSeconds": 25.6,
+        "vectorSinKernelCalls": 432,
+        "vectorSinRequested": true,
+        "vsOriginalPhoneKernelL2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "weightVariant": "w8-vsin",
+        "windowFrames": 256
+      },
+      "w8VectorSin8": {
+        "backend": "CPU",
+        "chunks": 3,
+        "createSeconds": 0.004875469,
+        "decoderComputeSeconds": 19.227102344000002,
+        "decoderOnlyComputeRtf": 0.7510586853125001,
+        "firstNumericalPacketSeconds": 7.31692375,
+        "frequencyBeforeLoad": {
+          "policy0": {
+            "currentKHz": 418000,
+            "maximumKHz": 1530000,
+            "relatedCpus": "0 1 2 3 "
+          },
+          "policy1": {
+            "currentKHz": 1580000,
+            "maximumKHz": 1770000,
+            "relatedCpus": "4 5 6 7 8 9 10 11 "
+          },
+          "policy2": {
+            "currentKHz": 1200000,
+            "maximumKHz": 1925000,
+            "relatedCpus": "12 13 "
+          }
+        },
+        "fullCodecValidated": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6874112,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "powerHint": "High",
+        "precision": "low",
+        "readSeconds": 0.001068907,
+        "resizeSeconds": 0.822880938,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.061062962948715355,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1580000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 840000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.060636870612963266,
+            "rssKiB": 774040,
+            "runAndReadSeconds": 6.462505938,
+            "systemAvailableKiB": 6874112,
+            "wallSeconds": 7.316510312
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.06076141694803823,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1000000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1580000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.062237213282861255,
+            "rssKiB": 774036,
+            "runAndReadSeconds": 6.469337656,
+            "systemAvailableKiB": 6889472,
+            "wallSeconds": 13.809300156
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.061732383082257855,
+            "emittedSeconds": 10.24,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1580000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1000000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.06186530195057017,
+            "rssKiB": 775968,
+            "runAndReadSeconds": 6.29525875,
+            "systemAvailableKiB": 6888448,
+            "wallSeconds": 20.126106094
+          }
+        ],
+        "rssAfterReleaseKiB": 13632,
+        "rssAfterResizeKiB": 141040,
+        "rssBeforeKiB": 6216,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 775968,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 8,
+        "totalSeconds": 20.226891562,
+        "validPcmSeconds": 25.6,
+        "vectorSinKernelCalls": 864,
+        "vectorSinRequested": true,
+        "vsOriginalPhoneKernelL2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "weightVariant": "w8-vsin",
+        "windowFrames": 256
+      }
+    },
+    "kernelSelfTest": {
+      "differentFp16Outputs": 0,
+      "finiteInputs": 63488,
+      "maxAbsoluteError": 0.0
+    },
+    "operatorProfiles": {
+      "fp32": {
+        "byOperatorType": [
+          {
+            "calls": 32,
+            "mnnEstimatedMflops": 548724.0115203857,
+            "percent": 63.25501020761112,
+            "seconds": 5.411537188999999,
+            "type": "Convolution"
+          },
+          {
+            "calls": 72,
+            "mnnEstimatedMflops": 1611.0,
+            "percent": 12.21053875749757,
+            "seconds": 1.0446253090000002,
+            "type": "UnaryOp"
+          },
+          {
+            "calls": 5,
+            "mnnEstimatedMflops": 75161.92578125,
+            "percent": 10.187475798652132,
+            "seconds": 0.87155,
+            "type": "Deconvolution"
+          },
+          {
+            "calls": 218,
+            "mnnEstimatedMflops": 4833.953125,
+            "percent": 8.553653853196598,
+            "seconds": 0.7317746969999998,
+            "type": "Raster"
+          },
+          {
+            "calls": 123,
+            "mnnEstimatedMflops": 2761.5,
+            "percent": 5.79332138304258,
+            "seconds": 0.49562515300000004,
+            "type": "BinaryOp"
+          }
+        ],
+        "callbackSeconds": 8.555112347999998,
+        "convolutionWeightMetadata": [
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 64,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.0/Conv_output_0",
+            "outputChannels": 2048,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 2048,
+            "kernelX": 1,
+            "kernelY": 20,
+            "name": "/layers/layers.1/layers/layers.1/ConvTranspose_output_0",
+            "outputChannels": 1024,
+            "strideX": 1,
+            "strideY": 10,
+            "type": "Deconvolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.1/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputChannels": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.1/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputChannels": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 3,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.1/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputChannels": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.1/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputChannels": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 9,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.1/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputChannels": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.1/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputChannels": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 12,
+            "name": "/layers/layers.2/layers/layers.1/ConvTranspose_output_0",
+            "outputChannels": 512,
+            "strideX": 1,
+            "strideY": 6,
+            "type": "Deconvolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.2/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputChannels": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.2/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputChannels": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 3,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.2/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputChannels": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.2/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputChannels": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 9,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.2/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputChannels": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.2/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputChannels": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 8,
+            "name": "/layers/layers.3/layers/layers.1/ConvTranspose_output_0",
+            "outputChannels": 256,
+            "strideX": 1,
+            "strideY": 4,
+            "type": "Deconvolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.3/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputChannels": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.3/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputChannels": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 3,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.3/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputChannels": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.3/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputChannels": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 9,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.3/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputChannels": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.3/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputChannels": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 8,
+            "name": "/layers/layers.4/layers/layers.1/ConvTranspose_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 4,
+            "type": "Deconvolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.4/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 3,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.4/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.4/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 9,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 4,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 2,
+            "type": "Deconvolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 3,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 9,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": false,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "pcm",
+            "outputChannels": 2,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          }
+        ],
+        "estimatedFlopsAreHardwareCounters": false,
+        "frames": 256,
+        "kleidiaiEnabled": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "powerHint": "High",
+        "precision": "low",
+        "profiledRunSeconds": 8.561653281,
+        "scope": "VAE-only CPU operator callback profile, one warm run then one profiled run; not whole-codec RTF",
+        "success": true,
+        "threadsRequested": 6,
+        "topOperators": [
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 6.6961934770374345,
+            "seconds": 0.572866875,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 6.678545035514011,
+            "seconds": 0.571357031,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 6.467147320740248,
+            "seconds": 0.553271719,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 3.699651882116932,
+            "seconds": 0.316509375,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 3.5065126183892876,
+            "seconds": 0.299986094,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 3.4741964092322415,
+            "seconds": 0.297221406,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "name": "/layers/layers.2/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "percent": 3.377072471380712,
+            "seconds": 0.288912344,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "name": "/layers/layers.2/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "percent": 3.1349657735669525,
+            "seconds": 0.268199844,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "name": "/layers/layers.3/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "percent": 3.06035760081172,
+            "seconds": 0.261817031,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "name": "/layers/layers.3/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "percent": 3.0419859075356244,
+            "seconds": 0.260245312,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "name": "/layers/layers.3/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "percent": 3.035144244022733,
+            "seconds": 0.25966,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "name": "/layers/layers.2/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "percent": 2.8430588063155153,
+            "seconds": 0.243226875,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 2.8200225103578043,
+            "seconds": 0.241256094,
+            "type": "Deconvolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.1/ConvTranspose_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 2.2546186204684084,
+            "seconds": 0.192885156,
+            "type": "Deconvolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "name": "/layers/layers.1/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "percent": 2.147595630850505,
+            "seconds": 0.183729219,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "name": "/layers/layers.1/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "percent": 2.0948146875230265,
+            "seconds": 0.17921375,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "name": "/layers/layers.1/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "percent": 2.0299996415663673,
+            "seconds": 0.17366875,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "name": "/layers/layers.3/layers/layers.1/ConvTranspose_output_0",
+            "outputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "percent": 1.920403255001182,
+            "seconds": 0.164292656,
+            "type": "Deconvolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "name": "/layers/layers.2/layers/layers.1/ConvTranspose_output_0",
+            "outputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "percent": 1.890824824034211,
+            "seconds": 0.161762188,
+            "type": "Deconvolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                2048,
+                256,
+                1
+              ]
+            ],
+            "name": "/layers/layers.1/layers/layers.1/ConvTranspose_output_0",
+            "outputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "percent": 1.301606588790528,
+            "seconds": 0.111353906,
+            "type": "Deconvolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 0.9960674335261227,
+            "seconds": 0.085214688,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 0.9038089957763816,
+            "seconds": 0.077321875,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 0.8866902024697995,
+            "seconds": 0.075857343,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 0.8475305063287758,
+            "seconds": 0.072507187,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 0.8295514905375971,
+            "seconds": 0.070969062,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 0.8214879728193141,
+            "seconds": 0.070279219,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 0.8213893417358547,
+            "seconds": 0.070270781,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 0.8109989930900205,
+            "seconds": 0.069381875,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 0.7791722573413482,
+            "seconds": 0.066659062,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.6/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 0.7345954844729997,
+            "seconds": 0.062845469,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "pcm",
+            "outputShapes": [
+              [
+                1,
+                2,
+                491520,
+                1
+              ]
+            ],
+            "percent": 0.6199217244925889,
+            "seconds": 0.053035,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "name": "/layers/layers.2/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "percent": 0.48835930260772314,
+            "seconds": 0.041779687,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 0.451888057426128,
+            "seconds": 0.038659531,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 0.4481750027393095,
+            "seconds": 0.038341875,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 0.4463705261442583,
+            "seconds": 0.0381875,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.3/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "percent": 0.4463230340736141,
+            "seconds": 0.038183437,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "percent": 0.4389425816106186,
+            "seconds": 0.037552031,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "name": "/layers/layers.3/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "percent": 0.42176901403796746,
+            "seconds": 0.036082813,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "percent": 0.41533827440976595,
+            "seconds": 0.035532656,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "name": "/layers/layers.3/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "percent": 0.4127393254894519,
+            "seconds": 0.035310313,
+            "type": "Convolution"
+          }
+        ],
+        "warmRunSeconds": 9.078601719,
+        "weightVariant": "fp32"
+      },
+      "w8": {
+        "byOperatorType": [
+          {
+            "calls": 32,
+            "mnnEstimatedMflops": 548724.0115203857,
+            "percent": 48.12127917246219,
+            "seconds": 2.949939373,
+            "type": "Convolution"
+          },
+          {
+            "calls": 72,
+            "mnnEstimatedMflops": 1611.0,
+            "percent": 17.20692243264496,
+            "seconds": 1.054821876,
+            "type": "UnaryOp"
+          },
+          {
+            "calls": 5,
+            "mnnEstimatedMflops": 75161.92578125,
+            "percent": 14.427815559055356,
+            "seconds": 0.8844565630000001,
+            "type": "Deconvolution"
+          },
+          {
+            "calls": 218,
+            "mnnEstimatedMflops": 4833.953125,
+            "percent": 12.099584649118148,
+            "seconds": 0.74173093,
+            "type": "Raster"
+          },
+          {
+            "calls": 123,
+            "mnnEstimatedMflops": 2761.5,
+            "percent": 8.144398186719332,
+            "seconds": 0.4992693730000001,
+            "type": "BinaryOp"
+          }
+        ],
+        "callbackSeconds": 6.130218115000001,
+        "convolutionWeightMetadata": [
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 64,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.0/Conv_output_0",
+            "outputChannels": 2048,
+            "quantType": 1,
+            "readType": 2048,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 2048,
+            "kernelX": 1,
+            "kernelY": 20,
+            "name": "/layers/layers.1/layers/layers.1/ConvTranspose_output_0",
+            "outputChannels": 1024,
+            "quantType": 1,
+            "readType": 1024,
+            "strideX": 1,
+            "strideY": 10,
+            "type": "Deconvolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.1/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputChannels": 1024,
+            "quantType": 1,
+            "readType": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.1/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputChannels": 1024,
+            "quantType": 1,
+            "readType": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 3,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.1/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputChannels": 1024,
+            "quantType": 1,
+            "readType": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.1/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputChannels": 1024,
+            "quantType": 1,
+            "readType": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 9,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.1/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputChannels": 1024,
+            "quantType": 1,
+            "readType": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.1/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputChannels": 1024,
+            "quantType": 1,
+            "readType": 1024,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 1024,
+            "kernelX": 1,
+            "kernelY": 12,
+            "name": "/layers/layers.2/layers/layers.1/ConvTranspose_output_0",
+            "outputChannels": 512,
+            "quantType": 1,
+            "readType": 512,
+            "strideX": 1,
+            "strideY": 6,
+            "type": "Deconvolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.2/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputChannels": 512,
+            "quantType": 1,
+            "readType": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.2/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputChannels": 512,
+            "quantType": 1,
+            "readType": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 3,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.2/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputChannels": 512,
+            "quantType": 1,
+            "readType": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.2/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputChannels": 512,
+            "quantType": 1,
+            "readType": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 9,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.2/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputChannels": 512,
+            "quantType": 1,
+            "readType": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.2/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputChannels": 512,
+            "quantType": 1,
+            "readType": 512,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 512,
+            "kernelX": 1,
+            "kernelY": 8,
+            "name": "/layers/layers.3/layers/layers.1/ConvTranspose_output_0",
+            "outputChannels": 256,
+            "quantType": 1,
+            "readType": 256,
+            "strideX": 1,
+            "strideY": 4,
+            "type": "Deconvolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.3/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputChannels": 256,
+            "quantType": 1,
+            "readType": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.3/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputChannels": 256,
+            "quantType": 1,
+            "readType": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 3,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.3/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputChannels": 256,
+            "quantType": 1,
+            "readType": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.3/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputChannels": 256,
+            "quantType": 1,
+            "readType": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 9,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.3/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputChannels": 256,
+            "quantType": 1,
+            "readType": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.3/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputChannels": 256,
+            "quantType": 1,
+            "readType": 256,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 256,
+            "kernelX": 1,
+            "kernelY": 8,
+            "name": "/layers/layers.4/layers/layers.1/ConvTranspose_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 4,
+            "type": "Deconvolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.4/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 3,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.4/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.4/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 9,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 4,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 2,
+            "type": "Deconvolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 3,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 9,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 1,
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputChannels": 128,
+            "quantType": 1,
+            "readType": 128,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          },
+          {
+            "aMaxOrBits": 8,
+            "aMin": -128,
+            "dilateX": 1,
+            "dilateY": 1,
+            "hasWeightQuantMetadata": true,
+            "inputChannels": 128,
+            "kernelX": 1,
+            "kernelY": 7,
+            "name": "pcm",
+            "outputChannels": 2,
+            "quantType": 1,
+            "readType": 2,
+            "strideX": 1,
+            "strideY": 1,
+            "type": "Convolution"
+          }
+        ],
+        "estimatedFlopsAreHardwareCounters": false,
+        "frames": 256,
+        "kleidiaiEnabled": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "powerHint": "High",
+        "precision": "low",
+        "profiledRunSeconds": 6.136634688,
+        "scope": "VAE-only CPU operator callback profile, one warm run then one profiled run; not whole-codec RTF",
+        "success": true,
+        "threadsRequested": 6,
+        "topOperators": [
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 4.912490882879458,
+            "seconds": 0.301146406,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 4.906343059214295,
+            "seconds": 0.300769531,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 4.744210785720141,
+            "seconds": 0.290830469,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 4.031325759768664,
+            "seconds": 0.247129062,
+            "type": "Deconvolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.1/ConvTranspose_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 3.1580671905668396,
+            "seconds": 0.193596407,
+            "type": "Deconvolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 3.1479507968534977,
+            "seconds": 0.19297625,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "name": "/layers/layers.2/layers/layers.1/ConvTranspose_output_0",
+            "outputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "percent": 2.6621172515979876,
+            "seconds": 0.163193594,
+            "type": "Deconvolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "name": "/layers/layers.3/layers/layers.1/ConvTranspose_output_0",
+            "outputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "percent": 2.6322472866856548,
+            "seconds": 0.1613625,
+            "type": "Deconvolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 2.3764244153651943,
+            "seconds": 0.14568,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "name": "/layers/layers.3/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "percent": 2.354927415172404,
+            "seconds": 0.144362187,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "name": "/layers/layers.3/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "percent": 2.26253164892486,
+            "seconds": 0.138698125,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "name": "/layers/layers.3/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                256,
+                61440,
+                1
+              ]
+            ],
+            "percent": 2.2118936627754877,
+            "seconds": 0.135593906,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "name": "/layers/layers.2/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "percent": 2.1445836760410275,
+            "seconds": 0.131467657,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "name": "/layers/layers.2/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "percent": 2.138672874937338,
+            "seconds": 0.131105312,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "name": "/layers/layers.2/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                512,
+                15360,
+                1
+              ]
+            ],
+            "percent": 1.9849084766211451,
+            "seconds": 0.121679219,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                2048,
+                256,
+                1
+              ]
+            ],
+            "name": "/layers/layers.1/layers/layers.1/ConvTranspose_output_0",
+            "outputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "percent": 1.9440580704362098,
+            "seconds": 0.119175,
+            "type": "Deconvolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 1.8137252201180445,
+            "seconds": 0.111185312,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "name": "/layers/layers.1/layers/layers.3/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "percent": 1.4137879007588947,
+            "seconds": 0.086668282,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "name": "/layers/layers.1/layers/layers.2/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "percent": 1.3963053417390514,
+            "seconds": 0.085596563,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "name": "/layers/layers.1/layers/layers.4/layers/layers.1/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                1024,
+                2560,
+                1
+              ]
+            ],
+            "percent": 1.3823784310813219,
+            "seconds": 0.084742813,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 1.181911453080491,
+            "seconds": 0.07245375,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 1.1758069720819386,
+            "seconds": 0.072079532,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 1.165229240786973,
+            "seconds": 0.071431094,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "pcm",
+            "outputShapes": [
+              [
+                1,
+                2,
+                491520,
+                1
+              ]
+            ],
+            "percent": 1.1618086936536351,
+            "seconds": 0.071221407,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 1.146739882354088,
+            "seconds": 0.070297656,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 1.1423303818285102,
+            "seconds": 0.070027344,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 1.1233720351889958,
+            "seconds": 0.068865156,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 1.1141197053475478,
+            "seconds": 0.068297968,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.6/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 1.098023736468633,
+            "seconds": 0.06731125,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.3/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520
+              ]
+            ],
+            "percent": 1.0836813593540462,
+            "seconds": 0.066432031,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                491520,
+                1
+              ]
+            ],
+            "percent": 0.8892959431020179,
+            "seconds": 0.054515781,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.3/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "percent": 0.6325962677430768,
+            "seconds": 0.038779531,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "name": "/layers/layers.5/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "percent": 0.5878843513221388,
+            "seconds": 0.036038593,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "percent": 0.5725530371279455,
+            "seconds": 0.03509875,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.3/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "percent": 0.56237803212325,
+            "seconds": 0.034475,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.2/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "percent": 0.5619192393124172,
+            "seconds": 0.034446875,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.0/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "percent": 0.5617076807714858,
+            "seconds": 0.034433906,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.2/layers/layers.2/Sin_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760
+              ]
+            ],
+            "percent": 0.5598164266949577,
+            "seconds": 0.034317968,
+            "type": "UnaryOp"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.4/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 0.553971920132894,
+            "seconds": 0.033959687,
+            "type": "Convolution"
+          },
+          {
+            "inputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "name": "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0",
+            "outputShapes": [
+              [
+                1,
+                128,
+                245760,
+                1
+              ]
+            ],
+            "percent": 0.5517875606616975,
+            "seconds": 0.033825781,
+            "type": "Convolution"
+          }
+        ],
+        "warmRunSeconds": 6.494139531,
+        "weightVariant": "w8"
+      }
+    },
+    "fiveChunkCliAwake": {
+      "baseline": {
+        "chunks": [
+          {
+            "chunk": 1,
+            "chunkSeconds": 22.204021406,
+            "contextFrames": 0,
+            "cumulativePcmSeconds": 7.68,
+            "ditTwoStepSeconds": 6.649620469,
+            "emittedPcmSeconds": 7.68,
+            "generatedCodesTotal": 256,
+            "kvPositions": 769,
+            "llmSeconds": 6.831889840999996,
+            "newCodecIds": 256,
+            "rssKiB": 1996936,
+            "runningRtf": 3.3308114217447917,
+            "systemAvailableKiB": 5688320,
+            "vaeSeconds": 8.617256407,
+            "wallSeconds": 25.580631719
+          },
+          {
+            "chunk": 2,
+            "chunkSeconds": 19.63074,
+            "contextFrames": 64,
+            "cumulativePcmSeconds": 15.36,
+            "ditTwoStepSeconds": 6.894991406,
+            "emittedPcmSeconds": 7.68,
+            "generatedCodesTotal": 448,
+            "kvPositions": 961,
+            "llmSeconds": 3.8275260890000005,
+            "newCodecIds": 192,
+            "rssKiB": 2016996,
+            "runningRtf": 2.943520721419271,
+            "systemAvailableKiB": 5688320,
+            "vaeSeconds": 8.799699219,
+            "wallSeconds": 45.212478281
+          },
+          {
+            "chunk": 3,
+            "chunkSeconds": 19.772613906,
+            "contextFrames": 64,
+            "cumulativePcmSeconds": 23.04,
+            "ditTwoStepSeconds": 7.0533181250000005,
+            "emittedPcmSeconds": 7.68,
+            "generatedCodesTotal": 640,
+            "kvPositions": 1153,
+            "llmSeconds": 4.0603296890000005,
+            "newCodecIds": 192,
+            "rssKiB": 2037132,
+            "runningRtf": 2.820585245746528,
+            "systemAvailableKiB": 5671936,
+            "vaeSeconds": 8.551251406,
+            "wallSeconds": 64.986284062
+          },
+          {
+            "chunk": 4,
+            "chunkSeconds": 19.994259844,
+            "contextFrames": 64,
+            "cumulativePcmSeconds": 30.72,
+            "ditTwoStepSeconds": 7.031034219,
+            "emittedPcmSeconds": 7.68,
+            "generatedCodesTotal": 832,
+            "kvPositions": 1345,
+            "llmSeconds": 4.257957180000001,
+            "newCodecIds": 192,
+            "rssKiB": 2057152,
+            "runningRtf": 2.7663330383138023,
+            "systemAvailableKiB": 5651456,
+            "vaeSeconds": 8.601321406,
+            "wallSeconds": 84.981750937
+          },
+          {
+            "chunk": 5,
+            "chunkSeconds": 20.330785156,
+            "contextFrames": 64,
+            "cumulativePcmSeconds": 40.96,
+            "ditTwoStepSeconds": 7.109818594,
+            "emittedPcmSeconds": 10.24,
+            "generatedCodesTotal": 1024,
+            "kvPositions": 1537,
+            "llmSeconds": 4.482777496000001,
+            "newCodecIds": 192,
+            "rssKiB": 2078064,
+            "runningRtf": 2.5711345481933594,
+            "systemAvailableKiB": 5627904,
+            "vaeSeconds": 8.632237656,
+            "wallSeconds": 105.313671094
+          }
+        ],
+        "decodeSeconds": 20.682628732000012,
+        "decodeTokensPerSecond": 49.46179778478651,
+        "ditPrecision": "High",
+        "ditStepsPerChunk": 2,
+        "ditWeightBits": 8,
+        "eosSuppressedForFixedLengthDiagnostic": true,
+        "finalKvPositions": 1537,
+        "firstNumericalPacketSeconds": 25.580631719,
+        "flowAndMemoryPassed": true,
+        "generatedCodecIds": 1024,
+        "initializationSeconds": 3.374139531,
+        "llmPowerHint": "Normal",
+        "maxCodeWindowIds": 256,
+        "minimumSystemAvailableKiB": 5481472,
+        "music_trained": false,
+        "oneDitSession": true,
+        "oneLlmSession": true,
+        "onePrefill": true,
+        "oneVaeSession": true,
+        "overlapFrames": 64,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "pcmPeak": 0.67724609375,
+        "pcmRms": 0.025815969661343734,
+        "phoneVsPcSameQuantVelocityL2": 0.026458152129098477,
+        "pipelinePeakRssKiB": 2225572,
+        "pipelineRtfThroughPcm": 2.571159198754883,
+        "pipelineSecondsThroughPcm": 105.314680781,
+        "policy": "all-five-chunks",
+        "prefillSeconds": 2.777851563,
+        "prefillTokens": 514,
+        "real_song_generated": false,
+        "requestedChunks": 5,
+        "retainedPcmTailSamplesPerChannel": 122880,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 2225572,
+        "scope": "Five sequential diagnostic codec windows, one LLM KV and one DiT/VAE session each; RANDOM music adapters; no speaker playback or quality proof",
+        "stages": [
+          {
+            "rssKiB": 6588,
+            "seconds": 0.001222969,
+            "stage": "five-chunk-start",
+            "systemAvailableKiB": 7624704
+          },
+          {
+            "rssKiB": 296596,
+            "seconds": 0.804910937,
+            "stage": "five-llm-loaded",
+            "systemAvailableKiB": 7314432
+          },
+          {
+            "rssKiB": 1017560,
+            "seconds": 2.460787969,
+            "stage": "five-dit-loaded",
+            "systemAvailableKiB": 6597632
+          },
+          {
+            "rssKiB": 1207872,
+            "seconds": 3.373657344,
+            "stage": "five-all-three-loaded",
+            "systemAvailableKiB": 6349824
+          },
+          {
+            "rssKiB": 1315780,
+            "seconds": 10.298516406,
+            "stage": "chunk-1-llm-ready",
+            "systemAvailableKiB": 6256640
+          },
+          {
+            "rssKiB": 1377784,
+            "seconds": 13.684145625,
+            "stage": "chunk-1-dit-1",
+            "systemAvailableKiB": 6287360
+          },
+          {
+            "rssKiB": 1377784,
+            "seconds": 16.958599844,
+            "stage": "chunk-1-dit-2",
+            "systemAvailableKiB": 6287360
+          },
+          {
+            "rssKiB": 1996932,
+            "seconds": 25.580302656,
+            "stage": "chunk-1-pcm-complete",
+            "systemAvailableKiB": 5688320
+          },
+          {
+            "rssKiB": 2011988,
+            "seconds": 29.49594125,
+            "stage": "chunk-2-llm-ready",
+            "systemAvailableKiB": 5682176
+          },
+          {
+            "rssKiB": 2013284,
+            "seconds": 32.940056875,
+            "stage": "chunk-2-dit-1",
+            "systemAvailableKiB": 5683200
+          },
+          {
+            "rssKiB": 2013284,
+            "seconds": 36.408173906,
+            "stage": "chunk-2-dit-2",
+            "systemAvailableKiB": 5690368
+          },
+          {
+            "rssKiB": 2016996,
+            "seconds": 45.21217,
+            "stage": "chunk-2-pcm-complete",
+            "systemAvailableKiB": 5688320
+          },
+          {
+            "rssKiB": 2032120,
+            "seconds": 49.36399625,
+            "stage": "chunk-3-llm-ready",
+            "systemAvailableKiB": 5670912
+          },
+          {
+            "rssKiB": 2033412,
+            "seconds": 52.892672656,
+            "stage": "chunk-3-dit-1",
+            "systemAvailableKiB": 5671936
+          },
+          {
+            "rssKiB": 2033412,
+            "seconds": 56.430332344,
+            "stage": "chunk-3-dit-2",
+            "systemAvailableKiB": 5675008
+          },
+          {
+            "rssKiB": 2037132,
+            "seconds": 64.98604,
+            "stage": "chunk-3-pcm-complete",
+            "systemAvailableKiB": 5671936
+          },
+          {
+            "rssKiB": 2052108,
+            "seconds": 69.331565781,
+            "stage": "chunk-4-llm-ready",
+            "systemAvailableKiB": 5656576
+          },
+          {
+            "rssKiB": 2053436,
+            "seconds": 72.913204531,
+            "stage": "chunk-4-dit-1",
+            "systemAvailableKiB": 5655552
+          },
+          {
+            "rssKiB": 2053440,
+            "seconds": 76.375666719,
+            "stage": "chunk-4-dit-2",
+            "systemAvailableKiB": 5655552
+          },
+          {
+            "rssKiB": 2057152,
+            "seconds": 84.981446719,
+            "stage": "chunk-4-pcm-complete",
+            "systemAvailableKiB": 5651456
+          },
+          {
+            "rssKiB": 2073056,
+            "seconds": 89.550737812,
+            "stage": "chunk-5-llm-ready",
+            "systemAvailableKiB": 5633024
+          },
+          {
+            "rssKiB": 2074352,
+            "seconds": 93.176541562,
+            "stage": "chunk-5-dit-1",
+            "systemAvailableKiB": 5632000
+          },
+          {
+            "rssKiB": 2074352,
+            "seconds": 96.676311094,
+            "stage": "chunk-5-dit-2",
+            "systemAvailableKiB": 5635072
+          },
+          {
+            "rssKiB": 2078064,
+            "seconds": 105.313344687,
+            "stage": "chunk-5-pcm-complete",
+            "systemAvailableKiB": 5627904
+          },
+          {
+            "rssKiB": 15944,
+            "seconds": 105.764995625,
+            "stage": "five-all-models-destroyed",
+            "systemAvailableKiB": 7687168
+          },
+          {
+            "rssKiB": 15936,
+            "seconds": 106.790418281,
+            "stage": "five-release-plus-1-second",
+            "systemAvailableKiB": 7664640
+          },
+          {
+            "rssKiB": 16308,
+            "seconds": 112.872237656,
+            "stage": "five-post-timing-parity-measured",
+            "systemAvailableKiB": 7664640
+          }
+        ],
+        "strictNumericalParityPassed": false,
+        "success": true,
+        "sumDitSeconds": 34.738782813,
+        "sumVaeSeconds": 43.20176609400001,
+        "totalSeconds": 112.873519219,
+        "vaeThreads": 6,
+        "vaeVectorSinKernelCalls": 0,
+        "vaeVectorSinRequested": false,
+        "vaeWeightBits": 32,
+        "validPcmSeconds": 40.96,
+        "variant": "baseline-high-vae6",
+        "windowFrames": 256
+      },
+      "optimized": {
+        "chunks": [
+          {
+            "chunk": 1,
+            "chunkSeconds": 19.749470313,
+            "contextFrames": 0,
+            "cumulativePcmSeconds": 7.68,
+            "ditTwoStepSeconds": 6.5363425,
+            "emittedPcmSeconds": 7.68,
+            "generatedCodesTotal": 256,
+            "kvPositions": 769,
+            "llmSeconds": 6.791051094,
+            "newCodecIds": 256,
+            "rssKiB": 1939692,
+            "runningRtf": 3.017786376953125,
+            "systemAvailableKiB": 5742592,
+            "vaeSeconds": 6.319048594,
+            "wallSeconds": 23.176599375
+          },
+          {
+            "chunk": 2,
+            "chunkSeconds": 16.803659688,
+            "contextFrames": 64,
+            "cumulativePcmSeconds": 15.36,
+            "ditTwoStepSeconds": 6.846240469,
+            "emittedPcmSeconds": 7.68,
+            "generatedCodesTotal": 448,
+            "kvPositions": 961,
+            "llmSeconds": 3.7207614100000015,
+            "newCodecIds": 192,
+            "rssKiB": 1959588,
+            "runningRtf": 2.602971099869792,
+            "systemAvailableKiB": 5745664,
+            "vaeSeconds": 6.136056718,
+            "wallSeconds": 39.981636094
+          },
+          {
+            "chunk": 3,
+            "chunkSeconds": 18.105483125,
+            "contextFrames": 64,
+            "cumulativePcmSeconds": 23.04,
+            "ditTwoStepSeconds": 7.043631562,
+            "emittedPcmSeconds": 7.68,
+            "generatedCodesTotal": 640,
+            "kvPositions": 1153,
+            "llmSeconds": 4.103099215,
+            "newCodecIds": 192,
+            "rssKiB": 1979640,
+            "runningRtf": 2.521168016232639,
+            "systemAvailableKiB": 5696512,
+            "vaeSeconds": 6.853967344,
+            "wallSeconds": 58.087711094
+          },
+          {
+            "chunk": 4,
+            "chunkSeconds": 17.426134844,
+            "contextFrames": 64,
+            "cumulativePcmSeconds": 30.72,
+            "ditTwoStepSeconds": 6.890895625,
+            "emittedPcmSeconds": 7.68,
+            "generatedCodesTotal": 832,
+            "kvPositions": 1345,
+            "llmSeconds": 4.295626261,
+            "newCodecIds": 192,
+            "rssKiB": 1999672,
+            "runningRtf": 2.4581651052083333,
+            "systemAvailableKiB": 5703680,
+            "vaeSeconds": 6.138059531,
+            "wallSeconds": 75.514832032
+          },
+          {
+            "chunk": 5,
+            "chunkSeconds": 17.5268775,
+            "contextFrames": 64,
+            "cumulativePcmSeconds": 40.96,
+            "ditTwoStepSeconds": 7.043580781,
+            "emittedPcmSeconds": 10.24,
+            "generatedCodesTotal": 1024,
+            "kvPositions": 1537,
+            "llmSeconds": 4.405261565999997,
+            "newCodecIds": 192,
+            "rssKiB": 2020560,
+            "runningRtf": 2.271544353491211,
+            "systemAvailableKiB": 5710848,
+            "vaeSeconds": 5.971893593,
+            "wallSeconds": 93.042456719
+          }
+        ],
+        "decodeSeconds": 20.521990014999993,
+        "decodeTokensPerSecond": 49.848966852252914,
+        "ditPrecision": "High",
+        "ditStepsPerChunk": 2,
+        "ditWeightBits": 8,
+        "eosSuppressedForFixedLengthDiagnostic": true,
+        "finalKvPositions": 1537,
+        "firstNumericalPacketSeconds": 23.176599375,
+        "flowAndMemoryPassed": true,
+        "generatedCodecIds": 1024,
+        "initializationSeconds": 3.417365313,
+        "llmPowerHint": "Normal",
+        "maxCodeWindowIds": 256,
+        "minimumSystemAvailableKiB": 5543936,
+        "music_trained": false,
+        "oneDitSession": true,
+        "oneLlmSession": true,
+        "onePrefill": true,
+        "oneVaeSession": true,
+        "overlapFrames": 64,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "pcmPeak": 0.66943359375,
+        "pcmRms": 0.02586890587616945,
+        "phoneVsPcSameQuantVelocityL2": 0.026458152129098477,
+        "pipelinePeakRssKiB": 2160308,
+        "pipelineRtfThroughPcm": 2.2715570182861327,
+        "pipelineSecondsThroughPcm": 93.042975469,
+        "policy": "all-five-chunks",
+        "prefillSeconds": 2.793809531,
+        "prefillTokens": 514,
+        "real_song_generated": false,
+        "requestedChunks": 5,
+        "retainedPcmTailSamplesPerChannel": 122880,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 2160308,
+        "scope": "Five sequential diagnostic codec windows, one LLM KV and one DiT/VAE session each; RANDOM music adapters; no speaker playback or quality proof",
+        "stages": [
+          {
+            "rssKiB": 6596,
+            "seconds": 0.001040313,
+            "stage": "five-chunk-start",
+            "systemAvailableKiB": 7670784
+          },
+          {
+            "rssKiB": 296564,
+            "seconds": 0.809634688,
+            "stage": "five-llm-loaded",
+            "systemAvailableKiB": 7384064
+          },
+          {
+            "rssKiB": 1017568,
+            "seconds": 2.467377657,
+            "stage": "five-dit-loaded",
+            "systemAvailableKiB": 6661120
+          },
+          {
+            "rssKiB": 1150268,
+            "seconds": 3.415910469,
+            "stage": "five-all-three-loaded",
+            "systemAvailableKiB": 6531072
+          },
+          {
+            "rssKiB": 1258508,
+            "seconds": 10.304959375,
+            "stage": "chunk-1-llm-ready",
+            "systemAvailableKiB": 6415360
+          },
+          {
+            "rssKiB": 1320548,
+            "seconds": 13.590363438,
+            "stage": "chunk-1-dit-1",
+            "systemAvailableKiB": 6356992
+          },
+          {
+            "rssKiB": 1320556,
+            "seconds": 16.851003282,
+            "stage": "chunk-1-dit-2",
+            "systemAvailableKiB": 6361088
+          },
+          {
+            "rssKiB": 1939688,
+            "seconds": 23.176264375,
+            "stage": "chunk-1-pcm-complete",
+            "systemAvailableKiB": 5742592
+          },
+          {
+            "rssKiB": 1954556,
+            "seconds": 26.984147657,
+            "stage": "chunk-2-llm-ready",
+            "systemAvailableKiB": 5742592
+          },
+          {
+            "rssKiB": 1955868,
+            "seconds": 30.447862188,
+            "stage": "chunk-2-dit-1",
+            "systemAvailableKiB": 5743616
+          },
+          {
+            "rssKiB": 1955868,
+            "seconds": 33.841451407,
+            "stage": "chunk-2-dit-2",
+            "systemAvailableKiB": 5753856
+          },
+          {
+            "rssKiB": 1959588,
+            "seconds": 39.9813975,
+            "stage": "chunk-2-pcm-complete",
+            "systemAvailableKiB": 5745664
+          },
+          {
+            "rssKiB": 1974628,
+            "seconds": 44.171184844,
+            "stage": "chunk-3-llm-ready",
+            "systemAvailableKiB": 5699584
+          },
+          {
+            "rssKiB": 1975928,
+            "seconds": 47.74621375,
+            "stage": "chunk-3-dit-1",
+            "systemAvailableKiB": 5698560
+          },
+          {
+            "rssKiB": 1975924,
+            "seconds": 51.22759125,
+            "stage": "chunk-3-dit-2",
+            "systemAvailableKiB": 5698560
+          },
+          {
+            "rssKiB": 1979640,
+            "seconds": 58.08728625,
+            "stage": "chunk-3-pcm-complete",
+            "systemAvailableKiB": 5696512
+          },
+          {
+            "rssKiB": 1994652,
+            "seconds": 62.47004,
+            "stage": "chunk-4-llm-ready",
+            "systemAvailableKiB": 5688320
+          },
+          {
+            "rssKiB": 1995956,
+            "seconds": 65.959935469,
+            "stage": "chunk-4-dit-1",
+            "systemAvailableKiB": 5687296
+          },
+          {
+            "rssKiB": 1995956,
+            "seconds": 69.371994532,
+            "stage": "chunk-4-dit-2",
+            "systemAvailableKiB": 5683200
+          },
+          {
+            "rssKiB": 1999672,
+            "seconds": 75.514521563,
+            "stage": "chunk-4-pcm-complete",
+            "systemAvailableKiB": 5703680
+          },
+          {
+            "rssKiB": 2015540,
+            "seconds": 80.0043825,
+            "stage": "chunk-5-llm-ready",
+            "systemAvailableKiB": 5688320
+          },
+          {
+            "rssKiB": 2016844,
+            "seconds": 83.511166719,
+            "stage": "chunk-5-dit-1",
+            "systemAvailableKiB": 5728256
+          },
+          {
+            "rssKiB": 2016844,
+            "seconds": 87.065056407,
+            "stage": "chunk-5-dit-2",
+            "systemAvailableKiB": 5718016
+          },
+          {
+            "rssKiB": 2020560,
+            "seconds": 93.042207188,
+            "stage": "chunk-5-pcm-complete",
+            "systemAvailableKiB": 5710848
+          },
+          {
+            "rssKiB": 15892,
+            "seconds": 93.494537344,
+            "stage": "five-all-models-destroyed",
+            "systemAvailableKiB": 7709696
+          },
+          {
+            "rssKiB": 15892,
+            "seconds": 94.505290625,
+            "stage": "five-release-plus-1-second",
+            "systemAvailableKiB": 7645184
+          },
+          {
+            "rssKiB": 16196,
+            "seconds": 100.4756575,
+            "stage": "five-post-timing-parity-measured",
+            "systemAvailableKiB": 7644160
+          }
+        ],
+        "strictNumericalParityPassed": false,
+        "success": true,
+        "sumDitSeconds": 34.360690937,
+        "sumVaeSeconds": 31.419025780000002,
+        "totalSeconds": 100.4770575,
+        "vaeThreads": 6,
+        "vaeVectorSinKernelCalls": 1080,
+        "vaeVectorSinRequested": true,
+        "vaeWeightBits": 8,
+        "validPcmSeconds": 40.96,
+        "variant": "baseline-high-vae6",
+        "windowFrames": 256
+      }
+    },
+    "fiveChunkSignedApp": {
+      "chunks": [
+        {
+          "chunk": 1,
+          "chunkSeconds": 20.721590781,
+          "contextFrames": 0,
+          "cumulativePcmSeconds": 7.68,
+          "ditTwoStepSeconds": 7.67370375,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 256,
+          "kvPositions": 769,
+          "llmSeconds": 6.703352807999998,
+          "newCodecIds": 256,
+          "rssKiB": 2065116,
+          "runningRtf": 2.9928098755208334,
+          "systemAvailableKiB": 5579776,
+          "vaeSeconds": 6.243055469,
+          "wallSeconds": 22.984779844
+        },
+        {
+          "chunk": 2,
+          "chunkSeconds": 18.670819531,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 15.36,
+          "ditTwoStepSeconds": 7.894717812,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 448,
+          "kvPositions": 961,
+          "llmSeconds": 4.244539998,
+          "newCodecIds": 192,
+          "rssKiB": 2096624,
+          "runningRtf": 2.711988474544271,
+          "systemAvailableKiB": 5660672,
+          "vaeSeconds": 6.429395625,
+          "wallSeconds": 41.656142969
+        },
+        {
+          "chunk": 3,
+          "chunkSeconds": 18.984350625,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 23.04,
+          "ditTwoStepSeconds": 7.878895937,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 640,
+          "kvPositions": 1153,
+          "llmSeconds": 4.698169685999998,
+          "newCodecIds": 192,
+          "rssKiB": 2115496,
+          "runningRtf": 2.631979776996528,
+          "systemAvailableKiB": 5675008,
+          "vaeSeconds": 6.316564844,
+          "wallSeconds": 60.640814062
+        },
+        {
+          "chunk": 4,
+          "chunkSeconds": 19.3481225,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 30.72,
+          "ditTwoStepSeconds": 8.082144218,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 832,
+          "kvPositions": 1345,
+          "llmSeconds": 4.837390625,
+          "newCodecIds": 192,
+          "rssKiB": 2128628,
+          "runningRtf": 2.603818227115885,
+          "systemAvailableKiB": 5694464,
+          "vaeSeconds": 6.331337968,
+          "wallSeconds": 79.989295937
+        },
+        {
+          "chunk": 5,
+          "chunkSeconds": 19.589361563,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 40.96,
+          "ditTwoStepSeconds": 7.971413125,
+          "emittedPcmSeconds": 10.24,
+          "generatedCodesTotal": 1024,
+          "kvPositions": 1537,
+          "llmSeconds": 5.187530934,
+          "newCodecIds": 192,
+          "rssKiB": 2203080,
+          "runningRtf": 2.4311352348388673,
+          "systemAvailableKiB": 5630976,
+          "vaeSeconds": 6.330347187,
+          "wallSeconds": 99.579299219
+        }
+      ],
+      "decodeSeconds": 23.188629050999978,
+      "decodeTokensPerSecond": 44.116450254564946,
+      "ditPrecision": "High",
+      "ditStepsPerChunk": 2,
+      "ditWeightBits": 8,
+      "eosSuppressedForFixedLengthDiagnostic": true,
+      "finalKvPositions": 1537,
+      "firstNumericalPacketSeconds": 22.984779844,
+      "flowAndMemoryPassed": true,
+      "generatedCodecIds": 1024,
+      "initializationSeconds": 2.2535975,
+      "llmPowerHint": "Normal",
+      "maxCodeWindowIds": 256,
+      "minimumSystemAvailableKiB": 5520384,
+      "music_trained": false,
+      "oneDitSession": true,
+      "oneLlmSession": true,
+      "onePrefill": true,
+      "oneVaeSession": true,
+      "overlapFrames": 64,
+      "pcmAccumulatedAcrossWholeSong": false,
+      "pcmPeak": 0.66943359375,
+      "pcmRms": 0.02586890587616945,
+      "phoneVsPcSameQuantVelocityL2": 0.026458152129098477,
+      "pipelinePeakRssKiB": 2297632,
+      "pipelineRtfThroughPcm": 2.4311391982910155,
+      "pipelineSecondsThroughPcm": 99.579461562,
+      "policy": "all-five-chunks",
+      "prefillSeconds": 2.482355,
+      "prefillTokens": 514,
+      "real_song_generated": false,
+      "requestedChunks": 5,
+      "retainedPcmTailSamplesPerChannel": 122880,
+      "sampleIntervalMs": 20,
+      "sampledPeakRssKiB": 2297632,
+      "scope": "Five sequential diagnostic codec windows, one LLM KV and one DiT/VAE session each; RANDOM music adapters; no speaker playback or quality proof",
+      "stages": [
+        {
+          "rssKiB": 69632,
+          "seconds": 0.000878281,
+          "stage": "five-chunk-start",
+          "systemAvailableKiB": 7250944
+        },
+        {
+          "rssKiB": 409204,
+          "seconds": 0.549363594,
+          "stage": "five-llm-loaded",
+          "systemAvailableKiB": 7034880
+        },
+        {
+          "rssKiB": 1140808,
+          "seconds": 1.599186875,
+          "stage": "five-dit-loaded",
+          "systemAvailableKiB": 6454272
+        },
+        {
+          "rssKiB": 1279868,
+          "seconds": 2.251977344,
+          "stage": "five-all-three-loaded",
+          "systemAvailableKiB": 6300672
+        },
+        {
+          "rssKiB": 1438228,
+          "seconds": 9.054123125,
+          "stage": "chunk-1-llm-ready",
+          "systemAvailableKiB": 6129664
+        },
+        {
+          "rssKiB": 1499368,
+          "seconds": 12.871052344,
+          "stage": "chunk-1-dit-1",
+          "systemAvailableKiB": 5995520
+        },
+        {
+          "rssKiB": 1450980,
+          "seconds": 16.735910781,
+          "stage": "chunk-1-dit-2",
+          "systemAvailableKiB": 6065152
+        },
+        {
+          "rssKiB": 2065112,
+          "seconds": 22.984401719,
+          "stage": "chunk-1-pcm-complete",
+          "systemAvailableKiB": 5579776
+        },
+        {
+          "rssKiB": 2108204,
+          "seconds": 27.313670312,
+          "stage": "chunk-2-llm-ready",
+          "systemAvailableKiB": 5611520
+        },
+        {
+          "rssKiB": 2088900,
+          "seconds": 31.229308281,
+          "stage": "chunk-2-dit-1",
+          "systemAvailableKiB": 5636096
+        },
+        {
+          "rssKiB": 2091828,
+          "seconds": 35.221793125,
+          "stage": "chunk-2-dit-2",
+          "systemAvailableKiB": 5624832
+        },
+        {
+          "rssKiB": 2096624,
+          "seconds": 41.655836875,
+          "stage": "chunk-2-pcm-complete",
+          "systemAvailableKiB": 5660672
+        },
+        {
+          "rssKiB": 2100460,
+          "seconds": 46.426952344,
+          "stage": "chunk-3-llm-ready",
+          "systemAvailableKiB": 5655552
+        },
+        {
+          "rssKiB": 2107740,
+          "seconds": 50.373934062,
+          "stage": "chunk-3-dit-1",
+          "systemAvailableKiB": 5655552
+        },
+        {
+          "rssKiB": 2107864,
+          "seconds": 54.319439375,
+          "stage": "chunk-3-dit-2",
+          "systemAvailableKiB": 5657600
+        },
+        {
+          "rssKiB": 2115496,
+          "seconds": 60.640560937,
+          "stage": "chunk-3-pcm-complete",
+          "systemAvailableKiB": 5675008
+        },
+        {
+          "rssKiB": 2119940,
+          "seconds": 65.561986875,
+          "stage": "chunk-4-llm-ready",
+          "systemAvailableKiB": 5677056
+        },
+        {
+          "rssKiB": 2129920,
+          "seconds": 69.564890781,
+          "stage": "chunk-4-dit-1",
+          "systemAvailableKiB": 5673984
+        },
+        {
+          "rssKiB": 2127220,
+          "seconds": 73.653403437,
+          "stage": "chunk-4-dit-2",
+          "systemAvailableKiB": 5685248
+        },
+        {
+          "rssKiB": 2128628,
+          "seconds": 79.989100312,
+          "stage": "chunk-4-pcm-complete",
+          "systemAvailableKiB": 5694464
+        },
+        {
+          "rssKiB": 2216952,
+          "seconds": 85.263426406,
+          "stage": "chunk-5-llm-ready",
+          "systemAvailableKiB": 5615616
+        },
+        {
+          "rssKiB": 2216956,
+          "seconds": 89.234095625,
+          "stage": "chunk-5-dit-1",
+          "systemAvailableKiB": 5617664
+        },
+        {
+          "rssKiB": 2202056,
+          "seconds": 93.243485625,
+          "stage": "chunk-5-dit-2",
+          "systemAvailableKiB": 5627904
+        },
+        {
+          "rssKiB": 2203080,
+          "seconds": 99.579075781,
+          "stage": "chunk-5-pcm-complete",
+          "systemAvailableKiB": 5630976
+        },
+        {
+          "rssKiB": 484860,
+          "seconds": 99.940498281,
+          "stage": "five-all-models-destroyed",
+          "systemAvailableKiB": 7322624
+        },
+        {
+          "rssKiB": 484860,
+          "seconds": 100.941517969,
+          "stage": "five-release-plus-1-second",
+          "systemAvailableKiB": 7322624
+        },
+        {
+          "rssKiB": 346256,
+          "seconds": 106.70768625,
+          "stage": "five-post-timing-parity-measured",
+          "systemAvailableKiB": 7413760
+        }
+      ],
+      "strictNumericalParityPassed": false,
+      "success": true,
+      "sumDitSeconds": 39.500874842,
+      "sumVaeSeconds": 31.650701093000002,
+      "totalSeconds": 106.708210781,
+      "vaeThreads": 6,
+      "vaeVectorSinKernelCalls": 1080,
+      "vaeVectorSinRequested": true,
+      "vaeWeightBits": 8,
+      "validPcmSeconds": 40.96,
+      "variant": "baseline-high-vae6",
+      "windowFrames": 256
+    },
+    "package": {
+      "version": "0.1.6",
+      "signedHapSha256": "d99e5d25fc2c5360096aee1968ed3facb80830f733ce3e73927ce003921263d8",
+      "signingMaterialPublished": false
+    },
+    "cannMatchedCases": {
+      "cases": [
+        {
+          "dilation": 1,
+          "id": "conv-0-8192",
+          "inputShape": [
+            1,
+            128,
+            1,
+            8192
+          ],
+          "kernel": 7,
+          "matchedCpu": {
+            "backend": "MNN CPU Low",
+            "power": "High",
+            "relativeL2": 0.0038656907915031375,
+            "runIncludingCopiesSeconds": [
+              0.023498125,
+              0.01244875,
+              0.010945781,
+              0.009517031
+            ],
+            "success": true,
+            "threads": 6
+          },
+          "operation": "Conv",
+          "outputShape": [
+            1,
+            128,
+            1,
+            8192
+          ],
+          "padding": 3,
+          "preCheckStatus": 1,
+          "realWeights": true,
+          "relativeL2": 0.0040877936719915875,
+          "runIncludingCopiesSeconds": [
+            0.023271406,
+            0.020360625,
+            0.036158281,
+            0.016809687
+          ],
+          "setupSeconds": 0.107348281,
+          "sourceNode": "/layers/layers.5/layers/layers.2/layers/layers.1/Conv",
+          "stride": 1,
+          "success": true,
+          "syntheticActivation": true,
+          "weightShape": [
+            128,
+            128,
+            1,
+            7
+          ],
+          "wholeGraphNpuPlacementVerified": false,
+          "workspaceBytes": 4194304
+        },
+        {
+          "dilation": 1,
+          "id": "conv-0-32768",
+          "inputShape": [
+            1,
+            128,
+            1,
+            32768
+          ],
+          "kernel": 7,
+          "matchedCpu": {
+            "backend": "MNN CPU Low",
+            "power": "High",
+            "relativeL2": 0.004182283921767423,
+            "runIncludingCopiesSeconds": [
+              0.077307969,
+              0.045190937,
+              0.037867188,
+              0.044986875
+            ],
+            "success": true,
+            "threads": 6
+          },
+          "operation": "Conv",
+          "outputShape": [
+            1,
+            128,
+            1,
+            32768
+          ],
+          "padding": 3,
+          "preCheckStatus": 1,
+          "realWeights": true,
+          "relativeL2": 0.004479319441774404,
+          "runIncludingCopiesSeconds": [
+            0.12685125,
+            0.062827031,
+            0.06078875,
+            0.061505625
+          ],
+          "setupSeconds": 0.005854218,
+          "sourceNode": "/layers/layers.5/layers/layers.2/layers/layers.1/Conv",
+          "stride": 1,
+          "success": true,
+          "syntheticActivation": true,
+          "weightShape": [
+            128,
+            128,
+            1,
+            7
+          ],
+          "wholeGraphNpuPlacementVerified": false,
+          "workspaceBytes": 16777216
+        },
+        {
+          "dilation": 3,
+          "id": "conv-1-8192",
+          "inputShape": [
+            1,
+            128,
+            1,
+            8192
+          ],
+          "kernel": 7,
+          "matchedCpu": {
+            "backend": "MNN CPU Low",
+            "power": "High",
+            "relativeL2": 0.003899456112589685,
+            "runIncludingCopiesSeconds": [
+              0.017200313,
+              0.01773125,
+              0.009923906,
+              0.018354063
+            ],
+            "success": true,
+            "threads": 6
+          },
+          "operation": "Conv",
+          "outputShape": [
+            1,
+            128,
+            1,
+            8192
+          ],
+          "padding": 9,
+          "preCheckStatus": 1,
+          "realWeights": true,
+          "relativeL2": 0.004425877532550636,
+          "runIncludingCopiesSeconds": [
+            0.055847812,
+            0.03218875,
+            0.024163125,
+            0.015890781
+          ],
+          "setupSeconds": 0.005607657,
+          "sourceNode": "/layers/layers.5/layers/layers.3/layers/layers.1/Conv",
+          "stride": 1,
+          "success": true,
+          "syntheticActivation": true,
+          "weightShape": [
+            128,
+            128,
+            1,
+            7
+          ],
+          "wholeGraphNpuPlacementVerified": false,
+          "workspaceBytes": 4194304
+        },
+        {
+          "dilation": 3,
+          "id": "conv-1-32768",
+          "inputShape": [
+            1,
+            128,
+            1,
+            32768
+          ],
+          "kernel": 7,
+          "matchedCpu": {
+            "backend": "MNN CPU Low",
+            "power": "High",
+            "relativeL2": 0.0039965392800620945,
+            "runIncludingCopiesSeconds": [
+              0.081750781,
+              0.045197187,
+              0.037829219,
+              0.03751125
+            ],
+            "success": true,
+            "threads": 6
+          },
+          "operation": "Conv",
+          "outputShape": [
+            1,
+            128,
+            1,
+            32768
+          ],
+          "padding": 9,
+          "preCheckStatus": 1,
+          "realWeights": true,
+          "relativeL2": 0.004337562746917559,
+          "runIncludingCopiesSeconds": [
+            0.090695625,
+            0.059939062,
+            0.060420312,
+            0.06042375
+          ],
+          "setupSeconds": 0.005776406,
+          "sourceNode": "/layers/layers.5/layers/layers.3/layers/layers.1/Conv",
+          "stride": 1,
+          "success": true,
+          "syntheticActivation": true,
+          "weightShape": [
+            128,
+            128,
+            1,
+            7
+          ],
+          "wholeGraphNpuPlacementVerified": false,
+          "workspaceBytes": 16777216
+        },
+        {
+          "dilation": 9,
+          "id": "conv-2-8192",
+          "inputShape": [
+            1,
+            128,
+            1,
+            8192
+          ],
+          "kernel": 7,
+          "matchedCpu": {
+            "backend": "MNN CPU Low",
+            "power": "High",
+            "relativeL2": 0.004593163716622095,
+            "runIncludingCopiesSeconds": [
+              0.018516094,
+              0.010253438,
+              0.010110156,
+              0.009630469
+            ],
+            "success": true,
+            "threads": 6
+          },
+          "operation": "Conv",
+          "outputShape": [
+            1,
+            128,
+            1,
+            8192
+          ],
+          "padding": 27,
+          "preCheckStatus": 1,
+          "realWeights": true,
+          "relativeL2": 0.004586238286366107,
+          "runIncludingCopiesSeconds": [
+            0.058932969,
+            0.030441875,
+            0.016925156,
+            0.016161406
+          ],
+          "setupSeconds": 0.004394218,
+          "sourceNode": "/layers/layers.5/layers/layers.4/layers/layers.1/Conv",
+          "stride": 1,
+          "success": true,
+          "syntheticActivation": true,
+          "weightShape": [
+            128,
+            128,
+            1,
+            7
+          ],
+          "wholeGraphNpuPlacementVerified": false,
+          "workspaceBytes": 4194304
+        },
+        {
+          "dilation": 9,
+          "id": "conv-2-32768",
+          "inputShape": [
+            1,
+            128,
+            1,
+            32768
+          ],
+          "kernel": 7,
+          "matchedCpu": {
+            "backend": "MNN CPU Low",
+            "power": "High",
+            "relativeL2": 0.0044491317654285975,
+            "runIncludingCopiesSeconds": [
+              0.102461719,
+              0.054724844,
+              0.039389219,
+              0.0378325
+            ],
+            "success": true,
+            "threads": 6
+          },
+          "operation": "Conv",
+          "outputShape": [
+            1,
+            128,
+            1,
+            32768
+          ],
+          "padding": 27,
+          "preCheckStatus": 1,
+          "realWeights": true,
+          "relativeL2": 0.004450105755461741,
+          "runIncludingCopiesSeconds": [
+            0.123758438,
+            0.062889687,
+            0.060680313,
+            0.060423906
+          ],
+          "setupSeconds": 0.005602032,
+          "sourceNode": "/layers/layers.5/layers/layers.4/layers/layers.1/Conv",
+          "stride": 1,
+          "success": true,
+          "syntheticActivation": true,
+          "weightShape": [
+            128,
+            128,
+            1,
+            7
+          ],
+          "wholeGraphNpuPlacementVerified": false,
+          "workspaceBytes": 16777216
+        },
+        {
+          "dilation": 1,
+          "id": "convtranspose-0-8192",
+          "inputShape": [
+            1,
+            128,
+            1,
+            8192
+          ],
+          "kernel": 4,
+          "matchedCpu": {
+            "backend": "MNN CPU Low",
+            "power": "High",
+            "relativeL2": 0.0012384965213397508,
+            "runIncludingCopiesSeconds": [
+              0.023154063,
+              0.0109525,
+              0.009403437,
+              0.007993593
+            ],
+            "success": true,
+            "threads": 6
+          },
+          "operation": "ConvTranspose",
+          "outputShape": [
+            1,
+            128,
+            1,
+            16384
+          ],
+          "padding": 1,
+          "preCheckStatus": 1,
+          "realWeights": true,
+          "relativeL2": 0.0012384965213397508,
+          "runIncludingCopiesSeconds": [
+            0.079064844,
+            0.032207656,
+            0.025296406,
+            0.024655469
+          ],
+          "setupSeconds": 0.004517031,
+          "sourceNode": "/layers/layers.5/layers/layers.1/ConvTranspose",
+          "stride": 2,
+          "success": true,
+          "syntheticActivation": true,
+          "weightShape": [
+            128,
+            128,
+            1,
+            4
+          ],
+          "wholeGraphNpuPlacementVerified": false,
+          "workspaceBytes": 6291456
+        },
+        {
+          "dilation": 1,
+          "id": "convtranspose-0-32768",
+          "inputShape": [
+            1,
+            128,
+            1,
+            32768
+          ],
+          "kernel": 4,
+          "matchedCpu": {
+            "backend": "MNN CPU Low",
+            "power": "High",
+            "relativeL2": 0.0013325762641588385,
+            "runIncludingCopiesSeconds": [
+              0.119369219,
+              0.049963593,
+              0.035543281,
+              0.035826094
+            ],
+            "success": true,
+            "threads": 6
+          },
+          "operation": "ConvTranspose",
+          "outputShape": [
+            1,
+            128,
+            1,
+            65536
+          ],
+          "padding": 1,
+          "preCheckStatus": 1,
+          "realWeights": true,
+          "relativeL2": 0.0013325762641588385,
+          "runIncludingCopiesSeconds": [
+            0.162977969,
+            0.100162969,
+            0.100091875,
+            0.100394063
+          ],
+          "setupSeconds": 0.005468281,
+          "sourceNode": "/layers/layers.5/layers/layers.1/ConvTranspose",
+          "stride": 2,
+          "success": true,
+          "syntheticActivation": true,
+          "weightShape": [
+            128,
+            128,
+            1,
+            4
+          ],
+          "wholeGraphNpuPlacementVerified": false,
+          "workspaceBytes": 25165824
+        }
+      ],
+      "fullVaeOnNpu": false,
+      "scope": "Real VAE terminal convolution weights, synthetic activation; isolated NPU compatibility and copy-inclusive latency only"
+    },
+    "cannPlacementLimit": "Single-op precheck COMMON=1, not OPTIMIZED=0. No proof of full decoder NPU placement; cannot infer forced-NPU graph speed.",
+    "snakeFusionPrototype": {
+      "capturedGroups": 36,
+      "error": "Coefficient capture must stay bounded",
+      "scope": "Callback Snake fusion feasibility only; original graph allocations retained; not whole-chain RTF",
+      "success": false
+    },
+    "snakeFusionFirstAttempt": {
+      "status": "stopped",
+      "reason": "Warm callback capture did not complete within bounded observation; no fusion performance result",
+      "pid": 25616,
+      "rssKiB": 755804,
+      "appAffected": false,
+      "productionChanged": false
+    },
+    "sampledKernels": {
+      "fp32CpuLow": "MNNPackedMatMulFP16; scalar sinf plus FP16 conversion",
+      "w8CpuLow": "MNNGemmInt8AddBiasScale_ARMV86_Unit_FP16 at sampled address 0x2cbd90; FP16 GEMM remains",
+      "source": "hiperf user-space cycle samples, 0 sample losses; assembly addresses resolved with the same unstripped binary",
+      "dramBandwidthMeasured": false,
+      "memoryBoundEstablished": false
+    },
+    "verifiedPhoneBinarySha256": {
+      "levo_vae_kernel": "34fcab282f27ed636e6fd1954e70fde03b19be5d2fe53996d2e2b2bf9ff06486",
+      "levo_chain_vae_optimized": "9df296bcf3fcabf41aae0005626010401c9d0ff7e66b8ee1a2816ed996acc05b",
+      "levo_vae_npu_probe": "09348e8eb50f3e36733cf690eeaede979625fbcca5f1121a8079b94b9c023ae2"
+    },
+    "sourceSha256": {
+      "native-bench/VaeBench.cpp": "a2a0de6a4fffa5e981eec2ebdd18f6603c86299c1c24e090e200ff387e631aaf",
+      "native-bench/VaeVectorSin.hpp": "c9e863564898efca0550f68d5b1b1643b6e3c91bfff0bde5f77f50666ce909ee",
+      "native-bench/VaeProfile.cpp": "053ef8c0445940032d8fb36e384a6b504120dbc7954ff464396ee5bccc55e31a",
+      "native-bench/VaeNpuProbe.cpp": "37fc9a985e94d1560c98abbb68abec122fd7d7084157056d673e005d4da48c8b",
+      "native-bench/VaeSnakeFusion.cpp": "c1ddaf2658e46f82afd6a38fac0c49e386b9f6138e51b74bc4ff58a4ed1a61b0",
+      "native-bench/ChainBench.cpp": "92adac6c773ea969273b2354ca1199dc1664f541384fdf5b9c2eaf9c772fe80f",
+      "app/entry/src/main/cpp/napi_init.cpp": "7e5f0e6e6b8e1f2337507cec1463631769b862ed7ddb6185fffe86b519674b24"
+    },
+    "existingRegressionTestsPassed": 15,
+    "vaeThreeTimesSpeedupAchieved": false,
+    "limits": [
+      "Module 1.77x improvement is not a whole-chain 1.77x gain; signed App and CLI differ",
+      "W8 waveform L2 vs PyTorch about 6%; no music listening acceptance",
+      "Earlier five-chunk pair ended SLEEP and is excluded from ranking",
+      "Original graph allocations retained in callback fusion prototype; no memory saving claim",
+      "Endpoint AWAKE checks do not replace continuous temperature/scheduling controls"
+    ]
   }
 }

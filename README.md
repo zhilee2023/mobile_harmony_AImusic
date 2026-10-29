@@ -1,5 +1,7 @@
 # mobile_harmony_AImusic · levo-harmony
 
+> v0.1.6 VAE优化已安装实测：W8权重＋ARM82 NEON正弦，独立VAE三窗RTF 1.193→0.674；亮屏五块CLI整链2.571→2.272，签名App候选2.431/峰值约2.19GiB。不是训练好的音乐或音质验收；3倍VAE和RTF1.5均未达到。见[详细结果](docs/VAE_OPTIMIZATION.md)，统一数据仍在reports/levo-test-report.json。
+
 面向16GB Mate 80 Pro的独立混合歌曲研究工程。**v0.1.5是已签名真机测试的多块流程/内存诊断App，不是已经训练好的0.6B LeVo。** CosyVoice与ACE项目保留。
 
 目标：最多512个歌词token＋1个风格前缀 → 约0.6B自回归骨干 → 单路Mixed音乐token → DiT → 48kHz双声道VAE。取消双轨分支，但保留人声＋伴奏的混合歌曲。

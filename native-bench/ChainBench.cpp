@@ -17,6 +17,9 @@
 #include <stdexcept>
 #include <thread>
 #include <unistd.h>
+#ifdef LEVO_VAE_VECTOR_SIN
+#include "VaeVectorSin.hpp"
+#endif
 using Json=nlohmann::json;
 using Clock=std::chrono::steady_clock;
 using MNN::Transformer::Llm;
@@ -99,7 +102,7 @@ std::string LevoRunChainBench(const std::string& dir,const std::string& requeste
   }catch(const std::exception& error){result["error"]=error.what();trace.mark("stopped");}
   return finish();
 }
-std::string LevoRunFiveChunks(const std::string& dir,bool tuned){
+std::string LevoRunFiveChunks(const std::string& dir,bool tuned,const std::string& vaeVariant){
   constexpr int chunks=5,frames=256,overlapFrames=64,hop=192;
   constexpr size_t pcmWindow=frames*1920,pcmOverlap=overlapFrames*1920;
   Trace trace;trace.sink=dir+"/last-chain-progress.jsonl";{std::ofstream clear(trace.sink);}
@@ -111,6 +114,11 @@ std::string LevoRunFiveChunks(const std::string& dir,bool tuned){
     {"pcmAccumulatedAcrossWholeSong",false},{"maxCodeWindowIds",frames},{"retainedPcmTailSamplesPerChannel",pcmOverlap}};
   result["variant"]=tuned?"dit-low-vae8-llm-highpower":"baseline-high-vae6";result["ditPrecision"]=tuned?"Low":"High";result["vaeThreads"]=tuned?8:6;result["llmPowerHint"]=tuned?"High":"Normal";result["eosSuppressedForFixedLengthDiagnostic"]=true;
   try{
+    require(vaeVariant=="fp32"||vaeVariant=="w8"||vaeVariant=="w8-vsin","Invalid VAE variant");
+#ifndef LEVO_VAE_VECTOR_SIN
+    require(vaeVariant!="w8-vsin","Vector SIN requires standalone probe");
+#endif
+    result["vaeWeightBits"]=vaeVariant=="fp32"?32:8;result["vaeVectorSinRequested"]=vaeVariant=="w8-vsin";
     trace.gate(2048);trace.mark("five-chunk-start");
     auto metadata=readJson(dir+"/student/diagnostic-student.json");require(metadata["music_trained"]==false&&metadata["layers"]==26,"Expected diagnostic student");
     auto prefix=readJson(dir+"/student/prefix.json").get<std::vector<int>>();require(prefix.size()==514,"Expected514position prefix");
@@ -119,7 +127,13 @@ std::string LevoRunFiveChunks(const std::string& dir,bool tuned){
     std::string runtime=dir+"/student/config-runtime.json";{std::ofstream out(runtime);out<<config.dump(2);require(out.good(),"Cannot save runtime config");}
     std::unique_ptr<Llm,decltype(&Llm::destroy)> llm(Llm::createLLM(runtime),&Llm::destroy);require(llm&&llm->load(),"LLM load failed");trace.mark("five-llm-loaded");trace.gate();
     auto dit=std::make_unique<Session>(dir+"/dit/full-w8.mnn",tuned);trace.mark("five-dit-loaded");trace.gate();
-    auto vae=std::make_unique<Session>(dir+"/vae/vae-256-fp32.mnn",true,tuned?8:6);trace.mark("five-all-three-loaded");trace.gate();
+#ifdef LEVO_VAE_VECTOR_SIN
+    LevoVaeSin::Scope sinScope(vaeVariant=="w8-vsin");
+#endif
+    auto vae=std::make_unique<Session>(dir+"/vae/vae-256-"+(vaeVariant=="fp32"?"fp32":"w8")+".mnn",true,tuned?8:6);trace.mark("five-all-three-loaded");trace.gate();
+#ifdef LEVO_VAE_VECTOR_SIN
+    sinScope.restore();
+#endif
     result["initializationSeconds"]=seconds(trace.start);
     auto codebook=read(dir+"/aux/codebook.f32",16384*32),weight=read(dir+"/aux/weight.f32",1024*32),bias=read(dir+"/aux/bias.f32",1024),mask=read(dir+"/aux/mask.f32",3*48),mean=read(dir+"/aux/mean.f32",64),stddev=read(dir+"/aux/std.f32",64);
     llm->reset();llm->generate_init();int generated=0,lastCode=-1,musicOffset=metadata["music_offset"].get<int>();
@@ -162,6 +176,9 @@ std::string LevoRunFiveChunks(const std::string& dir,bool tuned){
     require(generated==1024&&emittedSamples==1024*1920,"Dropped or duplicated codec IDs/PCM at five-chunk end");
     result["chunks"]=rows;result["generatedCodecIds"]=generated;result["finalKvPositions"]=llm->getCurrentHistory();result["prefillTokens"]=prefix.size();result["prefillSeconds"]=prefillSeconds;result["decodeSeconds"]=decodeSeconds;result["decodeTokensPerSecond"]=1023/decodeSeconds;result["sumDitSeconds"]=sumDit;result["sumVaeSeconds"]=sumVae;
     result["validPcmSeconds"]=double(emittedSamples)/48000;result["pcmRms"]=std::sqrt(energy/(2*emittedSamples));result["pcmPeak"]=maxPcm;
+#ifdef LEVO_VAE_VECTOR_SIN
+    result["vaeVectorSinKernelCalls"]=LevoVaeSin::calls.load();
+#endif
     result["pipelineSecondsThroughPcm"]=seconds(trace.start);result["pipelineRtfThroughPcm"]=result["pipelineSecondsThroughPcm"].get<double>()/result["validPcmSeconds"].get<double>();result["pipelinePeakRssKiB"]=trace.maxRss.load();
     vae.reset();dit.reset();llm.reset();trace.mark("five-all-models-destroyed");std::this_thread::sleep_for(std::chrono::milliseconds(1000));trace.mark("five-release-plus-1-second");
     trace.gate(1536);dit=std::make_unique<Session>(dir+"/dit/full-w8.mnn",tuned);auto actual=dit->run({{"inputs",read(dir+"/dit/inputs.f32",2*256*1200)},{"timestep",read(dir+"/dit/timestep.f32",2)},{"attention_mask",read(dir+"/dit/attention_mask.f32",2*256*256)}},"velocity",2*256*64);
@@ -170,5 +187,5 @@ std::string LevoRunFiveChunks(const std::string& dir,bool tuned){
   trace.sample();result["stages"]=trace.stages;result["sampledPeakRssKiB"]=trace.maxRss.load();result["minimumSystemAvailableKiB"]=trace.minAvailable.load();result["totalSeconds"]=seconds(trace.start);return result.dump();
 }
 #ifndef LEVO_CHAIN_LIBRARY
-int main(int argc,char** argv){if(argc!=3)return 2;auto result=LevoRunChainBench(argv[1],argv[2]);std::cout<<"LEVO_CHAIN_REPORT "<<result<<std::endl;return Json::parse(result)["success"].get<bool>()?0:1;}
+int main(int argc,char** argv){if(argc!=3)return 2;std::string policy=argv[2];auto result=policy=="chunks-5"?LevoRunFiveChunks(argv[1]):policy=="chunks-5-w8-vsin"?LevoRunFiveChunks(argv[1],false,"w8-vsin"):LevoRunChainBench(argv[1],policy);std::cout<<"LEVO_CHAIN_REPORT "<<result<<std::endl;return Json::parse(result)["success"].get<bool>()?0:1;}
 #endif

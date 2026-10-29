@@ -5,7 +5,7 @@ export default class EntryAbility extends UIAbility {
     const precision = want.parameters?.['levoDiagnostic'];
     if (precision === 'high' || precision === 'low' || precision === 'chain-serial' ||
       precision === 'chain-keep-llm' || precision === 'chain-all' || precision === 'chain-all-w4' ||
-      precision === 'chain-llm-short' || precision === 'chain-llm-long' || precision === 'chain-chunks-5' || precision === 'chain-chunks-5-tuned') {
+      precision === 'chain-llm-short' || precision === 'chain-llm-long' || precision === 'chain-chunks-5' || precision === 'chain-chunks-5-tuned' || precision === 'chain-chunks-5-w8-vsin') {
       AppStorage.setOrCreate<string>('levoDiagnosticPrecision', precision as string);
       const runId = want.parameters?.['levoDiagnosticRunId'];
       if (typeof runId === 'string') AppStorage.setOrCreate<string>('levoDiagnosticRunId', runId);
