@@ -15,6 +15,8 @@
 
 最新结果见[统一报告](reports/levo-test-report.json)。10.24秒窗口和0.6B接口见[分块与学生说明](docs/STREAMING_AND_STUDENT.md)。App由用户[手动签名安装](docs/INSTALL_MANUAL.md)，无电脑界面自动操作。
 
+后续实验已保存可重载的真实26层文本骨干（含音乐模块的学生总参数约0.598B，但未恢复训练），并提供保留KV的可暂停token流。VAE64帧工作区候选降至约348MiB；完整三模型共驻和歌曲生成仍未验收。
+
 ## PC验证
 
 ```powershell

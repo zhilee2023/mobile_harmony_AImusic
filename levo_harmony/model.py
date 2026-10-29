@@ -66,29 +66,21 @@ class MixedSongStudent(nn.Module):
 
     @torch.inference_mode()
     def generate_music(self, lyric_ids, style_ids, max_new_tokens=750, mask=None):
+        stream = self.stream_music(lyric_ids, style_ids, max_new_tokens, mask)
+        tokens = list(stream)
+        return {"tokens": tokens, "eos": stream.ended_by_eos}
+
+    def stream_music(self, lyric_ids, style_ids, max_new_tokens=750, mask=None):
+        """Create a pausable decoder retaining one prefix and its growing KV cache.
+
+        Consume IDs incrementally with next(stream), decode a codec window,
+        then resume the same iterator. Destroying/closing it discards its KV.
+        """
         if not self.music_trained:
             raise RuntimeError("Music adapter is untrained: text backbone weights alone cannot generate songs")
-        if lyric_ids.shape[0] != 1 or max_new_tokens < 1:
+        if lyric_ids.shape[0] != 1 or not isinstance(max_new_tokens, int) or max_new_tokens < 1:
             raise ValueError("Prototype decode supports one song and a positive token limit")
-        prefix, attention = self.prefix(lyric_ids, style_ids, mask)
-        bos = torch.full_like(lyric_ids[:, :1], self.bos)
-        x = torch.cat((prefix, self.music(bos).to(prefix.dtype)), 1)
-        attention = torch.cat((attention, torch.ones_like(bos)), 1)
-        cache = None
-        tokens = []
-        for _ in range(max_new_tokens):
-            out = self.backbone.model(inputs_embeds=x, attention_mask=attention, past_key_values=cache, use_cache=True)
-            cache = out.past_key_values
-            scores = self.music_head(out.last_hidden_state[:, -1].to(self.music_head.weight.dtype))
-            if not torch.isfinite(scores).all():
-                raise RuntimeError("Non-finite music logits")
-            token = scores.argmax(-1)
-            if token.item() == self.eos:
-                return {"tokens": tokens, "eos": True}
-            tokens.append(token.item())
-            x = self.music(token[:, None]).to(prefix.dtype)
-            attention = torch.cat((attention, torch.ones_like(bos)), 1)
-        return {"tokens": tokens, "eos": False}
+        return MusicTokenStream(self, lyric_ids, style_ids, max_new_tokens, mask)
 
     def load_music_adapter(self, folder):
         from safetensors.torch import load_file
@@ -102,3 +94,56 @@ class MixedSongStudent(nn.Module):
         for name, module in (("style", self.style), ("music", self.music), ("music_head", self.music_head)):
             module.load_state_dict({"weight": state[name + ".weight"]}, strict=True)
         self.music_trained = True
+
+
+class MusicTokenStream:
+    """Single-song decode lifecycle. Does not claim a trained music checkpoint."""
+    @torch.inference_mode()
+    def __init__(self, model, lyric_ids, style_ids, limit, mask):
+        self.model = model
+        prefix, attention = model.prefix(lyric_ids, style_ids, mask)
+        self.one = torch.ones_like(lyric_ids[:, :1])
+        bos = torch.full_like(lyric_ids[:, :1], model.bos)
+        self.x = torch.cat((prefix, model.music(bos).to(prefix.dtype)), 1)
+        self.attention = torch.cat((attention, self.one), 1)
+        self.cache = None
+        self.limit, self.tokens_generated = limit, 0
+        self.ended_by_eos, self.closed = False, False
+
+    def __iter__(self):
+        return self
+
+    @torch.inference_mode()
+    def __next__(self):
+        if self.closed:
+            raise StopIteration
+        if self.tokens_generated >= self.limit:
+            self.close()
+            raise StopIteration
+        try:
+            out = self.model.backbone.model(inputs_embeds=self.x, attention_mask=self.attention,
+                past_key_values=self.cache, use_cache=True)
+            self.cache = out.past_key_values
+            scores = self.model.music_head(out.last_hidden_state[:, -1].to(self.model.music_head.weight.dtype))
+            if not torch.isfinite(scores).all():
+                raise RuntimeError('Non-finite music logits')
+            token = scores.argmax(-1)
+            if token.item() == self.model.eos:
+                self.ended_by_eos = True
+                self.close()
+                raise StopIteration
+            self.x = self.model.music(token[:, None]).to(self.x.dtype)
+            self.attention = torch.cat((self.attention, self.one), 1)
+            self.tokens_generated += 1
+            return token.item()
+        except StopIteration:
+            raise
+        except Exception:
+            self.close()
+            raise
+
+    def close(self):
+        self.cache = None
+        self.x = self.attention = self.one = None
+        self.model = None
+        self.closed = True

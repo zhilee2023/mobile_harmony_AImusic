@@ -1,5 +1,5 @@
 {
-  "version": "0.1.3-ready-modules",
+  "version": "0.1.3-lifecycle-validation",
   "student": {
     "actual_parameters": 629640192,
     "backbone_parameters": 596049920,
@@ -23,7 +23,9 @@
       "remaining_layers": 26,
       "parameters": 598178304,
       "recovery_training_required": true,
-      "music_quality_validated": false
+      "music_quality_validated": false,
+      "real_weights_saved_and_reloaded": true,
+      "backbone_parameters": 564588032
     },
     "pretrained_text_backbone_loaded": true
   },
@@ -1532,5 +1534,2341 @@
     },
     "as_of_utc": "2026-10-29T03:48:31.599984+00:00",
     "full_song_generated": false
+  },
+  "lifecycle_experiments_2026_10_29": {
+    "as_of_utc": "2026-10-29T04:40:52.607911+00:00",
+    "real_pruning": {
+      "removed_layers": [
+        9,
+        18
+      ],
+      "remaining_layers": 26,
+      "parameters": 598178304,
+      "layer_metadata_reindexed": true,
+      "recovery_training_required": true,
+      "music_quality_validated": false,
+      "real_public_weights_loaded": true,
+      "source_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "source_sha256_verified": true,
+      "kept_original_layer_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "kept_parameter_object_identity_checked": true,
+      "cache_vs_full_relative_l2": 3.1161998776951805e-06,
+      "prefill_positions": 514,
+      "cache_positions_checked": 522,
+      "backbone_parameters": 564588032,
+      "actual_student_parameters": 598178304,
+      "music_adapter_trained": false,
+      "real_song_generated": false,
+      "saved_backbone": true,
+      "scope": "Actual pretrained26-layer text backbone with random music/style adapters; recovery training still required",
+      "saved_backbone_dtype": "bfloat16",
+      "saved_backbone_relative_path": "models\\qwen3-0.6b-26layers-unrecovered",
+      "saved_reload_exact": true,
+      "saved_weight_bytes": 1129208776,
+      "saved_weight_sha256": {
+        "model.safetensors": "883e30e604a62338ccd870b16c654d1a01c89825d43df92d8631957b8815f5f2"
+      }
+    },
+    "vae_same_timeline_pc": {
+      "onnx_vs_pytorch_relative_l2": 2.630913723067896e-06,
+      "mnn_vs_pytorch_relative_l2": 3.6567950721659166e-06,
+      "mnn_first_seconds": 1.2930686000036076,
+      "mnn_output_shape": [
+        1,
+        2,
+        122880,
+        1
+      ],
+      "weight_norm_folded": true,
+      "weight_norm_fold_relative_l2": 0.0,
+      "weight_norm_fold_max_abs": 0.0,
+      "full_decoder_weights_loaded": true,
+      "stream_fixture": {
+        "scope": "Real decoder, synthetic latent stream; no music LM or DiT in this fixture",
+        "frames": 64,
+        "overlap_frames": 16,
+        "hop_frames": 48,
+        "chunks": 13,
+        "channels": 2,
+        "sample_rate": 48000,
+        "samples_per_frame": 1920,
+        "valid_output_frames": 640,
+        "output_seconds": 25.6,
+        "source_latent_sha256": "b25eb006c5473de3a518fceb0497f5034c494b9d32cc05404e808064ee5105ee",
+        "chunked_vs_monolithic_relative_l2": 0.017411491703180793,
+        "files": {
+          "latent-0.f32": {
+            "bytes": 16384,
+            "sha256": "f5311cf606d3705cb2a0323ad4cddce327cd81b3f40f6a71277b647e7414f8fd"
+          },
+          "pcm-0.f32": {
+            "bytes": 983040,
+            "sha256": "1faceec760a1eb9ea599513a57ce7cd22b736f561198f472db554390d6cda1bf"
+          },
+          "latent-1.f32": {
+            "bytes": 16384,
+            "sha256": "425097077d825f4e974a605224d9650b196e6ca38f04bd55d88b04cadba36bcc"
+          },
+          "pcm-1.f32": {
+            "bytes": 983040,
+            "sha256": "b9ed78c139605308d093e7b6494fb58f80b55e8e369769c39cddfeb0f60c9b96"
+          },
+          "latent-2.f32": {
+            "bytes": 16384,
+            "sha256": "fe18ac0abb8ff232aa597f41f3b619511cfa54044be95ddcfaa8e4c8deb77fb7"
+          },
+          "pcm-2.f32": {
+            "bytes": 983040,
+            "sha256": "d253174eb0e923fb5b3009185f996a17ede4601d9f10a9bd3c1532250415b812"
+          },
+          "latent-3.f32": {
+            "bytes": 16384,
+            "sha256": "606d7a8b491a4389d14faff998b4f1ddd7064918dc507ba963d822b8d6aa8ecc"
+          },
+          "pcm-3.f32": {
+            "bytes": 983040,
+            "sha256": "1da979df15690ee0687c095388837e213a0e1ba0add80fcade56e173d6170574"
+          },
+          "latent-4.f32": {
+            "bytes": 16384,
+            "sha256": "0d329b94a7c6ddeaf046b5e5d5f5efd5712f4f3f6a5c1a0f1a7c2a192c95c9a5"
+          },
+          "pcm-4.f32": {
+            "bytes": 983040,
+            "sha256": "91aa18e54cd82ccfa70659fb5687527f95825ea2ec42a1a54614777706d028cc"
+          },
+          "latent-5.f32": {
+            "bytes": 16384,
+            "sha256": "4eadc891142b72fb542e3308550d8542553e51051666b092d15f734b1d39a1ba"
+          },
+          "pcm-5.f32": {
+            "bytes": 983040,
+            "sha256": "008cdd2175bda63963b76c08a0d4a8e75d9dd451680d10b84700ae4d07a30a1d"
+          },
+          "latent-6.f32": {
+            "bytes": 16384,
+            "sha256": "df92984d4d13f030a97f5b2942f081732e2b33db93cea95e726f0f905fa8e67c"
+          },
+          "pcm-6.f32": {
+            "bytes": 983040,
+            "sha256": "4e504774252bf0a92348ffc61e316aec85d682b424400ad08a637f4939ae9a39"
+          },
+          "latent-7.f32": {
+            "bytes": 16384,
+            "sha256": "15f7766bdb160c4ad7f227077433d40a8659693b42f4662192541772380d4239"
+          },
+          "pcm-7.f32": {
+            "bytes": 983040,
+            "sha256": "0b18697f4f87214ca372e6540c0f0a53e497f52ebb1371db51a37a0304b32490"
+          },
+          "latent-8.f32": {
+            "bytes": 16384,
+            "sha256": "a5ca58c85ebae0f487177ad4795573df2440789ff252507bfa3f683325e9bece"
+          },
+          "pcm-8.f32": {
+            "bytes": 983040,
+            "sha256": "dbce8afb8c3940345305df0a89f1d1c86fa67e0b04a234dadac3721198632d6d"
+          },
+          "latent-9.f32": {
+            "bytes": 16384,
+            "sha256": "fe3c903b8a0c7771b5e2470f5d450f42d43466bed5a88abf2d957ac81b2f28fa"
+          },
+          "pcm-9.f32": {
+            "bytes": 983040,
+            "sha256": "c8314815c939c9c9885723957fabd6d26747c53465723940a3d97962b4163c21"
+          },
+          "latent-10.f32": {
+            "bytes": 16384,
+            "sha256": "07930acfb1da443c1fa46f341c6991f529c8e41aa23e4b04033fe0c97e72d60b"
+          },
+          "pcm-10.f32": {
+            "bytes": 983040,
+            "sha256": "cfb782b86e85de0e9048366fd9bf2422f266c14e2a4951442e60d56c2381e6f0"
+          },
+          "latent-11.f32": {
+            "bytes": 16384,
+            "sha256": "1bb6f53d5e299eb3223aee167b0d014781189b2be8c916cb61f9c933fec07453"
+          },
+          "pcm-11.f32": {
+            "bytes": 983040,
+            "sha256": "8644180f268fdc94754a0175f984d3537a4a07f779130e033f2ffb384c47cdbc"
+          },
+          "latent-12.f32": {
+            "bytes": 16384,
+            "sha256": "d36431de05d7419bcd7853aa0c93c2429b1b263ab4623f7197c50a8c0485917a"
+          },
+          "pcm-12.f32": {
+            "bytes": 983040,
+            "sha256": "821eaffa9b101475bb08a665efde2d2fdb0500189e393b556c3a3f0c96c4f714"
+          },
+          "emit-0.f32": {
+            "bytes": 737280,
+            "sha256": "3c1a9371b3c4d582895c4c59d6badc530e435b7c82daf0997bdc013d9850bb89"
+          },
+          "emit-1.f32": {
+            "bytes": 737280,
+            "sha256": "b7ab7bc0ea9a329aa2058893bc095492545b4193c57ea45475d0d55de421a247"
+          },
+          "emit-2.f32": {
+            "bytes": 737280,
+            "sha256": "e250cafd243b03b2fcb7b89ec8269fc0af16951d95a6a1b75ce1eebcc84c4d02"
+          },
+          "emit-3.f32": {
+            "bytes": 737280,
+            "sha256": "0d299912db1fdbea5b405b1d0a31db9b94ff2f048d25f1a2e44d86bd15cc7537"
+          },
+          "emit-4.f32": {
+            "bytes": 737280,
+            "sha256": "de4cb20d46f3b76603dc58948f2032e846d03ab59355984711540a8b91ad4abc"
+          },
+          "emit-5.f32": {
+            "bytes": 737280,
+            "sha256": "7b3f9fb07fb5b14709e4ff969c1395a768f16595beee46d2e300c5aaa306eea0"
+          },
+          "emit-6.f32": {
+            "bytes": 737280,
+            "sha256": "e9c69f522abf7b0f033efbb1b421ddf6303e78ae8426c4f24327ff6e083ea091"
+          },
+          "emit-7.f32": {
+            "bytes": 737280,
+            "sha256": "a569fb6c9268dfc6053ca3a410916223940c14ddad35946f0f32877a7440449a"
+          },
+          "emit-8.f32": {
+            "bytes": 737280,
+            "sha256": "3ffb32a14bf295894a0b3cbe18f4537809054047bfc929f8a24c09401b0407b0"
+          },
+          "emit-9.f32": {
+            "bytes": 737280,
+            "sha256": "5d79e0306231560a8690525067176f536f71d0a28e9700d7278eccb4ee590d6b"
+          },
+          "emit-10.f32": {
+            "bytes": 737280,
+            "sha256": "1b3b7e01722794c6a9ccd644faa6ae327cdd069c24a59d81e1d923e5d7de9724"
+          },
+          "emit-11.f32": {
+            "bytes": 737280,
+            "sha256": "cc6c1c6be83f3ef616c20ab9d6b1da28cb0ecd74929d18bf27ae3a9712a30dbb"
+          },
+          "emit-12.f32": {
+            "bytes": 983040,
+            "sha256": "5267b2ced28481333c268f2d065da99eef782c36bd5785f072190a37fc5a4f75"
+          }
+        }
+      },
+      "real_song_generated": false,
+      "full_codec_validated": false
+    },
+    "vae_phone": [
+      {
+        "backend": "CPU",
+        "chunks": 13,
+        "createSeconds": 0.005499688,
+        "decoderComputeSeconds": 41.203265628,
+        "decoderOnlyComputeRtf": 1.6095025635937499,
+        "firstNumericalPacketSeconds": 3.3581125,
+        "fullCodecValidated": false,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6473728,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "precision": "low",
+        "readSeconds": 0.001185,
+        "resizeSeconds": 0.782060313,
+        "retainedOverlapFrames": 16,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 1.92,
+            "emittedRelativeL2": 0.02860394450723766,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.04001606027844957,
+            "rssKiB": 355692,
+            "runAndReadSeconds": 2.56361875,
+            "systemAvailableKiB": 6498304,
+            "wallSeconds": 3.357979062
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 3.84,
+            "emittedRelativeL2": 0.04632434482026831,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.0389911709121653,
+            "rssKiB": 355692,
+            "runAndReadSeconds": 2.418707656,
+            "systemAvailableKiB": 6500352,
+            "wallSeconds": 5.781542969
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 5.76,
+            "emittedRelativeL2": 0.025208133014024543,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.02497307650199867,
+            "rssKiB": 355692,
+            "runAndReadSeconds": 2.440904844,
+            "systemAvailableKiB": 6506496,
+            "wallSeconds": 8.228050312
+          },
+          {
+            "chunk": 4,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.030864784273404867,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.029997097143215776,
+            "rssKiB": 355696,
+            "runAndReadSeconds": 2.507260938,
+            "systemAvailableKiB": 6509568,
+            "wallSeconds": 10.740069219
+          },
+          {
+            "chunk": 5,
+            "cumulativePcmSeconds": 9.6,
+            "emittedRelativeL2": 0.02565058886144213,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.025754206142985354,
+            "rssKiB": 355720,
+            "runAndReadSeconds": 2.403620625,
+            "systemAvailableKiB": 6522880,
+            "wallSeconds": 13.147437656
+          },
+          {
+            "chunk": 6,
+            "cumulativePcmSeconds": 11.52,
+            "emittedRelativeL2": 0.02808551369616927,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.028008184009907313,
+            "rssKiB": 355720,
+            "runAndReadSeconds": 2.607050782,
+            "systemAvailableKiB": 6523904,
+            "wallSeconds": 15.758363594
+          },
+          {
+            "chunk": 7,
+            "cumulativePcmSeconds": 13.44,
+            "emittedRelativeL2": 0.027783010318948188,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.029396672660057147,
+            "rssKiB": 355720,
+            "runAndReadSeconds": 2.701855313,
+            "systemAvailableKiB": 6526976,
+            "wallSeconds": 18.464412969
+          },
+          {
+            "chunk": 8,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.028198182199930866,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.02838713032163994,
+            "rssKiB": 355720,
+            "runAndReadSeconds": 2.998537344,
+            "systemAvailableKiB": 6526976,
+            "wallSeconds": 21.466967344
+          },
+          {
+            "chunk": 9,
+            "cumulativePcmSeconds": 17.28,
+            "emittedRelativeL2": 0.06646311315533822,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.05911123109495027,
+            "rssKiB": 355736,
+            "runAndReadSeconds": 2.47008625,
+            "systemAvailableKiB": 6526976,
+            "wallSeconds": 23.940275469
+          },
+          {
+            "chunk": 10,
+            "cumulativePcmSeconds": 19.2,
+            "emittedRelativeL2": 0.027260364088991934,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.027341561150225322,
+            "rssKiB": 355732,
+            "runAndReadSeconds": 4.318537656,
+            "systemAvailableKiB": 6534144,
+            "wallSeconds": 28.264590937
+          },
+          {
+            "chunk": 11,
+            "cumulativePcmSeconds": 21.12,
+            "emittedRelativeL2": 0.056694717842176896,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.0566541654195428,
+            "rssKiB": 355732,
+            "runAndReadSeconds": 4.572958907,
+            "systemAvailableKiB": 6532096,
+            "wallSeconds": 32.843896094
+          },
+          {
+            "chunk": 12,
+            "cumulativePcmSeconds": 23.04,
+            "emittedRelativeL2": 0.040053383868112954,
+            "emittedSeconds": 1.92,
+            "relativeL2VsPytorch": 0.03562422428963443,
+            "rssKiB": 355736,
+            "runAndReadSeconds": 4.614792344,
+            "systemAvailableKiB": 6562816,
+            "wallSeconds": 37.465166562
+          },
+          {
+            "chunk": 13,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.027818757975534122,
+            "emittedSeconds": 2.56,
+            "relativeL2VsPytorch": 0.028238378336116268,
+            "rssKiB": 356216,
+            "runAndReadSeconds": 4.585334219,
+            "systemAvailableKiB": 6566912,
+            "wallSeconds": 42.056481406
+          }
+        ],
+        "rssAfterReleaseKiB": 9664,
+        "rssAfterResizeKiB": 197400,
+        "rssBeforeKiB": 6172,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 356224,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 42.141672031,
+        "validPcmSeconds": 25.6,
+        "windowFrames": 64,
+        "source_log": "phone-vae-64-low.log",
+        "powerStateObservedBefore": "not captured; SLEEP observed nearby, not proof of state throughout"
+      },
+      {
+        "backend": "CPU",
+        "chunks": 3,
+        "createSeconds": 0.005747656,
+        "decoderComputeSeconds": 38.937661718,
+        "decoderOnlyComputeRtf": 1.521002410859375,
+        "firstNumericalPacketSeconds": 11.580177344,
+        "fullCodecValidated": false,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6178816,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "precision": "low",
+        "readSeconds": 0.001295469,
+        "resizeSeconds": 0.987308438,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.03488299256180811,
+            "emittedSeconds": 7.68,
+            "relativeL2VsPytorch": 0.03366564573306985,
+            "rssKiB": 831124,
+            "runAndReadSeconds": 10.568069062,
+            "systemAvailableKiB": 6194176,
+            "wallSeconds": 11.580047813
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.030129458310464402,
+            "emittedSeconds": 7.68,
+            "relativeL2VsPytorch": 0.039534774784258785,
+            "rssKiB": 831124,
+            "runAndReadSeconds": 10.024104531,
+            "systemAvailableKiB": 6204416,
+            "wallSeconds": 21.619002188
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.04542158686499666,
+            "emittedSeconds": 10.24,
+            "relativeL2VsPytorch": 0.04565701124609052,
+            "rssKiB": 833064,
+            "runAndReadSeconds": 18.345488125,
+            "systemAvailableKiB": 6228992,
+            "wallSeconds": 40.001208906
+          }
+        ],
+        "rssAfterReleaseKiB": 13488,
+        "rssAfterResizeKiB": 198188,
+        "rssBeforeKiB": 6244,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 833064,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 40.211688438,
+        "validPcmSeconds": 25.6,
+        "windowFrames": 256,
+        "source_log": "phone-vae-256-low-repeat.log",
+        "powerStateObservedBefore": "not captured; SLEEP observed nearby, not proof of state throughout"
+      },
+      {
+        "backend": "CPU",
+        "chunks": 13,
+        "createSeconds": 0.005464063,
+        "decoderComputeSeconds": 42.377428904999995,
+        "decoderOnlyComputeRtf": 1.6553683166015623,
+        "firstNumericalPacketSeconds": 3.259809688,
+        "frequencyBeforeLoad": {
+          "policy0": {
+            "currentKHz": 418000,
+            "maximumKHz": 1530000,
+            "relatedCpus": "0 1 2 3 "
+          },
+          "policy1": {
+            "currentKHz": 1000000,
+            "maximumKHz": 1770000,
+            "relatedCpus": "4 5 6 7 8 9 10 11 "
+          },
+          "policy2": {
+            "currentKHz": 1200000,
+            "maximumKHz": 1925000,
+            "relatedCpus": "12 13 "
+          }
+        },
+        "fullCodecValidated": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6556672,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "powerHint": "High",
+        "precision": "low",
+        "readSeconds": 0.002367813,
+        "resizeSeconds": 0.626546094,
+        "retainedOverlapFrames": 16,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 1.92,
+            "emittedRelativeL2": 0.02860394450723766,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 558000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 558000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.04001606027844957,
+            "rssKiB": 355800,
+            "runAndReadSeconds": 2.618573437,
+            "systemAvailableKiB": 6571008,
+            "wallSeconds": 3.259363125
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 3.84,
+            "emittedRelativeL2": 0.04632434482026831,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.0389911709121653,
+            "rssKiB": 355792,
+            "runAndReadSeconds": 2.3972825,
+            "systemAvailableKiB": 6575104,
+            "wallSeconds": 5.661486094
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 5.76,
+            "emittedRelativeL2": 0.025208133014024543,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 750000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.02497307650199867,
+            "rssKiB": 355804,
+            "runAndReadSeconds": 2.410399219,
+            "systemAvailableKiB": 6578176,
+            "wallSeconds": 8.0773525
+          },
+          {
+            "chunk": 4,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.030864784273404867,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 750000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.029997097143215776,
+            "rssKiB": 355804,
+            "runAndReadSeconds": 2.437238594,
+            "systemAvailableKiB": 6580224,
+            "wallSeconds": 10.519979375
+          },
+          {
+            "chunk": 5,
+            "cumulativePcmSeconds": 9.6,
+            "emittedRelativeL2": 0.02565058886144213,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.025754206142985354,
+            "rssKiB": 355816,
+            "runAndReadSeconds": 2.432927344,
+            "systemAvailableKiB": 6556672,
+            "wallSeconds": 12.958370157
+          },
+          {
+            "chunk": 6,
+            "cumulativePcmSeconds": 11.52,
+            "emittedRelativeL2": 0.02808551369616927,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.028008184009907313,
+            "rssKiB": 355812,
+            "runAndReadSeconds": 2.408363594,
+            "systemAvailableKiB": 6562816,
+            "wallSeconds": 15.371962969
+          },
+          {
+            "chunk": 7,
+            "cumulativePcmSeconds": 13.44,
+            "emittedRelativeL2": 0.027783010318948188,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.029396672660057147,
+            "rssKiB": 355828,
+            "runAndReadSeconds": 2.422719375,
+            "systemAvailableKiB": 6567936,
+            "wallSeconds": 17.799601875
+          },
+          {
+            "chunk": 8,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.028198182199930866,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.02838713032163994,
+            "rssKiB": 355824,
+            "runAndReadSeconds": 2.429741562,
+            "systemAvailableKiB": 6567936,
+            "wallSeconds": 20.234840313
+          },
+          {
+            "chunk": 9,
+            "cumulativePcmSeconds": 17.28,
+            "emittedRelativeL2": 0.06646311315533822,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 558000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.05911123109495027,
+            "rssKiB": 355848,
+            "runAndReadSeconds": 3.984872656,
+            "systemAvailableKiB": 6607872,
+            "wallSeconds": 24.22690875
+          },
+          {
+            "chunk": 10,
+            "cumulativePcmSeconds": 19.2,
+            "emittedRelativeL2": 0.027260364088991934,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 558000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.027341561150225322,
+            "rssKiB": 355868,
+            "runAndReadSeconds": 4.710146718,
+            "systemAvailableKiB": 6610944,
+            "wallSeconds": 28.944346094
+          },
+          {
+            "chunk": 11,
+            "cumulativePcmSeconds": 21.12,
+            "emittedRelativeL2": 0.056694717842176896,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.0566541654195428,
+            "rssKiB": 355872,
+            "runAndReadSeconds": 4.474473281,
+            "systemAvailableKiB": 6610944,
+            "wallSeconds": 33.426097657
+          },
+          {
+            "chunk": 12,
+            "cumulativePcmSeconds": 23.04,
+            "emittedRelativeL2": 0.040053383868112954,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 1160000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.03562422428963443,
+            "rssKiB": 355872,
+            "runAndReadSeconds": 4.741786719,
+            "systemAvailableKiB": 6611968,
+            "wallSeconds": 38.175175782
+          },
+          {
+            "chunk": 13,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.027818757975534122,
+            "emittedSeconds": 2.56,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 1530000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 920000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1380000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.028238378336116268,
+            "rssKiB": 356372,
+            "runAndReadSeconds": 4.908903906,
+            "systemAvailableKiB": 6615040,
+            "wallSeconds": 43.091625625
+          }
+        ],
+        "rssAfterReleaseKiB": 9752,
+        "rssAfterResizeKiB": 197496,
+        "rssBeforeKiB": 6212,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 356372,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 43.179419219,
+        "validPcmSeconds": 25.6,
+        "windowFrames": 64,
+        "source_log": "phone-vae-64-low-4-high-power.log",
+        "powerStateObservedBefore": "SLEEP"
+      },
+      {
+        "backend": "CPU",
+        "chunks": 13,
+        "createSeconds": 0.004584375,
+        "decoderComputeSeconds": 31.993947654000003,
+        "decoderOnlyComputeRtf": 1.249763580234375,
+        "firstNumericalPacketSeconds": 2.860667187,
+        "frequencyBeforeLoad": {
+          "policy0": {
+            "currentKHz": 1040000,
+            "maximumKHz": 1530000,
+            "relatedCpus": "0 1 2 3 "
+          },
+          "policy1": {
+            "currentKHz": 1000000,
+            "maximumKHz": 1770000,
+            "relatedCpus": "4 5 6 7 8 9 10 11 "
+          },
+          "policy2": {
+            "currentKHz": 1200000,
+            "maximumKHz": 1925000,
+            "relatedCpus": "12 13 "
+          }
+        },
+        "fullCodecValidated": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6583296,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "powerHint": "High",
+        "precision": "low",
+        "readSeconds": 0.000979844,
+        "resizeSeconds": 0.616121094,
+        "retainedOverlapFrames": 16,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 1.92,
+            "emittedRelativeL2": 0.02712811053985867,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 1400000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 558000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.039233789512954094,
+            "rssKiB": 355728,
+            "runAndReadSeconds": 2.233129531,
+            "systemAvailableKiB": 6588416,
+            "wallSeconds": 2.860177812
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 3.84,
+            "emittedRelativeL2": 0.042975085266128865,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 1040000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 1400000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.03681410565338854,
+            "rssKiB": 355728,
+            "runAndReadSeconds": 2.06712125,
+            "systemAvailableKiB": 6583296,
+            "wallSeconds": 4.931971406
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 5.76,
+            "emittedRelativeL2": 0.024383874067807124,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 650000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 1040000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.024189903615231177,
+            "rssKiB": 355728,
+            "runAndReadSeconds": 2.037145156,
+            "systemAvailableKiB": 6584320,
+            "wallSeconds": 6.974280625
+          },
+          {
+            "chunk": 4,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.02829850511390943,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 840000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 650000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.027886704237627298,
+            "rssKiB": 355772,
+            "runAndReadSeconds": 2.043939532,
+            "systemAvailableKiB": 6606848,
+            "wallSeconds": 9.022295781
+          },
+          {
+            "chunk": 5,
+            "cumulativePcmSeconds": 9.6,
+            "emittedRelativeL2": 0.025086254001661236,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 840000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.02530631630090129,
+            "rssKiB": 355776,
+            "runAndReadSeconds": 2.04600875,
+            "systemAvailableKiB": 6609920,
+            "wallSeconds": 11.072705
+          },
+          {
+            "chunk": 6,
+            "cumulativePcmSeconds": 11.52,
+            "emittedRelativeL2": 0.02692767259252665,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.027106166279290182,
+            "rssKiB": 355776,
+            "runAndReadSeconds": 2.055081718,
+            "systemAvailableKiB": 6614016,
+            "wallSeconds": 13.132373281
+          },
+          {
+            "chunk": 7,
+            "cumulativePcmSeconds": 13.44,
+            "emittedRelativeL2": 0.026327495882141796,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.02797323610569613,
+            "rssKiB": 355784,
+            "runAndReadSeconds": 2.058615312,
+            "systemAvailableKiB": 6621184,
+            "wallSeconds": 15.194603593
+          },
+          {
+            "chunk": 8,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.027228083920187694,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.027713076585504738,
+            "rssKiB": 355780,
+            "runAndReadSeconds": 2.032063437,
+            "systemAvailableKiB": 6621184,
+            "wallSeconds": 17.230335
+          },
+          {
+            "chunk": 9,
+            "cumulativePcmSeconds": 17.28,
+            "emittedRelativeL2": 0.0659590597373256,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 1400000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.05861843742798685,
+            "rssKiB": 355784,
+            "runAndReadSeconds": 2.051596094,
+            "systemAvailableKiB": 6621184,
+            "wallSeconds": 19.285830468
+          },
+          {
+            "chunk": 10,
+            "cumulativePcmSeconds": 19.2,
+            "emittedRelativeL2": 0.026370518696556204,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 1400000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.026562743619249797,
+            "rssKiB": 355808,
+            "runAndReadSeconds": 2.049094531,
+            "systemAvailableKiB": 6620160,
+            "wallSeconds": 21.338688281
+          },
+          {
+            "chunk": 11,
+            "cumulativePcmSeconds": 21.12,
+            "emittedRelativeL2": 0.05532641922144957,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1480000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1770000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.055672528763714,
+            "rssKiB": 355808,
+            "runAndReadSeconds": 2.937982187,
+            "systemAvailableKiB": 6622208,
+            "wallSeconds": 24.282969375
+          },
+          {
+            "chunk": 12,
+            "cumulativePcmSeconds": 23.04,
+            "emittedRelativeL2": 0.038232275005396235,
+            "emittedSeconds": 1.92,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1670000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1670000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.03258931877599425,
+            "rssKiB": 355812,
+            "runAndReadSeconds": 4.016127031,
+            "systemAvailableKiB": 6622208,
+            "wallSeconds": 28.305819531
+          },
+          {
+            "chunk": 13,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.027246936862495876,
+            "emittedSeconds": 2.56,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1580000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1670000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.027662706281400995,
+            "rssKiB": 356296,
+            "runAndReadSeconds": 4.366043125,
+            "systemAvailableKiB": 6624256,
+            "wallSeconds": 32.679402343
+          }
+        ],
+        "rssAfterReleaseKiB": 9816,
+        "rssAfterResizeKiB": 197400,
+        "rssBeforeKiB": 6248,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 356296,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 6,
+        "totalSeconds": 32.771448281,
+        "validPcmSeconds": 25.6,
+        "windowFrames": 64,
+        "source_log": "phone-vae-64-low-6-high-power.log",
+        "powerStateObservedBefore": "SLEEP"
+      },
+      {
+        "backend": "CPU",
+        "chunks": 3,
+        "createSeconds": 0.005789688,
+        "decoderComputeSeconds": 29.315568749999997,
+        "decoderOnlyComputeRtf": 1.1451394042968748,
+        "firstNumericalPacketSeconds": 9.952587657,
+        "frequencyBeforeLoad": {
+          "policy0": {
+            "currentKHz": 418000,
+            "maximumKHz": 1530000,
+            "relatedCpus": "0 1 2 3 "
+          },
+          "policy1": {
+            "currentKHz": 1000000,
+            "maximumKHz": 1770000,
+            "relatedCpus": "4 5 6 7 8 9 10 11 "
+          },
+          "policy2": {
+            "currentKHz": 1200000,
+            "maximumKHz": 1925000,
+            "relatedCpus": "12 13 "
+          }
+        },
+        "fullCodecValidated": false,
+        "mainPipelineBackend": 13,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6238208,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "powerHint": "High",
+        "precision": "low",
+        "readSeconds": 0.001369531,
+        "resizeSeconds": 0.92409125,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.035125520351352045,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 1160000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1150000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 650000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1000000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.03361041459581474,
+            "rssKiB": 831368,
+            "runAndReadSeconds": 9.000415313,
+            "systemAvailableKiB": 6266880,
+            "wallSeconds": 9.952059375
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.030210288167328042,
+            "emittedSeconds": 7.68,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1580000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 1160000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1150000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.03998061804977247,
+            "rssKiB": 831368,
+            "runAndReadSeconds": 8.594598437,
+            "systemAvailableKiB": 6283264,
+            "wallSeconds": 18.559154219
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.0461475442306433,
+            "emittedSeconds": 10.24,
+            "frequencyAfter": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1670000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1200000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "frequencyBefore": {
+              "policy0": {
+                "currentKHz": 418000,
+                "maximumKHz": 1530000,
+                "relatedCpus": "0 1 2 3 "
+              },
+              "policy1": {
+                "currentKHz": 1580000,
+                "maximumKHz": 1770000,
+                "relatedCpus": "4 5 6 7 8 9 10 11 "
+              },
+              "policy2": {
+                "currentKHz": 1925000,
+                "maximumKHz": 1925000,
+                "relatedCpus": "12 13 "
+              }
+            },
+            "relativeL2VsPytorch": 0.0464051967410791,
+            "rssKiB": 833308,
+            "runAndReadSeconds": 11.720555,
+            "systemAvailableKiB": 6286336,
+            "wallSeconds": 30.297892032
+          }
+        ],
+        "rssAfterReleaseKiB": 13364,
+        "rssAfterResizeKiB": 198440,
+        "rssBeforeKiB": 6128,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 833312,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 6,
+        "totalSeconds": 30.447069063,
+        "validPcmSeconds": 25.6,
+        "windowFrames": 256,
+        "source_log": "phone-vae-256-low-6-high-power.log",
+        "powerStateObservedBefore": "SLEEP"
+      }
+    ],
+    "vae_hotspots": {
+      "byOperatorType": [
+        {
+          "calls": 32,
+          "mnnEstimatedMflops": 137181.00288009644,
+          "percent": 62.87896375732622,
+          "seconds": 1.2845868759999999,
+          "type": "Convolution"
+        },
+        {
+          "calls": 72,
+          "mnnEstimatedMflops": 402.75,
+          "percent": 12.562552389667898,
+          "seconds": 0.25664688100000005,
+          "type": "UnaryOp"
+        },
+        {
+          "calls": 5,
+          "mnnEstimatedMflops": 18790.4814453125,
+          "percent": 10.895287737750841,
+          "seconds": 0.222585469,
+          "type": "Deconvolution"
+        },
+        {
+          "calls": 218,
+          "mnnEstimatedMflops": 1208.48828125,
+          "percent": 8.057948840609093,
+          "seconds": 0.16462000499999993,
+          "type": "Raster"
+        },
+        {
+          "calls": 123,
+          "mnnEstimatedMflops": 690.375,
+          "percent": 5.605247274645959,
+          "seconds": 0.11451249600000002,
+          "type": "BinaryOp"
+        }
+      ],
+      "callbackSeconds": 2.0429517269999997,
+      "estimatedFlopsAreHardwareCounters": false,
+      "kleidiaiEnabled": false,
+      "mainPipelineBackend": 13,
+      "memoryMode": "Low",
+      "powerHint": "High",
+      "precision": "low",
+      "profiledRunSeconds": 2.044809687,
+      "scope": "VAE-only CPU operator callback profile, one warm run then one profiled run; not whole-codec RTF",
+      "success": true,
+      "threadsRequested": 6,
+      "topOperators": [
+        {
+          "name": "/layers/layers.5/layers/layers.4/layers/layers.1/Conv_output_0",
+          "percent": 6.607144907834624,
+          "seconds": 0.134980781,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.5/layers/layers.2/layers/layers.1/Conv_output_0",
+          "percent": 6.342286128819529,
+          "seconds": 0.129569844,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.5/layers/layers.3/layers/layers.1/Conv_output_0",
+          "percent": 6.337108277644585,
+          "seconds": 0.129464063,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.4/layers/layers.3/layers/layers.1/Conv_output_0",
+          "percent": 3.616603761288972,
+          "seconds": 0.073885469,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.4/layers/layers.2/layers/layers.1/Conv_output_0",
+          "percent": 3.477642768599789,
+          "seconds": 0.071046563,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.4/layers/layers.4/layers/layers.1/Conv_output_0",
+          "percent": 3.1626114384444297,
+          "seconds": 0.064610625,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.3/layers/layers.3/layers/layers.1/Conv_output_0",
+          "percent": 3.123559463331363,
+          "seconds": 0.063812812,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.3/layers/layers.4/layers/layers.1/Conv_output_0",
+          "percent": 3.12345241234376,
+          "seconds": 0.063810625,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.3/layers/layers.2/layers/layers.1/Conv_output_0",
+          "percent": 3.1123853862847546,
+          "seconds": 0.063584531,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.2/layers/layers.2/layers/layers.1/Conv_output_0",
+          "percent": 3.1027715516843446,
+          "seconds": 0.063388125,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.2/layers/layers.3/layers/layers.1/Conv_output_0",
+          "percent": 3.095077439389737,
+          "seconds": 0.063230938,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.2/layers/layers.4/layers/layers.1/Conv_output_0",
+          "percent": 3.0933795040180114,
+          "seconds": 0.06319625,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+          "percent": 2.8237864476961287,
+          "seconds": 0.057688594,
+          "type": "Deconvolution"
+        },
+        {
+          "name": "/layers/layers.1/layers/layers.4/layers/layers.1/Conv_output_0",
+          "percent": 2.178664400717874,
+          "seconds": 0.044509062,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.1/layers/layers.3/layers/layers.1/Conv_output_0",
+          "percent": 2.170763822458151,
+          "seconds": 0.044347657,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.1/layers/layers.2/layers/layers.1/Conv_output_0",
+          "percent": 2.1680027684765752,
+          "seconds": 0.04429125,
+          "type": "Convolution"
+        },
+        {
+          "name": "/layers/layers.4/layers/layers.1/ConvTranspose_output_0",
+          "percent": 2.1426335444684743,
+          "seconds": 0.043772969,
+          "type": "Deconvolution"
+        },
+        {
+          "name": "/layers/layers.3/layers/layers.1/ConvTranspose_output_0",
+          "percent": 2.121547289991351,
+          "seconds": 0.043342187,
+          "type": "Deconvolution"
+        },
+        {
+          "name": "/layers/layers.2/layers/layers.1/ConvTranspose_output_0",
+          "percent": 1.9977757408851398,
+          "seconds": 0.040813594,
+          "type": "Deconvolution"
+        },
+        {
+          "name": "/layers/layers.1/layers/layers.1/ConvTranspose_output_0",
+          "percent": 1.809544714709747,
+          "seconds": 0.036968125,
+          "type": "Deconvolution"
+        }
+      ],
+      "warmRunSeconds": 2.231156719,
+      "source_log": "phone-vae-64-low-hotspots.log"
+    },
+    "phone_fixture_sha256_verified": {
+      "latent-0.f32": {
+        "bytes": 16384,
+        "sha256": "f5311cf606d3705cb2a0323ad4cddce327cd81b3f40f6a71277b647e7414f8fd"
+      },
+      "pcm-0.f32": {
+        "bytes": 983040,
+        "sha256": "1faceec760a1eb9ea599513a57ce7cd22b736f561198f472db554390d6cda1bf"
+      },
+      "latent-1.f32": {
+        "bytes": 16384,
+        "sha256": "425097077d825f4e974a605224d9650b196e6ca38f04bd55d88b04cadba36bcc"
+      },
+      "pcm-1.f32": {
+        "bytes": 983040,
+        "sha256": "b9ed78c139605308d093e7b6494fb58f80b55e8e369769c39cddfeb0f60c9b96"
+      },
+      "latent-2.f32": {
+        "bytes": 16384,
+        "sha256": "fe18ac0abb8ff232aa597f41f3b619511cfa54044be95ddcfaa8e4c8deb77fb7"
+      },
+      "pcm-2.f32": {
+        "bytes": 983040,
+        "sha256": "d253174eb0e923fb5b3009185f996a17ede4601d9f10a9bd3c1532250415b812"
+      },
+      "latent-3.f32": {
+        "bytes": 16384,
+        "sha256": "606d7a8b491a4389d14faff998b4f1ddd7064918dc507ba963d822b8d6aa8ecc"
+      },
+      "pcm-3.f32": {
+        "bytes": 983040,
+        "sha256": "1da979df15690ee0687c095388837e213a0e1ba0add80fcade56e173d6170574"
+      },
+      "latent-4.f32": {
+        "bytes": 16384,
+        "sha256": "0d329b94a7c6ddeaf046b5e5d5f5efd5712f4f3f6a5c1a0f1a7c2a192c95c9a5"
+      },
+      "pcm-4.f32": {
+        "bytes": 983040,
+        "sha256": "91aa18e54cd82ccfa70659fb5687527f95825ea2ec42a1a54614777706d028cc"
+      },
+      "latent-5.f32": {
+        "bytes": 16384,
+        "sha256": "4eadc891142b72fb542e3308550d8542553e51051666b092d15f734b1d39a1ba"
+      },
+      "pcm-5.f32": {
+        "bytes": 983040,
+        "sha256": "008cdd2175bda63963b76c08a0d4a8e75d9dd451680d10b84700ae4d07a30a1d"
+      },
+      "latent-6.f32": {
+        "bytes": 16384,
+        "sha256": "df92984d4d13f030a97f5b2942f081732e2b33db93cea95e726f0f905fa8e67c"
+      },
+      "pcm-6.f32": {
+        "bytes": 983040,
+        "sha256": "4e504774252bf0a92348ffc61e316aec85d682b424400ad08a637f4939ae9a39"
+      },
+      "latent-7.f32": {
+        "bytes": 16384,
+        "sha256": "15f7766bdb160c4ad7f227077433d40a8659693b42f4662192541772380d4239"
+      },
+      "pcm-7.f32": {
+        "bytes": 983040,
+        "sha256": "0b18697f4f87214ca372e6540c0f0a53e497f52ebb1371db51a37a0304b32490"
+      },
+      "latent-8.f32": {
+        "bytes": 16384,
+        "sha256": "a5ca58c85ebae0f487177ad4795573df2440789ff252507bfa3f683325e9bece"
+      },
+      "pcm-8.f32": {
+        "bytes": 983040,
+        "sha256": "dbce8afb8c3940345305df0a89f1d1c86fa67e0b04a234dadac3721198632d6d"
+      },
+      "latent-9.f32": {
+        "bytes": 16384,
+        "sha256": "fe3c903b8a0c7771b5e2470f5d450f42d43466bed5a88abf2d957ac81b2f28fa"
+      },
+      "pcm-9.f32": {
+        "bytes": 983040,
+        "sha256": "c8314815c939c9c9885723957fabd6d26747c53465723940a3d97962b4163c21"
+      },
+      "latent-10.f32": {
+        "bytes": 16384,
+        "sha256": "07930acfb1da443c1fa46f341c6991f529c8e41aa23e4b04033fe0c97e72d60b"
+      },
+      "pcm-10.f32": {
+        "bytes": 983040,
+        "sha256": "cfb782b86e85de0e9048366fd9bf2422f266c14e2a4951442e60d56c2381e6f0"
+      },
+      "latent-11.f32": {
+        "bytes": 16384,
+        "sha256": "1bb6f53d5e299eb3223aee167b0d014781189b2be8c916cb61f9c933fec07453"
+      },
+      "pcm-11.f32": {
+        "bytes": 983040,
+        "sha256": "8644180f268fdc94754a0175f984d3537a4a07f779130e033f2ffb384c47cdbc"
+      },
+      "latent-12.f32": {
+        "bytes": 16384,
+        "sha256": "d36431de05d7419bcd7853aa0c93c2429b1b263ab4623f7197c50a8c0485917a"
+      },
+      "pcm-12.f32": {
+        "bytes": 983040,
+        "sha256": "821eaffa9b101475bb08a665efde2d2fdb0500189e393b556c3a3f0c96c4f714"
+      },
+      "emit-0.f32": {
+        "bytes": 737280,
+        "sha256": "3c1a9371b3c4d582895c4c59d6badc530e435b7c82daf0997bdc013d9850bb89"
+      },
+      "emit-1.f32": {
+        "bytes": 737280,
+        "sha256": "b7ab7bc0ea9a329aa2058893bc095492545b4193c57ea45475d0d55de421a247"
+      },
+      "emit-2.f32": {
+        "bytes": 737280,
+        "sha256": "e250cafd243b03b2fcb7b89ec8269fc0af16951d95a6a1b75ce1eebcc84c4d02"
+      },
+      "emit-3.f32": {
+        "bytes": 737280,
+        "sha256": "0d299912db1fdbea5b405b1d0a31db9b94ff2f048d25f1a2e44d86bd15cc7537"
+      },
+      "emit-4.f32": {
+        "bytes": 737280,
+        "sha256": "de4cb20d46f3b76603dc58948f2032e846d03ab59355984711540a8b91ad4abc"
+      },
+      "emit-5.f32": {
+        "bytes": 737280,
+        "sha256": "7b3f9fb07fb5b14709e4ff969c1395a768f16595beee46d2e300c5aaa306eea0"
+      },
+      "emit-6.f32": {
+        "bytes": 737280,
+        "sha256": "e9c69f522abf7b0f033efbb1b421ddf6303e78ae8426c4f24327ff6e083ea091"
+      },
+      "emit-7.f32": {
+        "bytes": 737280,
+        "sha256": "a569fb6c9268dfc6053ca3a410916223940c14ddad35946f0f32877a7440449a"
+      },
+      "emit-8.f32": {
+        "bytes": 737280,
+        "sha256": "3ffb32a14bf295894a0b3cbe18f4537809054047bfc929f8a24c09401b0407b0"
+      },
+      "emit-9.f32": {
+        "bytes": 737280,
+        "sha256": "5d79e0306231560a8690525067176f536f71d0a28e9700d7278eccb4ee590d6b"
+      },
+      "emit-10.f32": {
+        "bytes": 737280,
+        "sha256": "1b3b7e01722794c6a9ccd644faa6ae327cdd069c24a59d81e1d923e5d7de9724"
+      },
+      "emit-11.f32": {
+        "bytes": 737280,
+        "sha256": "cc6c1c6be83f3ef616c20ab9d6b1da28cb0ecd74929d18bf27ae3a9712a30dbb"
+      },
+      "emit-12.f32": {
+        "bytes": 983040,
+        "sha256": "5267b2ced28481333c268f2d065da99eef782c36bd5785f072190a37fc5a4f75"
+      },
+      "fixture.json": {
+        "bytes": 5831,
+        "sha256": "1ca34478d0879a3f47ac902e88b751b82535b7f694433968546fd953c911d0bf"
+      },
+      "vae-64-fp32.mnn": {
+        "bytes": 194016,
+        "sha256": "c3facebef530d8a04b9db28c7f54432150d3c493bd41dc647b2b4874a6384cc4"
+      },
+      "vae-64-fp32.mnn.weight": {
+        "bytes": 337468424,
+        "sha256": "704c456d6a9d6f1e7fc9ad857dee84251df1dfad1d633dbf7b85a0187e22bc99"
+      }
+    },
+    "phone_binary_sha256": {
+      "levo_vae_bench": "9af45ee1f026e35bcb830600cc17569288ec508f6a81107078b336385337123e",
+      "levo_vae_bench-affinity": "b9248e9c03f7ea68185fd1300d4ac7dd803de1e1712cc5de569b80bf0a68448b",
+      "levo_vae_profile": "bf0ad7bb7edf51b66a577dac1ba133d10e055d23092e7e561dc6fa761dba5a42"
+    },
+    "historical_binary_note": "levo_vae_bench predates affinity instrumentation; other two match current local binaries",
+    "source_sha256": {
+      "levo_harmony/model.py": "e8e413d5c8480feca8564fe0b20313e94b4b4e560c443d03ba4849a99fe1b4f2",
+      "levo_harmony/pruning.py": "a69bae71b138e178f6f0858d404acd6f8d27d89bfa426aeb75ca2d9a75a7e105",
+      "native-bench/VaeBench.cpp": "4c7730112021ae9304e790caa22a170d560eb285dc4c70ada2ead83fa1b7209b",
+      "native-bench/VaeBench.hpp": "9b089904f9b56ad51fdeebc3e55f84189f599732cf51bb7e50ed15cd0d5e60e9",
+      "native-bench/VaeProfile.cpp": "424461508cb82833a1cf2188dee312e62c808dc31660a72b93bae8311dbe18d9"
+    },
+    "unit_tests": {
+      "passed": true,
+      "count": 15,
+      "scope": "Tiny prototype/lifecycle/scheduler fixtures; real pretrained tests are recorded separately"
+    },
+    "stateful_decode": {
+      "implemented": true,
+      "pause_keeps_same_kv": true,
+      "close_releases_owned_kv_reference": true,
+      "trained_music_checkpoint_available": false
+    },
+    "limits": [
+      "Synthetic latent stream, not generated music or full codec RTF",
+      "No complete LLM/DiT/VAE co-residency validated",
+      "Screen state and CPU frequency varied; do not treat these runs as controlled foreground benchmarks",
+      "Smaller VAE windows change boundary error; no listening-quality claim"
+    ],
+    "mixed_download_range_bytes": 2776629248
   }
 }

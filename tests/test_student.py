@@ -69,6 +69,80 @@ class StudentTests(unittest.TestCase):
         self.assertEqual(self.model.backbone.model.layers[0].self_attn.layer_idx, 0)
         self.test_cached_decode_matches_full_forward()
 
+    def test_pruned_backbone_can_save_and_reload(self):
+        prune_backbone_depth(self.model, (0,))
+        self.assertEqual(len(self.model.backbone.config.layer_types), 1)
+        with tempfile.TemporaryDirectory() as directory:
+            self.model.backbone.save_pretrained(directory)
+            loaded = MixedSongStudent.from_pretrained(directory, self.model.config)
+            self.assertEqual(loaded.backbone.config.num_hidden_layers, 1)
+            self.assertEqual(len(loaded.backbone.config.layer_types), 1)
+            for name, tensor in self.model.backbone.state_dict().items():
+                torch.testing.assert_close(loaded.backbone.state_dict()[name], tensor, atol=0, rtol=0)
+            self.assertFalse(loaded.music_trained)
+
+    def test_stream_pause_resume_matches_full_context(self):
+        # Only this tiny random fixture bypasses the production training guard.
+        self.model.music_trained = True
+        head = torch.nn.Linear(self.model.music_head.in_features, self.model.music_head.out_features, bias=True)
+        with torch.no_grad():
+            head.weight.copy_(self.model.music_head.weight)
+            head.bias.zero_()
+            head.bias[self.model.eos] = -1000
+        self.model.music_head = head
+        lyric, style = torch.tensor([[1,2,3]]), torch.tensor([1])
+        stream = self.model.stream_music(lyric,style,6)
+        prefix, _ = self.model.prefix(lyric,style)
+        ids = [self.model.bos]
+        paused = False
+        for index in range(6):
+            with torch.inference_mode():
+                inputs = torch.cat((prefix,self.model.music(torch.tensor([ids]))),1)
+                hidden = self.model.backbone.model(inputs_embeds=inputs,use_cache=False).last_hidden_state[:, -1]
+                expected = self.model.music_head(hidden).argmax(-1).item()
+            if expected == self.model.eos:
+                with self.assertRaises(StopIteration): next(stream)
+                self.assertTrue(stream.ended_by_eos)
+                break
+            self.assertEqual(next(stream), expected)
+            self.assertEqual(stream.cache.get_seq_length(), prefix.shape[1]+len(ids))
+            ids.append(expected)
+            if index == 2:
+                paused = True
+                cache = stream.cache
+                positions = cache.get_seq_length()
+                # Numeric codec work between tokens must not recreate this KV.
+                _ = torch.sin(torch.arange(32,dtype=torch.float32))
+                self.assertIs(stream.cache,cache)
+                self.assertEqual(stream.cache.get_seq_length(),positions)
+        list(stream)
+        self.assertTrue(paused)
+        self.assertTrue(stream.closed)
+        self.assertIsNone(stream.cache)
+
+    def test_stream_guard_and_explicit_release(self):
+        with self.assertRaisesRegex(RuntimeError,'untrained'):
+            self.model.stream_music(torch.tensor([[1]]),torch.tensor([0]))
+        self.model.music_trained = True  # Tiny lifecycle fixture only.
+        stream = self.model.stream_music(torch.tensor([[1]]),torch.tensor([0]),4)
+        stream.close()
+        self.assertIsNone(stream.model)
+        self.assertIsNone(stream.cache)
+        with self.assertRaises(StopIteration): next(stream)
+
+    def test_stream_eos_never_enters_codec_ids(self):
+        self.model.music_trained = True  # Tiny protocol fixture only.
+        head = torch.nn.Linear(self.model.music_head.in_features,self.model.music_head.out_features,bias=True)
+        with torch.no_grad():
+            head.weight.zero_();head.bias.zero_();head.bias[self.model.eos] = 1000
+        self.model.music_head = head
+        stream = self.model.stream_music(torch.tensor([[1]]),torch.tensor([0]),4)
+        self.assertEqual(list(stream),[])
+        self.assertTrue(stream.ended_by_eos)
+        self.assertIsNone(stream.cache)
+        self.assertEqual(self.model.generate_music(torch.tensor([[1]]),torch.tensor([0]),4),
+                         {'tokens':[],'eos':True})
+
 
 if __name__ == "__main__":
     unittest.main()
