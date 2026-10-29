@@ -1,12 +1,74 @@
 import native from 'libentry.so';
+import { common } from '@kit.AbilityKit';
+import { fileIo as fs, picker } from '@kit.CoreFileKit';
+
+interface VaeResult { success: boolean; error?: string; decoderOnlyComputeRtf?: number; sampledPeakRssKiB?: number; }
+interface AppMemoryInfo { totalKiB: number; availableKiB: number; appRssLimitKiB: number; appVssLimitKiB: number; processPssKiB: number; processRssKiB: number; }
+interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; memory?: AppMemoryInfo; }
 
 @Entry
 @Component
 struct Index {
   @State lyrics: string = '[Verse]\n晚风轻轻吹过窗台\n星光落在你的眼海';
   @State style: number = 0;
-  @State status: string = 'v0.1 · 架构与内存检查；尚无训练好的0.6B音乐权重';
+  @State status: string = 'v0.1.3 · 数值与内存诊断；尚无训练好的0.6B音乐权重';
   @State memory: string = '';
+  @State assets: string = '尚未检查测试文件';
+  @State busy: boolean = false;
+  private required: string[] = ['fixture.json', 'vae-256-fp32.mnn', 'vae-256-fp32.mnn.weight',
+    'latent-0.f32', 'latent-1.f32', 'latent-2.f32', 'pcm-0.f32', 'pcm-1.f32', 'pcm-2.f32',
+    'emit-0.f32', 'emit-1.f32', 'emit-2.f32'];
+  private context(): common.UIAbilityContext { return getContext(this) as common.UIAbilityContext; }
+  private modelDir(): string { return `${this.context().filesDir}/vae-stream-256`; }
+  private refresh(): void {
+    let count: number = 0;
+    this.required.forEach((name: string) => { try { if (fs.accessSync(`${this.modelDir()}/${name}`)) count++; } catch (_) {} });
+    this.assets = `测试文件 ${count}/${this.required.length} · VAE 256帧／10.24秒窗`;
+  }
+  aboutToAppear(): void { this.refresh(); }
+  private async importFiles(): Promise<void> {
+    this.busy = true;
+    try {
+      const view = new picker.DocumentViewPicker(this.context());
+      const uris = await view.select({ maxSelectNumber: 20 });
+      try { fs.mkdirSync(this.modelDir()); } catch (_) {}
+      let imported: number = 0;
+      uris.forEach((uri: string) => {
+        const name = decodeURIComponent(uri.substring(uri.lastIndexOf('/') + 1));
+        if (this.required.includes(name)) { fs.copyFileSync(uri, `${this.modelDir()}/${name}`); imported++; }
+      });
+      this.status = `已复制 ${imported} 个匹配文件；识别数量不代表数值验收`;
+      this.refresh();
+    } catch (error) { this.status = `导入失败：${String(error)}`; }
+    this.busy = false;
+  }
+  private async runVae(precision: string): Promise<void> {
+    this.busy = true;
+    this.status = `正在后台运行 VAE ${precision}：3个窗，保留64帧尾部；不播放数值夹具`;
+    try {
+      const raw: string = await native.runVaeStream(this.modelDir(), precision);
+      const report = JSON.parse(raw) as VaeResult;
+      const reportPath = `${this.context().filesDir}/levo-test-report.json`;
+      let archive: TestArchive = { version: '0.1.3', scope: 'VAE-only numerical stream; no DiT/LLM or speaker playback' };
+      try { archive = JSON.parse(fs.readTextSync(reportPath)) as TestArchive; } catch (_) {}
+      if (precision === 'high') archive.high = report; else archive.low = report;
+      archive.memory = JSON.parse(native.memoryProbe()) as AppMemoryInfo;
+      const file = fs.openSync(reportPath, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE | fs.OpenMode.TRUNC);
+      try { fs.writeSync(file.fd, JSON.stringify(archive)); } finally { fs.closeSync(file); }
+      if (report.success) {
+        this.status = `VAE数值分块完成：有效25.60秒，模块计算RTF ${report.decoderOnlyComputeRtf?.toFixed(3)}，采样峰值RSS ${((report.sampledPeakRssKiB ?? 0) / 1024).toFixed(1)} MiB。未包含DiT/LLM和扬声器播放。`;
+      } else { this.status = `测试未通过：${report.error ?? '查看统一报告'}`; }
+    } catch (error) { this.status = `测试失败：${String(error)}`; }
+    this.memory = native.memoryProbe();
+    this.busy = false;
+  }
+  private async exportReport(): Promise<void> {
+    try {
+      const view = new picker.DocumentViewPicker(this.context());
+      const uris = await view.save({ newFileNames: ['levo-test-report.json'] });
+      if (uris.length) fs.copyFileSync(`${this.context().filesDir}/levo-test-report.json`, uris[0]);
+    } catch (error) { this.status = `导出失败：${String(error)}`; }
+  }
   build() {
     Scroll() {
       Column({ space: 18 }) {
@@ -21,6 +83,15 @@ struct Index {
           .onClick(() => { this.memory = native.memoryProbe(); })
         Text(this.memory).fontColor('#76E0C8').fontSize(13).width('100%')
         Text(this.status).fontColor('#E9C882').width('100%')
+        Text('10.24 秒分块实验').fontSize(22).fontWeight(FontWeight.Bold).fontColor('#F0F4FA').width('100%')
+        Text(this.assets).fontColor('#A9B9D2').width('100%')
+        Button('导入12个测试文件').enabled(!this.busy).width('100%').onClick(() => { this.importFiles(); })
+        Button('刷新文件状态').enabled(!this.busy).width('100%').onClick(() => { this.refresh(); })
+        Button('VAE CPU High · 三窗数值与内存').enabled(!this.busy).width('100%').onClick(() => { this.runVae('high'); })
+        Button('VAE CPU Low · 三窗数值与内存').enabled(!this.busy).width('100%').onClick(() => { this.runVae('low'); })
+        Button('导出统一测试报告').enabled(!this.busy).width('100%').onClick(() => { this.exportReport(); })
+        Text('当前实验使用真实VAE和合成latent；先测数值与有界内存，不是完整DiT/LLM生成，也未验证播放器。')
+          .fontColor('#A9B9D2').fontSize(13).width('100%')
         Text('歌词 → 1个风格前缀＋Qwen3骨干 → 混合音乐Token → DiT → 48kHz双声道VAE')
           .fontColor('#CCD7E8').fontSize(15)
         Text('Qwen文本预训练权重可加载；音乐embedding、输出头和风格向量必须训练。此版本不显示虚假的生成/播放结果。')

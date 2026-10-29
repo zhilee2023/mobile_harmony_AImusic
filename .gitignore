@@ -27,3 +27,5 @@ app/build-profile.local.json5
 app/entry/build/
 app/entry/.cxx/
 native-build/
+app/entry/src/main/cpp/levo-local.cmake
+dist/

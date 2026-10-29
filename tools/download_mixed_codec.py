@@ -4,12 +4,14 @@ Does not deserialize pickle. Omits MusicFM/Hubert encoders unused for token->aud
 The extracted subset has its own SHA256; full upstream file hash is NOT verified.
 """
 import concurrent.futures
+import argparse
 import hashlib
 import json
 import os
 from pathlib import Path
 import struct
 import time
+import threading
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1] / 'models/levo-mixed-codec'
@@ -33,6 +35,21 @@ def get_range(url, start, end, total=None):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--workers', type=int, choices=range(1, 9), default=4)
+    parser.add_argument('--deadline-epoch', type=float,
+                        help='Hard stop at the authorized window boundary; parts remain resumable')
+    args = parser.parse_args()
+    if args.deadline_epoch is not None:
+        remaining = args.deadline_epoch - time.time()
+        if remaining <= 0:
+            raise SystemExit('Authorized window already ended; no download started')
+        def stop_at_deadline():
+            print('Authorized window ended; stopping this downloader without a new-window retry', flush=True)
+            os._exit(75)
+        timer = threading.Timer(remaining, stop_at_deadline)
+        timer.daemon = True
+        timer.start()
     ROOT.mkdir(parents=True, exist_ok=True)
     pin = ROOT / 'source.json'
     if pin.exists():
@@ -80,7 +97,7 @@ def main():
                 if attempt == 3: raise
                 time.sleep(2 + attempt)
     done = 0; total = sum(b - a + 1 for a, b in tasks)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures = [pool.submit(fetch, x) for x in tasks]
         for f in concurrent.futures.as_completed(futures):
             done += f.result(); print(f'inference weights {done}/{total} bytes', flush=True)

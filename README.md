@@ -1,17 +1,19 @@
 # mobile_harmony_AImusic · levo-harmony
 
-面向16GB Mate 80 Pro的独立混合歌曲研究工程。**v0.1是可测试的学生模型原型和可构建的鸿蒙诊断App，不是已经训练好的0.6B LeVo。** CosyVoice与ACE项目保留。
+面向16GB Mate 80 Pro的独立混合歌曲研究工程。**v0.1.3是可测试的学生模型原型和可构建的鸿蒙诊断App，不是已经训练好的0.6B LeVo。** CosyVoice与ACE项目保留。
 
 目标：最多512个歌词token＋1个风格前缀 → 约0.6B自回归骨干 → 单路Mixed音乐token → DiT → 48kHz双声道VAE。取消双轨分支，但保留人声＋伴奏的混合歌曲。
 
 ## 已实现
 
-- 严格加载Qwen3预训练骨干的入口；独立音乐embedding、音乐头、风格embedding。
+- 已实际加载完整Qwen3-0.6B公开权重并核对SHA256；独立音乐embedding、音乐头、风格embedding仍未训练。
 - 单路音乐teacher forcing、KV增量decode、EOS、最大长度与codec身份检查；未训练音乐头禁止生成。
 - 监督/教师logit蒸馏训练入口，参数计数与KV预算工具。
-- DiT/VAE导出接口与有限值/形状校验，尚未完成官方codec适配。
+- 真实DiT单层手机32/256帧对齐；完整真实VAE导出、手机三窗数值/内存测试。完整DiT和歌曲codec仍未闭环。
 - 独立包名鸿蒙ArkTS＋C++内存诊断App；未签名HAP构建，不复制本地证书。
 - GitHub CPU参考测试；没有上传模型权重。
+
+最新结果见[统一报告](reports/levo-test-report.json)。10.24秒窗口和0.6B接口见[分块与学生说明](docs/STREAMING_AND_STUDENT.md)。App由用户[手动签名安装](docs/INSTALL_MANUAL.md)，无电脑界面自动操作。
 
 ## PC验证
 

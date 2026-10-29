@@ -1,10 +1,10 @@
 {
-  "version": "0.1.2-phone-block-validation",
+  "version": "0.1.3-ready-modules",
   "student": {
     "actual_parameters": 629640192,
     "backbone_parameters": 596049920,
     "music_adapter_trained": false,
-    "shape_only_not_weight_load": true,
+    "shape_only_not_weight_load": false,
     "lyrics_max_tokens": 512,
     "style_prefix_tokens": 1,
     "music_codebooks": 1,
@@ -24,7 +24,8 @@
       "parameters": 598178304,
       "recovery_training_required": true,
       "music_quality_validated": false
-    }
+    },
+    "pretrained_text_backbone_loaded": true
   },
   "reference_tests": {
     "passed": true,
@@ -53,10 +54,10 @@
     "real_song_generated": false,
     "rtf_measured": false,
     "blocking_work": [
-      "finish Qwen download and actual full backbone load",
-      "finish and strictly load restored full Mixed DiT/VAE weights",
-      "music-adapter training with legitimate data",
-      "complete MNN graph export and phone validation"
+      "complete real Mixed DiT download and multi-step validation",
+      "train0.6B music/style adapters with legitimate paired data",
+      "validate full phone codec and bounded playback queue",
+      "user signs and installs independent diagnostic App"
     ]
   },
   "synthetic_training_smoke": {
@@ -1161,5 +1162,375 @@
       "real_song_generated": false
     },
     "next_candidate": "W8 CPU High: 256-frame warm median 53.4ms vs W4 58.4ms in this run; verify complete pretrained model before audio or RTF claims"
+  },
+  "ready_modules_2026_10_29": {
+    "backbone_cpu": {
+      "real_pretrained_weights_loaded": true,
+      "weight_sha256_verified": true,
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "backbone_parameters": 596049920,
+      "student_parameters": 629640192,
+      "lyrics_tokens": 512,
+      "style_prefix_tokens": 1,
+      "audio_bos_tokens": 1,
+      "prefill_positions": 514,
+      "cache_positions_after_fixed_8_codes": 522,
+      "load_seconds": 3.0889912999991793,
+      "prefill_seconds": 1.9895399999804795,
+      "teacher_forced_incremental_seconds": [
+        0.07043250001152046,
+        0.06681119999848306,
+        0.06888880001497455,
+        0.06092839999473654,
+        0.06140690000029281,
+        0.07082969998009503,
+        0.06770699998014607,
+        0.06213710000156425
+      ],
+      "cache_vs_full_relative_l2": 2.840588422259316e-06,
+      "untrained_music_guard_passed": true,
+      "real_song_generated": false,
+      "scope": "Windows CPU FP32 4 threads; real text backbone, random untrained music/style adapters; 8 fixed input codes are not generated music"
+    },
+    "vae_cpu": {
+      "full_decoder_weights_loaded": true,
+      "strict_load": true,
+      "matched_tensors": 182,
+      "parameters": 84414082,
+      "every_source_storage_crc32_verified": true,
+      "subset_sha256": "820ea34f7b5d6645b161a2800bd34839ecc07394ab0dd9825077cf88c94b351f",
+      "full_source_sha256_verified": false,
+      "load_seconds": 0.9706035999988671,
+      "rows": [
+        {
+          "frames": 8,
+          "seconds_of_pcm": 0.32,
+          "shape": [
+            1,
+            2,
+            15360
+          ],
+          "all_finite": true,
+          "first_seconds": 0.3324576999875717,
+          "warm_seconds": 0.31625760000315495,
+          "peak": 0.31666624546051025,
+          "rms": 0.07968921214342117
+        },
+        {
+          "frames": 32,
+          "seconds_of_pcm": 1.28,
+          "shape": [
+            1,
+            2,
+            61440
+          ],
+          "all_finite": true,
+          "first_seconds": 1.1728003999742214,
+          "warm_seconds": 1.2480841999931727,
+          "peak": 0.3233509659767151,
+          "rms": 0.08231428265571594
+        },
+        {
+          "frames": 256,
+          "seconds_of_pcm": 10.24,
+          "shape": [
+            1,
+            2,
+            491520
+          ],
+          "all_finite": true,
+          "first_seconds": 8.897861400007969,
+          "warm_seconds": 7.8109122999885585,
+          "peak": 0.36475440859794617,
+          "rms": 0.08355671912431717
+        }
+      ],
+      "scope": "Windows CPU FP32, 4 threads, real pretrained decoder and synthetic latent fixtures; not a generated song or full codec RTF",
+      "real_song_generated": false
+    },
+    "vae_mnn": {
+      "onnx_vs_pytorch_relative_l2": 2.4036828414236828e-06,
+      "mnn_vs_pytorch_relative_l2": 4.5183273737319225e-06,
+      "mnn_first_seconds": 8.829034599999432,
+      "mnn_output_shape": [
+        1,
+        2,
+        491520,
+        1
+      ],
+      "weight_norm_folded": true,
+      "weight_norm_fold_relative_l2": 1.3398081161246848e-06,
+      "weight_norm_fold_max_abs": 2.86102294921875e-06,
+      "full_decoder_weights_loaded": true,
+      "stream_fixture": {
+        "scope": "Real decoder, synthetic latent stream; no music LM or DiT in this fixture",
+        "frames": 256,
+        "overlap_frames": 64,
+        "hop_frames": 192,
+        "chunks": 3,
+        "channels": 2,
+        "sample_rate": 48000,
+        "samples_per_frame": 1920,
+        "valid_output_frames": 640,
+        "output_seconds": 25.6,
+        "chunked_vs_monolithic_relative_l2": 0.0019382114193362667,
+        "files": {
+          "latent-0.f32": {
+            "bytes": 65536,
+            "sha256": "5b9afe8afd94213e85368508af54ad097df9aa483624053c6f7d28d86abc41a6"
+          },
+          "pcm-0.f32": {
+            "bytes": 3932160,
+            "sha256": "63de95e0412ce3618eb97a1ee3e4ed99fb880843f69ae1a4c766c8494ad20b4d"
+          },
+          "latent-1.f32": {
+            "bytes": 65536,
+            "sha256": "d698bd74e070cb25f743199b376c7478a481a29b59788d14461e6371c35c45a4"
+          },
+          "pcm-1.f32": {
+            "bytes": 3932160,
+            "sha256": "3788653804f9c84858ba9a1267deddb1b95d4ca053756bdd0adc9b7478de1c33"
+          },
+          "latent-2.f32": {
+            "bytes": 65536,
+            "sha256": "87a0ff9bd8d6c87264da7b690b77ee6a188b15af66430b110541d8a2172a01b7"
+          },
+          "pcm-2.f32": {
+            "bytes": 3932160,
+            "sha256": "2a2a6396a1970d2779488e28019ea1eed06db89c4784499e23feb431c4f88da3"
+          },
+          "emit-0.f32": {
+            "bytes": 2949120,
+            "sha256": "8872511261744805478c6e8d5edcd5f7bee5aab6a967c3a3982337b3a7f7ae17"
+          },
+          "emit-1.f32": {
+            "bytes": 2949120,
+            "sha256": "c06630faec4bd96b321e6543761cfe53c6cad2087aeea29636a38fe6bbd238bc"
+          },
+          "emit-2.f32": {
+            "bytes": 3932160,
+            "sha256": "63a634fc7a66ee1a6b9cba21de1d0da5e1a5696aee5e38737449a091d5a9ef80"
+          }
+        }
+      },
+      "real_song_generated": false,
+      "full_codec_validated": false
+    },
+    "vae_phone_rows": [
+      {
+        "backend": "CPU",
+        "createSeconds": 0.005904063,
+        "decoderComputeSeconds": 88.170979375,
+        "decoderOnlyComputeRtf": 3.4441788818359376,
+        "firstNumericalPacketSeconds": 20.526322813,
+        "fullCodecValidated": false,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 5544960,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "precision": "high",
+        "readSeconds": 0.001625156,
+        "resizeSeconds": 1.171249218,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 4.465135602926234e-06,
+            "emittedSeconds": 7.68,
+            "relativeL2VsPytorch": 4.3542243490523855e-06,
+            "rssKiB": 1588764,
+            "runAndReadSeconds": 19.325359219,
+            "systemAvailableKiB": 5544960,
+            "wallSeconds": 20.526187656
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 4.5352082395666e-06,
+            "emittedSeconds": 7.68,
+            "relativeL2VsPytorch": 4.816045905383839e-06,
+            "rssKiB": 1588760,
+            "runAndReadSeconds": 31.764204375,
+            "systemAvailableKiB": 5687296,
+            "wallSeconds": 52.323365
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 4.990149447525308e-06,
+            "emittedSeconds": 10.24,
+            "relativeL2VsPytorch": 5.225021754744302e-06,
+            "rssKiB": 1590688,
+            "runAndReadSeconds": 37.081415781,
+            "systemAvailableKiB": 5761024,
+            "wallSeconds": 89.444369063
+          }
+        ],
+        "rssAfterReleaseKiB": 13428,
+        "rssAfterResizeKiB": 341424,
+        "rssBeforeKiB": 6240,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 1590688,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 89.842168906,
+        "validPcmSeconds": 25.6
+      },
+      {
+        "backend": "CPU",
+        "createSeconds": 0.005764062,
+        "decoderComputeSeconds": 31.059221406000002,
+        "decoderOnlyComputeRtf": 1.213250836171875,
+        "firstNumericalPacketSeconds": 10.999736875,
+        "fullCodecValidated": false,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6007808,
+        "mnnVersion": "3.6.1",
+        "oneSessionReused": true,
+        "pcmAccumulatedAcrossWholeSong": false,
+        "precision": "low",
+        "readSeconds": 0.001580781,
+        "resizeSeconds": 0.931527344,
+        "retainedOverlapFrames": 64,
+        "rows": [
+          {
+            "chunk": 1,
+            "cumulativePcmSeconds": 7.68,
+            "emittedRelativeL2": 0.03488299256180811,
+            "emittedSeconds": 7.68,
+            "relativeL2VsPytorch": 0.03366564573306985,
+            "rssKiB": 830944,
+            "runAndReadSeconds": 10.045898438,
+            "systemAvailableKiB": 6007808,
+            "wallSeconds": 10.999602344
+          },
+          {
+            "chunk": 2,
+            "cumulativePcmSeconds": 15.36,
+            "emittedRelativeL2": 0.030129458310464402,
+            "emittedSeconds": 7.68,
+            "relativeL2VsPytorch": 0.039534774784258785,
+            "rssKiB": 830976,
+            "runAndReadSeconds": 10.148020312,
+            "systemAvailableKiB": 6187008,
+            "wallSeconds": 21.158826094
+          },
+          {
+            "chunk": 3,
+            "cumulativePcmSeconds": 25.6,
+            "emittedRelativeL2": 0.04542158686499666,
+            "emittedSeconds": 10.24,
+            "relativeL2VsPytorch": 0.04565701124609052,
+            "rssKiB": 832908,
+            "runAndReadSeconds": 10.865302656,
+            "systemAvailableKiB": 6241280,
+            "wallSeconds": 32.039279688
+          }
+        ],
+        "rssAfterReleaseKiB": 13356,
+        "rssAfterResizeKiB": 198060,
+        "rssBeforeKiB": 6144,
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 832908,
+        "scope": "Real pretrained VAE decoder only; synthetic latent stream; no DiT/LLM or speaker playback",
+        "speakerPlaybackTested": false,
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 32.184930781,
+        "validPcmSeconds": 25.6
+      }
+    ],
+    "phone_file_sha256_verified": {
+      "fixture.json": {
+        "bytes": 1625,
+        "sha256": "264adecc755bd6885e52e27203892b2cf1ef28cc551937d34395a6a807284a9f"
+      },
+      "vae-256-fp32.mnn": {
+        "bytes": 194016,
+        "sha256": "67961cbf83b69dee16ab7e00fe5e7716fba8176a9dd7f9604300d34328ed713e"
+      },
+      "vae-256-fp32.mnn.weight": {
+        "bytes": 337468424,
+        "sha256": "704c456d6a9d6f1e7fc9ad857dee84251df1dfad1d633dbf7b85a0187e22bc99"
+      },
+      "latent-0.f32": {
+        "bytes": 65536,
+        "sha256": "5b9afe8afd94213e85368508af54ad097df9aa483624053c6f7d28d86abc41a6"
+      },
+      "latent-1.f32": {
+        "bytes": 65536,
+        "sha256": "d698bd74e070cb25f743199b376c7478a481a29b59788d14461e6371c35c45a4"
+      },
+      "latent-2.f32": {
+        "bytes": 65536,
+        "sha256": "87a0ff9bd8d6c87264da7b690b77ee6a188b15af66430b110541d8a2172a01b7"
+      },
+      "pcm-0.f32": {
+        "bytes": 3932160,
+        "sha256": "63de95e0412ce3618eb97a1ee3e4ed99fb880843f69ae1a4c766c8494ad20b4d"
+      },
+      "pcm-1.f32": {
+        "bytes": 3932160,
+        "sha256": "3788653804f9c84858ba9a1267deddb1b95d4ca053756bdd0adc9b7478de1c33"
+      },
+      "pcm-2.f32": {
+        "bytes": 3932160,
+        "sha256": "2a2a6396a1970d2779488e28019ea1eed06db89c4784499e23feb431c4f88da3"
+      },
+      "emit-0.f32": {
+        "bytes": 2949120,
+        "sha256": "8872511261744805478c6e8d5edcd5f7bee5aab6a967c3a3982337b3a7f7ae17"
+      },
+      "emit-1.f32": {
+        "bytes": 2949120,
+        "sha256": "c06630faec4bd96b321e6543761cfe53c6cad2087aeea29636a38fe6bbd238bc"
+      },
+      "emit-2.f32": {
+        "bytes": 3932160,
+        "sha256": "63a634fc7a66ee1a6b9cba21de1d0da5e1a5696aee5e38737449a091d5a9ef80"
+      },
+      "levo_vae_bench": {
+        "bytes": 3282648,
+        "sha256": "2da37da3ff5074dba324f840ee29618856774ee85f897edcdb1d661eb3b2fe91"
+      }
+    },
+    "diagnostic_app": {
+      "version": "0.1.3",
+      "bundle": "com.zhilee.levoharmony",
+      "unsigned_build_succeeded": true,
+      "unsigned_hap_sha256": "4530efcf588a5648a8e2d7edce4ab238a90bfcbb099dbbcd6cb4a0e4bfded3a6",
+      "unsigned_hap_bytes": 4982862,
+      "signed_or_installed_by_agent": false,
+      "signing_installation": "User will operate DevEco manually; no computer-use actions performed",
+      "speaker_playback_validated": false
+    },
+    "unit_tests": {
+      "passed": true,
+      "count": 11,
+      "scope": "8 tiny prototype tests plus3 scheduler tests; actual weights validated separately"
+    },
+    "streaming_schedule": {
+      "window_frames": 256,
+      "hop_frames": 192,
+      "overlap_frames": 64,
+      "first_stable_pcm_seconds": 7.68,
+      "4000_token_windows": 21,
+      "synthetic_latents": true,
+      "full_dit_in_stream_test": false,
+      "lm_prefill_restarted_per_chunk": false,
+      "note": "Scheduler retains256 codec IDs and64 PCM frames; real LM KV still grows with sequence length."
+    },
+    "mixed_dit_download": {
+      "completed_range_bytes": 1325400064,
+      "expected_range_bytes": 3008576172,
+      "assembled": false,
+      "full_real_dit_forward_validated": false
+    },
+    "as_of_utc": "2026-10-29T03:48:31.599984+00:00",
+    "full_song_generated": false
   }
 }
