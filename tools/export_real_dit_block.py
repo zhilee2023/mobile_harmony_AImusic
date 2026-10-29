@@ -1,6 +1,6 @@
 """Export a real LeVo Mixed block to ONNX/MNN and validate W8/W4 on PC CPU.
 
-Measures one block, fixed 32 frames. Not whole-DiT or phone RTF.
+Measures one block at a selected fixed shape. Not whole-DiT or phone RTF.
 """
 import argparse
 import json
@@ -41,6 +41,7 @@ class Block(nn.Module):
 
 def main():
     p = argparse.ArgumentParser(); p.add_argument('--mnn-python-path', required=True)
+    p.add_argument('--frames', type=int, choices=(32, 128, 256), default=32)
     args = p.parse_args(); sys.path.append(args.mnn_python_path)
     import numpy as np
     import MNN
@@ -57,14 +58,16 @@ def main():
     block.load_state_dict({k.removeprefix(prefix): tensor_from_parts(k, info, root/'parts')
                            for k in info['tensors'] if k.startswith(prefix)}, strict=True)
     model = Block(block).eval()
-    x = torch.randn(1, 32, 1200) * .2; modulation = torch.randn(1, 7200) * .1
-    mask = torch.zeros(1, 1, 32, 32); mask[..., -2:] = torch.finfo(torch.float32).min
+    frames = args.frames
+    x = torch.randn(1, frames, 1200) * .2; modulation = torch.randn(1, 7200) * .1
+    mask = torch.zeros(1, 1, frames, frames); mask[..., -2:] = torch.finfo(torch.float32).min
     with torch.inference_mode(): reference = model(x, modulation, mask)
     # Replace complex arithmetic with algebraically equivalent real pairs.
     source.precompute_freqs_cis = real_freqs; source.apply_rotary_emb = real_rope
     with torch.inference_mode(): rewritten = model(x, modulation, mask)
     torch.testing.assert_close(rewritten, reference, atol=1e-6, rtol=1e-5)
-    outdir = ROOT / 'models/dit-block'; outdir.mkdir(exist_ok=True)
+    suffix = '' if frames == 32 else f'-{frames}'
+    outdir = ROOT / f'models/dit-block{suffix}'; outdir.mkdir(exist_ok=True)
     np.savez(outdir / 'fixture.npz', x=x.numpy(), modulation=modulation.numpy(), mask=mask.numpy(),
              reference=reference.detach().numpy())
     onnx = outdir / 'real-block0.onnx'
@@ -112,12 +115,13 @@ def main():
                      'relative_l2': float(np.linalg.norm((output-expected).astype(np.float64))/np.linalg.norm(expected.astype(np.float64))),
                      'first_seconds':times[0], 'warm_median_seconds':statistics.median(times[1:]),'finite':True})
         print(json.dumps(rows[-1]), flush=True)
-    report = {'scope':'Windows CPU, 4 requested threads, actual pretrained block0, fixed32frames; not phone RTF',
+    report = {'scope':f'Windows CPU, 4 requested threads, actual pretrained block0, fixed{frames}frames; not phone RTF',
+              'frames':frames,
               'onnx_fixed_shape_simplification_required':True,
               'onnxruntime_relative_l2':ort_l2,
               'real_rope_rewrite_max_abs': float((reference-rewritten).abs().max()),'rows':rows,
               'full_dit_validated':False,'real_song_generated':False}
-    (ROOT/'reports/real-dit-block-mnn.json').write_text(json.dumps(report,indent=2),encoding='utf8')
+    (ROOT/f'reports/real-dit-block-mnn{suffix}.json').write_text(json.dumps(report,indent=2),encoding='utf8')
 
 
 if __name__ == '__main__': main()

@@ -26,3 +26,4 @@ app/local.properties
 app/build-profile.local.json5
 app/entry/build/
 app/entry/.cxx/
+native-build/

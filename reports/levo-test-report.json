@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1-cpu-validation",
+  "version": "0.1.2-phone-block-validation",
   "student": {
     "actual_parameters": 629640192,
     "backbone_parameters": 596049920,
@@ -305,5 +305,861 @@
       }
     },
     "scope_note": "Real block0 and codec buffers validated; full pretrained DiT, Qwen backbone and VAE decoder have not been loaded end-to-end."
+  },
+  "phone_block_validation_2026_10_29": {
+    "device": "Huawei Mate 80 Pro 16 GB / HarmonyOS / aarch64",
+    "scope": "Actual pretrained Mixed DiT block0 only; synthetic fixed input; HDC native CLI, not application or full song inference",
+    "real_pretrained_block_parameters": 17302800,
+    "linked_mnn_build": {
+      "source_revision": "d407447ed56c4121a11ccbd266dc184ca1ead0c2",
+      "archive_bytes": 385938568,
+      "archive_sha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+      "clean_upstream_build_attested": false,
+      "note": "Read-only reuse of the existing Harmony MNN archive; no source or library modifications made by this experiment."
+    },
+    "configuration": {
+      "mnn": "3.6.1",
+      "backend": "CPU",
+      "memory": "Low",
+      "threads_requested": 4,
+      "kleidiai_enabled": false,
+      "input_copied_each_iteration": true,
+      "iterations": 11,
+      "warm_iterations": 10,
+      "warm_statistic": "median including input/output copy",
+      "process_per_profile": true
+    },
+    "limits": [
+      "Weights are real; fixed x/modulation fixtures are synthetic, not generated music latents.",
+      "Precision Low is a backend compute policy, not W4 weight quantization.",
+      "20ms process RSS sampling plus stage samples can miss shorter transient peaks; no dedicated GPU memory was measured.",
+      "System MemAvailable is not an application allocation entitlement or an OOM-free guarantee.",
+      "Transfer preceded timing; first process inference is not a device cold-storage benchmark.",
+      "Short 32-frame FP32 timings varied substantially across runs; no controlled thermal/frequency benchmark.",
+      "Single block memory cannot establish whole-DiT or Qwen/DiT/VAE co-residency.",
+      "Relative L2 is single-block numerical error, not an audio perceptual quality score."
+    ],
+    "full_chain_validated": false,
+    "real_song_generated": false,
+    "file_verification": {
+      "32": {
+        "local_remote_sha256_match": true,
+        "fixture": {
+          "x": {
+            "shape": [
+              1,
+              32,
+              1200
+            ],
+            "bytes": 153600,
+            "sha256": "e346fda6cb067b4630fcc0199380d969fcd56148692f576ede57455b027715c5"
+          },
+          "modulation": {
+            "shape": [
+              1,
+              7200
+            ],
+            "bytes": 28800,
+            "sha256": "55faff42a263e6b344ad477a90135267b4591dafd617b4ff0a1b5ac5618a8102"
+          },
+          "mask": {
+            "shape": [
+              1,
+              1,
+              32,
+              32
+            ],
+            "bytes": 4096,
+            "sha256": "b83cd974ad570767d4174c86c1e1190664aeb00a4dd6fd1dcd970b896378e41a"
+          },
+          "reference": {
+            "shape": [
+              1,
+              32,
+              1200
+            ],
+            "bytes": 153600,
+            "sha256": "0b09cc7a1f3f503968d601720973a6ed6ba85ae5d70837ee01cf96f3a7f6cfb8"
+          }
+        },
+        "files": {
+          "fixture.json": {
+            "bytes": 725,
+            "sha256": "995c91976362ebcf5570626a8bf25b1bd57ba6649b9e80d71a142396665f2c11"
+          },
+          "mask.f32": {
+            "bytes": 4096,
+            "sha256": "b83cd974ad570767d4174c86c1e1190664aeb00a4dd6fd1dcd970b896378e41a"
+          },
+          "modulation.f32": {
+            "bytes": 28800,
+            "sha256": "55faff42a263e6b344ad477a90135267b4591dafd617b4ff0a1b5ac5618a8102"
+          },
+          "reference.f32": {
+            "bytes": 153600,
+            "sha256": "0b09cc7a1f3f503968d601720973a6ed6ba85ae5d70837ee01cf96f3a7f6cfb8"
+          },
+          "x.f32": {
+            "bytes": 153600,
+            "sha256": "e346fda6cb067b4630fcc0199380d969fcd56148692f576ede57455b027715c5"
+          },
+          "real-block0-w32.mnn": {
+            "bytes": 32328,
+            "sha256": "5df3d5eeecaae1b2ad974548968b11fa75561a0574d812abab0bb0fe9762aefe"
+          },
+          "real-block0-w32.mnn.weight": {
+            "bytes": 69211200,
+            "sha256": "69d056a917e3a5788767303df59e95132830d90253cf4206aad2878533317917"
+          },
+          "real-block0-w8.mnn": {
+            "bytes": 32632,
+            "sha256": "ca28c7f431a03bd2357020870726227993fed478f52843c60b744d125ab78517"
+          },
+          "real-block0-w8.mnn.weight": {
+            "bytes": 18169052,
+            "sha256": "fb067c2ee25fffb4219cbbb5248fc66c7622c5588a5f0f8046c490bf19bc8c4b"
+          },
+          "real-block0-w4.mnn": {
+            "bytes": 32632,
+            "sha256": "a1cd3901c84bd93b7a442b0d592a56e0af301bfb3b4c4b3c0910698696222c0a"
+          },
+          "real-block0-w4.mnn.weight": {
+            "bytes": 9528092,
+            "sha256": "c62c2bf165ef44c035cd44de97b5f92f76eb1c2ab4e67e9fdfbc24fcaae4f2c4"
+          },
+          "w4-g16.mnn": {
+            "bytes": 32616,
+            "sha256": "3e3ad309deb67321d979280fb14f463cd6eab9291a93345d453470729f0badf1"
+          },
+          "w4-g16.mnn.weight": {
+            "bytes": 17371304,
+            "sha256": "24a083b14aa5829a44e75b34092888e665c2cec3ce7e902d2c08f7e208f3dffc"
+          },
+          "levo_block_bench": {
+            "bytes": 3239296,
+            "sha256": "882a4e46f103431dbf68789b0e62bf7c7f851e715a09bc382b3f5ee7fa16b106"
+          }
+        }
+      },
+      "256": {
+        "local_remote_sha256_match": true,
+        "fixture": {
+          "x": {
+            "shape": [
+              1,
+              256,
+              1200
+            ],
+            "bytes": 1228800,
+            "sha256": "6c5dad9c62b18ee4dec8c87ba8dff4aa585075e58c128e2cf8f6bbd3d8dbc595"
+          },
+          "modulation": {
+            "shape": [
+              1,
+              7200
+            ],
+            "bytes": 28800,
+            "sha256": "01e2d7a8bd1672b1baf05b8f51b2dd4c45dc23d380b79f22f7c1776802131ae0"
+          },
+          "mask": {
+            "shape": [
+              1,
+              1,
+              256,
+              256
+            ],
+            "bytes": 262144,
+            "sha256": "e71df2793d0b2893858066217babbfd2c83ee59669c830d69f5f004d36cd56c9"
+          },
+          "reference": {
+            "shape": [
+              1,
+              256,
+              1200
+            ],
+            "bytes": 1228800,
+            "sha256": "3c488122b667e973f55b99fdd93d31111175fa8dfa087304d3cf0c7becc605bb"
+          }
+        },
+        "files": {
+          "fixture.json": {
+            "bytes": 733,
+            "sha256": "e6902fa02a81158302b13bae9980bd846eee25b40eda00dfc6f510fb11bf2fc3"
+          },
+          "mask.f32": {
+            "bytes": 262144,
+            "sha256": "e71df2793d0b2893858066217babbfd2c83ee59669c830d69f5f004d36cd56c9"
+          },
+          "modulation.f32": {
+            "bytes": 28800,
+            "sha256": "01e2d7a8bd1672b1baf05b8f51b2dd4c45dc23d380b79f22f7c1776802131ae0"
+          },
+          "reference.f32": {
+            "bytes": 1228800,
+            "sha256": "3c488122b667e973f55b99fdd93d31111175fa8dfa087304d3cf0c7becc605bb"
+          },
+          "x.f32": {
+            "bytes": 1228800,
+            "sha256": "6c5dad9c62b18ee4dec8c87ba8dff4aa585075e58c128e2cf8f6bbd3d8dbc595"
+          },
+          "real-block0-w32.mnn": {
+            "bytes": 27224,
+            "sha256": "a12d410d8df6acaf0166ecd8e32da7c217a6005db7ae3daf224c8c6dd85ebd15"
+          },
+          "real-block0-w32.mnn.weight": {
+            "bytes": 69252160,
+            "sha256": "635b5a904a68593adc17d0f0d4cbafda082978aa0b5e9a8d13cf93e00f674aea"
+          },
+          "real-block0-w8.mnn": {
+            "bytes": 27528,
+            "sha256": "7454afd621c965ddfb3c4a61bb3795629f1574bf2900d5816c484a33f1af5c40"
+          },
+          "real-block0-w8.mnn.weight": {
+            "bytes": 18210012,
+            "sha256": "7d44d2a06545186d9c0f2e0f6c94071e5340d38e854c44f3a75337e440235daa"
+          },
+          "real-block0-w4.mnn": {
+            "bytes": 27528,
+            "sha256": "8ec47fe0ead4b354525fdd85ae635df06abe6b6aa0edaf90cacb39eb6fbd9dc9"
+          },
+          "real-block0-w4.mnn.weight": {
+            "bytes": 9569052,
+            "sha256": "cdafa34578cf6472eb4ca67c2d8bc9e26e32874ce85baa8d623522eb30e5474c"
+          },
+          "levo_block_bench": {
+            "bytes": 3239296,
+            "sha256": "882a4e46f103431dbf68789b0e62bf7c7f851e715a09bc382b3f5ee7fa16b106"
+          }
+        }
+      }
+    },
+    "rows": [
+      {
+        "createSeconds": 0.004169531,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.048573906,
+        "frames": 32,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6490112,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w32.mnn",
+        "precision": "high",
+        "readSeconds": 0.000284531,
+        "relativeL2VsPytorch": 1.8743638428338643e-06,
+        "resizeSeconds": 0.083846563,
+        "rssAfterReleaseKiB": 9080,
+        "rssAfterResizeKiB": 76768,
+        "rssAfterRunKiB": 79592,
+        "rssBeforeKiB": 6136,
+        "runsSeconds": [
+          0.048573906,
+          0.043339844,
+          0.042807344,
+          0.022475,
+          0.038594063,
+          0.042760469,
+          0.022763438,
+          0.022626719,
+          0.020204375,
+          0.04311375,
+          0.042782812
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 89992,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.491711563,
+        "warmMedianSeconds": 0.040677266000000004,
+        "source_log": "phone-block-w32-high-verified.log"
+      },
+      {
+        "createSeconds": 0.005613125,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.014168907,
+        "frames": 32,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6535168,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w8.mnn",
+        "precision": "high",
+        "readSeconds": 0.000346875,
+        "relativeL2VsPytorch": 0.00968266505178928,
+        "resizeSeconds": 0.053312812,
+        "rssAfterReleaseKiB": 8780,
+        "rssAfterResizeKiB": 26696,
+        "rssAfterRunKiB": 29496,
+        "rssBeforeKiB": 6112,
+        "runsSeconds": [
+          0.014168907,
+          0.011107812,
+          0.007148906,
+          0.011082031,
+          0.007842344,
+          0.006950157,
+          0.006910313,
+          0.006939844,
+          0.006967344,
+          0.006965469,
+          0.006956406
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 31324,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.160969687,
+        "warmMedianSeconds": 0.0069664065,
+        "source_log": "phone-block-w8-high-verified.log"
+      },
+      {
+        "createSeconds": 0.005305,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.014608281,
+        "frames": 32,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6545408,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w4.mnn",
+        "precision": "high",
+        "readSeconds": 0.000329218,
+        "relativeL2VsPytorch": 0.07744781497715296,
+        "resizeSeconds": 0.019935468,
+        "rssAfterReleaseKiB": 8808,
+        "rssAfterResizeKiB": 18296,
+        "rssAfterRunKiB": 21152,
+        "rssBeforeKiB": 5968,
+        "runsSeconds": [
+          0.014608281,
+          0.009553125,
+          0.0092725,
+          0.008587656,
+          0.009855,
+          0.00742875,
+          0.007423438,
+          0.007354843,
+          0.007405625,
+          0.00739375,
+          0.00738875
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 21308,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.127789218,
+        "warmMedianSeconds": 0.007426093999999999,
+        "source_log": "phone-block-w4-high-verified.log"
+      },
+      {
+        "createSeconds": 0.008180625,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.026190469,
+        "frames": 32,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6541312,
+        "mnnVersion": "3.6.1",
+        "model": "w4-g16.mnn",
+        "precision": "high",
+        "readSeconds": 0.001087187,
+        "relativeL2VsPytorch": 0.04088415212290861,
+        "resizeSeconds": 0.045323594,
+        "rssAfterReleaseKiB": 8932,
+        "rssAfterResizeKiB": 26044,
+        "rssAfterRunKiB": 28872,
+        "rssBeforeKiB": 6276,
+        "runsSeconds": [
+          0.026190469,
+          0.020902031,
+          0.013988907,
+          0.013131875,
+          0.013068906,
+          0.013010312,
+          0.01303375,
+          0.013052656,
+          0.013049375,
+          0.013044844,
+          0.01304625
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 29044,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.227424375,
+        "warmMedianSeconds": 0.013051015499999999,
+        "source_log": "phone-block-w4-g16-high-verified.log"
+      },
+      {
+        "createSeconds": 0.003834375,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.025256406,
+        "frames": 32,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6501376,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w32.mnn",
+        "precision": "low",
+        "readSeconds": 0.000368125,
+        "relativeL2VsPytorch": 0.004166958234803157,
+        "resizeSeconds": 0.059335781,
+        "rssAfterReleaseKiB": 8980,
+        "rssAfterResizeKiB": 48448,
+        "rssAfterRunKiB": 50052,
+        "rssBeforeKiB": 6248,
+        "runsSeconds": [
+          0.025256406,
+          0.01116625,
+          0.022595938,
+          0.009561875,
+          0.00953375,
+          0.009623594,
+          0.009554688,
+          0.009536875,
+          0.009530625,
+          0.009498281,
+          0.00955375
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 82128,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.207035312,
+        "warmMedianSeconds": 0.009554219,
+        "source_log": "phone-block-w32-low-verified.log"
+      },
+      {
+        "createSeconds": 0.003703438,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.136827343,
+        "frames": 256,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6016000,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w32.mnn",
+        "precision": "high",
+        "readSeconds": 0.000235781,
+        "relativeL2VsPytorch": 1.894346771413189e-06,
+        "resizeSeconds": 0.103268282,
+        "rssAfterReleaseKiB": 12552,
+        "rssAfterResizeKiB": 79556,
+        "rssAfterRunKiB": 119240,
+        "rssBeforeKiB": 6204,
+        "runsSeconds": [
+          0.136827343,
+          0.115141875,
+          0.115515,
+          0.115076719,
+          0.115835,
+          0.133475,
+          0.116757813,
+          0.114759843,
+          0.114766719,
+          0.114359062,
+          0.115236563
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 120444,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed256frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 1.446564531,
+        "warmMedianSeconds": 0.11518921900000001,
+        "source_log": "phone-block-w32-high-256.log"
+      },
+      {
+        "createSeconds": 0.004095938,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.06619,
+        "frames": 256,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6074368,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w8.mnn",
+        "precision": "high",
+        "readSeconds": 0.000360625,
+        "relativeL2VsPytorch": 0.009624033876263998,
+        "resizeSeconds": 0.03550625,
+        "rssAfterReleaseKiB": 12612,
+        "rssAfterResizeKiB": 29492,
+        "rssAfterRunKiB": 56280,
+        "rssBeforeKiB": 6172,
+        "runsSeconds": [
+          0.06619,
+          0.053021563,
+          0.054026406,
+          0.052650157,
+          0.053707812,
+          0.054757812,
+          0.057803437,
+          0.053542032,
+          0.053257812,
+          0.052935156,
+          0.052912813
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 57492,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed256frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.66447125,
+        "warmMedianSeconds": 0.053399922,
+        "source_log": "phone-block-w8-high-256.log"
+      },
+      {
+        "createSeconds": 0.004517031,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.067023907,
+        "frames": 256,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6119424,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w4.mnn",
+        "precision": "high",
+        "readSeconds": 0.000378282,
+        "relativeL2VsPytorch": 0.07911775141297762,
+        "resizeSeconds": 0.016996875,
+        "rssAfterReleaseKiB": 12364,
+        "rssAfterResizeKiB": 20892,
+        "rssAfterRunKiB": 47616,
+        "rssBeforeKiB": 6076,
+        "runsSeconds": [
+          0.067023907,
+          0.057892187,
+          0.058501875,
+          0.059078281,
+          0.058207813,
+          0.058350782,
+          0.057881563,
+          0.058731406,
+          0.058429687,
+          0.058885156,
+          0.058152344
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 48820,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed256frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.690707344,
+        "warmMedianSeconds": 0.0583902345,
+        "source_log": "phone-block-w4-high-256.log"
+      },
+      {
+        "createSeconds": 0.00431375,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.07839,
+        "frames": 256,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6085632,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w32.mnn",
+        "precision": "low",
+        "readSeconds": 0.000334531,
+        "relativeL2VsPytorch": 0.006257701168626726,
+        "resizeSeconds": 0.086691093,
+        "rssAfterReleaseKiB": 12668,
+        "rssAfterResizeKiB": 51128,
+        "rssAfterRunKiB": 65304,
+        "rssBeforeKiB": 6204,
+        "runsSeconds": [
+          0.07839,
+          0.06758375,
+          0.067097188,
+          0.066078907,
+          0.066404219,
+          0.066736875,
+          0.066834688,
+          0.066579375,
+          0.066113438,
+          0.065810312,
+          0.066607188
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 82072,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed256frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.85598125,
+        "warmMedianSeconds": 0.06659328149999999,
+        "source_log": "phone-block-w32-low-256.log"
+      }
+    ],
+    "earlier_32_frame_runs": [
+      {
+        "createSeconds": 0.003980469,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.041267969,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6344704,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w32.mnn",
+        "precision": "high",
+        "readSeconds": 0.000281093,
+        "relativeL2VsPytorch": 1.8743638428338643e-06,
+        "resizeSeconds": 0.05209375,
+        "rssAfterReleaseKiB": 8936,
+        "rssAfterResizeKiB": 76552,
+        "rssAfterRunKiB": 79460,
+        "rssBeforeKiB": 6076,
+        "runsSeconds": [
+          0.041267969,
+          0.043159531,
+          0.022774062,
+          0.0226475,
+          0.022505156,
+          0.022206875,
+          0.042225938,
+          0.042246562,
+          0.022345469,
+          0.022451719,
+          0.022474375
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 79624,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.391941875,
+        "warmMedianSeconds": 0.022576328,
+        "frames": 32,
+        "source_log": "phone-block-w32-high.log"
+      },
+      {
+        "createSeconds": 0.003105313,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.048792031,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6358016,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w32.mnn",
+        "precision": "high",
+        "readSeconds": 0.000319532,
+        "relativeL2VsPytorch": 1.8743638428338643e-06,
+        "resizeSeconds": 0.052879375,
+        "rssAfterReleaseKiB": 9152,
+        "rssAfterResizeKiB": 76772,
+        "rssAfterRunKiB": 79676,
+        "rssBeforeKiB": 6232,
+        "runsSeconds": [
+          0.048792031,
+          0.016803437,
+          0.016737969,
+          0.016599062,
+          0.016720625,
+          0.016692968,
+          0.01659375,
+          0.016585781,
+          0.016692656,
+          0.016755312,
+          0.016607031
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 79832,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.280772657,
+        "warmMedianSeconds": 0.016692812,
+        "frames": 32,
+        "source_log": "phone-block-w32-high-repeat.log"
+      },
+      {
+        "createSeconds": 0.00391,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.013390313,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6412288,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w8.mnn",
+        "precision": "high",
+        "readSeconds": 0.0002425,
+        "relativeL2VsPytorch": 0.00968266505178928,
+        "resizeSeconds": 0.029821407,
+        "rssAfterReleaseKiB": 8764,
+        "rssAfterResizeKiB": 26616,
+        "rssAfterRunKiB": 29472,
+        "rssBeforeKiB": 6156,
+        "runsSeconds": [
+          0.013390313,
+          0.011171094,
+          0.010603281,
+          0.010310156,
+          0.010534063,
+          0.01122,
+          0.011023282,
+          0.01050875,
+          0.009947344,
+          0.009511094,
+          0.009839843
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 29628,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.159156875,
+        "warmMedianSeconds": 0.0105214065,
+        "frames": 32,
+        "source_log": "phone-block-w8-high.log"
+      },
+      {
+        "createSeconds": 0.002878594,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.013381406,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6418432,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w4.mnn",
+        "precision": "high",
+        "readSeconds": 0.000303125,
+        "relativeL2VsPytorch": 0.07744781497715296,
+        "resizeSeconds": 0.015821875,
+        "rssAfterReleaseKiB": 8856,
+        "rssAfterResizeKiB": 18292,
+        "rssAfterRunKiB": 21152,
+        "rssBeforeKiB": 6080,
+        "runsSeconds": [
+          0.013381406,
+          0.008926875,
+          0.00861,
+          0.008624531,
+          0.0076875,
+          0.007443125,
+          0.007381406,
+          0.007360312,
+          0.007350469,
+          0.007330938,
+          0.007342188
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 21312,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.116007813,
+        "warmMedianSeconds": 0.0074122655,
+        "frames": 32,
+        "source_log": "phone-block-w4-high.log"
+      },
+      {
+        "createSeconds": 0.003299531,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.029992656,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6410240,
+        "mnnVersion": "3.6.1",
+        "model": "w4-g16.mnn",
+        "precision": "high",
+        "readSeconds": 0.000300157,
+        "relativeL2VsPytorch": 0.04088415212290861,
+        "resizeSeconds": 0.033894219,
+        "rssAfterReleaseKiB": 8840,
+        "rssAfterResizeKiB": 25960,
+        "rssAfterRunKiB": 28800,
+        "rssBeforeKiB": 6224,
+        "runsSeconds": [
+          0.029992656,
+          0.015740781,
+          0.014308282,
+          0.013634375,
+          0.016142187,
+          0.013240469,
+          0.013103594,
+          0.013003281,
+          0.013043906,
+          0.013060625,
+          0.013019688
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 28964,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.212303438,
+        "warmMedianSeconds": 0.0131720315,
+        "frames": 32,
+        "source_log": "phone-block-w4-g16-high.log"
+      },
+      {
+        "createSeconds": 0.002163281,
+        "dedicatedGpuMemoryMeasured": false,
+        "firstSeconds": 0.024153282,
+        "memoryMode": "Low",
+        "minimumSystemAvailableKiB": 6360064,
+        "mnnVersion": "3.6.1",
+        "model": "real-block0-w32.mnn",
+        "precision": "low",
+        "readSeconds": 0.000220782,
+        "relativeL2VsPytorch": 0.004166958234803157,
+        "resizeSeconds": 0.063600781,
+        "rssAfterReleaseKiB": 8984,
+        "rssAfterResizeKiB": 48380,
+        "rssAfterRunKiB": 50048,
+        "rssBeforeKiB": 6060,
+        "runsSeconds": [
+          0.024153282,
+          0.021214062,
+          0.015119219,
+          0.00961375,
+          0.009487031,
+          0.009350312,
+          0.009331719,
+          0.00933,
+          0.009397969,
+          0.009452188,
+          0.009659062
+        ],
+        "sampleIntervalMs": 20,
+        "sampledPeakRssKiB": 82072,
+        "scope": "Mate80 Pro HDC native CLI, one real pretrained DiT block, fixed32frames; not App/full-DiT/song RTF",
+        "success": true,
+        "threadsRequested": 4,
+        "totalSeconds": 0.209304844,
+        "warmMedianSeconds": 0.0094696095,
+        "frames": 32,
+        "source_log": "phone-block-w32-low.log"
+      }
+    ],
+    "pc_256_frame_alignment": {
+      "scope": "Windows CPU, 4 requested threads, actual pretrained block0, fixed256frames; not phone RTF",
+      "frames": 256,
+      "onnx_fixed_shape_simplification_required": true,
+      "onnxruntime_relative_l2": 2.676282605969001e-07,
+      "real_rope_rewrite_max_abs": 5.7220458984375e-06,
+      "rows": [
+        {
+          "requested_weight_bits": 32,
+          "model_bytes": 27224,
+          "external_bytes": 69252160,
+          "relative_l2": 7.853657598170751e-07,
+          "first_seconds": 0.03393889998551458,
+          "warm_median_seconds": 0.03640150002320297,
+          "finite": true
+        },
+        {
+          "requested_weight_bits": 8,
+          "model_bytes": 27528,
+          "external_bytes": 18210012,
+          "relative_l2": 0.009610970870315337,
+          "first_seconds": 0.055143300007330254,
+          "warm_median_seconds": 0.03667439997661859,
+          "finite": true
+        },
+        {
+          "requested_weight_bits": 4,
+          "model_bytes": 27528,
+          "external_bytes": 9569052,
+          "relative_l2": 0.07914789206062975,
+          "first_seconds": 0.030705700017279014,
+          "warm_median_seconds": 0.027902000001631677,
+          "finite": true
+        }
+      ],
+      "full_dit_validated": false,
+      "real_song_generated": false
+    },
+    "next_candidate": "W8 CPU High: 256-frame warm median 53.4ms vs W4 58.4ms in this run; verify complete pretrained model before audio or RTF claims"
   }
 }

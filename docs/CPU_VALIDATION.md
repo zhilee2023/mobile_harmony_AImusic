@@ -40,3 +40,30 @@ Qwen分块已保留约1,040MB/1,503MB；VAE decoder约159MB/338MB，最后因DNS
 4. 音乐模块仍需训练。上述CPU验证不等于已经有可唱歌的0.6B音乐权重；用户当前没有数据和GPU，本轮没有训练实际音乐模型。
 
 当前仅有未签名鸿蒙诊断HAP，不应把它描述为可生成音乐的App。独立模型仍然不具备已验收的整链RTF。
+
+## 2026-10-29：Mate 80 Pro真实单层测试
+
+用户恢复真机测试后，使用独立HDC原生CLI运行Mixed DiT的真实block0（17,302,800参数）。测试输入是固定随机x/modulation和带尾部mask的fixture，不是歌曲latent。MNN 3.6.1，CPU四线程、Memory Low、关闭KleidiAI；每个配置独立进程，首次一次＋预热十次，每轮重新拷贝三个输入，检查输出有限。
+
+以下以256帧组为主；耗时包括输入拷贝、前向和输出读取，不包括模型初始化。
+
+| 配置 | 首次前向 | 预热中位数 | 采样峰值进程RSS | 相对PyTorch单层L2 |
+|---|---:|---:|---:|---:|
+| FP32 / CPU High | 136.8 ms | 115.2 ms | 117.6 MiB | 0.000189% |
+| W8 / CPU High | 66.2 ms | 53.4 ms | 56.1 MiB | 0.962% |
+| W4 / CPU High | 67.0 ms | 58.4 ms | 47.7 MiB | 7.91% |
+| FP32权重 / CPU Low | 78.4 ms | 66.6 ms | 80.1 MiB | 0.626% |
+
+W8在本轮256帧组约为FP32的2.16倍速度；W4虽然文件更小，本轮长块却比W8慢约9%。CPU Low是计算精度策略，与权重W4不是同一个开关。32帧组W8预热约7.0–10.5ms、W4约7.4ms；FP32多轮中位数16.7–40.7ms，短块调度/频率波动明显，不给稳定倍速承诺。W4 group16单层L2约4.09%，32帧约13.1ms，误差更小但代价更大。
+
+输入、参考输出、图、外置权重和最终测试程序均已在PC与手机间逐文件核对SHA256。9组最终配置全部完成，32/256帧的ONNX/MNN PC对齐也已通过。链接的是既有鸿蒙MNN构建，只读复用，源仓库含此前LLM适配修改；本轮不是全新纯上游构建基准。静态库指纹、原始各轮数值、历史短块波动、文件哈希统一保存在`reports/levo-test-report.json`的`phone_block_validation_2026_10_29`中，只需分享这一份JSON。
+
+内存是20ms采样加阶段采样的**进程RSS**，可能漏掉更短瞬时峰值；系统MemAvailable不是App可分配额度，也没有测独立GPU显存。单层结果不能证明39层完整DiT、Qwen、VAE可以共驻，更不能据此承诺不OOM或推算整曲RTF。
+
+### 复现与后续
+
+1. 使用本项目隔离Python环境，运行`tools/export_real_dit_block.py --mnn-python-path <MNN轮子目录>`；加`--frames 256`生成另一组固定图。两个形状分目录保存，不覆盖32帧结果。
+2. 分别运行`tools/prepare_phone_block.py`与`--frames 256`。W4 group16可选对照需先运行既有`tools/sweep_block_quant.py`。
+3. `build-native-bench.ps1`只读复用已有ARM64 MNN静态库，或显式指定`MnnRoot/MnnStaticLibrary`。不修改CosyVoice/ACE工程。
+4. 手机连接后运行`tools/test_phone_blocks.ps1`，在独立临时目录传文件、分进程测试、核对哈希并更新统一报告。不需要安装或覆盖现有App。
+5. 下一阶段优先W8，完成完整DiT与VAE权重下载/严格加载，再测短块多步采样和实际音频。0.6B音乐头尚未训练，完整音乐生成与端到端RTF仍未验收。
