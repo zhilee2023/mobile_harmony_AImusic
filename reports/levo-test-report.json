@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1-cpu-validation",
   "student": {
     "actual_parameters": 629640192,
     "backbone_parameters": 596049920,
@@ -53,10 +53,10 @@
     "real_song_generated": false,
     "rtf_measured": false,
     "blocking_work": [
-      "music adapter training",
-      "complete official Mixed DiT construction",
-      "DiT/VAE export and PC alignment",
-      "Harmony music runtime and signing"
+      "finish Qwen download and actual full backbone load",
+      "finish and strictly load restored full Mixed DiT/VAE weights",
+      "music-adapter training with legitimate data",
+      "complete MNN graph export and phone validation"
     ]
   },
   "synthetic_training_smoke": {
@@ -68,5 +68,242 @@
     "public_0_6b_weights_loaded": false,
     "music_training_or_quality_validated": false,
     "audio_generated": false
+  },
+  "cpu_validation_2026_10_28": {
+    "mixed_dit_constructor": {
+      "source_revision": "653cbcf4716101834900c75b7d5da43b07e15d5b",
+      "restored_missing_constructor": true,
+      "meta_only": true,
+      "real_weights_loaded": false,
+      "parameters": 751534224,
+      "missing": [],
+      "unexpected": [],
+      "shape_mismatches": {},
+      "matched_tensor_count": 526,
+      "exact_header_shape_match": true
+    },
+    "mixed_sampler_and_rvq_parity": {
+      "rvq_real_weights_relative_l2": 0.0,
+      "normalization_real_stats_relative_l2": 0.0,
+      "sampler_parity": [
+        {
+          "context_frames": 0,
+          "guidance": 1.0,
+          "relative_l2": 5.423864877229789e-07,
+          "finite": true
+        },
+        {
+          "context_frames": 0,
+          "guidance": 1.5,
+          "relative_l2": 5.295125333759643e-07,
+          "finite": true
+        },
+        {
+          "context_frames": 2,
+          "guidance": 1.0,
+          "relative_l2": 4.5381426616586396e-07,
+          "finite": true
+        },
+        {
+          "context_frames": 2,
+          "guidance": 1.5,
+          "relative_l2": 4.553913015570288e-07,
+          "finite": true
+        }
+      ],
+      "dit_weights": "tiny random reference, not full pretrained DiT",
+      "real_song_generated": false
+    },
+    "pretrained_block_cpu": {
+      "real_pretrained_block": 0,
+      "parameters_loaded": 17302800,
+      "strict_load": true,
+      "rows": [
+        {
+          "frames": 8,
+          "relative_l2": 1.29523570535639e-07,
+          "finite": true,
+          "eager_median_seconds": 0.0028630500164581463,
+          "sdpa_median_seconds": 0.002806599994073622
+        },
+        {
+          "frames": 32,
+          "relative_l2": 1.4097821576797287e-07,
+          "finite": true,
+          "eager_median_seconds": 0.0033479999838164076,
+          "sdpa_median_seconds": 0.0034439500013832003
+        },
+        {
+          "frames": 128,
+          "relative_l2": 1.6259296842235926e-07,
+          "finite": true,
+          "eager_median_seconds": 0.010800450007081963,
+          "sdpa_median_seconds": 0.011669800005620345
+        },
+        {
+          "frames": 256,
+          "relative_l2": 1.7649838923716743e-07,
+          "finite": true,
+          "eager_median_seconds": 0.02051114999630954,
+          "sdpa_median_seconds": 0.022475249992567115
+        }
+      ],
+      "full_dit_validated": false,
+      "real_song_generated": false,
+      "source_revision": "cc258cc694a63114c61684cc26d0583b8ad777d0"
+    },
+    "pretrained_block_mnn": {
+      "scope": "Windows CPU, 4 requested threads, actual pretrained block0, fixed32frames; not phone RTF",
+      "onnx_fixed_shape_simplification_required": true,
+      "onnxruntime_relative_l2": 2.5675925043834094e-07,
+      "real_rope_rewrite_max_abs": 5.7220458984375e-06,
+      "rows": [
+        {
+          "requested_weight_bits": 32,
+          "model_bytes": 32328,
+          "external_bytes": 69211200,
+          "relative_l2": 4.834423381069354e-07,
+          "first_seconds": 0.007416400010697544,
+          "warm_median_seconds": 0.005565900006331503,
+          "finite": true
+        },
+        {
+          "requested_weight_bits": 8,
+          "model_bytes": 32632,
+          "external_bytes": 18169052,
+          "relative_l2": 0.009673668955363346,
+          "first_seconds": 0.008266700024250895,
+          "warm_median_seconds": 0.004051100026117638,
+          "finite": true
+        },
+        {
+          "requested_weight_bits": 4,
+          "model_bytes": 32632,
+          "external_bytes": 9528092,
+          "relative_l2": 0.07726455113383718,
+          "first_seconds": 0.00392180000199005,
+          "warm_median_seconds": 0.0033390999888069928,
+          "finite": true
+        }
+      ],
+      "full_dit_validated": false,
+      "real_song_generated": false
+    },
+    "weight_quantization_recipes": {
+      "scope": "actual pretrained block0, fixed32frames, PC CPU; not whole-DiT or phone RTF",
+      "algorithm": "MNN existing weight-only quantization; no activation calibration",
+      "source_width": 1200,
+      "note": "64 does not divide1200;16/48 do, avoiding fallback for these projections",
+      "rows": [
+        {
+          "profile": "w8-g16",
+          "bits_requested": 8,
+          "group_requested": 16,
+          "asymmetric": false,
+          "hqq": false,
+          "hqq_disabled_by_converter": false,
+          "conversion_isolated_process": true,
+          "weight_bytes": 26012264,
+          "graph_bytes": 32616,
+          "relative_l2": 0.011915914737171922,
+          "warm_median_seconds": 0.006062400003429502,
+          "convert_seconds": 0.5833266999979969,
+          "finite": true
+        },
+        {
+          "profile": "w8-g48",
+          "bits_requested": 8,
+          "group_requested": 48,
+          "asymmetric": false,
+          "hqq": false,
+          "hqq_disabled_by_converter": false,
+          "conversion_isolated_process": true,
+          "weight_bytes": 20252260,
+          "graph_bytes": 32616,
+          "relative_l2": 0.009876472659730387,
+          "warm_median_seconds": 0.004617099999450147,
+          "convert_seconds": 0.5485684000013862,
+          "finite": true
+        },
+        {
+          "profile": "w4-g16",
+          "bits_requested": 4,
+          "group_requested": 16,
+          "asymmetric": false,
+          "hqq": false,
+          "hqq_disabled_by_converter": false,
+          "conversion_isolated_process": true,
+          "weight_bytes": 17371304,
+          "graph_bytes": 32616,
+          "relative_l2": 0.040794780361967556,
+          "warm_median_seconds": 0.004920100007439032,
+          "convert_seconds": 0.6417447999992874,
+          "finite": true
+        },
+        {
+          "profile": "w4-g48",
+          "bits_requested": 4,
+          "group_requested": 48,
+          "asymmetric": false,
+          "hqq": false,
+          "hqq_disabled_by_converter": false,
+          "conversion_isolated_process": true,
+          "weight_bytes": 11611300,
+          "graph_bytes": 32616,
+          "relative_l2": 0.05672918897578836,
+          "warm_median_seconds": 0.0035050000005867332,
+          "convert_seconds": 0.5564113000000361,
+          "finite": true
+        },
+        {
+          "profile": "w4-affine-g16",
+          "bits_requested": 4,
+          "group_requested": 16,
+          "asymmetric": true,
+          "hqq": false,
+          "hqq_disabled_by_converter": false,
+          "conversion_isolated_process": true,
+          "weight_bytes": 13051304,
+          "graph_bytes": 32616,
+          "relative_l2": 0.04922099394239984,
+          "warm_median_seconds": 0.004965500003891066,
+          "convert_seconds": 0.6072574999998324,
+          "finite": true
+        }
+      ],
+      "real_song_generated": false
+    },
+    "vae_decoder_constructor": {
+      "meta_only": true,
+      "full_decoder_weights_loaded": false,
+      "parameters": 84414082,
+      "matched_tensors": 182,
+      "missing": [],
+      "unexpected": [],
+      "shape_mismatches": {},
+      "sample_rate": 48000,
+      "latent_channels": 64,
+      "output_channels": 2,
+      "stride_product": 1920
+    },
+    "hqq": {
+      "validated": false,
+      "reason": "Installed converter disabled HQQ in the attempted run; follow-up flag probe was not executed after approval-review timeout."
+    },
+    "download_state": {
+      "qwen_backbone": {
+        "completed_range_bytes": 1040187392,
+        "expected_download_bytes": 1503300328,
+        "complete": false,
+        "stop_reason": "DNS getaddrinfo failed; chunks retained; no automatic new-window retry"
+      },
+      "vae_decoder": {
+        "completed_range_bytes": 159383552,
+        "expected_download_bytes": 338287232,
+        "complete": false,
+        "stop_reason": "DNS getaddrinfo failed; chunks retained; no automatic new-window retry"
+      }
+    },
+    "scope_note": "Real block0 and codec buffers validated; full pretrained DiT, Qwen backbone and VAE decoder have not been loaded end-to-end."
   }
 }

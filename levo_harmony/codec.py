@@ -22,11 +22,11 @@ class ExportedMixedCodec:
             raise ValueError("Latent/code frame mismatch")
         x = noise.clone()
         for i in range(steps):
-            t = torch.tensor([1.0 - i / steps], dtype=x.dtype)
+            t = torch.tensor([i / steps], dtype=x.dtype)
             velocity = self.dit(codes, x, t, tail)
             if velocity.shape != x.shape or not torch.isfinite(velocity).all():
                 raise RuntimeError("Invalid DiT output")
-            x = x - velocity / steps
+            x = x + velocity / steps
         pcm = self.vae(x)
         expected = (1, self.contract.channels, codes.shape[1] * 1920)
         if pcm.shape != expected or not torch.isfinite(pcm).all():

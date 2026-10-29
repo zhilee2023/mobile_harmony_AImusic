@@ -1,0 +1,14 @@
+# Isolated legacy environment for the pinned official LeVo DiT only.
+# Do not install over the Qwen3 student environment.
+transformers==4.37.2
+diffusers==0.27.2
+huggingface_hub==0.25.2
+tokenizers==0.15.2
+requests
+pillow
+importlib_metadata
+einops==0.8.1
+# Export/validation only; MNN Python package is provided separately.
+onnx
+onnxsim
+onnxruntime

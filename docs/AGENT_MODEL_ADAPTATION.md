@@ -2,6 +2,8 @@
 
 更新时间：2026-10-28。本文是交接文档，不代表下列未完成项已验收。
 
+> 2026-10-29收尾更新：见[CPU验证记录](CPU_VALIDATION.md)和统一JSON。Mixed DiT构造已恢复并通过526参数形状检查；真实单层、ONNX/MNN FP32已数值对齐。以下早期状态中“尚未修复构造”已被这项结构验证推进，但完整权重及整曲生成仍未完成。下载分块约Qwen1,040MB、VAE159MB；DNS中断后保留，按原窗口规则没有自动重启实验。
+
 ## 1. 用户目标和工程边界
 
 - 本地工程：`C:\levo-harmony`；公开仓库：`https://github.com/zhilee2023/mobile_harmony_AImusic`。

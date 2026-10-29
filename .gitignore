@@ -1,4 +1,5 @@
 .deps/
+.codec-deps/
 .venv/
 __pycache__/
 *.pyc
@@ -14,6 +15,8 @@ reports/local/
 *.hap
 *.log
 *.o
+reports/*.json
+!reports/levo-test-report.json
 *.p12
 *.p7b
 *.cer
