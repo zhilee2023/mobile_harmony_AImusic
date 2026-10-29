@@ -39,12 +39,12 @@ struct Trace{
 class Session{
   std::unique_ptr<MNN::Interpreter> net;MNN::Session* session=nullptr;
 public:
-  Session(const std::string& model,bool low){
+  Session(const std::string& model,bool low,int threads=6){
     net.reset(MNN::Interpreter::createFromFile(model.c_str()));require(bool(net),"Cannot read MNN model");
     auto weight=model+".weight";net->setExternalFile(weight.c_str());net->setSessionMode(MNN::Interpreter::Session_Resize_Defer);
     net->setSessionHint(MNN::Interpreter::CPU_ENABLE_KLEIDIAI,0);
     MNN::BackendConfig backend;backend.precision=low?MNN::BackendConfig::Precision_Low:MNN::BackendConfig::Precision_High;backend.memory=MNN::BackendConfig::Memory_Low;backend.power=MNN::BackendConfig::Power_High;
-    MNN::ScheduleConfig cfg;cfg.type=MNN_FORWARD_CPU;cfg.numThread=6;cfg.backendConfig=&backend;
+    MNN::ScheduleConfig cfg;cfg.type=MNN_FORWARD_CPU;cfg.numThread=threads;cfg.backendConfig=&backend;
     session=net->createSession(cfg);require(session,"Cannot create MNN session");net->resizeSession(session);net->releaseModel();
   }
   ~Session(){if(session)net->releaseSession(session);}
@@ -61,12 +61,13 @@ std::string LevoRunChainBench(const std::string& dir,const std::string& requeste
   Json result={{"success",false},{"flowAndMemoryPassed",false},{"policy",policy},{"ditWeightBits",w4?4:8},{"requestedPolicy",requestedPolicy},{"music_trained",false},{"real_song_generated",false},{"scope","Actual26-layer student with RANDOM music adapters -> complete39-layer quantized DiT TWO steps -> real CPU Low VAE; one diagnostic window, no numerical/perceptual parity claim"},{"sampleIntervalMs",20},{"ditSteps",2},{"frames",256},{"validPcmSeconds",10.24},{"llmThreads",4},{"codecThreads",6}};
   auto finish=[&](){trace.sample();result["stages"]=trace.stages;result["sampledPeakRssKiB"]=trace.maxRss.load();result["minimumSystemAvailableKiB"]=trace.minAvailable.load();result["totalSeconds"]=seconds(trace.start);return result.dump();};
   try{
-    bool llmOnly=policy=="llm-short"||policy=="llm-long";
+    bool llmOnly=policy=="llm-short"||policy=="llm-long"||policy=="llm-kleidi";
     require(policy=="serial"||policy=="keep-llm"||policy=="all"||llmOnly,"Unknown lifetime policy");trace.gate(2048);trace.mark("start");
     auto metadata=readJson(dir+"/student/diagnostic-student.json");require(metadata["music_trained"]==false&&metadata["layers"]==26,"Expected diagnostic student");
     auto prefix=readJson(dir+"/student/prefix.json").get<std::vector<int>>();require(prefix.size()==514,"Expected512lyric+1style+BOS prefix");
     if(policy=="llm-short"){int bos=prefix.back();prefix.resize(137);prefix.push_back(bos);}
     auto config=readJson(dir+"/student/config.json");config["base_dir"]=dir+"/student/";config["llm_config"]="llm_config.json";config["embedding_file"]="embeddings_bf16.bin";config["reuse_kv"]=false;
+    config["cosyvoice_kleidiai"]=(policy=="llm-kleidi");result["llmKleidiRequested"]=(policy=="llm-kleidi");
     std::string runtime=dir+"/student/config-runtime.json";{std::ofstream out(runtime);out<<config.dump(2);require(out.good(),"Cannot write local runtime config");}
     std::unique_ptr<Llm,decltype(&Llm::destroy)> llm(Llm::createLLM(runtime),&Llm::destroy);require(llm&&llm->load(),"LLM load failed");trace.mark("llm-loaded");trace.gate();
     std::unique_ptr<Session> dit,vae;
@@ -97,6 +98,76 @@ std::string LevoRunChainBench(const std::string& dir,const std::string& requeste
     dit.reset();result["flowAndMemoryPassed"]=true;result["success"]=true;
   }catch(const std::exception& error){result["error"]=error.what();trace.mark("stopped");}
   return finish();
+}
+std::string LevoRunFiveChunks(const std::string& dir,bool tuned){
+  constexpr int chunks=5,frames=256,overlapFrames=64,hop=192;
+  constexpr size_t pcmWindow=frames*1920,pcmOverlap=overlapFrames*1920;
+  Trace trace;trace.sink=dir+"/last-chain-progress.jsonl";{std::ofstream clear(trace.sink);}
+  Json result={{"success",false},{"flowAndMemoryPassed",false},{"policy","all-five-chunks"},
+    {"scope","Five sequential diagnostic codec windows, one LLM KV and one DiT/VAE session each; RANDOM music adapters; no speaker playback or quality proof"},
+    {"music_trained",false},{"real_song_generated",false},{"requestedChunks",chunks},{"windowFrames",frames},
+    {"overlapFrames",overlapFrames},{"ditStepsPerChunk",2},{"ditWeightBits",8},{"sampleIntervalMs",20},
+    {"oneLlmSession",true},{"onePrefill",true},{"oneDitSession",true},{"oneVaeSession",true},
+    {"pcmAccumulatedAcrossWholeSong",false},{"maxCodeWindowIds",frames},{"retainedPcmTailSamplesPerChannel",pcmOverlap}};
+  result["variant"]=tuned?"dit-low-vae8-llm-highpower":"baseline-high-vae6";result["ditPrecision"]=tuned?"Low":"High";result["vaeThreads"]=tuned?8:6;result["llmPowerHint"]=tuned?"High":"Normal";result["eosSuppressedForFixedLengthDiagnostic"]=true;
+  try{
+    trace.gate(2048);trace.mark("five-chunk-start");
+    auto metadata=readJson(dir+"/student/diagnostic-student.json");require(metadata["music_trained"]==false&&metadata["layers"]==26,"Expected diagnostic student");
+    auto prefix=readJson(dir+"/student/prefix.json").get<std::vector<int>>();require(prefix.size()==514,"Expected514position prefix");
+    auto config=readJson(dir+"/student/config.json");config["base_dir"]=dir+"/student/";config["llm_config"]="llm_config.json";config["embedding_file"]="embeddings_bf16.bin";config["reuse_kv"]=false;
+    if(tuned)config["power"]="high";
+    std::string runtime=dir+"/student/config-runtime.json";{std::ofstream out(runtime);out<<config.dump(2);require(out.good(),"Cannot save runtime config");}
+    std::unique_ptr<Llm,decltype(&Llm::destroy)> llm(Llm::createLLM(runtime),&Llm::destroy);require(llm&&llm->load(),"LLM load failed");trace.mark("five-llm-loaded");trace.gate();
+    auto dit=std::make_unique<Session>(dir+"/dit/full-w8.mnn",tuned);trace.mark("five-dit-loaded");trace.gate();
+    auto vae=std::make_unique<Session>(dir+"/vae/vae-256-fp32.mnn",true,tuned?8:6);trace.mark("five-all-three-loaded");trace.gate();
+    result["initializationSeconds"]=seconds(trace.start);
+    auto codebook=read(dir+"/aux/codebook.f32",16384*32),weight=read(dir+"/aux/weight.f32",1024*32),bias=read(dir+"/aux/bias.f32",1024),mask=read(dir+"/aux/mask.f32",3*48),mean=read(dir+"/aux/mean.f32",64),stddev=read(dir+"/aux/std.f32",64);
+    llm->reset();llm->generate_init();int generated=0,lastCode=-1,musicOffset=metadata["music_offset"].get<int>();
+    std::vector<int> codeTail;std::vector<float> context(overlapFrames*64,0),pcmTail;
+    std::mt19937 rng(2307);std::normal_distribution<float> normal;
+    size_t emittedSamples=0;double energy=0,maxPcm=0,prefillSeconds=0,decodeSeconds=0,sumDit=0,sumVae=0;
+    Json rows=Json::array();
+    for(int chunk=0;chunk<chunks;++chunk){
+      trace.gate();auto chunkStart=Clock::now();std::vector<int> codes=codeTail;int newCodes=chunk?hop:frames;double llmSeconds=0;
+      for(int i=0;i<newCodes;++i){trace.gate();auto begin=Clock::now();auto logits=llm->forward(generated?std::vector<int>{musicOffset+lastCode}:prefix,generated==0);
+        require(logits.get()!=nullptr&&logits->getInfo()!=nullptr,"LLM resume returned no logits");auto size=logits->getInfo()->size;require(size>=16385,"Wrong music logit shape");const float* data=logits->readMap<float>();require(data,"LLM resume synchronization failed");data+=size-16385;int best=0;for(int j=0;j<16385;++j)require(std::isfinite(data[j]),"Non-finite LLM output");for(int j=1;j<16384;++j)if(data[j]>data[best])best=j;
+        lastCode=best;codes.push_back(best);double elapsed=seconds(begin);llmSeconds+=elapsed;if(generated==0)prefillSeconds=elapsed;else decodeSeconds+=elapsed;++generated;
+      }
+      require(codes.size()==frames,"Bounded code window changed");size_t expectedKv=prefix.size()+generated-1;require(llm->getCurrentHistory()==expectedKv,"KV was reset or advanced incorrectly across codec pause");trace.mark("chunk-"+std::to_string(chunk+1)+"-llm-ready");
+      std::vector<float> mu(frames*1024);for(int t=0;t<frames;++t)for(int c=0;c<1024;++c){float value=bias[c];for(int k=0;k<32;++k)value+=codebook[codes[t]*32+k]*weight[c*32+k];mu[t*1024+c]=value;}peak(mu);
+      std::vector<float> noise(frames*64);for(auto& value:noise)value=normal(rng);std::vector<float> x=noise;double ditSeconds=0;
+      for(int step=0;step<2;++step){
+        trace.gate();float time=step*.5f;if(chunk)for(int t=0;t<overlapFrames;++t)for(int c=0;c<64;++c)x[t*64+c]=(1-(1-1e-4f)*time)*noise[t*64+c]+time*context[t*64+c];
+        std::vector<float> inputs(2*frames*1200,0);
+        for(int b=0;b<2;++b)for(int t=0;t<frames;++t){size_t offset=(b*frames+t)*1200;bool known=chunk&&t<overlapFrames;std::copy_n(mask.data()+(known?48:96),48,inputs.data()+offset);if(known)std::copy_n(context.data()+t*64,64,inputs.data()+offset+48);if(b)std::copy_n(mu.data()+t*1024,1024,inputs.data()+offset+112);std::copy_n(x.data()+t*64,64,inputs.data()+offset+1136);}
+        auto begin=Clock::now();auto velocity=dit->run({{"inputs",std::move(inputs)},{"timestep",{time,time}},{"attention_mask",std::vector<float>(2*frames*frames,1)}},"velocity",2*frames*64);ditSeconds+=seconds(begin);
+        for(size_t j=0;j<x.size();++j)x[j]+=.5f*(velocity[j]+1.5f*(velocity[x.size()+j]-velocity[j]));peak(x);trace.mark("chunk-"+std::to_string(chunk+1)+"-dit-"+std::to_string(step+1));
+      }
+      if(chunk)std::copy(context.begin(),context.end(),x.begin());
+      std::vector<float> latent(64*frames);for(int t=0;t<frames;++t)for(int c=0;c<64;++c)latent[c*frames+t]=x[t*64+c]*stddev[c]+mean[c];
+      trace.gate();auto begin=Clock::now();auto pcm=vae->run({{"latent",std::move(latent)}},"pcm",2*pcmWindow);double vaeSeconds=seconds(begin);maxPcm=std::max(maxPcm,peak(pcm));
+      if(chunk){require(pcmTail.size()==2*pcmOverlap,"Missing bounded PCM tail");for(int channel=0;channel<2;++channel)for(size_t i=0;i<pcmOverlap;++i){float alpha=float(i)/float(pcmOverlap-1);pcm[channel*pcmWindow+i]=pcmTail[channel*pcmOverlap+i]*(1-alpha)+pcm[channel*pcmWindow+i]*alpha;}}
+      size_t count=chunk==chunks-1?pcmWindow:pcmWindow-pcmOverlap;
+      for(int channel=0;channel<2;++channel)for(size_t i=0;i<count;++i){float value=pcm[channel*pcmWindow+i];require(std::isfinite(value),"Non-finite emitted PCM");energy+=double(value)*value;}
+      emittedSamples+=count;
+      if(chunk<chunks-1){pcmTail.resize(2*pcmOverlap);for(int channel=0;channel<2;++channel)std::copy_n(pcm.data()+channel*pcmWindow+pcmWindow-pcmOverlap,pcmOverlap,pcmTail.data()+channel*pcmOverlap);std::copy_n(x.data()+(frames-overlapFrames)*64,overlapFrames*64,context.data());codeTail.assign(codes.end()-overlapFrames,codes.end());}
+      else {pcmTail.clear();codeTail.clear();}
+      sumDit+=ditSeconds;sumVae+=vaeSeconds;trace.mark("chunk-"+std::to_string(chunk+1)+"-pcm-complete");
+      double wall=seconds(trace.start);if(!chunk)result["firstNumericalPacketSeconds"]=wall;
+      rows.push_back({{"chunk",chunk+1},{"newCodecIds",newCodes},{"generatedCodesTotal",generated},{"kvPositions",expectedKv},{"contextFrames",chunk?overlapFrames:0},
+        {"llmSeconds",llmSeconds},{"ditTwoStepSeconds",ditSeconds},{"vaeSeconds",vaeSeconds},{"chunkSeconds",seconds(chunkStart)},
+        {"emittedPcmSeconds",double(count)/48000},{"cumulativePcmSeconds",double(emittedSamples)/48000},{"wallSeconds",wall},
+        {"rssKiB",resident()},{"systemAvailableKiB",available()},{"runningRtf",wall/(double(emittedSamples)/48000)}});
+    }
+    require(generated==1024&&emittedSamples==1024*1920,"Dropped or duplicated codec IDs/PCM at five-chunk end");
+    result["chunks"]=rows;result["generatedCodecIds"]=generated;result["finalKvPositions"]=llm->getCurrentHistory();result["prefillTokens"]=prefix.size();result["prefillSeconds"]=prefillSeconds;result["decodeSeconds"]=decodeSeconds;result["decodeTokensPerSecond"]=1023/decodeSeconds;result["sumDitSeconds"]=sumDit;result["sumVaeSeconds"]=sumVae;
+    result["validPcmSeconds"]=double(emittedSamples)/48000;result["pcmRms"]=std::sqrt(energy/(2*emittedSamples));result["pcmPeak"]=maxPcm;
+    result["pipelineSecondsThroughPcm"]=seconds(trace.start);result["pipelineRtfThroughPcm"]=result["pipelineSecondsThroughPcm"].get<double>()/result["validPcmSeconds"].get<double>();result["pipelinePeakRssKiB"]=trace.maxRss.load();
+    vae.reset();dit.reset();llm.reset();trace.mark("five-all-models-destroyed");std::this_thread::sleep_for(std::chrono::milliseconds(1000));trace.mark("five-release-plus-1-second");
+    trace.gate(1536);dit=std::make_unique<Session>(dir+"/dit/full-w8.mnn",tuned);auto actual=dit->run({{"inputs",read(dir+"/dit/inputs.f32",2*256*1200)},{"timestep",read(dir+"/dit/timestep.f32",2)},{"attention_mask",read(dir+"/dit/attention_mask.f32",2*256*256)}},"velocity",2*256*64);
+    double error=relative(actual,read(dir+"/dit/w8-reference.f32",2*256*64));result["phoneVsPcSameQuantVelocityL2"]=error;result["strictNumericalParityPassed"]=error<.01;dit.reset();trace.mark("five-post-timing-parity-measured");result["flowAndMemoryPassed"]=true;result["success"]=true;
+  }catch(const std::exception& error){result["error"]=error.what();trace.mark("five-chunk-stopped");}
+  trace.sample();result["stages"]=trace.stages;result["sampledPeakRssKiB"]=trace.maxRss.load();result["minimumSystemAvailableKiB"]=trace.minAvailable.load();result["totalSeconds"]=seconds(trace.start);return result.dump();
 }
 #ifndef LEVO_CHAIN_LIBRARY
 int main(int argc,char** argv){if(argc!=3)return 2;auto result=LevoRunChainBench(argv[1],argv[2]);std::cout<<"LEVO_CHAIN_REPORT "<<result<<std::endl;return Json::parse(result)["success"].get<bool>()?0:1;}

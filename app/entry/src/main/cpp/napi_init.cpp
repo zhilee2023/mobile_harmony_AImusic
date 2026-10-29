@@ -21,13 +21,13 @@ static napi_value Vae(napi_env env,napi_callback_info info){
     napi_value args[2];size_t count=2;napi_get_cb_info(env,info,&count,args,nullptr,nullptr);
     if(count!=2){napi_throw_type_error(env,nullptr,"Expected fixture directory and precision");return nullptr;}
     auto task=std::make_unique<VaeTask>();task->directory=ReadString(env,args[0]);task->precision=ReadString(env,args[1]);
-    task->chain=task->precision=="serial"||task->precision=="keep-llm"||task->precision=="all"||task->precision=="all-w4"||task->precision=="llm-short"||task->precision=="llm-long";
+    task->chain=task->precision=="serial"||task->precision=="keep-llm"||task->precision=="all"||task->precision=="all-w4"||task->precision=="llm-short"||task->precision=="llm-long"||task->precision=="chunks-5"||task->precision=="chunks-5-tuned";
     if(task->directory.empty()||(!task->chain&&task->precision!="high"&&task->precision!="low")){napi_throw_type_error(env,nullptr,"Invalid diagnostic options");return nullptr;}
     if(busy.exchange(true)){napi_throw_error(env,nullptr,"A numerical test is already running");return nullptr;}
     napi_value promise,name;napi_create_promise(env,&task->deferred,&promise);napi_create_string_utf8(env,"LevoVaeStream",NAPI_AUTO_LENGTH,&name);
     auto execute=[](napi_env,void* data){auto* job=static_cast<VaeTask*>(data);
 #ifdef LEVO_WITH_MNN
-      job->result=job->chain?LevoRunChainBench(job->directory,job->precision):LevoRunVaeBench(job->directory,job->precision);
+      job->result=(job->precision=="chunks-5"||job->precision=="chunks-5-tuned")?LevoRunFiveChunks(job->directory,job->precision=="chunks-5-tuned"):(job->chain?LevoRunChainBench(job->directory,job->precision):LevoRunVaeBench(job->directory,job->precision));
 #else
       job->result="{\"success\":false,\"error\":\"This build has no linked MNN runtime\"}";
 #endif

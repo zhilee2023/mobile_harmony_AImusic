@@ -1,11 +1,11 @@
-# 手动签名安装LeVo Harmony v0.1.4
+# 手动签名安装LeVo Harmony v0.1.5
 
 用户要求自己操作电脑界面；不使用computer-use。当前App是**数值与内存诊断版**，不是已训练的音乐生成产品。
 
 ## 已构建内容
 
 - 工程：`C:\levo-harmony\app`，独立包名`com.zhilee.levoharmony`。
-- 未签名安装包：`C:\levo-harmony\dist\LeVo-Harmony-v0.1.4-unsigned.hap`；用户本地签名包在`app\entry\build\default\outputs\default\entry-default-signed.hap`。
+- 未签名安装包：`C:\levo-harmony\dist\LeVo-Harmony-v0.1.5-unsigned.hap`；用户本地签名包在`app\entry\build\default\outputs\default\entry-default-signed.hap`。
 - 测试数据：`C:\levo-harmony\dist\vae-stream-256`，恰好12个文件，约0.36GB。
 - 使用已有MNN静态库的本机路径保存在忽略的`app/entry/src/main/cpp/levo-local.cmake`，DevEco后续编译仍会链接同一运行时。它不包含签名凭据，也不修改原CosyVoice工程。
 
@@ -15,7 +15,7 @@
 2. 进入 **File → Project Structure → Project → Signing Configs**（不同语言界面可能显示“签名配置”）。
 3. 选择`default`产品，使用 **Automatically generate signature / 自动生成签名**。确认当前包名是`com.zhilee.levoharmony`，使用你已经登录的华为开发者账号和已连接手机完成自动签名。
 4. 点击 **Apply / OK**，顶部设备列表选择Mate 80 Pro，点击绿色 **Run ▶**。若有账号登录或手机确认，由你本人完成。
-5. 安装成功后手机应出现 **LeVo Harmony** 图标，首页显示`v0.1.4`及“10.24秒分块实验”。若构建提示`No signingConfig found for product default`，需要把已生成的default签名关联到default产品；仅生成签名而未关联仍会输出unsigned包。
+5. 安装成功后手机应出现 **LeVo Harmony** 图标，首页显示`v0.1.5`及“10.24秒分块实验”。若构建提示`No signingConfig found for product default`，需要把已生成的default签名关联到default产品；仅生成签名而未关联仍会输出unsigned包。
 
 首页“读取设备内存”还会显示HiDebug提供的App进程RSS/VSS限制与RSS/PSS；数值为0或远大于物理RAM的限额哨兵不作为可用上限，不能将系统可用量当作App无OOM保证。
 
@@ -34,3 +34,5 @@
 3个256帧窗口，每块10.24秒，重叠64帧/2.56秒，最终有效25.60秒。只保留当前块和前一块PCM尾部；不把整篇PCM累积在内存。
 
 这组按钮使用真实VAE权重及合成latent，不播放数值夹具，显示模块RTF。v0.1.4另有“三模块”诊断按钮，需预装约1.66GB的W8诊断资产，W4对照另加约0.46GB；本机已部署，路径与详情见THREE_MODULE_VALIDATION.md。该链路的随机音乐头未训练，整链流程/内存通过不代表严格数值或歌曲音质通过；尚无播放器/跨窗长流验收。
+
+v0.1.5增加连续5块测试，复用同一KV和DiT/VAE会话，数值sink有效40.96秒；详见FIVE_CHUNK_VALIDATION.md。请保持手机亮屏、LeVo前台，观察器超时后先检查原进程，不要再次点击启动并行测试。播放器仍未接入。

@@ -2,6 +2,12 @@
 
 更新时间：2026-10-29。本文是交接文档，不代表下列未完成项已验收。
 
+> 最新v0.1.5五块连续测试已完成：同一LLM KV跨codec暂停/恢复，256新码＋4×192新码=1024，KV终态1537；同一DiT/VAE会话，64帧latent context和有界PCM交叉渐变。有效40.96秒，113.107秒，RTF2.761，峰值2324MiB。详见FIVE_CHUNK_VALIDATION.md和统一报告`five_chunk_validation_2026_10_29`。目标1.5尚未实现，不能假定只优化DiT就够：把DiT38.015秒全部去掉，其他阶段不变仍RTF约1.83。
+
+> 新Low/8线程候选：独立DiT CPU Low有限、约3.0秒/单步，不能据此承诺整链更快。首轮观察超时、PID40681/SLEEP，用户亮屏后同一任务已完成；1038秒包含长暂停，不能用于性能排名。确认该任务终止后再独立前台复测R2，141.041秒/RTF3.443、2266MiB，比基线更慢，组合不启用，不要再等待旧PID。MNN Transformer融合+C4转换失败；C4关闭隔离也退出0xC0000409且无模型，保留失败路线。
+
+> LLM Kleidi开关配对也完成：本机库MNN_KLEIDIAI=ON、DEFAULT_ON=OFF，llm.cpp已有`cosyvoice_kleidiai`补丁，静态库包含此字符串。同一CLI/514前缀/256输出，关闭55.40 token/s，开启52.90，无decode提速，未确认逐层实际选核，不启用默认路径。`LevoRunChainBench(...,"llm-kleidi")`仅增加CLI探针；App仍保持现有测试入口。CLI会覆盖通用进度文件，之后判断任务须结合App lastRunId与PID。
+
 > 最新v0.1.4已实际签名安装：26层真实Qwen体W4/g64＋随机音乐头W8/embedding BF16→完整39层DiT W8或W4/g48两步→VAE CPU Low，App后台NAPI跑通单窗10.24秒。阶段释放峰值909MiB/RTF2.49；保留LLM为1310MiB/2.84；全部共驻W8为2070–2074MiB/2.40–2.57，W4为1810–1815MiB/2.60–3.03。KV验证769位置。PC完整DiT W8/W4相对FP32约3.93%/16.70%，手机同量化对照未过1%严格门槛；`flowAndMemoryPassed`不等于`strictNumericalParityPassed`。首轮严格失败保留。详见THREE_MODULE_VALIDATION.md、KERNEL_REUSE_REVIEW.md及统一报告`signed_three_module_validation_2026_10_29`。不许把随机头输出当歌，不许打开生产模型music_trained开关。
 
 > 签名与路径：用户生成default signingConfig后未关联default产品，本轮只在本地`app/build-profile.json5`补关联；该文件现在含本地签名配置，绝不可提交。IDE生成文件原样保留。真实模块filesDir为`.../haps/entry/files`，早先应用级files路径错误导致的失败已查清。诊断包26资产＋bundle.json已在手机three-module/，模型未上传。测试入口Want参数由run_signed_chain.ps1设置；不使用computer-use。HiDebug返回超大限额哨兵，已标不可用，不是无限内存。
