@@ -1,6 +1,6 @@
 # mobile_harmony_AImusic · levo-harmony
 
-面向16GB Mate 80 Pro的独立混合歌曲研究工程。**v0.1.3是可测试的学生模型原型和可构建的鸿蒙诊断App，不是已经训练好的0.6B LeVo。** CosyVoice与ACE项目保留。
+面向16GB Mate 80 Pro的独立混合歌曲研究工程。**v0.1.4是已签名真机测试的三模块流程/内存诊断App，不是已经训练好的0.6B LeVo。** CosyVoice与ACE项目保留。
 
 目标：最多512个歌词token＋1个风格前缀 → 约0.6B自回归骨干 → 单路Mixed音乐token → DiT → 48kHz双声道VAE。取消双轨分支，但保留人声＋伴奏的混合歌曲。
 
@@ -9,13 +9,13 @@
 - 已实际加载完整Qwen3-0.6B公开权重并核对SHA256；独立音乐embedding、音乐头、风格embedding仍未训练。
 - 单路音乐teacher forcing、KV增量decode、EOS、最大长度与codec身份检查；未训练音乐头禁止生成。
 - 监督/教师logit蒸馏训练入口，参数计数与KV预算工具。
-- 真实DiT单层手机32/256帧对齐；完整真实VAE导出、手机三窗数值/内存测试。完整预训练DiT＋VAE已在PC通过两窗数值链路，手机完整codec仍未验证。
-- 独立包名鸿蒙ArkTS＋C++内存诊断App；未签名HAP构建，不复制本地证书。
+- 完整39层真实DiT已导出MNN W8/W4，与26层骨干及真实VAE接入签名App完成单窗流程；严格数值误差与内存流程分开报告，未作音乐质量验收。
+- 独立包名鸿蒙ArkTS＋C++诊断App，用户本地自动签名并通过HDC安装测试；签名材料不上传。
 - GitHub CPU参考测试；没有上传模型权重。
 
 最新结果见[统一报告](reports/levo-test-report.json)。10.24秒窗口和0.6B接口见[分块与学生说明](docs/STREAMING_AND_STUDENT.md)。App由用户[手动签名安装](docs/INSTALL_MANUAL.md)，无电脑界面自动操作。
 
-后续实验已保存可重载的真实26层文本骨干（含音乐模块的学生总参数约0.598B，但未恢复训练），并提供保留KV的可暂停token流。VAE64帧工作区候选降至约348MiB；完整三模型共驻和歌曲生成仍未验收。
+已保存可重载的真实26层文本骨干（含音乐模块总参数约0.598B，未恢复训练），提供保留KV的可暂停token流。VAE64帧候选约348MiB。最新单窗三模块W8共驻峰值约2.03GiB、整链RTF2.40–2.57；W4约1.77GiB、RTF2.60–3.03。音乐头为随机初始化，跨窗/长文稳定性及数值/音质验收尚未完成。详见[真机三模块记录](docs/THREE_MODULE_VALIDATION.md)和[内核复用评估](docs/KERNEL_REUSE_REVIEW.md)。
 
 2026-10-29完整codec验证：严格加载526个CFM参数张量，20步Euler解码两个256帧窗口、64帧重叠，输出17.92秒有限值PCM。整网SDPA对eager相对L2约1.01e-6，采样器对官方实现约3.26e-7。使用测试codec ID，未接训练好的音乐LM；这是PC数值验证，不是手机RTF或音质验收。
 

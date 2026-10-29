@@ -8,10 +8,11 @@
 #include <hidebug/hidebug.h>
 #ifdef LEVO_WITH_MNN
 #include "VaeBench.hpp"
+#include "ChainBench.hpp"
 #endif
 
 static std::atomic<bool> busy{false};
-struct VaeTask { napi_async_work work{};napi_deferred deferred{};std::string directory,precision,result; };
+struct VaeTask { napi_async_work work{};napi_deferred deferred{};std::string directory,precision,result;bool chain=false; };
 static std::string ReadString(napi_env env,napi_value value){
     size_t size=0;if(napi_get_value_string_utf8(env,value,nullptr,0,&size)!=napi_ok||size>4096)return {};
     std::string text(size+1,'\0');napi_get_value_string_utf8(env,value,text.data(),text.size(),&size);text.resize(size);return text;
@@ -20,12 +21,13 @@ static napi_value Vae(napi_env env,napi_callback_info info){
     napi_value args[2];size_t count=2;napi_get_cb_info(env,info,&count,args,nullptr,nullptr);
     if(count!=2){napi_throw_type_error(env,nullptr,"Expected fixture directory and precision");return nullptr;}
     auto task=std::make_unique<VaeTask>();task->directory=ReadString(env,args[0]);task->precision=ReadString(env,args[1]);
-    if(task->directory.empty()||(task->precision!="high"&&task->precision!="low")){napi_throw_type_error(env,nullptr,"Invalid VAE options");return nullptr;}
+    task->chain=task->precision=="serial"||task->precision=="keep-llm"||task->precision=="all"||task->precision=="all-w4"||task->precision=="llm-short"||task->precision=="llm-long";
+    if(task->directory.empty()||(!task->chain&&task->precision!="high"&&task->precision!="low")){napi_throw_type_error(env,nullptr,"Invalid diagnostic options");return nullptr;}
     if(busy.exchange(true)){napi_throw_error(env,nullptr,"A numerical test is already running");return nullptr;}
     napi_value promise,name;napi_create_promise(env,&task->deferred,&promise);napi_create_string_utf8(env,"LevoVaeStream",NAPI_AUTO_LENGTH,&name);
     auto execute=[](napi_env,void* data){auto* job=static_cast<VaeTask*>(data);
 #ifdef LEVO_WITH_MNN
-      job->result=LevoRunVaeBench(job->directory,job->precision);
+      job->result=job->chain?LevoRunChainBench(job->directory,job->precision):LevoRunVaeBench(job->directory,job->precision);
 #else
       job->result="{\"success\":false,\"error\":\"This build has no linked MNN runtime\"}";
 #endif
@@ -55,15 +57,17 @@ static napi_value Memory(napi_env env, napi_callback_info) {
        <<",\"rssLimitBytes\":\""<<limit(rssOK,rss.rlim_cur)<<"\",\"addressLimitBytes\":\""<<limit(spaceOK,space.rlim_cur)
        <<"\",\"appRssLimitKiB\":"<<appLimit.rssLimit<<",\"appVssLimitKiB\":"<<appLimit.vssLimit
        <<",\"processPssKiB\":"<<appMemory.pss<<",\"processRssKiB\":"<<appMemory.rss
-       <<",\"reportedLimitAvailable\":"<<(appLimit.rssLimit?"true":"false")
+       <<",\"reportedLimitAvailable\":"<<((total>0&&appLimit.rssLimit>0&&appLimit.rssLimit<=total)?"true":"false")
+       <<",\"limitInterpretation\":\"Nonzero values above physical RAM may be unlimited sentinels; not an allocation guarantee\""
        <<",\"safeAllocationCeilingTested\":false}";
     napi_value result; auto value=out.str(); napi_create_string_utf8(env,value.c_str(),value.size(),&result); return result;
 }
 static napi_value Init(napi_env env,napi_value exports){
     napi_property_descriptor props[]={
       {"memoryProbe",nullptr,Memory,nullptr,nullptr,nullptr,napi_default,nullptr},
-      {"runVaeStream",nullptr,Vae,nullptr,nullptr,nullptr,napi_default,nullptr}};
-    napi_define_properties(env,exports,2,props);return exports;
+      {"runVaeStream",nullptr,Vae,nullptr,nullptr,nullptr,napi_default,nullptr},
+      {"runThreeModuleChain",nullptr,Vae,nullptr,nullptr,nullptr,napi_default,nullptr}};
+    napi_define_properties(env,exports,3,props);return exports;
 }
 static napi_module mod={1,0,nullptr,Init,"entry",nullptr,{0}};
 extern "C" __attribute__((constructor)) void Register(){napi_module_register(&mod);}

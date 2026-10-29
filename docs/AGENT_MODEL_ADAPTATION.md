@@ -2,6 +2,12 @@
 
 更新时间：2026-10-29。本文是交接文档，不代表下列未完成项已验收。
 
+> 最新v0.1.4已实际签名安装：26层真实Qwen体W4/g64＋随机音乐头W8/embedding BF16→完整39层DiT W8或W4/g48两步→VAE CPU Low，App后台NAPI跑通单窗10.24秒。阶段释放峰值909MiB/RTF2.49；保留LLM为1310MiB/2.84；全部共驻W8为2070–2074MiB/2.40–2.57，W4为1810–1815MiB/2.60–3.03。KV验证769位置。PC完整DiT W8/W4相对FP32约3.93%/16.70%，手机同量化对照未过1%严格门槛；`flowAndMemoryPassed`不等于`strictNumericalParityPassed`。首轮严格失败保留。详见THREE_MODULE_VALIDATION.md、KERNEL_REUSE_REVIEW.md及统一报告`signed_three_module_validation_2026_10_29`。不许把随机头输出当歌，不许打开生产模型music_trained开关。
+
+> 签名与路径：用户生成default signingConfig后未关联default产品，本轮只在本地`app/build-profile.json5`补关联；该文件现在含本地签名配置，绝不可提交。IDE生成文件原样保留。真实模块filesDir为`.../haps/entry/files`，早先应用级files路径错误导致的失败已查清。诊断包26资产＋bundle.json已在手机three-module/，模型未上传。测试入口Want参数由run_signed_chain.ps1设置；不使用computer-use。HiDebug返回超大限额哨兵，已标不可用，不是无限内存。
+
+> 最新完整DiT热点：W8 FFN41.8%、Raster13.7%、Binary14.1%、QKV12.4%。旧CosyVoice手动Kleidi W8A8 i8mm FFN尚未迁入LeVo；旧1024/2048/22层不同于本1200/4800/39层。复制旧实现会重复保留FFN权重，迁移先做真实FFN down核和内存记账。两个模型所有新测试运行CPU，不是NPU/GPU。
+
 > 亮屏补测完成：同一VAE Low/6线程/Power High按64→256→256→64测试，四轮端点均AWAKE。64帧RTF1.220/1.211、峰值约348MiB、首次数值包2.77/2.64秒；256帧1.119/1.166、约814MiB、9.55/10.79秒。历史SLEEP启动同配置分别1.250/1.145，不能据此声称亮屏大幅提速。全部文件校验、逐块误差与历史一致，统一报告`awake_vae_validation_2026_10_29`。仍是CLI VAE模块，不是整链/App/扬声器成绩。用户产生的app/.idea、oh_modules和lock文件留在原处，未作为本次测试提交。
 
 > 最新完整codec：Mixed推理权重子集已下载完成并核对自身SHA256（未下载整个原文件，不能声称原文件全量SHA已验证）。526个CFM张量严格加载，完整751,534,224参数；真实VAE严格加载。PC两个256帧窗口、64帧上下文、每窗20步通过，PCM有效17.92秒且全部有限。首窗DiT47.141秒/VAE6.414秒，次窗45.587秒/5.641秒；不是手机性能。统一报告`full_codec_cpu_2026_10_29`保存结果和来源。`tools/validate_real_codec.py`复现，`tools/merge_full_codec_validation.py`合并。注意普通CPU构造保留非持久attention buffer；meta构造后仅assign权重不足。PCM拼接采用非原地操作，避免inference tensor限制。仍缺全DiT的MNN导出、手机全链与共驻验证、训练好的0.6B音乐头和有界播放器；不要将测试ID输出称为歌曲。下方下载中描述均属历史状态。

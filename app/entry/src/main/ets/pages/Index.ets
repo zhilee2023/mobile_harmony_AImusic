@@ -3,18 +3,20 @@ import { common } from '@kit.AbilityKit';
 import { fileIo as fs, picker } from '@kit.CoreFileKit';
 
 interface VaeResult { success: boolean; error?: string; decoderOnlyComputeRtf?: number; sampledPeakRssKiB?: number; }
+interface ChainResult { success: boolean; error?: string; policy: string; totalSeconds?: number; sampledPeakRssKiB?: number; }
 interface AppMemoryInfo { totalKiB: number; availableKiB: number; appRssLimitKiB: number; appVssLimitKiB: number; processPssKiB: number; processRssKiB: number; }
-interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; memory?: AppMemoryInfo; }
+interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; chainSerial?: ChainResult; chainKeepLlm?: ChainResult; chainAll?: ChainResult; chainAllW4?: ChainResult; llmShort?: ChainResult; llmLong?: ChainResult; memory?: AppMemoryInfo; memoryBeforeRun?: AppMemoryInfo; lastRunId?: string; }
 
 @Entry
 @Component
 struct Index {
   @State lyrics: string = '[Verse]\n晚风轻轻吹过窗台\n星光落在你的眼海';
   @State style: number = 0;
-  @State status: string = 'v0.1.3 · 数值与内存诊断；尚无训练好的0.6B音乐权重';
+  @State status: string = 'v0.1.4 · 数值与内存诊断；尚无训练好的0.6B音乐权重';
   @State memory: string = '';
   @State assets: string = '尚未检查测试文件';
   @State busy: boolean = false;
+  private diagnosticRunId: string = '';
   private required: string[] = ['fixture.json', 'vae-256-fp32.mnn', 'vae-256-fp32.mnn.weight',
     'latent-0.f32', 'latent-1.f32', 'latent-2.f32', 'pcm-0.f32', 'pcm-1.f32', 'pcm-2.f32',
     'emit-0.f32', 'emit-1.f32', 'emit-2.f32'];
@@ -25,7 +27,21 @@ struct Index {
     this.required.forEach((name: string) => { try { if (fs.accessSync(`${this.modelDir()}/${name}`)) count++; } catch (_) {} });
     this.assets = `测试文件 ${count}/${this.required.length} · VAE 256帧／10.24秒窗`;
   }
-  aboutToAppear(): void { this.refresh(); }
+  aboutToAppear(): void {
+    this.refresh();
+    const precision = AppStorage.get<string>('levoDiagnosticPrecision');
+    if (precision === 'high' || precision === 'low') {
+      this.diagnosticRunId = AppStorage.get<string>('levoDiagnosticRunId') ?? '';
+      AppStorage.delete('levoDiagnosticPrecision');
+      AppStorage.delete('levoDiagnosticRunId');
+      this.runVae(precision);
+    } else if (precision === 'chain-serial' || precision === 'chain-keep-llm' || precision === 'chain-all' || precision === 'chain-all-w4' || precision === 'chain-llm-short' || precision === 'chain-llm-long') {
+      this.diagnosticRunId = AppStorage.get<string>('levoDiagnosticRunId') ?? '';
+      AppStorage.delete('levoDiagnosticPrecision');
+      AppStorage.delete('levoDiagnosticRunId');
+      this.runChain(precision.substring(6));
+    }
+  }
   private async importFiles(): Promise<void> {
     this.busy = true;
     try {
@@ -46,11 +62,15 @@ struct Index {
     this.busy = true;
     this.status = `正在后台运行 VAE ${precision}：3个窗，保留64帧尾部；不播放数值夹具`;
     try {
+      const memoryBeforeRun = JSON.parse(native.memoryProbe()) as AppMemoryInfo;
       const raw: string = await native.runVaeStream(this.modelDir(), precision);
       const report = JSON.parse(raw) as VaeResult;
       const reportPath = `${this.context().filesDir}/levo-test-report.json`;
-      let archive: TestArchive = { version: '0.1.3', scope: 'VAE-only numerical stream; no DiT/LLM or speaker playback' };
+      let archive: TestArchive = { version: '0.1.4', scope: 'VAE-only numerical stream; no DiT/LLM or speaker playback' };
       try { archive = JSON.parse(fs.readTextSync(reportPath)) as TestArchive; } catch (_) {}
+      archive.version = '0.1.4';
+      archive.memoryBeforeRun = memoryBeforeRun;
+      archive.lastRunId = this.diagnosticRunId;
       if (precision === 'high') archive.high = report; else archive.low = report;
       archive.memory = JSON.parse(native.memoryProbe()) as AppMemoryInfo;
       const file = fs.openSync(reportPath, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE | fs.OpenMode.TRUNC);
@@ -60,6 +80,7 @@ struct Index {
       } else { this.status = `测试未通过：${report.error ?? '查看统一报告'}`; }
     } catch (error) { this.status = `测试失败：${String(error)}`; }
     this.memory = native.memoryProbe();
+    this.diagnosticRunId = '';
     this.busy = false;
   }
   private async exportReport(): Promise<void> {
@@ -68,6 +89,33 @@ struct Index {
       const uris = await view.save({ newFileNames: ['levo-test-report.json'] });
       if (uris.length) fs.copyFileSync(`${this.context().filesDir}/levo-test-report.json`, uris[0]);
     } catch (error) { this.status = `导出失败：${String(error)}`; }
+  }
+  private async runChain(policy: string): Promise<void> {
+    this.busy = true;
+    this.status = `三模块诊断 ${policy}：512歌词占位token＋风格＋BOS，LLM 256码→完整DiT两步→VAE；音乐头未训练`;
+    try {
+      const memoryBeforeRun = JSON.parse(native.memoryProbe()) as AppMemoryInfo;
+      const raw: string = await native.runThreeModuleChain(`${this.context().filesDir}/three-module`, policy);
+      const result = JSON.parse(raw) as ChainResult;
+      const reportPath = `${this.context().filesDir}/levo-test-report.json`;
+      let archive: TestArchive = { version: '0.1.4', scope: 'Diagnostic module flow and memory; untrained music adapters, no quality validation' };
+      try { archive = JSON.parse(fs.readTextSync(reportPath)) as TestArchive; } catch (_) {}
+      if (policy === 'serial') archive.chainSerial = result;
+      else if (policy === 'keep-llm') archive.chainKeepLlm = result;
+      else if (policy === 'all-w4') archive.chainAllW4 = result;
+      else if (policy === 'llm-short') archive.llmShort = result;
+      else if (policy === 'llm-long') archive.llmLong = result;
+      else archive.chainAll = result;
+      archive.memoryBeforeRun = memoryBeforeRun;
+      archive.memory = JSON.parse(native.memoryProbe()) as AppMemoryInfo;
+      archive.lastRunId = this.diagnosticRunId;
+      const file = fs.openSync(reportPath, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE | fs.OpenMode.TRUNC);
+      try { fs.writeSync(file.fd, JSON.stringify(archive)); } finally { fs.closeSync(file); }
+      this.status = result.success ? `三模块数值流程完成 ${policy}；峰值RSS ${((result.sampledPeakRssKiB ?? 0) / 1024).toFixed(1)} MiB，总耗时 ${result.totalSeconds?.toFixed(2)}秒。不是可听歌曲或长期稳定性验收。` : `三模块安全停止：${result.error}`;
+    } catch (error) { this.status = `三模块测试失败：${String(error)}`; }
+    this.memory = native.memoryProbe();
+    this.diagnosticRunId = '';
+    this.busy = false;
   }
   build() {
     Scroll() {
@@ -89,6 +137,11 @@ struct Index {
         Button('刷新文件状态').enabled(!this.busy).width('100%').onClick(() => { this.refresh(); })
         Button('VAE CPU High · 三窗数值与内存').enabled(!this.busy).width('100%').onClick(() => { this.runVae('high'); })
         Button('VAE CPU Low · 三窗数值与内存').enabled(!this.busy).width('100%').onClick(() => { this.runVae('low'); })
+        Text('三模块内存诊断 · 需预装独立测试包').fontColor('#A9B9D2')
+        Button('三模块 · 每阶段释放').enabled(!this.busy).width('100%').onClick(() => { this.runChain('serial'); })
+        Button('三模块 · 保留LLM和KV').enabled(!this.busy).width('100%').onClick(() => { this.runChain('keep-llm'); })
+        Button('三模块 · 全部共驻').enabled(!this.busy).width('100%').onClick(() => { this.runChain('all'); })
+        Button('三模块 · DiT W4全部共驻').enabled(!this.busy).width('100%').onClick(() => { this.runChain('all-w4'); })
         Button('导出统一测试报告').enabled(!this.busy).width('100%').onClick(() => { this.exportReport(); })
         Text('当前实验使用真实VAE和合成latent；先测数值与有界内存，不是完整DiT/LLM生成，也未验证播放器。')
           .fontColor('#A9B9D2').fontSize(13).width('100%')

@@ -19,5 +19,5 @@ try {
   & "$env:NODE_HOME\node.exe" "$DevEcoRoot\tools\hvigor\bin\hvigorw.js" --mode module -p product=default -p module=entry@default -p buildMode=debug assembleHap --no-daemon
   if($LASTEXITCODE -ne 0){throw 'Harmony build failed'}
 } finally { Pop-Location }
-# Unsigned by design. Use DevEco automatic signing for com.zhilee.levoharmony.
+# Unsigned unless the user associates a local DevEco signing configuration.
 # Never commit local signing material or reuse the CosyVoice bundle identity.
