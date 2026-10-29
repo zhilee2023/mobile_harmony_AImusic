@@ -50,3 +50,7 @@ CLI配对三个电源检查点为AWAKE。App真实执行1024码、KV1537、5块�
 `tools/validate_vae_w8.py`验证PC三窗；`build-native-bench.ps1`编译专用kernel、热点、CANN匹配对照和融合探针。独立kernel参数示例：`fixtureDir low 6 high w8-vsin low`；`--sin-selftest`穷举FP16输入。
 
 统一合并：`tools/merge_vae_optimization.py`，输出仍为`reports/levo-test-report.json`，不用发送散日志。模型与签名材料不上传。手机App的W8两文件在`haps/entry/files/three-module/vae/`；本轮已传入，新设备需另复制。单算子探针是独立CLI，不在App常规生成路径。
+
+## 后续常量提取修正
+
+`tools/extract_vae_snake_coefficients.py`从简化ONNX提取36组原始alpha/倒数beta，623,160字节，避免读取运行时广播展开后的大张量。融合探针改为读取snake-coefficients.json并已重新编译。首次准备真机验证时检测到SLEEP，因此未启动；该改动尚无真机等价性或提速证据，不在v0.1.6 App路径中。执行前必须保持亮屏，使用timeout 45边界，并检查原W8 PCM的L2门槛。

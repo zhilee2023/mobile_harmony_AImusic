@@ -18218,5 +18218,20 @@
       "Original graph allocations retained in callback fusion prototype; no memory saving claim",
       "Endpoint AWAKE checks do not replace continuous temperature/scheduling controls"
     ]
+  },
+  "vae_snake_immutable_followup_2026_10_29": {
+    "status": "compiled; phone check found SLEEP, no runtime probe started",
+    "runtimeVerified": false,
+    "productionChanged": false,
+    "immutableCoefficientExtraction": {
+      "groups": 36,
+      "bytes": 623160,
+      "sha256": "9eb1d18168e8252e945470884df90357fb4c71aadba88c1962503d8eb3588751"
+    },
+    "sourceSha256": {
+      "native-bench/VaeSnakeFusion.cpp": "db37300f4be4da2c73b6af8bf833fcdd0735a5657296de39a3e168b4639321cd",
+      "tools/extract_vae_snake_coefficients.py": "751cc34457c8b5b867b46d22b7fa6f989bf0fda155d07b7e82aaafeb61949522"
+    },
+    "nextCheck": "Bounded 45-second probe only after awake and within authorized usage window; preserve numeric/layout gates"
   }
 }
