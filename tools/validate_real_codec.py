@@ -50,7 +50,9 @@ def main():
     if digest.hexdigest()!=manifest['subset_sha256']:raise ValueError('Mixed subset integrity mismatch')
     state=load_file(folder/'mixed-inference.safetensors')
     begin=time.perf_counter()
-    with torch.device('meta'):cfm=RestoredMixedCfm(ROOT/'reference/LeVo')
+    # Construct on CPU so non-persistent upstream attention buffers are real,
+    # too. assign=True alone does not materialize buffers absent from state_dict.
+    cfm=RestoredMixedCfm(ROOT/'reference/LeVo')
     weights={name.removeprefix('cfm_wrapper.'):value for name,value in state.items() if name.startswith('cfm_wrapper.')}
     cfm.load_state_dict(weights,strict=True,assign=True);cfm.eval()
     load_seconds=time.perf_counter()-begin
@@ -103,7 +105,9 @@ def main():
         if list(pcm.shape)!=[2,256*1920] or not torch.isfinite(pcm).all():raise ValueError('Real codec PCM failed')
         count=64*1920
         if pcm_tail is not None:
-            ramp=torch.linspace(0,1,count)[None];pcm[:,:count]=pcm_tail*(1-ramp)+pcm[:,:count]*ramp
+            ramp=torch.linspace(0,1,count)[None]
+            overlap=pcm_tail*(1-ramp)+pcm[:,:count]*ramp
+            pcm=torch.cat((overlap,pcm[:,count:]),dim=-1)
         if index==0:pcm_tail=pcm[:,-count:].clone();emitted.append(pcm[:,:-count].clone())
         else:emitted.append(pcm.clone())
         chunks.append({'chunk':index+1,'frames':256,'context_frames':0 if index==0 else 64,

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.3-lifecycle-validation",
+  "version": "0.1.3-full-codec-cpu",
   "student": {
     "actual_parameters": 629640192,
     "backbone_parameters": 596049920,
@@ -56,9 +56,9 @@
     "real_song_generated": false,
     "rtf_measured": false,
     "blocking_work": [
-      "complete real Mixed DiT download and multi-step validation",
+      "complete full codec MNN export and phone numerical validation",
       "train0.6B music/style adapters with legitimate paired data",
-      "validate full phone codec and bounded playback queue",
+      "validate full LLM/DiT/VAE co-residency and bounded player queue",
       "user signs and installs independent diagnostic App"
     ]
   },
@@ -3870,5 +3870,64 @@
       "Smaller VAE windows change boundary error; no listening-quality claim"
     ],
     "mixed_download_range_bytes": 2776629248
+  },
+  "full_codec_cpu_2026_10_29": {
+    "full_pretrained_cfm_loaded": true,
+    "cfm_tensors": 526,
+    "cfm_parameters": 751534224,
+    "load_seconds": 8.2284185999888,
+    "full_source_sha256_verified": false,
+    "subset_sha256_verified": true,
+    "subset_sha256": "c62991442e5a1e36718a16226efdf6daf6b9839182b90452d9541f8194ae36c3",
+    "full_network_sdpa_vs_eager_l2": 1.0147952025363338e-06,
+    "official_solver_relative_l2": 3.263620840243675e-07,
+    "full_pretrained_vae_loaded": true,
+    "steps_per_chunk": 20,
+    "guidance": 1.5,
+    "chunks": [
+      {
+        "chunk": 1,
+        "frames": 256,
+        "context_frames": 0,
+        "dit_seconds": 47.14084609999554,
+        "vae_seconds": 6.414038200018695,
+        "latent_peak": 5.909259796142578,
+        "pcm_peak": 0.6029592752456665,
+        "pcm_finite": true
+      },
+      {
+        "chunk": 2,
+        "frames": 256,
+        "context_frames": 64,
+        "dit_seconds": 45.58741029998055,
+        "vae_seconds": 5.641243599995505,
+        "latent_peak": 5.067948341369629,
+        "pcm_peak": 0.6040764451026917,
+        "pcm_finite": true
+      }
+    ],
+    "output_shape": [
+      2,
+      860160
+    ],
+    "effective_pcm_seconds": 17.92,
+    "synthetic_codec_ids": true,
+    "student_lm_connected": false,
+    "real_song_generated": false,
+    "scope": "Windows CPU real full codec numerical chain; not phone RTF, trained music-LM generation or listening-quality validation",
+    "as_of_utc": "2026-10-29T05:01:43.991003+00:00",
+    "source_code_sha256": "18c37e6d4476e4cf93b3dc809e221eed6496e6a1a23d2cb509efa03c953c8c95",
+    "download_manifest": {
+      "repo": "lglg666/SongGeneration-Runtime",
+      "revision": "cc258cc694a63114c61684cc26d0583b8ad777d0",
+      "file": "ckpt/model_1rvq/model_2_fixed.safetensors",
+      "bytes": 4704507596,
+      "lfs_sha256": "339a16956b859a82defc02bfd32c3744d11ff942065f6ec9306dfd4400d62110",
+      "subset_tensor_count": 540,
+      "subset_sha256": "c62991442e5a1e36718a16226efdf6daf6b9839182b90452d9541f8194ae36c3",
+      "full_source_sha256_verified": false,
+      "scope": "Exact ranged HTTP responses from pinned source; inference subset"
+    },
+    "full_inference_subset_bytes": 3008637660
   }
 }
