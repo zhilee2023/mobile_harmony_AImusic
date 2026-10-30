@@ -11,7 +11,7 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('directory',type=Path);args=parser.parse_args()
     root=args.directory.resolve();manifest=json.loads((root/'manifest.json').read_text())
     for case in manifest['candidateCases']:
-        name=case['id'];assert name in ('residual-d1-h1','residual-d1-h4','residual-stack3-h4','residual-stack3-compact')
+        name=case['id'];assert name in ('residual-d1-h1','residual-d1-h4','residual-stack3-h4','residual-stack3-compact','pureconv6-h4','pureconv-k7-d1-h4','pureconv-k7-d3-h4','pureconv-k7-d9-h4')
         source=root/(name+'-nchw.onnx')
         assert hashlib.sha256(source.read_bytes()).hexdigest()==case['modelSha256']
         for bits in (0,8):

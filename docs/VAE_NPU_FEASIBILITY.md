@@ -73,3 +73,26 @@ NPU首次分别25.66/47.85/224.44/264.54ms，加载构建约35.9–213.5ms，已
 结论：已证明连续子图可以NPU-only运行，但本轮四组均未快于原W8＋NEON CPU，App保留原入口。两轮端点为AWAKE；固定顺序、仅三次预热样本、未控温，不对所有NPU模型作泛化结论。下一轮应先看编译后的逐节点执行和内部转换，再验证FP16输入/输出接口，暂不直接扩大到完整VAE。
 
 复现工具：`prepare_vae_npu_block.py`（默认/`--stack3`/`--stack3 --compact`）、`prepare_vae_npu_cpu.py 夹具目录`、远端`convert_vae_npu_blocks_remote.py --deadline 当前授权截止epoch`、`build-native-bench.ps1`及`levo_vae_npu_offline 夹具目录`。取回并校验OMC，再上传本地绝对路径；统一合并`merge_vae_npu_offline.py`。模型/原始日志不上传，统一报告新增`vae_npu_offline_performance_2026_10_30`，保留全部先前失败。
+
+## 纯Conv消融：卷积可加速，尚非VAE端到端收益
+
+用户在新普通额度窗口继续授权后，完成纯Conv隔离：相同真实权重、[1,128,4,8320]形状，保留bias以及kernel/dilation/padding，只删除Snake、逐元素运算和残差。导出一条六Conv串联，以及kernel7、dilation1/3/9的三个独立单Conv图。外部输入与完整残差夹具相同；中间激活和模型函数已改变，不能替代真实decoder。
+
+默认档和显式High档各测两轮，每轮一次首次运行＋七次预热；均NPU-only、禁回退、FP32主机接口/FP16权重。High选项返回成功，不等于已测到固定硬件频率。下表是两轮各自预热中位数的范围，含输入输出拷贝和同步，CPU为6线程CPU Low、W8权重：
+
+| 纯Conv图 | NPU High | CPU W8 | 同轮加速范围 |
+|---|---:|---:|---:|
+| 六Conv串联 | 25.68–31.64ms | 77.18–78.91ms | 2.44–3.07倍 |
+| kernel7/dilation1 | 8.62–9.00ms | 25.08–25.15ms | 2.80–2.91倍 |
+| kernel7/dilation3 | 10.50–16.71ms | 25.24–25.51ms | 1.53–2.40倍 |
+| kernel7/dilation9 | 11.21–13.31ms | 24.66–24.68ms | 1.85–2.20倍 |
+
+六Conv默认档NPU33.20–42.58ms，CPU77.56–77.94ms，同轮约1.83–2.34倍。NPU纯六Conv相对该消融FP32参考L2约0.181%，单Conv约0.114%–0.116%；CPU W8约1.16%–2.33%。不同精度/量化的误差和耗时分开报告，没有歌曲音质结论。纯Conv图没有Sin，CPU正弦hook调用数为0，不把正弦优化的收益算到这些数据里。
+
+同轮完整三残差块复测，NPU默认约215.52ms、High191.73ms，CPU W8约112.23/110.80ms；计数器补验High为192.43ms，对CPU111.59ms。故本轮不能说整个VAE被NPU加速：卷积消融明显获益，但完整块仍慢。不能简单用两者差额当作Sin耗时，删除非线性/残差还会改变中间数据、编译融合和执行计划。六Conv是否被编译器进一步融合未取得逐节点证据，三个独立单Conv结果提供了另外的卷积路径证据。
+
+报告校验另发现统计问题：正弦selector Scope每个会话重置计数，原先减去上个会话的计数会使第二个CPU结果显示0。已改为记录重置后的绝对值，并补验CPU FP32文件与W8两路各288次正弦调用（6个Sin×6线程×8次）。此更改不改变算术或计时区间；修复前探针/源码哈希和所有原始结果保留，不把新二进制冒充旧产物。
+
+下一步应验证卷积-only NPU＋CPU正弦/残差的真实混合数据路径，并计入每个边界的转换、同步和拷贝；或继续定位完整NPU图的非卷积算子/内部转换。转置卷积、大通道早期层、完整VAE、实际歌曲与全局padding均不能据此宣称已通过。App仍保留原CPU W8＋NEON入口，原五块VAE30.19秒/整链RTF2.290没有因本轮改变。
+
+纯Conv复现：`prepare_vae_pureconv.py`→`prepare_vae_npu_cpu.py models/vae-npu-pureconv`→离线转换→`levo_vae_npu_offline 夹具目录 default 8`或`high 8`；`merge_vae_pureconv.py`写入唯一公开报告的`vae_pureconv_ablation_2026_10_30`。第一轮因旧额度94%未启动的情况由本次新窗口实测推进，未绕过旧窗口停止线。

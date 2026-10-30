@@ -4,6 +4,8 @@
 
 > [VAE NPU研究](docs/VAE_NPU_FEASIBILITY.md)：四组连续真实子图已成功离线OMC NPU-only运行、禁止CPU回退；预热19.9–258ms，本轮均慢于匹配W8＋NEON CPU，App保留原入口。尚非完整VAE RTF，旧在线查询异常和数值/内存限制均保留。
 
+> 后续纯Conv隔离已测：六Conv High两轮比CPU W8快2.44–3.07倍，但完整残差块NPU仍较慢，**尚无新的VAE端到端加速**。App继续原CPU入口，纯Conv数据单列在统一报告，不能拿消融输出替代歌曲。
+
 > 2026-10-30 Snake融合CLI探针三窗通过：对同轮W8＋NEON约1.16倍加速，PCM L2=0；仍有120MiB输入快照、未接入App，绝对RTF未超过历史最好。详见[VAE优化记录](docs/VAE_OPTIMIZATION.md)。[MNN推测解码接入说明](docs/SPECULATIVE_DECODING.md)已核对，音乐链路尚未启用。
 
 > v0.1.6 VAE优化已安装实测：W8权重＋ARM82 NEON正弦，独立VAE三窗RTF 1.193→0.674；亮屏五块CLI整链2.571→2.272，签名App候选2.431/峰值约2.19GiB。不是训练好的音乐或音质验收；3倍VAE和RTF1.5均未达到。见[详细结果](docs/VAE_OPTIMIZATION.md)，统一数据仍在reports/levo-test-report.json。
