@@ -1,5 +1,5 @@
 param(
-  [Parameter(Mandatory=$true)][ValidateSet('serial','keep-llm','all','all-w4','llm-short','llm-long','chunks-5','chunks-5-tuned','chunks-5-w8-vsin')][string]$Policy,
+  [Parameter(Mandatory=$true)][ValidateSet('serial','keep-llm','all','all-w4','llm-short','llm-long','chunks-5','chunks-5-tuned','chunks-5-w8-vsin','chunks-5-w8-snake')][string]$Policy,
   [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9-]+$')][string]$RunId
 )
 $ErrorActionPreference='Stop'
@@ -8,7 +8,7 @@ $levoRoot=Split-Path -Parent $PSScriptRoot
 $levoOutput=Join-Path $levoRoot "reports\signed-$RunId.json"
 if (Test-Path -LiteralPath $levoOutput) { throw 'Preserve existing diagnostic result; choose another RunId' }
 $levoRemote='/data/app/el2/100/base/com.zhilee.levoharmony/haps/entry/files'
-$levoKey=@{'serial'='chainSerial';'keep-llm'='chainKeepLlm';'all'='chainAll';'all-w4'='chainAllW4';'llm-short'='llmShort';'llm-long'='llmLong';'chunks-5'='chunks5';'chunks-5-tuned'='chunks5Tuned';'chunks-5-w8-vsin'='chunks5W8Vsin'}[$Policy]
+$levoKey=@{'serial'='chainSerial';'keep-llm'='chainKeepLlm';'all'='chainAll';'all-w4'='chainAllW4';'llm-short'='llmShort';'llm-long'='llmLong';'chunks-5'='chunks5';'chunks-5-tuned'='chunks5Tuned';'chunks-5-w8-vsin'='chunks5W8Vsin';'chunks-5-w8-snake'='chunks5W8Snake'}[$Policy]
 $levoReceipt=[ordered]@{runId=$RunId;policy=$Policy;hapSha256=(Get-FileHash -LiteralPath (Join-Path $levoRoot 'app\entry\build\default\outputs\default\entry-default-signed.hap') -Algorithm SHA256).Hash.ToLower();chainSourceSha256=(Get-FileHash -LiteralPath (Join-Path $levoRoot 'native-bench\ChainBench.cpp') -Algorithm SHA256).Hash.ToLower();napiSourceSha256=(Get-FileHash -LiteralPath (Join-Path $levoRoot 'app\entry\src\main\cpp\napi_init.cpp') -Algorithm SHA256).Hash.ToLower();scope='Local package installed by HDC immediately before the experiment group'}
 $levoReceipt | ConvertTo-Json | Set-Content -LiteralPath ($levoOutput.Replace('.json','-receipt.json')) -Encoding utf8
 & $levoHdc shell 'aa force-stop com.zhilee.levoharmony'

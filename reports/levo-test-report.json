@@ -1,5 +1,5 @@
 {
-  "version": "0.1.6-vae-optimization",
+  "version": "0.1.7-original-entry-retained",
   "student": {
     "actual_parameters": 629640192,
     "backbone_parameters": 596049920,
@@ -18394,5 +18394,780 @@
       "PCM L2 zero is against same-phone W8, not unquantized quality; no listening acceptance or trained music head"
     ],
     "nextAction": "Evaluate explicit fused CPU Execution/Plugin plus graph rewrite to remove snapshot and unused workspaces, then repeat numeric/memory/paired and whole-chain validation"
+  },
+  "vae_snake_app_validation_2026_10_30": {
+    "asOfUtc": "2026-10-30T03:09:34.384764+00:00",
+    "status": "flow-validated-no-whole-chain-speedup",
+    "fusion": {
+      "chunks": [
+        {
+          "chunk": 1,
+          "chunkSeconds": 27.915024687,
+          "contextFrames": 0,
+          "cumulativePcmSeconds": 7.68,
+          "ditTwoStepSeconds": 6.8558326560000005,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 256,
+          "kvPositions": 769,
+          "llmSeconds": 8.80937091899999,
+          "newCodecIds": 256,
+          "rssKiB": 2208032,
+          "runningRtf": 3.9103479410156248,
+          "systemAvailableKiB": 5592064,
+          "vaeSeconds": 12.1548125,
+          "wallSeconds": 30.031472187
+        },
+        {
+          "chunk": 2,
+          "chunkSeconds": 17.27174125,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 15.36,
+          "ditTwoStepSeconds": 7.252869531,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 448,
+          "kvPositions": 961,
+          "llmSeconds": 4.076865319999999,
+          "newCodecIds": 192,
+          "rssKiB": 2223720,
+          "runningRtf": 3.079657175651042,
+          "systemAvailableKiB": 5608448,
+          "vaeSeconds": 5.841927344,
+          "wallSeconds": 47.303534218
+        },
+        {
+          "chunk": 3,
+          "chunkSeconds": 16.909181875,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 23.04,
+          "ditTwoStepSeconds": 7.316865312,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 640,
+          "kvPositions": 1153,
+          "llmSeconds": 3.978586874999999,
+          "newCodecIds": 192,
+          "rssKiB": 2252520,
+          "runningRtf": 2.787022379557292,
+          "systemAvailableKiB": 5606400,
+          "vaeSeconds": 5.520022188,
+          "wallSeconds": 64.212995625
+        },
+        {
+          "chunk": 4,
+          "chunkSeconds": 20.079050625,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 30.72,
+          "ditTwoStepSeconds": 7.540208281,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 832,
+          "kvPositions": 1345,
+          "llmSeconds": 4.532440151999999,
+          "newCodecIds": 192,
+          "rssKiB": 2263796,
+          "runningRtf": 2.743892990104167,
+          "systemAvailableKiB": 5625856,
+          "vaeSeconds": 7.904106718,
+          "wallSeconds": 84.292392656
+        },
+        {
+          "chunk": 5,
+          "chunkSeconds": 26.163803282,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 40.96,
+          "ditTwoStepSeconds": 11.716729843,
+          "emittedPcmSeconds": 10.24,
+          "generatedCodesTotal": 1024,
+          "kvPositions": 1537,
+          "llmSeconds": 4.789344528000003,
+          "newCodecIds": 192,
+          "rssKiB": 2289880,
+          "runningRtf": 2.6966917266845702,
+          "systemAvailableKiB": 5596160,
+          "vaeSeconds": 9.563476718,
+          "wallSeconds": 110.456493125
+        }
+      ],
+      "decodeSeconds": 23.73045232600004,
+      "decodeTokensPerSecond": 43.10916563858161,
+      "ditPrecision": "High",
+      "ditStepsPerChunk": 2,
+      "ditWeightBits": 8,
+      "eosSuppressedForFixedLengthDiagnostic": true,
+      "finalKvPositions": 1537,
+      "firstNumericalPacketSeconds": 30.031472187,
+      "flowAndMemoryPassed": true,
+      "generatedCodecIds": 1024,
+      "initializationSeconds": 2.111901562,
+      "llmPowerHint": "Normal",
+      "maxCodeWindowIds": 256,
+      "minimumSystemAvailableKiB": 5459968,
+      "music_trained": false,
+      "oneDitSession": true,
+      "oneLlmSession": true,
+      "onePrefill": true,
+      "oneVaeSession": true,
+      "overlapFrames": 64,
+      "pcmAccumulatedAcrossWholeSong": false,
+      "pcmPeak": 0.66943359375,
+      "pcmRms": 0.02586890587616945,
+      "phoneVsPcSameQuantVelocityL2": 0.026458152129098477,
+      "pipelinePeakRssKiB": 2427744,
+      "pipelineRtfThroughPcm": 2.696695636743164,
+      "pipelineSecondsThroughPcm": 110.456653281,
+      "policy": "all-five-chunks",
+      "prefillSeconds": 2.456155468,
+      "prefillTokens": 514,
+      "real_song_generated": false,
+      "requestedChunks": 5,
+      "retainedPcmTailSamplesPerChannel": 122880,
+      "sampleIntervalMs": 20,
+      "sampledPeakRssKiB": 2427744,
+      "scope": "Five sequential diagnostic codec windows, one LLM KV and one DiT/VAE session each; RANDOM music adapters; no speaker playback or quality proof",
+      "stages": [
+        {
+          "rssKiB": 68076,
+          "seconds": 0.000979062,
+          "stage": "five-chunk-start",
+          "systemAvailableKiB": 7497728
+        },
+        {
+          "rssKiB": 411424,
+          "seconds": 0.427040312,
+          "stage": "five-llm-loaded",
+          "systemAvailableKiB": 7115776
+        },
+        {
+          "rssKiB": 1137268,
+          "seconds": 1.39166375,
+          "stage": "five-dit-loaded",
+          "systemAvailableKiB": 6530048
+        },
+        {
+          "rssKiB": 1273352,
+          "seconds": 2.111493125,
+          "stage": "five-all-three-loaded",
+          "systemAvailableKiB": 6381568
+        },
+        {
+          "rssKiB": 1441968,
+          "seconds": 11.008851406,
+          "stage": "chunk-1-llm-ready",
+          "systemAvailableKiB": 6521856
+        },
+        {
+          "rssKiB": 1503140,
+          "seconds": 14.459371718,
+          "stage": "chunk-1-dit-1",
+          "systemAvailableKiB": 6460416
+        },
+        {
+          "rssKiB": 1471272,
+          "seconds": 17.872479843,
+          "stage": "chunk-1-dit-2",
+          "systemAvailableKiB": 6270976
+        },
+        {
+          "rssKiB": 2208032,
+          "seconds": 30.031268906,
+          "stage": "chunk-1-pcm-complete",
+          "systemAvailableKiB": 5592064
+        },
+        {
+          "rssKiB": 2250936,
+          "seconds": 34.193007343,
+          "stage": "chunk-2-llm-ready",
+          "systemAvailableKiB": 5553152
+        },
+        {
+          "rssKiB": 2253744,
+          "seconds": 37.866970625,
+          "stage": "chunk-2-dit-1",
+          "systemAvailableKiB": 5556224
+        },
+        {
+          "rssKiB": 2253760,
+          "seconds": 41.456925312,
+          "stage": "chunk-2-dit-2",
+          "systemAvailableKiB": 5568512
+        },
+        {
+          "rssKiB": 2223720,
+          "seconds": 47.303325625,
+          "stage": "chunk-2-pcm-complete",
+          "systemAvailableKiB": 5608448
+        },
+        {
+          "rssKiB": 2239184,
+          "seconds": 51.361260781,
+          "stage": "chunk-3-llm-ready",
+          "systemAvailableKiB": 5596160
+        },
+        {
+          "rssKiB": 2244632,
+          "seconds": 54.996545937,
+          "stage": "chunk-3-dit-1",
+          "systemAvailableKiB": 5591040
+        },
+        {
+          "rssKiB": 2244680,
+          "seconds": 58.688199062,
+          "stage": "chunk-3-dit-2",
+          "systemAvailableKiB": 5596160
+        },
+        {
+          "rssKiB": 2252520,
+          "seconds": 64.212773125,
+          "stage": "chunk-3-pcm-complete",
+          "systemAvailableKiB": 5606400
+        },
+        {
+          "rssKiB": 2254872,
+          "seconds": 68.828986875,
+          "stage": "chunk-4-llm-ready",
+          "systemAvailableKiB": 5626880
+        },
+        {
+          "rssKiB": 2264796,
+          "seconds": 72.603948125,
+          "stage": "chunk-4-dit-1",
+          "systemAvailableKiB": 5618688
+        },
+        {
+          "rssKiB": 2264868,
+          "seconds": 76.383627812,
+          "stage": "chunk-4-dit-2",
+          "systemAvailableKiB": 5622784
+        },
+        {
+          "rssKiB": 2263796,
+          "seconds": 84.292146875,
+          "stage": "chunk-4-pcm-complete",
+          "systemAvailableKiB": 5625856
+        },
+        {
+          "rssKiB": 2290744,
+          "seconds": 89.162350937,
+          "stage": "chunk-5-llm-ready",
+          "systemAvailableKiB": 5599232
+        },
+        {
+          "rssKiB": 2283088,
+          "seconds": 94.967794843,
+          "stage": "chunk-5-dit-1",
+          "systemAvailableKiB": 5607424
+        },
+        {
+          "rssKiB": 2286036,
+          "seconds": 100.887907656,
+          "stage": "chunk-5-dit-2",
+          "systemAvailableKiB": 5598208
+        },
+        {
+          "rssKiB": 2289880,
+          "seconds": 110.456227812,
+          "stage": "chunk-5-pcm-complete",
+          "systemAvailableKiB": 5596160
+        },
+        {
+          "rssKiB": 473880,
+          "seconds": 110.828290937,
+          "stage": "five-all-models-destroyed",
+          "systemAvailableKiB": 7406592
+        },
+        {
+          "rssKiB": 473880,
+          "seconds": 111.830900781,
+          "stage": "five-release-plus-1-second",
+          "systemAvailableKiB": 7376896
+        },
+        {
+          "rssKiB": 347820,
+          "seconds": 119.170500468,
+          "stage": "five-post-timing-parity-measured",
+          "systemAvailableKiB": 7507968
+        }
+      ],
+      "strictNumericalParityPassed": false,
+      "success": true,
+      "sumDitSeconds": 40.682505623,
+      "sumVaeSeconds": 40.984345468,
+      "totalSeconds": 119.171121406,
+      "vaeSnakeFusion": {
+        "completedForwards": 5,
+        "firstRealInputParityPassed": true,
+        "firstRealInputPcmL2": 0,
+        "fusedCalls": 180,
+        "groups": 36,
+        "includedReferenceValidationSeconds": 6.378364844,
+        "originalGraphWorkspaceRetained": true,
+        "producerSnapshotPeakBytes": 125829120,
+        "requiresWarmCapture": false
+      },
+      "vaeSnakeFusionRequested": true,
+      "vaeThreads": 6,
+      "vaeVariant": "w8-snake",
+      "vaeVectorSinKernelCalls": 0,
+      "vaeVectorSinRequested": false,
+      "vaeWeightBits": 8,
+      "validPcmSeconds": 40.96,
+      "variant": "baseline-high-vae6",
+      "windowFrames": 256
+    },
+    "samePackageOriginalW8Neon": {
+      "chunks": [
+        {
+          "chunk": 1,
+          "chunkSeconds": 19.273330313,
+          "contextFrames": 0,
+          "cumulativePcmSeconds": 7.68,
+          "ditTwoStepSeconds": 6.994521563,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 256,
+          "kvPositions": 769,
+          "llmSeconds": 6.475809370000005,
+          "newCodecIds": 256,
+          "rssKiB": 2074108,
+          "runningRtf": 2.7822056477864585,
+          "systemAvailableKiB": 5652480,
+          "vaeSeconds": 5.715020781,
+          "wallSeconds": 21.367339375
+        },
+        {
+          "chunk": 2,
+          "chunkSeconds": 17.216530938,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 15.36,
+          "ditTwoStepSeconds": 7.211304375,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 448,
+          "kvPositions": 961,
+          "llmSeconds": 3.900776103000002,
+          "newCodecIds": 192,
+          "rssKiB": 2096928,
+          "runningRtf": 2.5119913635416666,
+          "systemAvailableKiB": 5671936,
+          "vaeSeconds": 6.008977343,
+          "wallSeconds": 38.584187344
+        },
+        {
+          "chunk": 3,
+          "chunkSeconds": 17.244038438,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 23.04,
+          "ditTwoStepSeconds": 6.931739531,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 640,
+          "kvPositions": 1153,
+          "llmSeconds": 4.386115783999999,
+          "newCodecIds": 192,
+          "rssKiB": 2111000,
+          "runningRtf": 2.4230744764756946,
+          "systemAvailableKiB": 5669888,
+          "vaeSeconds": 5.836364687,
+          "wallSeconds": 55.827635938
+        },
+        {
+          "chunk": 4,
+          "chunkSeconds": 18.502321563,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 30.72,
+          "ditTwoStepSeconds": 7.304881406,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 832,
+          "kvPositions": 1345,
+          "llmSeconds": 4.7231234340000015,
+          "newCodecIds": 192,
+          "rssKiB": 2141240,
+          "runningRtf": 2.4196436004557293,
+          "systemAvailableKiB": 5666816,
+          "vaeSeconds": 6.372178437,
+          "wallSeconds": 74.331451406
+        },
+        {
+          "chunk": 5,
+          "chunkSeconds": 19.467122343,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 40.96,
+          "ditTwoStepSeconds": 8.0529525,
+          "emittedPcmSeconds": 10.24,
+          "generatedCodesTotal": 1024,
+          "kvPositions": 1537,
+          "llmSeconds": 5.054852815000002,
+          "newCodecIds": 192,
+          "rssKiB": 2161248,
+          "runningRtf": 2.2900211105468746,
+          "systemAvailableKiB": 5666816,
+          "vaeSeconds": 6.256345625,
+          "wallSeconds": 93.799264688
+        }
+      ],
+      "decodeSeconds": 21.900279692999998,
+      "decodeTokensPerSecond": 46.71173219431449,
+      "ditPrecision": "High",
+      "ditStepsPerChunk": 2,
+      "ditWeightBits": 8,
+      "eosSuppressedForFixedLengthDiagnostic": true,
+      "finalKvPositions": 1537,
+      "firstNumericalPacketSeconds": 21.367339375,
+      "flowAndMemoryPassed": true,
+      "generatedCodecIds": 1024,
+      "initializationSeconds": 2.08789625,
+      "llmPowerHint": "Normal",
+      "maxCodeWindowIds": 256,
+      "minimumSystemAvailableKiB": 5490688,
+      "music_trained": false,
+      "oneDitSession": true,
+      "oneLlmSession": true,
+      "onePrefill": true,
+      "oneVaeSession": true,
+      "overlapFrames": 64,
+      "pcmAccumulatedAcrossWholeSong": false,
+      "pcmPeak": 0.66943359375,
+      "pcmRms": 0.02586890587616945,
+      "phoneVsPcSameQuantVelocityL2": 0.026458152129098477,
+      "pipelinePeakRssKiB": 2300464,
+      "pipelineRtfThroughPcm": 2.290025066381836,
+      "pipelineSecondsThroughPcm": 93.799426719,
+      "policy": "all-five-chunks",
+      "prefillSeconds": 2.640397813,
+      "prefillTokens": 514,
+      "real_song_generated": false,
+      "requestedChunks": 5,
+      "retainedPcmTailSamplesPerChannel": 122880,
+      "sampleIntervalMs": 20,
+      "sampledPeakRssKiB": 2300464,
+      "scope": "Five sequential diagnostic codec windows, one LLM KV and one DiT/VAE session each; RANDOM music adapters; no speaker playback or quality proof",
+      "stages": [
+        {
+          "rssKiB": 68616,
+          "seconds": 0.000688906,
+          "stage": "five-chunk-start",
+          "systemAvailableKiB": 7527424
+        },
+        {
+          "rssKiB": 411672,
+          "seconds": 0.508652031,
+          "stage": "five-llm-loaded",
+          "systemAvailableKiB": 7110656
+        },
+        {
+          "rssKiB": 1147280,
+          "seconds": 1.448647188,
+          "stage": "five-dit-loaded",
+          "systemAvailableKiB": 6521856
+        },
+        {
+          "rssKiB": 1288272,
+          "seconds": 2.086974688,
+          "stage": "five-all-three-loaded",
+          "systemAvailableKiB": 6361088
+        },
+        {
+          "rssKiB": 1423936,
+          "seconds": 8.645706563,
+          "stage": "chunk-1-llm-ready",
+          "systemAvailableKiB": 6204416
+        },
+        {
+          "rssKiB": 1485252,
+          "seconds": 12.167818906,
+          "stage": "chunk-1-dit-1",
+          "systemAvailableKiB": 6221824
+        },
+        {
+          "rssKiB": 1456736,
+          "seconds": 15.648135938,
+          "stage": "chunk-1-dit-2",
+          "systemAvailableKiB": 6251520
+        },
+        {
+          "rssKiB": 2074108,
+          "seconds": 21.367124063,
+          "stage": "chunk-1-pcm-complete",
+          "systemAvailableKiB": 5652480
+        },
+        {
+          "rssKiB": 2087900,
+          "seconds": 25.350090625,
+          "stage": "chunk-2-llm-ready",
+          "systemAvailableKiB": 5658624
+        },
+        {
+          "rssKiB": 2097796,
+          "seconds": 29.007976563,
+          "stage": "chunk-2-dit-1",
+          "systemAvailableKiB": 5653504
+        },
+        {
+          "rssKiB": 2095224,
+          "seconds": 32.571916875,
+          "stage": "chunk-2-dit-2",
+          "systemAvailableKiB": 5661696
+        },
+        {
+          "rssKiB": 2096928,
+          "seconds": 38.584012656,
+          "stage": "chunk-2-pcm-complete",
+          "systemAvailableKiB": 5671936
+        },
+        {
+          "rssKiB": 2157904,
+          "seconds": 43.042052344,
+          "stage": "chunk-3-llm-ready",
+          "systemAvailableKiB": 5620736
+        },
+        {
+          "rssKiB": 2133768,
+          "seconds": 46.554324063,
+          "stage": "chunk-3-dit-1",
+          "systemAvailableKiB": 5642240
+        },
+        {
+          "rssKiB": 2113160,
+          "seconds": 49.987224375,
+          "stage": "chunk-3-dit-2",
+          "systemAvailableKiB": 5666816
+        },
+        {
+          "rssKiB": 2118436,
+          "seconds": 55.827365625,
+          "stage": "chunk-3-pcm-complete",
+          "systemAvailableKiB": 5662720
+        },
+        {
+          "rssKiB": 2126480,
+          "seconds": 60.637147656,
+          "stage": "chunk-4-llm-ready",
+          "systemAvailableKiB": 5658624
+        },
+        {
+          "rssKiB": 2136376,
+          "seconds": 64.307596094,
+          "stage": "chunk-4-dit-1",
+          "systemAvailableKiB": 5664768
+        },
+        {
+          "rssKiB": 2133476,
+          "seconds": 67.95428875,
+          "stage": "chunk-4-dit-2",
+          "systemAvailableKiB": 5661696
+        },
+        {
+          "rssKiB": 2141240,
+          "seconds": 74.331194375,
+          "stage": "chunk-4-pcm-complete",
+          "systemAvailableKiB": 5666816
+        },
+        {
+          "rssKiB": 2174936,
+          "seconds": 79.471704844,
+          "stage": "chunk-5-llm-ready",
+          "systemAvailableKiB": 5629952
+        },
+        {
+          "rssKiB": 2174940,
+          "seconds": 83.504388906,
+          "stage": "chunk-5-dit-1",
+          "systemAvailableKiB": 5629952
+        },
+        {
+          "rssKiB": 2153556,
+          "seconds": 87.537469219,
+          "stage": "chunk-5-dit-2",
+          "systemAvailableKiB": 5665792
+        },
+        {
+          "rssKiB": 2161248,
+          "seconds": 93.79904625,
+          "stage": "chunk-5-pcm-complete",
+          "systemAvailableKiB": 5666816
+        },
+        {
+          "rssKiB": 511548,
+          "seconds": 94.151636094,
+          "stage": "five-all-models-destroyed",
+          "systemAvailableKiB": 7252992
+        },
+        {
+          "rssKiB": 511548,
+          "seconds": 95.152932656,
+          "stage": "five-release-plus-1-second",
+          "systemAvailableKiB": 7252992
+        },
+        {
+          "rssKiB": 428048,
+          "seconds": 100.65424375,
+          "stage": "five-post-timing-parity-measured",
+          "systemAvailableKiB": 7331840
+        }
+      ],
+      "strictNumericalParityPassed": false,
+      "success": true,
+      "sumDitSeconds": 36.495399375000005,
+      "sumVaeSeconds": 30.188886872999994,
+      "totalSeconds": 100.655279375,
+      "vaeSnakeFusion": null,
+      "vaeSnakeFusionRequested": false,
+      "vaeThreads": 6,
+      "vaeVariant": "w8-vsin",
+      "vaeVectorSinKernelCalls": 1080,
+      "vaeVectorSinRequested": true,
+      "vaeWeightBits": 8,
+      "validPcmSeconds": 40.96,
+      "variant": "baseline-high-vae6",
+      "windowFrames": 256
+    },
+    "receipts": {
+      "fusion": {
+        "runId": "five-snake-v017-r2",
+        "policy": "chunks-5-w8-snake",
+        "hapSha256": "4dd657d037564d0b4667ecdd726ebe7a3e643023d1352814caa1be9c4649e553",
+        "chainSourceSha256": "3e016ccbacadaf7d8eddafa1dee93162286e4ce4917ee66499f95af1a01be238",
+        "napiSourceSha256": "491f2d8ab1482443fbf0ae64765cde791d046ac8c68b66700723dd874f5dd486",
+        "scope": "Local package installed by HDC immediately before the experiment group"
+      },
+      "baseline": {
+        "runId": "five-vsin-v017-r1",
+        "policy": "chunks-5-w8-vsin",
+        "hapSha256": "4dd657d037564d0b4667ecdd726ebe7a3e643023d1352814caa1be9c4649e553",
+        "chainSourceSha256": "3e016ccbacadaf7d8eddafa1dee93162286e4ce4917ee66499f95af1a01be238",
+        "napiSourceSha256": "491f2d8ab1482443fbf0ae64765cde791d046ac8c68b66700723dd874f5dd486",
+        "scope": "Local package installed by HDC immediately before the experiment group"
+      }
+    },
+    "bothRunsEndpointPowerStates": "AWAKE",
+    "experimentOrder": "fusion then original W8+NEON; one sequential comparison, no thermal/frequency control",
+    "firstRealInputReferenceForwardCostIncluded": true,
+    "failedFirstAttempt": {
+      "error": "Snake real-input PCM parity failed",
+      "totalSeconds": 30.351690156,
+      "sourceReportSha256": "a97e0b6c38fe93318713b87c06741c3f22877738a45c62168ad91384a912dd95",
+      "receipt": {
+        "runId": "five-snake-v017-r1",
+        "policy": "chunks-5-w8-snake",
+        "hapSha256": "627e92c6aa29303823f73903ca63d65eacacea0a360dc6c39f704eb6973c1d88",
+        "chainSourceSha256": "2b4a70fb892fc8cb60bceede81b9e5f55ad9bd2a9145400ff3b1c0406f29cab9",
+        "napiSourceSha256": "491f2d8ab1482443fbf0ae64765cde791d046ac8c68b66700723dd874f5dd486",
+        "scope": "Local package installed by HDC immediately before the experiment group"
+      },
+      "resolution": "Reupload all VAE inputs between the reference and fused forward in the same session; followup first real-input PCM L2 zero"
+    },
+    "decision": {
+      "recommendedPolicy": "chunks-5-w8-vsin",
+      "experimentalFusionUiVisible": false,
+      "humanSteering": "Keep the original entry",
+      "fusionBackendRetainedForReproduction": true,
+      "reason": "Measured fused App path slower and uses an extra producer snapshot; no promotion to recommended generation"
+    },
+    "installedUiOnlyPackage": {
+      "hapSha256": "b60e3382a055d10addc5aea669002c89f42cb281003ae0ff858ff7c6de9bdff3",
+      "nativePayloadSha256": "076c71b13822a60ff5e340d7514c1c9f98a0df3254cf5860eb3aa8af8ad12c07",
+      "bytes": 7089440
+    },
+    "testedNativePayloadUnchangedAfterUiCleanup": true,
+    "sharedRuntimeSourceSha256": "b16c54d8654977c77719a62ae33a6935a8abd753cb638a35dafc494cad785194",
+    "regressionTestsPassed": 15,
+    "limits": [
+      "First real App PCM window was paired against original W8; remaining four checked finite, not independently reference-paired",
+      "Reference validation cost 6.378 seconds included in fused total; do not subtract it and advertise a new measured App RTF",
+      "Original graph workspace retained, extra 120 MiB snapshot; no graph-level memory saving proven",
+      "DiT remains original W8 CPU High/two steps; strict same-quant 1% parity still false and reported separately",
+      "Random/untrained music adapters; finite diagnostic PCM is not a song or listening quality acceptance"
+    ]
+  },
+  "vae_npu_research_2026_10_30": {
+    "asOfUtc": "2026-10-30T03:16:15.261698+00:00",
+    "status": "real-residual-candidates-prepared-cpu-only",
+    "sourceOnnxSha256": "dc585e5d042a29b8b1c01b1898bde4bc0259c7e1cd67f399825222d1d6a6329c",
+    "wholeDecoderOps": {
+      "Constant": 37,
+      "Conv": 32,
+      "Mul": 72,
+      "Sin": 36,
+      "Pow": 36,
+      "Add": 51,
+      "ConvTranspose": 5
+    },
+    "sourcePrefix": "/layers/layers.5/layers/layers.2/",
+    "blockOps": {
+      "Mul": 4,
+      "Sin": 2,
+      "Pow": 2,
+      "Add": 3,
+      "Conv": 2
+    },
+    "candidateCases": [
+      {
+        "id": "residual-d1-h1",
+        "shape": [
+          1,
+          128,
+          1,
+          8320
+        ],
+        "modelBytes": 531204,
+        "modelSha256": "e8ff6fefc9bb1932603a83daa80635e4a7ae640634dee812bdfa8da1fc2cc150",
+        "rank4VsOriginalRank3Fp32L2": 1.9466823182668541e-07,
+        "fp16InputPlusOutputBytes": 4259840,
+        "fp32InputPlusOutputBytes": 8519680,
+        "coreValuesPerRow": 8192,
+        "haloPerSide": 64,
+        "wholeDecoder": false,
+        "npuCompiled": false,
+        "npuOnlyExecutionValidated": false
+      },
+      {
+        "id": "residual-d1-h4",
+        "shape": [
+          1,
+          128,
+          4,
+          8320
+        ],
+        "modelBytes": 531204,
+        "modelSha256": "dfe892a6fe0a6b0a1704b5e649fa7b37fae1844d588a97276d008187171b3cf7",
+        "rank4VsOriginalRank3Fp32L2": 1.9399988691085947e-07,
+        "fp16InputPlusOutputBytes": 17039360,
+        "fp32InputPlusOutputBytes": 34078720,
+        "coreValuesPerRow": 8192,
+        "haloPerSide": 64,
+        "wholeDecoder": false,
+        "npuCompiled": false,
+        "npuOnlyExecutionValidated": false
+      }
+    ],
+    "continuous32768VsTiled4x8192Fp32L2": 1.9461339472743359e-07,
+    "denseConvAndDeconvMacEstimate": 623885942784,
+    "denseMacEstimateByStage": {
+      "layers.0": 234881024,
+      "layers.1": 75161927680,
+      "layers.2": 112742891520,
+      "layers.3": 112742891520,
+      "layers.4": 112742891520,
+      "layers.5": 209379655680,
+      "layers.7": 880803840
+    },
+    "macConvention": "One multiply-accumulate is one MAC; deconv ignores padded-edge elimination, not measured hardware FLOPs",
+    "npuPerformanceMeasured": false,
+    "appPathChangedToNpu": false,
+    "limits": [
+      "Real original FP32 weights, deterministic synthetic activations; not calibrated INT8 or music-quality proof",
+      "Rank lifting preserves kernel [1,K], dilation [1,d], padding [0,p,0,p] and broadcasts; no approximate Sin substitution",
+      "Halo/tiling proof applies to this one d=1 block only; multiple residual blocks and ConvTranspose require separate boundary verification",
+      "NPU-only compilation must disable fallback; checking public API availability is not evidence of actual NPU placement",
+      "Compare combined host copy, precision conversion, device run and synchronization against the matched CPU path; do not extrapolate single-op speed"
+    ],
+    "onlineSupportProbe": {
+      "programExitCode": 135,
+      "signal": "SIGBUS/BUS_ADRALN",
+      "lastObservedRuntimeFrame": "NNBackend::GetSupportedOperation / InnerModel::GetSupportedOperations",
+      "supportStatusEstablished": false,
+      "npuCompileStatusEstablished": false,
+      "npuInferenceExecuted": false,
+      "verifiedBinarySha256": "3c09d868c46081cfca0da0d7c00f792d0100de0c271206533adb581ab707663c",
+      "sourceAtRunSha256": "e77a41615fa107eb29d920bd576f41324a01748988fb3679f8d41b297d3d4120",
+      "stackExcerptSha256": "c607107e55afcebdbbc325a112b2487cfe5f7cb61fe96436b3b2b8341e0c43c8",
+      "localLogSha256": "e2a13202b5e9ea8fb1b4bde0f37e04159efc458ace2b3a3323f341b97db8b146",
+      "interpretation": "Failure of this legacy online support-query path, not proof that NPU lacks Sin; preserve App CPU path and prefer established offline OMC compiler/runtime"
+    }
   }
 }

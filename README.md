@@ -1,5 +1,9 @@
 # mobile_harmony_AImusic · levo-harmony
 
+> v0.1.7：保留推荐W8＋NEON原入口，同包五块RTF2.290、峰值约2.19GiB。Snake融合接入App后RTF2.697（含首块额外校验），未提速；用户选择原入口，较慢实验按钮已移出常规UI，测试与后端保留。见[VAE记录](docs/VAE_OPTIMIZATION.md)、[DiT后续方向](docs/DIT_ACCELERATION.md)与统一报告。仍是随机音乐头的数值链路，不是训练好的歌曲。
+
+> [VAE NPU研究](docs/VAE_NPU_FEASIBILITY.md)：真实残差块已完成2D/分块PC数值证明，尚无NPU速度成绩；旧在线支持查询异常已记录，后续采用离线OMC＋禁止回退验证。
+
 > 2026-10-30 Snake融合CLI探针三窗通过：对同轮W8＋NEON约1.16倍加速，PCM L2=0；仍有120MiB输入快照、未接入App，绝对RTF未超过历史最好。详见[VAE优化记录](docs/VAE_OPTIMIZATION.md)。[MNN推测解码接入说明](docs/SPECULATIVE_DECODING.md)已核对，音乐链路尚未启用。
 
 > v0.1.6 VAE优化已安装实测：W8权重＋ARM82 NEON正弦，独立VAE三窗RTF 1.193→0.674；亮屏五块CLI整链2.571→2.272，签名App候选2.431/峰值约2.19GiB。不是训练好的音乐或音质验收；3倍VAE和RTF1.5均未达到。见[详细结果](docs/VAE_OPTIMIZATION.md)，统一数据仍在reports/levo-test-report.json。

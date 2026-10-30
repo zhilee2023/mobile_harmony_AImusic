@@ -1,5 +1,9 @@
 # LeVo Harmony：给接手Agent的模型适配指南
 
+> 最新NPU研究：见VAE_NPU_FEASIBILITY.md。末级真实13节点残差块已导出H1/H4 NCHW 2D图，各531204字节；PC原1D/2D与32768点带halo分块L2约2e-7。图在models/vae-npu-block/，不上传权重。NNRT旧在线支持查询在NNBackend::GetSupportedOperation内部SIGBUS退出135，未返回支持列表/未推理，不能说Sin不支持；不自动重试，优先匹配Kirin9030的离线OMC路线并禁用CPU回退。App未切换NPU。HDC file send务必用本地绝对文件路径，相对native-build路径可能在远端生成同名目录；检查ls/哈希再执行，初次路径错误也留存。
+
+> 2026-10-30 v0.1.7 App接入后用户选择保留原入口：W8＋NEON五块93.799秒/RTF2.290，VAE30.189、DiT36.495、LLM24.541秒，采样峰值2246.5MiB。Snake回调五块110.457秒/2.697、2370.8MiB，含6.378秒首块原路径校验；首块PCM L2=0、180次融合完成，但整链未提速。最初校验失败已通过重传输入修复，失败历史保留。融合按钮已移出常规UI，后端保留作开发复现；最终原入口包已安装，native库与测试包哈希一致。统一报告vae_snake_app_validation_2026_10_30，15回归通过。用户最新要求研究连续VAE子图NPU路径；此前CANN单算子COMMON且更慢不能当全图指定NPU结论，下一步先核对CANN Kit图接口/设备放置和真实块支持。禁止修改旧CosyVoice/ACE工程及提交本地签名。
+
 > 2026-10-30后续“继续测试”已完成Snake定位与三窗口配对：安全回调退出、C8实际布局/归档ABI匹配、真实producer快照修复后，36组×3窗全部PCM L2=0。同轮W8＋NEON24.803秒→融合21.348秒（25.6秒有效PCM，模块RTF0.969→0.834，1.162倍）；峰值约919MiB，含最多一份120MiB快照。未接入App，原工作区保留；本轮绝对值慢于历史NEON0.674，不是新最好整链RTF。旧timeout已定位为回调异常绕过引擎清理；失败历史保留。下一步考虑显式Execution/图重写去快照，但固定归档PLUGIN=OFF，尚未实现。详见VAE_OPTIMIZATION.md及统一报告vae_snake_progress_2026_10_30。MNN另有Lookahead/MTP/EAGLE/DFlash，当前音乐循环未启用，见SPECULATIVE_DECODING.md；不要把未训练音乐头的接受率当歌曲指标。
 
 > 2026-10-30限定补验：用户只授权继续亮屏后的本项有界Snake验证，不推断为重新授权整窗自动试验。原不可变常量探针无结构化结果；改用共享MNN线程池并加阶段/实际退出码后，AWAKE前后检查下45.18秒返回124。预热与36组系数加载已完成，首个融合窗口未完成，尚未区分输入复制/回调/内核，不能报新RTF或宣称融合无收益。统一报告vae_snake_validation_2026_10_30与VAE_OPTIMIZATION.md记录完整证据。App源码/已安装v0.1.6保持原状；原版/共享池进程均确认终止。下一步应做独立kernel等价性与更细阶段检查，再考虑显式Execution/图重写。

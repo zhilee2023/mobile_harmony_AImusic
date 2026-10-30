@@ -19,6 +19,7 @@
 #include <unistd.h>
 #ifdef LEVO_VAE_VECTOR_SIN
 #include "VaeVectorSin.hpp"
+#include "VaeSnakeRuntime.hpp"
 #endif
 using Json=nlohmann::json;
 using Clock=std::chrono::steady_clock;
@@ -41,19 +42,46 @@ struct Trace{
 };
 class Session{
   std::unique_ptr<MNN::Interpreter> net;MNN::Session* session=nullptr;
+#ifdef LEVO_VAE_VECTOR_SIN
+  std::unique_ptr<LevoVaeSnake::Runtime> snake;
+  bool snakeValidated=false;double validationSeconds=0,validationL2=0;
+#endif
 public:
-  Session(const std::string& model,bool low,int threads=6){
+  Session(const std::string& model,bool low,int threads=6,bool snakeFusion=false){
     net.reset(MNN::Interpreter::createFromFile(model.c_str()));require(bool(net),"Cannot read MNN model");
+    if(snakeFusion){require(low&&threads==6,"Snake runtime requires VAE CPU Low / 6 threads");net->setSessionMode(MNN::Interpreter::Session_Debug);}
     auto weight=model+".weight";net->setExternalFile(weight.c_str());net->setSessionMode(MNN::Interpreter::Session_Resize_Defer);
     net->setSessionHint(MNN::Interpreter::CPU_ENABLE_KLEIDIAI,0);
     MNN::BackendConfig backend;backend.precision=low?MNN::BackendConfig::Precision_Low:MNN::BackendConfig::Precision_High;backend.memory=MNN::BackendConfig::Memory_Low;backend.power=MNN::BackendConfig::Power_High;
     MNN::ScheduleConfig cfg;cfg.type=MNN_FORWARD_CPU;cfg.numThread=threads;cfg.backendConfig=&backend;
     session=net->createSession(cfg);require(session,"Cannot create MNN session");net->resizeSession(session);net->releaseModel();
+#ifdef LEVO_VAE_VECTOR_SIN
+    if(snakeFusion)snake=std::make_unique<LevoVaeSnake::Runtime>(model,model.substr(0,model.find_last_of("/\\")+1)+"snake-coefficients.json");
+#else
+    require(!snakeFusion,"Snake runtime not compiled");
+#endif
   }
   ~Session(){if(session)net->releaseSession(session);}
   std::vector<float> run(const std::map<std::string,std::vector<float>>& values,const std::string& output,size_t count){
-    for(const auto& pair:values){auto* input=net->getSessionInput(session,pair.first.c_str());require(input,"Missing model input: "+pair.first);MNN::Tensor host(input,MNN::Tensor::CAFFE,true);require(host.elementSize()==pair.second.size(),"Model input size mismatch");std::memcpy(host.host<float>(),pair.second.data(),pair.second.size()*4);require(input->copyFromHostTensor(&host),"Input copy failed");}
-    require(net->runSession(session)==MNN::NO_ERROR,"MNN forward failed");auto* tensor=net->getSessionOutput(session,output.c_str());require(tensor,"Missing model output");MNN::Tensor host(tensor,MNN::Tensor::CAFFE,true);require(host.elementSize()==count&&tensor->copyToHostTensor(&host),"Output shape/copy failed");std::vector<float> result(count);std::memcpy(result.data(),host.host<float>(),count*4);peak(result);return result;
+    auto putInputs=[&](){for(const auto& pair:values){auto* input=net->getSessionInput(session,pair.first.c_str());require(input,"Missing model input: "+pair.first);MNN::Tensor host(input,MNN::Tensor::CAFFE,true);require(host.elementSize()==pair.second.size(),"Model input size mismatch");std::memcpy(host.host<float>(),pair.second.data(),pair.second.size()*4);require(input->copyFromHostTensor(&host),"Input copy failed");}};putInputs();
+    std::vector<float> reference;
+#ifdef LEVO_VAE_VECTOR_SIN
+    // One real-input reference forward in this same VAE session validates App
+    // integration. Its full cost is included in the first chunk and total RTF.
+    if(snake&&!snakeValidated){auto tick=Clock::now();require(net->runSession(session)==MNN::NO_ERROR,"Snake reference forward failed");auto* tensor=net->getSessionOutput(session,output.c_str());require(tensor,"Missing reference PCM");MNN::Tensor host(tensor,MNN::Tensor::CAFFE,true);require(host.elementSize()==count&&tensor->copyToHostTensor(&host),"Snake reference copy failed");reference.assign(host.host<float>(),host.host<float>()+count);peak(reference);putInputs();validationSeconds=seconds(tick);}
+    if(snake)snake->run(net.get(),session);else
+#endif
+    require(net->runSession(session)==MNN::NO_ERROR,"MNN forward failed");auto* tensor=net->getSessionOutput(session,output.c_str());require(tensor,"Missing model output");MNN::Tensor host(tensor,MNN::Tensor::CAFFE,true);require(host.elementSize()==count&&tensor->copyToHostTensor(&host),"Output shape/copy failed");std::vector<float> result(count);std::memcpy(result.data(),host.host<float>(),count*4);peak(result);
+#ifdef LEVO_VAE_VECTOR_SIN
+    if(snake&&!snakeValidated){validationL2=relative(result,reference);require(validationL2<.001,"Snake real-input PCM parity failed; L2="+std::to_string(validationL2));snakeValidated=true;}
+#endif
+    return result;
+  }
+  Json snakeStats()const{
+#ifdef LEVO_VAE_VECTOR_SIN
+    if(snake){auto stats=snake->stats();stats["firstRealInputParityPassed"]=snakeValidated;stats["firstRealInputPcmL2"]=validationL2;stats["includedReferenceValidationSeconds"]=validationSeconds;return stats;}
+#endif
+    return Json();
   }
 };
 std::string LevoRunChainBench(const std::string& dir,const std::string& requestedPolicy){
@@ -114,11 +142,12 @@ std::string LevoRunFiveChunks(const std::string& dir,bool tuned,const std::strin
     {"pcmAccumulatedAcrossWholeSong",false},{"maxCodeWindowIds",frames},{"retainedPcmTailSamplesPerChannel",pcmOverlap}};
   result["variant"]=tuned?"dit-low-vae8-llm-highpower":"baseline-high-vae6";result["ditPrecision"]=tuned?"Low":"High";result["vaeThreads"]=tuned?8:6;result["llmPowerHint"]=tuned?"High":"Normal";result["eosSuppressedForFixedLengthDiagnostic"]=true;
   try{
-    require(vaeVariant=="fp32"||vaeVariant=="w8"||vaeVariant=="w8-vsin","Invalid VAE variant");
+    require(vaeVariant=="fp32"||vaeVariant=="w8"||vaeVariant=="w8-vsin"||vaeVariant=="w8-snake","Invalid VAE variant");
 #ifndef LEVO_VAE_VECTOR_SIN
-    require(vaeVariant!="w8-vsin","Vector SIN requires standalone probe");
+    require(vaeVariant!="w8-vsin"&&vaeVariant!="w8-snake","Optimized VAE runtime not compiled");
 #endif
-    result["vaeWeightBits"]=vaeVariant=="fp32"?32:8;result["vaeVectorSinRequested"]=vaeVariant=="w8-vsin";
+    require(vaeVariant!="w8-snake"||!tuned,"Snake runtime requires 6-thread baseline config");
+    result["vaeVariant"]=vaeVariant;result["vaeWeightBits"]=vaeVariant=="fp32"?32:8;result["vaeVectorSinRequested"]=vaeVariant=="w8-vsin";result["vaeSnakeFusionRequested"]=vaeVariant=="w8-snake";
     trace.gate(2048);trace.mark("five-chunk-start");
     auto metadata=readJson(dir+"/student/diagnostic-student.json");require(metadata["music_trained"]==false&&metadata["layers"]==26,"Expected diagnostic student");
     auto prefix=readJson(dir+"/student/prefix.json").get<std::vector<int>>();require(prefix.size()==514,"Expected514position prefix");
@@ -130,7 +159,7 @@ std::string LevoRunFiveChunks(const std::string& dir,bool tuned,const std::strin
 #ifdef LEVO_VAE_VECTOR_SIN
     LevoVaeSin::Scope sinScope(vaeVariant=="w8-vsin");
 #endif
-    auto vae=std::make_unique<Session>(dir+"/vae/vae-256-"+(vaeVariant=="fp32"?"fp32":"w8")+".mnn",true,tuned?8:6);trace.mark("five-all-three-loaded");trace.gate();
+    auto vae=std::make_unique<Session>(dir+"/vae/vae-256-"+(vaeVariant=="fp32"?"fp32":"w8")+".mnn",true,tuned?8:6,vaeVariant=="w8-snake");trace.mark("five-all-three-loaded");trace.gate();
 #ifdef LEVO_VAE_VECTOR_SIN
     sinScope.restore();
 #endif
@@ -175,7 +204,7 @@ std::string LevoRunFiveChunks(const std::string& dir,bool tuned,const std::strin
     }
     require(generated==1024&&emittedSamples==1024*1920,"Dropped or duplicated codec IDs/PCM at five-chunk end");
     result["chunks"]=rows;result["generatedCodecIds"]=generated;result["finalKvPositions"]=llm->getCurrentHistory();result["prefillTokens"]=prefix.size();result["prefillSeconds"]=prefillSeconds;result["decodeSeconds"]=decodeSeconds;result["decodeTokensPerSecond"]=1023/decodeSeconds;result["sumDitSeconds"]=sumDit;result["sumVaeSeconds"]=sumVae;
-    result["validPcmSeconds"]=double(emittedSamples)/48000;result["pcmRms"]=std::sqrt(energy/(2*emittedSamples));result["pcmPeak"]=maxPcm;
+    result["validPcmSeconds"]=double(emittedSamples)/48000;result["pcmRms"]=std::sqrt(energy/(2*emittedSamples));result["pcmPeak"]=maxPcm;result["vaeSnakeFusion"]=vae->snakeStats();
 #ifdef LEVO_VAE_VECTOR_SIN
     result["vaeVectorSinKernelCalls"]=LevoVaeSin::calls.load();
 #endif
@@ -187,5 +216,5 @@ std::string LevoRunFiveChunks(const std::string& dir,bool tuned,const std::strin
   trace.sample();result["stages"]=trace.stages;result["sampledPeakRssKiB"]=trace.maxRss.load();result["minimumSystemAvailableKiB"]=trace.minAvailable.load();result["totalSeconds"]=seconds(trace.start);return result.dump();
 }
 #ifndef LEVO_CHAIN_LIBRARY
-int main(int argc,char** argv){if(argc!=3)return 2;std::string policy=argv[2];auto result=policy=="chunks-5"?LevoRunFiveChunks(argv[1]):policy=="chunks-5-w8-vsin"?LevoRunFiveChunks(argv[1],false,"w8-vsin"):LevoRunChainBench(argv[1],policy);std::cout<<"LEVO_CHAIN_REPORT "<<result<<std::endl;return Json::parse(result)["success"].get<bool>()?0:1;}
+int main(int argc,char** argv){if(argc!=3)return 2;std::string policy=argv[2];auto result=policy=="chunks-5"?LevoRunFiveChunks(argv[1]):policy=="chunks-5-w8-vsin"?LevoRunFiveChunks(argv[1],false,"w8-vsin"):policy=="chunks-5-w8-snake"?LevoRunFiveChunks(argv[1],false,"w8-snake"):LevoRunChainBench(argv[1],policy);std::cout<<"LEVO_CHAIN_REPORT "<<result<<std::endl;return Json::parse(result)["success"].get<bool>()?0:1;}
 #endif
