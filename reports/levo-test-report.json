@@ -19169,5 +19169,713 @@
       "localLogSha256": "e2a13202b5e9ea8fb1b4bde0f37e04159efc458ace2b3a3323f341b97db8b146",
       "interpretation": "Failure of this legacy online support-query path, not proof that NPU lacks Sin; preserve App CPU path and prefer established offline OMC compiler/runtime"
     }
+  },
+  "vae_npu_stack_research_2026_10_30": {
+    "asOfUtc": "2026-10-30T03:41:05.076853+00:00",
+    "status": "real-residual-candidates-prepared-cpu-only",
+    "sourceOnnxSha256": "dc585e5d042a29b8b1c01b1898bde4bc0259c7e1cd67f399825222d1d6a6329c",
+    "wholeDecoderOps": {
+      "Constant": 37,
+      "Conv": 32,
+      "Mul": 72,
+      "Sin": 36,
+      "Pow": 36,
+      "Add": 51,
+      "ConvTranspose": 5
+    },
+    "sourcePrefixes": [
+      "/layers/layers.5/layers/layers.2/",
+      "/layers/layers.5/layers/layers.3/",
+      "/layers/layers.5/layers/layers.4/"
+    ],
+    "blockOps": {
+      "Mul": 12,
+      "Sin": 6,
+      "Pow": 6,
+      "Add": 9,
+      "Conv": 6
+    },
+    "candidateCases": [
+      {
+        "id": "residual-stack3-h4",
+        "shape": [
+          1,
+          128,
+          4,
+          8320
+        ],
+        "modelBytes": 1593581,
+        "modelSha256": "764f3b992cc9a2815faca7c996837515eea378bbbddd3e6850b9f2834caf1e52",
+        "rank4VsOriginalRank3Fp32L2": 3.488210121625669e-07,
+        "fp16InputPlusOutputBytes": 17039360,
+        "fp32InputPlusOutputBytes": 34078720,
+        "coreValuesPerRow": 8192,
+        "haloPerSide": 64,
+        "wholeDecoder": false,
+        "npuCompiled": false,
+        "npuOnlyExecutionValidated": false
+      }
+    ],
+    "interiorExcludingGlobalEdgesL2": 3.480970078234645e-07,
+    "globalSequenceEdgePaddingValidated": false,
+    "denseConvAndDeconvMacEstimate": 623885942784,
+    "denseMacEstimateByStage": {
+      "layers.0": 234881024,
+      "layers.1": 75161927680,
+      "layers.2": 112742891520,
+      "layers.3": 112742891520,
+      "layers.4": 112742891520,
+      "layers.5": 209379655680,
+      "layers.7": 880803840
+    },
+    "macConvention": "One multiply-accumulate is one MAC; deconv ignores padded-edge elimination, not measured hardware FLOPs",
+    "npuPerformanceMeasured": false,
+    "appPathChangedToNpu": false,
+    "limits": [
+      "Real original FP32 weights, deterministic synthetic activations; not calibrated INT8 or music-quality proof",
+      "Rank lifting preserves kernel [1,K], dilation [1,d], padding [0,p,0,p] and broadcasts; no approximate Sin substitution",
+      "Halo/tiling proof applies to this one d=1 block only; multiple residual blocks and ConvTranspose require separate boundary verification",
+      "NPU-only compilation must disable fallback; checking public API availability is not evidence of actual NPU placement",
+      "Compare combined host copy, precision conversion, device run and synchronization against the matched CPU path; do not extrapolate single-op speed"
+    ],
+    "continuousVsTiledFp32L2": 0.001952791078076284,
+    "continuousProofLength": 32768,
+    "continuousProofTileRows": 4
+  },
+  "vae_npu_compact_research_2026_10_30": {
+    "asOfUtc": "2026-10-30T03:44:25.453292+00:00",
+    "status": "real-residual-candidates-prepared-cpu-only",
+    "sourceOnnxSha256": "dc585e5d042a29b8b1c01b1898bde4bc0259c7e1cd67f399825222d1d6a6329c",
+    "wholeDecoderOps": {
+      "Constant": 37,
+      "Conv": 32,
+      "Mul": 72,
+      "Sin": 36,
+      "Pow": 36,
+      "Add": 51,
+      "ConvTranspose": 5
+    },
+    "sourcePrefixes": [
+      "/layers/layers.5/layers/layers.2/",
+      "/layers/layers.5/layers/layers.3/",
+      "/layers/layers.5/layers/layers.4/"
+    ],
+    "blockOps": {
+      "Mul": 12,
+      "Sin": 6,
+      "Pow": 6,
+      "Add": 9,
+      "Conv": 6
+    },
+    "candidateCases": [
+      {
+        "id": "residual-stack3-compact",
+        "shape": [
+          1,
+          128,
+          64,
+          640
+        ],
+        "modelBytes": 1593581,
+        "modelSha256": "ea5583c6281096d5f273f4423431ea5979a78a17294e836600731fb2e8111ef3",
+        "rank4VsOriginalRank3Fp32L2": 3.4637081188192957e-07,
+        "fp16InputPlusOutputBytes": 20971520,
+        "fp32InputPlusOutputBytes": 41943040,
+        "coreValuesPerRow": 512,
+        "haloPerSide": 64,
+        "wholeDecoder": false,
+        "npuCompiled": false,
+        "npuOnlyExecutionValidated": false
+      }
+    ],
+    "interiorExcludingGlobalEdgesL2": 3.4932284733658756e-07,
+    "globalSequenceEdgePaddingValidated": false,
+    "denseConvAndDeconvMacEstimate": 623885942784,
+    "denseMacEstimateByStage": {
+      "layers.0": 234881024,
+      "layers.1": 75161927680,
+      "layers.2": 112742891520,
+      "layers.3": 112742891520,
+      "layers.4": 112742891520,
+      "layers.5": 209379655680,
+      "layers.7": 880803840
+    },
+    "macConvention": "One multiply-accumulate is one MAC; deconv ignores padded-edge elimination, not measured hardware FLOPs",
+    "npuPerformanceMeasured": false,
+    "appPathChangedToNpu": false,
+    "limits": [
+      "Real original FP32 weights, deterministic synthetic activations; not calibrated INT8 or music-quality proof",
+      "Rank lifting preserves kernel [1,K], dilation [1,d], padding [0,p,0,p] and broadcasts; no approximate Sin substitution",
+      "Halo/tiling proof applies to this one d=1 block only; multiple residual blocks and ConvTranspose require separate boundary verification",
+      "NPU-only compilation must disable fallback; checking public API availability is not evidence of actual NPU placement",
+      "Compare combined host copy, precision conversion, device run and synchronization against the matched CPU path; do not extrapolate single-op speed"
+    ],
+    "continuousVsTiledFp32L2": 0.008281273818027731,
+    "continuousProofLength": 2048,
+    "continuousProofTileRows": 4
+  },
+  "vae_npu_offline_performance_2026_10_30": {
+    "asOfUtc": "2026-10-30T03:47:50.747838+00:00",
+    "status": "npu-only-build-and-run-passed-all-four-cases-slower-than-cpu",
+    "cases": [
+      {
+        "id": "residual-d1-h1",
+        "shape": [
+          1,
+          128,
+          1,
+          8320
+        ],
+        "npu": {
+          "firstMs": 25.658907000000003,
+          "warmMedianMs": 19.908749999999998,
+          "warmMinMs": 15.125313,
+          "warmMaxMs": 20.836405999999997,
+          "relativeL2VsOriginalFp32": 0.0009386657279241576,
+          "setupMs": 213.500313
+        },
+        "cpuFp32LowNeon": {
+          "firstMs": 20.539375,
+          "warmMedianMs": 13.793280999999999,
+          "warmMinMs": 13.599219,
+          "warmMaxMs": 15.140938,
+          "relativeL2VsOriginalFp32": 0.003072971689770623,
+          "setupMs": 4.617969
+        },
+        "cpuW8LowNeon": {
+          "firstMs": 12.149062,
+          "warmMedianMs": 9.409842999999999,
+          "warmMinMs": 7.274687,
+          "warmMaxMs": 11.529218,
+          "relativeL2VsOriginalFp32": 0.010476937443171748,
+          "setupMs": 0.895781
+        },
+        "npuSpeedupVsCpuW8": 0.47264860927983926
+      },
+      {
+        "id": "residual-d1-h4",
+        "shape": [
+          1,
+          128,
+          4,
+          8320
+        ],
+        "npu": {
+          "firstMs": 47.849062999999994,
+          "warmMedianMs": 59.688281,
+          "warmMinMs": 58.237813,
+          "warmMaxMs": 73.676406,
+          "relativeL2VsOriginalFp32": 0.0009444957775390853,
+          "setupMs": 35.853125
+        },
+        "cpuFp32LowNeon": {
+          "firstMs": 72.716563,
+          "warmMedianMs": 58.883125,
+          "warmMinMs": 55.978282,
+          "warmMaxMs": 63.377656,
+          "relativeL2VsOriginalFp32": 0.003083988720902375,
+          "setupMs": 1.337656
+        },
+        "cpuW8LowNeon": {
+          "firstMs": 58.487656,
+          "warmMedianMs": 44.057031,
+          "warmMinMs": 43.265313,
+          "warmMaxMs": 50.856407,
+          "relativeL2VsOriginalFp32": 0.010489837738162118,
+          "setupMs": 0.936406
+        },
+        "npuSpeedupVsCpuW8": 0.7381186099160738
+      },
+      {
+        "id": "residual-stack3-h4",
+        "shape": [
+          1,
+          128,
+          4,
+          8320
+        ],
+        "npu": {
+          "firstMs": 224.43781199999998,
+          "warmMedianMs": 220.610469,
+          "warmMinMs": 220.33781199999999,
+          "warmMaxMs": 228.362344,
+          "relativeL2VsOriginalFp32": 0.0016192313095619582,
+          "setupMs": 164.669687
+        },
+        "cpuFp32LowNeon": {
+          "firstMs": 205.379218,
+          "warmMedianMs": 163.707344,
+          "warmMinMs": 161.681875,
+          "warmMaxMs": 165.80140600000001,
+          "relativeL2VsOriginalFp32": 0.005494865312011333,
+          "setupMs": 7.948438
+        },
+        "cpuW8LowNeon": {
+          "firstMs": 159.818906,
+          "warmMedianMs": 112.40984399999999,
+          "warmMinMs": 111.584219,
+          "warmMaxMs": 123.880313,
+          "relativeL2VsOriginalFp32": 0.01789890822760733,
+          "setupMs": 2.6214060000000003
+        },
+        "npuSpeedupVsCpuW8": 0.5095399348432553,
+        "npuRunSyncWarmMedianMs": 217.842969,
+        "npuHostCopyWarmMedianMs": 2.668125
+      },
+      {
+        "id": "residual-stack3-compact",
+        "shape": [
+          1,
+          128,
+          64,
+          640
+        ],
+        "npu": {
+          "firstMs": 264.53671899999995,
+          "warmMedianMs": 257.97015600000003,
+          "warmMinMs": 250.76328199999998,
+          "warmMaxMs": 297.541562,
+          "relativeL2VsOriginalFp32": 0.0016080845041978157,
+          "setupMs": 141.48250000000002
+        },
+        "cpuFp32LowNeon": {
+          "firstMs": 261.005313,
+          "warmMedianMs": 200.13125000000002,
+          "warmMinMs": 199.548437,
+          "warmMaxMs": 208.310312,
+          "relativeL2VsOriginalFp32": 0.005460936623572913,
+          "setupMs": 7.548438
+        },
+        "cpuW8LowNeon": {
+          "firstMs": 184.306094,
+          "warmMedianMs": 172.590937,
+          "warmMinMs": 144.302344,
+          "warmMaxMs": 177.273906,
+          "relativeL2VsOriginalFp32": 0.01781105367541969,
+          "setupMs": 2.428125
+        },
+        "npuSpeedupVsCpuW8": 0.6690345103330478,
+        "npuRunSyncWarmMedianMs": 255.46359400000003,
+        "npuHostCopyWarmMedianMs": 2.545938
+      }
+    ],
+    "records": [
+      {
+        "run": "vae-npu-offline-20261030-r1",
+        "result": {
+          "cases": [
+            {
+              "cpuFp32LowNeon": {
+                "backend": "MNN CPU Low 6 threads NEON Sin",
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 3.203125,
+                  "relativeL2": 0.003072971689770623
+                },
+                "runIncludingCopiesSeconds": [
+                  0.020539375,
+                  0.015140938,
+                  0.013793281,
+                  0.013599219
+                ],
+                "setupSeconds": 0.004617969,
+                "success": true,
+                "weightBits": 32
+              },
+              "cpuW8LowNeon": {
+                "backend": "MNN CPU Low 6 threads NEON Sin",
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 3.19921875,
+                  "relativeL2": 0.010476937443171748
+                },
+                "runIncludingCopiesSeconds": [
+                  0.012149062,
+                  0.009409843,
+                  0.007274687,
+                  0.011529218
+                ],
+                "setupSeconds": 0.000895781,
+                "success": true,
+                "weightBits": 8
+              },
+              "id": "residual-d1-h1",
+              "npu": {
+                "buildCode": 0,
+                "cpuFallbackAllowed": false,
+                "disableFallbackCode": 0,
+                "npuOnlyBuildAndRunSucceeded": true,
+                "npuOnlyOptionCode": 0,
+                "npuOnlyRequested": true,
+                "npuPrivateWorkspacePeakMeasured": false,
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 3.205078125,
+                  "relativeL2": 0.0009386657279241576
+                },
+                "onlineSupportQueryUsed": false,
+                "rssAfterSetupKiB": 69904,
+                "runIncludingCopiesSeconds": [
+                  0.025658907,
+                  0.020836406,
+                  0.01990875,
+                  0.015125313
+                ],
+                "setupSeconds": 0.213500313,
+                "success": true
+              },
+              "shape": [
+                1,
+                128,
+                1,
+                8320
+              ]
+            },
+            {
+              "cpuFp32LowNeon": {
+                "backend": "MNN CPU Low 6 threads NEON Sin",
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 3.66796875,
+                  "relativeL2": 0.003083988720902375
+                },
+                "runIncludingCopiesSeconds": [
+                  0.072716563,
+                  0.058883125,
+                  0.055978282,
+                  0.063377656
+                ],
+                "setupSeconds": 0.001337656,
+                "success": true,
+                "weightBits": 32
+              },
+              "cpuW8LowNeon": {
+                "backend": "MNN CPU Low 6 threads NEON Sin",
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 3.6796875,
+                  "relativeL2": 0.010489837738162118
+                },
+                "runIncludingCopiesSeconds": [
+                  0.058487656,
+                  0.044057031,
+                  0.050856407,
+                  0.043265313
+                ],
+                "setupSeconds": 0.000936406,
+                "success": true,
+                "weightBits": 8
+              },
+              "id": "residual-d1-h4",
+              "npu": {
+                "buildCode": 0,
+                "cpuFallbackAllowed": false,
+                "disableFallbackCode": 0,
+                "npuOnlyBuildAndRunSucceeded": true,
+                "npuOnlyOptionCode": 0,
+                "npuOnlyRequested": true,
+                "npuPrivateWorkspacePeakMeasured": false,
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 3.666015625,
+                  "relativeL2": 0.0009444957775390853
+                },
+                "onlineSupportQueryUsed": false,
+                "rssAfterSetupKiB": 97144,
+                "runIncludingCopiesSeconds": [
+                  0.047849063,
+                  0.059688281,
+                  0.073676406,
+                  0.058237813
+                ],
+                "setupSeconds": 0.035853125,
+                "success": true
+              },
+              "shape": [
+                1,
+                128,
+                4,
+                8320
+              ]
+            }
+          ],
+          "probeCompleted": true,
+          "sampleIntervalMs": 20,
+          "sampledPeakRssKiB": 188872,
+          "scope": "Real residual block, synthetic activations, offline OMC NPU-only vs MNN CPU; not complete VAE or whole-chain RTF"
+        },
+        "conversion": {
+          "scope": "Real VAE residual offline OMC conversion only; not NPU execution",
+          "cases": [
+            {
+              "id": "residual-d1-h1",
+              "sourceSha256": "e8ff6fefc9bb1932603a83daa80635e4a7ae640634dee812bdfa8da1fc2cc150",
+              "weightType": "FP16",
+              "success": true,
+              "returnCode": 0,
+              "seconds": 2.021309315925464,
+              "bytes": 467590,
+              "sha256": "45e99f747902a0e320c64a90a725451b3b1418350540e548f33a0b7871c945c4"
+            },
+            {
+              "id": "residual-d1-h4",
+              "sourceSha256": "dfe892a6fe0a6b0a1704b5e649fa7b37fae1844d588a97276d008187171b3cf7",
+              "weightType": "FP16",
+              "success": true,
+              "returnCode": 0,
+              "seconds": 0.37050872994586825,
+              "bytes": 467596,
+              "sha256": "d293dbbb4b089526dbdd102166f92c5f1fc79b1dfab12b4398b0dd0c0d3b8c0e"
+            }
+          ],
+          "complete": true
+        },
+        "sourceLogSha256": "8548c29f37226b5576fb7c8d991dc859a7cefd4c4ea0cfa6aed7a863bdf30714",
+        "phoneIdentityLogSha256": "582088a3845ae4bd16c4f7a6a5f640471536d069503c654fba1964ea3d993e6f"
+      },
+      {
+        "run": "vae-npu-stack-20261030-r1",
+        "result": {
+          "cases": [
+            {
+              "cpuFp32LowNeon": {
+                "backend": "MNN CPU Low 6 threads NEON Sin",
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 4.2421875,
+                  "relativeL2": 0.005494865312011333
+                },
+                "runIncludingCopiesSeconds": [
+                  0.205379218,
+                  0.165801406,
+                  0.163707344,
+                  0.161681875
+                ],
+                "setupSeconds": 0.007948438,
+                "success": true,
+                "weightBits": 32
+              },
+              "cpuW8LowNeon": {
+                "backend": "MNN CPU Low 6 threads NEON Sin",
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 4.24609375,
+                  "relativeL2": 0.01789890822760733
+                },
+                "runIncludingCopiesSeconds": [
+                  0.159818906,
+                  0.111584219,
+                  0.112409844,
+                  0.123880313
+                ],
+                "setupSeconds": 0.002621406,
+                "success": true,
+                "weightBits": 8
+              },
+              "id": "residual-stack3-h4",
+              "npu": {
+                "buildCode": 0,
+                "cpuFallbackAllowed": false,
+                "disableFallbackCode": 0,
+                "hostInputCopySeconds": [
+                  0.0011825,
+                  0.001628125,
+                  0.001151406,
+                  0.001707032
+                ],
+                "hostOutputCopySeconds": [
+                  0.001133906,
+                  0.00104,
+                  0.001506875,
+                  0.00105625
+                ],
+                "npuOnlyBuildAndRunSucceeded": true,
+                "npuOnlyOptionCode": 0,
+                "npuOnlyRequested": true,
+                "npuPrivateWorkspacePeakMeasured": false,
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 4.234375,
+                  "relativeL2": 0.0016192313095619582
+                },
+                "onlineSupportQueryUsed": false,
+                "rssAfterSetupKiB": 96168,
+                "runIncludingCopiesSeconds": [
+                  0.224437812,
+                  0.228362344,
+                  0.220337812,
+                  0.220610469
+                ],
+                "runSyncSeconds": [
+                  0.222115313,
+                  0.225691407,
+                  0.217675625,
+                  0.217842969
+                ],
+                "setupSeconds": 0.164669687,
+                "success": true
+              },
+              "shape": [
+                1,
+                128,
+                4,
+                8320
+              ]
+            }
+          ],
+          "probeCompleted": true,
+          "sampleIntervalMs": 20,
+          "sampledPeakRssKiB": 189208,
+          "scope": "Real residual block, synthetic activations, offline OMC NPU-only vs MNN CPU; not complete VAE or whole-chain RTF"
+        },
+        "conversion": {
+          "scope": "Real VAE residual offline OMC conversion only; not NPU execution",
+          "cases": [
+            {
+              "id": "residual-stack3-h4",
+              "sourceSha256": "764f3b992cc9a2815faca7c996837515eea378bbbddd3e6850b9f2834caf1e52",
+              "weightType": "FP16",
+              "success": true,
+              "returnCode": 0,
+              "seconds": 0.4195550619624555,
+              "bytes": 1338557,
+              "sha256": "d0a17b66bd3954eb8fefe16861c73b64f205813f7aad5d22ddd6eb8092be0e50"
+            }
+          ],
+          "complete": true
+        },
+        "sourceLogSha256": "6f592a4a836f0baecb077164f1bdd8c9a93d3ba9efd5515991a282cdfe90f6fb",
+        "phoneIdentityLogSha256": "a2ad812d145ae8af3059e2c10d7a5c323d7f62ece63ef0b6527e8a00a89e1163"
+      },
+      {
+        "run": "vae-npu-compact-20261030-r1",
+        "result": {
+          "cases": [
+            {
+              "cpuFp32LowNeon": {
+                "backend": "MNN CPU Low 6 threads NEON Sin",
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 4.6015625,
+                  "relativeL2": 0.005460936623572913
+                },
+                "runIncludingCopiesSeconds": [
+                  0.261005313,
+                  0.208310312,
+                  0.199548437,
+                  0.20013125
+                ],
+                "setupSeconds": 0.007548438,
+                "success": true,
+                "weightBits": 32
+              },
+              "cpuW8LowNeon": {
+                "backend": "MNN CPU Low 6 threads NEON Sin",
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 4.59765625,
+                  "relativeL2": 0.01781105367541969
+                },
+                "runIncludingCopiesSeconds": [
+                  0.184306094,
+                  0.172590937,
+                  0.144302344,
+                  0.177273906
+                ],
+                "setupSeconds": 0.002428125,
+                "success": true,
+                "weightBits": 8
+              },
+              "id": "residual-stack3-compact",
+              "npu": {
+                "buildCode": 0,
+                "cpuFallbackAllowed": false,
+                "disableFallbackCode": 0,
+                "hostInputCopySeconds": [
+                  0.001542344,
+                  0.0017625,
+                  0.001234063,
+                  0.00137625
+                ],
+                "hostOutputCopySeconds": [
+                  0.001385937,
+                  0.001181875,
+                  0.001311875,
+                  0.001127031
+                ],
+                "npuOnlyBuildAndRunSucceeded": true,
+                "npuOnlyOptionCode": 0,
+                "npuOnlyRequested": true,
+                "npuPrivateWorkspacePeakMeasured": false,
+                "numeric": {
+                  "finite": true,
+                  "outputPeak": 4.59765625,
+                  "relativeL2": 0.0016080845041978157
+                },
+                "onlineSupportQueryUsed": false,
+                "rssAfterSetupKiB": 103788,
+                "runIncludingCopiesSeconds": [
+                  0.264536719,
+                  0.297541562,
+                  0.250763282,
+                  0.257970156
+                ],
+                "runSyncSeconds": [
+                  0.261603907,
+                  0.294590469,
+                  0.248210625,
+                  0.255463594
+                ],
+                "setupSeconds": 0.1414825,
+                "success": true
+              },
+              "shape": [
+                1,
+                128,
+                64,
+                640
+              ]
+            }
+          ],
+          "probeCompleted": true,
+          "sampleIntervalMs": 20,
+          "sampledPeakRssKiB": 218068,
+          "scope": "Real residual block, synthetic activations, offline OMC NPU-only vs MNN CPU; not complete VAE or whole-chain RTF"
+        },
+        "conversion": {
+          "scope": "Real VAE residual offline OMC conversion only; not NPU execution",
+          "cases": [
+            {
+              "id": "residual-stack3-compact",
+              "sourceSha256": "ea5583c6281096d5f273f4423431ea5979a78a17294e836600731fb2e8111ef3",
+              "weightType": "FP16",
+              "success": true,
+              "returnCode": 0,
+              "seconds": 0.41712744696997106,
+              "bytes": 1323543,
+              "sha256": "e7d5a5f5e8ff3032848da83c218e9150259883ecbb131758d15f6284bf2d1e78"
+            }
+          ],
+          "complete": true
+        },
+        "sourceLogSha256": "f65be2fa3e6dfd7cf3390070369c3c87020d6268bf3794bd872a7b6d6ee939e9",
+        "phoneIdentityLogSha256": "c851a6d450bc4bf2f0733f9f91203a7c20d8d8cde559f4b20b0fcc2f78261854"
+      }
+    ],
+    "finalProbeSourceSha256": "bcf966541d7e0c4d5d31efcf3b64d43455de33da071dbe4d7979b9bcc420e052",
+    "appPathChanged": false,
+    "recommendedAppPolicy": "chunks-5-w8-vsin",
+    "firstRunBinaryDiffersFromLaterTimingBreakdownProbe": true,
+    "limits": [
+      "Real original weights with synthetic activations; no trained song or whole-VAE RTF result",
+      "NPU weights FP16 and FP32 host IO; CPU Low FP32-disk and W8-disk both use NEON Sin, six threads; errors differ across precision/quantization recipes",
+      "Exactly one first run and three warmed runs per case, fixed NPU then CPU order, no controlled temperature/frequency experiment",
+      "NPU-only/no-fallback options accepted and offline build/run successful; no per-operator AI-core/AICPU hardware trace",
+      "RunSync includes device compute and potentially internal layout/precision conversion, scheduling and waits; not pure kernel time or DRAM bandwidth",
+      "Process RSS sampled every20ms; NPU private workspace peak not measured",
+      "Stacked blocks validate independent tile numerics/interior; global sequence edge padding is not production-validated",
+      "Compact and wide stack process32768 valid feature positions, but compact halo work is25% versus1.5625% for wide; not equal total padded FLOPs"
+    ],
+    "nextAction": "Inspect compiled node/device kernels and internal precision/layout costs; try FP16 IO before any whole-decoder offload, retain CPU fallback-free comparisons"
   }
 }

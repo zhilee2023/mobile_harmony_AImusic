@@ -2,7 +2,7 @@
 
 > v0.1.7：保留推荐W8＋NEON原入口，同包五块RTF2.290、峰值约2.19GiB。Snake融合接入App后RTF2.697（含首块额外校验），未提速；用户选择原入口，较慢实验按钮已移出常规UI，测试与后端保留。见[VAE记录](docs/VAE_OPTIMIZATION.md)、[DiT后续方向](docs/DIT_ACCELERATION.md)与统一报告。仍是随机音乐头的数值链路，不是训练好的歌曲。
 
-> [VAE NPU研究](docs/VAE_NPU_FEASIBILITY.md)：真实残差块已完成2D/分块PC数值证明，尚无NPU速度成绩；旧在线支持查询异常已记录，后续采用离线OMC＋禁止回退验证。
+> [VAE NPU研究](docs/VAE_NPU_FEASIBILITY.md)：四组连续真实子图已成功离线OMC NPU-only运行、禁止CPU回退；预热19.9–258ms，本轮均慢于匹配W8＋NEON CPU，App保留原入口。尚非完整VAE RTF，旧在线查询异常和数值/内存限制均保留。
 
 > 2026-10-30 Snake融合CLI探针三窗通过：对同轮W8＋NEON约1.16倍加速，PCM L2=0；仍有120MiB输入快照、未接入App，绝对RTF未超过历史最好。详见[VAE优化记录](docs/VAE_OPTIMIZATION.md)。[MNN推测解码接入说明](docs/SPECULATIVE_DECODING.md)已核对，音乐链路尚未启用。
 

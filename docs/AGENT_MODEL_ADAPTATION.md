@@ -1,5 +1,7 @@
 # LeVo Harmony：给接手Agent的模型适配指南
 
+> 最新连续VAE NPU性能已测：离线OMC绕过在线查询，NPU-only/禁回退均接受，四组实际RunSync通过。单块H1/H4预热中位数NPU19.91/59.69ms，对W8＋NEON CPU9.41/44.06ms；三块宽/紧凑220.61/257.97ms，对CPU112.41/172.59ms。NPU误差0.094%–0.162%。三块主机拷贝约2.6ms，多数时间在RunSync，内部转换/调度未分离，不能断言memory-bound或纯计算慢。App保留原CPU入口。模型均未上传；统一报告vae_npu_offline_performance_2026_10_30及VAE_NPU_FEASIBILITY.md有完整来源。候选13/39节点只是部分VAE，不是整网或歌曲RTF；三块全局端点padding仍需修复。当前窗口用量已接近收尾，不继续新增实验跨额度窗口。
+
 > 最新NPU研究：见VAE_NPU_FEASIBILITY.md。末级真实13节点残差块已导出H1/H4 NCHW 2D图，各531204字节；PC原1D/2D与32768点带halo分块L2约2e-7。图在models/vae-npu-block/，不上传权重。NNRT旧在线支持查询在NNBackend::GetSupportedOperation内部SIGBUS退出135，未返回支持列表/未推理，不能说Sin不支持；不自动重试，优先匹配Kirin9030的离线OMC路线并禁用CPU回退。App未切换NPU。HDC file send务必用本地绝对文件路径，相对native-build路径可能在远端生成同名目录；检查ls/哈希再执行，初次路径错误也留存。
 
 > 2026-10-30 v0.1.7 App接入后用户选择保留原入口：W8＋NEON五块93.799秒/RTF2.290，VAE30.189、DiT36.495、LLM24.541秒，采样峰值2246.5MiB。Snake回调五块110.457秒/2.697、2370.8MiB，含6.378秒首块原路径校验；首块PCM L2=0、180次融合完成，但整链未提速。最初校验失败已通过重传输入修复，失败历史保留。融合按钮已移出常规UI，后端保留作开发复现；最终原入口包已安装，native库与测试包哈希一致。统一报告vae_snake_app_validation_2026_10_30，15回归通过。用户最新要求研究连续VAE子图NPU路径；此前CANN单算子COMMON且更慢不能当全图指定NPU结论，下一步先核对CANN Kit图接口/设备放置和真实块支持。禁止修改旧CosyVoice/ACE工程及提交本地签名。

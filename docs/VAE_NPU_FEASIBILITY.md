@@ -1,6 +1,6 @@
 # VAE在Mate手机NPU上的可行性与已完成准备
 
-2026-10-30。当前App仍推荐原W8＋NEON CPU入口，本轮没有将App改为NPU；没有新的NPU VAE速度成绩。
+2026-10-30。当前App仍推荐原W8＋NEON CPU入口。后续已通过离线OMC实际跑通四组NPU-only连续子图，性能见末节；没有将App改成NPU，也没有整VAE的NPU RTF。
 
 ## 为什么值得研究完整子图
 
@@ -50,3 +50,26 @@ NNRT头中有Conv2D、Conv2DTranspose、Sin、Pow等枚举，**这只是API可�
 5. 扩大到连续残差堆栈/上采样阶段，最后整decoder，记账NPU工作区、CPU原模型和常驻权重副本。NPU FP16权重预计约169MB量级，不会自动保持MNN W8的85MB体积；INT8必须另做代表性激活校准及质量验证。
 
 当前统一报告`vae_npu_research_2026_10_30`包含PC证明、候选哈希、在线查询真实退出和限制；没有NPU RTF。原CPU入口继续可用。官方能力入口：[CANN Kit](https://developer.huawei.com/consumer/cn/sdk/cann-kit/)、[图编译与执行](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/cannkit-graph-compilation-and-execution)。具体API以上述本机SDK头和实际构建结果为准，不套用服务器昇腾算子支持表。
+
+## 连续子图真机性能结果（2026-10-30）
+
+已复用现有Linux转换工具，在独立目录将真实权重子图编译为Kirin9030 FP16 OMC。手机使用NN core离线接口，选择HIAI_F、设置NPU-only并禁用fallback；四组build及RunSync均返回成功，未调用此前异常的在线支持查询。尚未获取逐节点AI-core/AICPU硬件轨迹，不能将设备内部所有时间都称为矩阵核计算。
+
+每组先运行一次，再运行三次，以下为后三次含输入/输出主机拷贝及同步的中位数，CPU为6线程CPU Low＋NEON Sin：
+
+| 连续图/形状 | NPU FP16权重 | CPU FP32文件/Low计算 | CPU W8/Low计算 | NPU相对FP32参考L2 |
+|---|---:|---:|---:|---:|
+| 1块，[1,128,1,8320] | 19.91ms | 13.79ms | 9.41ms | 0.094% |
+| 1块，[1,128,4,8320] | 59.69ms | 58.88ms | 44.06ms | 0.094% |
+| 3块，[1,128,4,8320] | 220.61ms | 163.71ms | 112.41ms | 0.162% |
+| 3块紧凑，[1,128,64,640] | 257.97ms | 200.13ms | 172.59ms | 0.161% |
+
+NPU首次分别25.66/47.85/224.44/264.54ms，加载构建约35.9–213.5ms，已与前向分列。3块宽图RunSync中位数217.84ms、主机输入输出拷贝合计约2.67ms；紧凑图分别255.46/2.55ms。说明所测显式memcpy不是主要耗时，但RunSync内部仍可能包含布局/精度转换、调度/等待和设备计算，尚不能证明纯计算或DRAM带宽瓶颈。
+
+三块包括dilation1/3/9的6个Conv、6个Sin，合计39节点，OMC约1.34MB；紧凑图约1.32MB。宽图和紧凑图均处理32768个有效特征位置，但halo额外计算分别约1.56%和25%，不能当作完全相同的填充FLOPs。合成输入的统计分布相同，数值不是训练好的歌曲。CPU FP32文件Low误差约0.31%–0.55%，CPU W8约1.05%–1.79%；不同量化/精度方案不是逐位相同的对照。
+
+三个独立进程20ms采样RSS峰值约184/185/213MiB；这是部分模型的进程RSS，未测NPU私有工作区峰值，不能当完整共驻峰值。三块只验证了独立tile和去掉真实序列端点后的内部拼接。宽图真实端点相对误差约0.195%，紧凑短序列约0.828%，需要正确处理每层边界，尚未成为生产流式拼接实现。
+
+结论：已证明连续子图可以NPU-only运行，但本轮四组均未快于原W8＋NEON CPU，App保留原入口。两轮端点为AWAKE；固定顺序、仅三次预热样本、未控温，不对所有NPU模型作泛化结论。下一轮应先看编译后的逐节点执行和内部转换，再验证FP16输入/输出接口，暂不直接扩大到完整VAE。
+
+复现工具：`prepare_vae_npu_block.py`（默认/`--stack3`/`--stack3 --compact`）、`prepare_vae_npu_cpu.py 夹具目录`、远端`convert_vae_npu_blocks_remote.py --deadline 当前授权截止epoch`、`build-native-bench.ps1`及`levo_vae_npu_offline 夹具目录`。取回并校验OMC，再上传本地绝对路径；统一合并`merge_vae_npu_offline.py`。模型/原始日志不上传，统一报告新增`vae_npu_offline_performance_2026_10_30`，保留全部先前失败。
