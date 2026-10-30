@@ -18220,7 +18220,7 @@
     ]
   },
   "vae_snake_immutable_followup_2026_10_29": {
-    "status": "compiled; phone check found SLEEP, no runtime probe started",
+    "status": "Original immutable-constant version attempted Oct30 without structured result; shared-pool followup timed out; see vae_snake_validation_2026_10_30",
     "runtimeVerified": false,
     "productionChanged": false,
     "immutableCoefficientExtraction": {
@@ -18233,5 +18233,49 @@
       "tools/extract_vae_snake_coefficients.py": "751cc34457c8b5b867b46d22b7fa6f989bf0fda155d07b7e82aaafeb61949522"
     },
     "nextCheck": "Bounded 45-second probe only after awake and within authorized usage window; preserve numeric/layout gates"
+  },
+  "vae_snake_validation_2026_10_30": {
+    "asOfUtc": "2026-10-30T01:25:42.368437+00:00",
+    "humanAuthorizationScope": "Continue the bounded Snake fusion validation after manually waking the phone; no new open-ended experiment campaign",
+    "status": "timeout",
+    "programExitCode": 124,
+    "observation": {
+      "wallSeconds": 45.1834612,
+      "transportExit": 0,
+      "durationCapSeconds": 45
+    },
+    "stages": [
+      "warm-capture-start",
+      "warm-capture-complete",
+      "immutable-coefficients-ready",
+      "fused-window-1-start"
+    ],
+    "numericEquivalenceValidated": false,
+    "performanceValidated": false,
+    "newRtf": null,
+    "productionAppChanged": false,
+    "bothEndpointPowerStates": "AWAKE",
+    "phoneProbeObservedTerminal": true,
+    "sourceSha256": {
+      "native-bench/VaeSnakeFusion.cpp": "e040b0762f71b389cf0b44391d9d02c72351bf6538407c2b7f8ed83188d0b55b",
+      "native-bench/CMakeLists.txt": "57c6f7abae918c6e816bbb262a6c9c7141bcf4524c1025f83207cf2d24773ed9"
+    },
+    "verifiedProbeBinarySha256": "f6effe2d8704d537108f233530aed982bb2a10de8b600a75c5ed99418b15da9e",
+    "verifiedImmutableCoefficientSha256": "9eb1d18168e8252e945470884df90357fb4c71aadba88c1962503d8eb3588751",
+    "sourceLogSha256": "5d7968ee529c21619c45523a3466551805bcfd97a1f12ba02f9045e489da8cb5",
+    "previousAttempt": {
+      "name": "snake-immutable-20261030-r1",
+      "structuredResultPresent": false,
+      "programExitCode": null,
+      "transportExitIsNotProgramExit": true,
+      "sourceLogSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "limits": [
+      "Timeout is a failure of this callback implementation; it does not measure the speed of a correct fused kernel",
+      "Final stage marker precedes input copying; finer markers are needed before attributing the stall solely to the fused kernel or thread pool",
+      "Graph workspaces remain allocated; no peak-memory reduction established",
+      "Independent kernel correctness and an explicit CPU Execution/graph rewrite remain unvalidated"
+    ],
+    "nextAction": "Split input-copy and callback/kernel phases; validate the fused kernel independently before integrating a graph rewrite"
   }
 }
