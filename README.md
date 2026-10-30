@@ -2,7 +2,7 @@
 
 > v0.1.7：保留推荐W8＋NEON原入口，同包五块RTF2.290、峰值约2.19GiB。Snake融合接入App后RTF2.697（含首块额外校验），未提速；用户选择原入口，较慢实验按钮已移出常规UI，测试与后端保留。见[VAE记录](docs/VAE_OPTIMIZATION.md)、[DiT后续方向](docs/DIT_ACCELERATION.md)与统一报告。仍是随机音乐头的数值链路，不是训练好的歌曲。
 
-> [VAE NPU研究](docs/VAE_NPU_FEASIBILITY.md)：四组连续真实子图已成功离线OMC NPU-only运行、禁止CPU回退；预热19.9–258ms，本轮均慢于匹配W8＋NEON CPU，App保留原入口。尚非完整VAE RTF，旧在线查询异常和数值/内存限制均保留。
+> [CANN官方W8A8量化实测](docs/CANN_VAE_QUANTIZATION.md)：20条校准＋4条留出输入已跑通；四行完整残差46–47ms，仍慢于CPU W8 39–42ms；纯卷积W8A8约12.3–12.5ms，对同轮CPU约2倍。关键更正：残差OMC预编译为NPU3＋CPU2，运行时禁回退不代表纯NPU；旧三残差为NPU7＋CPU6。App未切换，尚无新整链RTF。
 
 > 后续纯Conv隔离已测：六Conv High两轮比CPU W8快2.44–3.07倍，但完整残差块NPU仍较慢，**尚无新的VAE端到端加速**。App继续原CPU入口，纯Conv数据单列在统一报告，不能拿消融输出替代歌曲。
 

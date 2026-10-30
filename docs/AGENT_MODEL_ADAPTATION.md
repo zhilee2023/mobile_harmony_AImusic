@@ -1,5 +1,7 @@
 # LeVo Harmony：给接手Agent的模型适配指南
 
+> 最新CANN官方量化与分区更正：见CANN_VAE_QUANTIZATION.md、统一报告vae_cann_quantization_2026_10_30。DDK原包包含DOPT，只是此前只解压了OMG；独立Python3.10跑Quant_INT8-8（权重AbsMax、激活EmaMinMax），20/20条真实VAE前缀激活校准，源latent仍为合成数据。H1四条留出、H4两轮逆序对照通过。四行残差W8A8 46.25–47.01ms，CPU W8同轮39.45–41.85ms；纯K7卷积W8A8 12.26–12.52ms，CPU24.70–24.78ms。FP16波动明显，不能断言W8A8优于FP16。编译证据更正此前“NPU-only”措辞：单残差NPU3/CPU2、三残差NPU7/CPU6，纯Conv NPU1/CPU0；禁回退仅为运行时选项，不会消除已编入的CPU子图。原始数字保留并追加更正字段，App仍为W8＋NEON，未有本轮端到端提速。不要把RunSync约44–45ms全部称为调度开销，尚包含计算、转换与同步。
+
 > 最新纯Conv消融已完成并单列：用户在新普通窗口0%继续授权，截止epoch1793359789。NPU-only/禁回退，六Conv High两轮25.68–31.64ms，对CPU W8 77.18–78.91ms，约2.44–3.07倍；单kernel7/dilation1约2.8–2.9倍。完整三残差High仍191.7–192.4ms，对CPU110.8–111.6ms，所以没有新VAE端到端/NPU App加速。删除Snake/残差改变函数及编译计划，禁止把差额全归给Sin。计数器Scope会清零，修复错误delta并补验两CPU路各288次正弦调用；保留修复前二进制和源码哈希。统一报告vae_pureconv_ablation_2026_10_30，VAE_NPU_FEASIBILITY.md有两轮范围和误差；模型与签名不上传。下一步才是卷积NPU＋CPU逐元素的真实混合边界验证。App保持原W8＋NEON入口。
 
 > 最新连续VAE NPU性能已测：离线OMC绕过在线查询，NPU-only/禁回退均接受，四组实际RunSync通过。单块H1/H4预热中位数NPU19.91/59.69ms，对W8＋NEON CPU9.41/44.06ms；三块宽/紧凑220.61/257.97ms，对CPU112.41/172.59ms。NPU误差0.094%–0.162%。三块主机拷贝约2.6ms，多数时间在RunSync，内部转换/调度未分离，不能断言memory-bound或纯计算慢。App保留原CPU入口。模型均未上传；统一报告vae_npu_offline_performance_2026_10_30及VAE_NPU_FEASIBILITY.md有完整来源。候选13/39节点只是部分VAE，不是整网或歌曲RTF；三块全局端点padding仍需修复。当前窗口用量已接近收尾，不继续新增实验跨额度窗口。
