@@ -18277,5 +18277,122 @@
       "Independent kernel correctness and an explicit CPU Execution/graph rewrite remain unvalidated"
     ],
     "nextAction": "Split input-copy and callback/kernel phases; validate the fused kernel independently before integrating a graph rewrite"
+  },
+  "vae_snake_progress_2026_10_30": {
+    "asOfUtc": "2026-10-30T02:43:58.914921+00:00",
+    "humanAuthorizationScope": "Later human request to continue testing; bounded VAE callback fusion localization and paired validation",
+    "status": "three-window-callback-fusion-feasibility-passed",
+    "programExitCode": 0,
+    "case": {
+      "baselineComputeSeconds": 24.803390625,
+      "baselineSin": "neon",
+      "baselineVaeOnlyRtf": 0.9688824462890624,
+      "capturedGroups": 36,
+      "computeSeconds": 21.348003749999997,
+      "dispatch": "pool",
+      "fusedCalls": 108,
+      "fusedCallsCompleted": 108,
+      "pairOrder": "even windows baseline then fused; odd windows fused then baseline",
+      "producerSnapshotPeakBytes": 125829120,
+      "rows": [
+        {
+          "baselineSeconds": 6.054989062,
+          "l2VsOriginalPhoneW8": 0.0,
+          "seconds": 5.607044531
+        },
+        {
+          "baselineSeconds": 9.620421094,
+          "l2VsOriginalPhoneW8": 0.0,
+          "seconds": 7.7150075
+        },
+        {
+          "baselineSeconds": 9.127980469,
+          "l2VsOriginalPhoneW8": 0.0,
+          "seconds": 8.025951719
+        }
+      ],
+      "sampleIntervalMs": 20,
+      "sampledPeakRssKiB": 940916,
+      "scope": "Callback Snake fusion feasibility only; original graph allocations retained; not whole-chain RTF",
+      "selection": "all",
+      "speedupVsPairedBaseline": 1.1618599525962703,
+      "success": true,
+      "vaeOnlyRtf": 0.8339063964843748,
+      "validPcmSeconds": 25.6,
+      "vectorSinKernelCalls": 864,
+      "warmOriginalL2VsPhoneReference": 0.0,
+      "windows": 3
+    },
+    "observation": {
+      "wallSeconds": 54.0993352,
+      "durationCapSeconds": 90
+    },
+    "bothEndpointPowerStates": "AWAKE",
+    "relativeTimeReduction": 0.13931106949213734,
+    "numericEquivalenceValidated": true,
+    "sameRunPairedPerformanceValidated": true,
+    "newBestAbsolutePerformanceEstablished": false,
+    "productionAppChanged": false,
+    "sourceSha256": {
+      "native-bench/VaeSnakeFusion.cpp": "5ff3e149a0f641187621d846142693d46cc5927c55a9d09e506c7c8d56882f2b",
+      "native-bench/VaeVectorSin.hpp": "c9e863564898efca0550f68d5b1b1643b6e3c91bfff0bde5f77f50666ce909ee",
+      "native-bench/CMakeLists.txt": "c7fa373dcfa5c54e0e614a977056888c121bb6212c427c109dafdefc92e88abe"
+    },
+    "verifiedProbeBinarySha256": "c935572f438a79e277bc02cacffba9a240604ed35f103143fbc40de7af30df52",
+    "verifiedImmutableCoefficientSha256": "9eb1d18168e8252e945470884df90357fb4c71aadba88c1962503d8eb3588751",
+    "sourceLogSha256": "092a7d9293f2818e57c29a5a0cfaf9396bdae755cfb1385e3f19cdfe7c317e00",
+    "localizationHistory": [
+      {
+        "run": "snake-direct-first-20261030-r1",
+        "status": "timeout-before-safe-callback-stop",
+        "sourceLogSha256": "cc05c4c313d0fc71198a2f5a4d256de0ab60ae9a8694d0a74d24ccc66ce7b146"
+      },
+      {
+        "run": "snake-safe-layout-20261030-r1",
+        "status": "rejected-unexpected-layout",
+        "sourceLogSha256": "ac931817893d941cb69f450d6596a46fff739cc3b62ab54c979e3e59f23c980f"
+      },
+      {
+        "run": "snake-c8-abi-direct-first-20261030-r1",
+        "status": "failed-numerics-reused-buffer",
+        "sourceLogSha256": "a61936c4261edc736d40f6492df634b071a4d12bcf2a2a1abf5feb8e782551d6"
+      },
+      {
+        "run": "snake-baseline-gate-20261030-r1",
+        "status": "original-passed-fusion-failed-reused-buffer",
+        "sourceLogSha256": "8bbc135ac708faf1f7528e8f82d3e547b953f8f536cce3f23e44c7d7f0ed73c3"
+      },
+      {
+        "run": "snake-producer-direct-first-20261030-r1",
+        "status": "rejected-nonexecuted-reshape-producer",
+        "sourceLogSha256": "c0e62440d9e2b484e10abeb3265a62372f44eb7d5d14ae3b9cace2bc71729a56"
+      },
+      {
+        "run": "snake-producer-trace-direct-first-20261030-r1",
+        "status": "one-group-pcm-equivalence-passed",
+        "sourceLogSha256": "1bb802eec22b84b40fb88931f17e5819cf4cd94909caf11dab3fbee03e3e21f5"
+      },
+      {
+        "run": "snake-producer-pool-all-20261030-r1",
+        "status": "all-groups-one-window-passed-scalar-baseline",
+        "sourceLogSha256": "3b6f02fced18c67c61ac0408aaa58496a7c636f41ccbbf9f13a18d5805c8e331"
+      }
+    ],
+    "findings": [
+      "Exceptions escaping MNN callbacks skipped runtime exit/cleanup; catch inside callbacks, return CALL_BACK_STOP safely, then report outside the engine",
+      "ARM82 FP16 uses C8 physical storage under the NC4HW4 format tag; complete virtual reshape views must resolve to actual storage",
+      "Probe must match archive MNN_SUPPORT_QUANT_EXTEND and MNN_USE_THREAD_POOL for CoreFunctions ABI",
+      "Skipping original operators invalidates their original buffer reuse; reading residual input late read overwritten coefficient data",
+      "Capture the actual executed producer before reuse, tracing through nonexecuted Squeeze/Reshape metadata; one bounded reusable FP16 snapshot restored equivalence"
+    ],
+    "limits": [
+      "Original graph allocations remain; this probe adds at most one 120 MiB input snapshot, included in sampled RSS and fused timing",
+      "Compute timing includes run, synchronization/output copy, fused snapshot copy and callback diagnostics, excludes input fixture read/copy and setup/warmup for both paired arms",
+      "25.6 valid PCM seconds excludes overlap; 3 windows are not 30.72 seconds of distinct audio",
+      "Same-process alternating order gives a local 1.162x speedup; large per-window drift remains, with no controlled temperature/frequency or DRAM-byte measurement",
+      "Absolute fused RTF 0.834 is slower than historical standalone W8+NEON best 0.674; not a new best App or whole-chain result",
+      "PCM L2 zero is against same-phone W8, not unquantized quality; no listening acceptance or trained music head"
+    ],
+    "nextAction": "Evaluate explicit fused CPU Execution/Plugin plus graph rewrite to remove snapshot and unused workspaces, then repeat numeric/memory/paired and whole-chain validation"
   }
 }
