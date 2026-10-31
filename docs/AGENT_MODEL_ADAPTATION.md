@@ -1,5 +1,9 @@
 # LeVo Harmony：给接手Agent的模型适配指南
 
+> 2026-10-31 最新独立CLI实验已统一记录：见 QWEN_LOW_BIT_LANGUAGE_TEST.md、SMALL_DIT_SCHEDULING.md。原始28层Qwen完整已训练语言头W4/g64＋KV16/6线程约25–28token/s，prefill512约1.40–1.58s。实验Smooth A4范围/KV4和A8静态对照质量失败，High出现非有限值；同一smoothed W4权重去掉静态激活描述后手机参考token一致率恢复94.53%。不要声称已部署原生W4A4KV4；A4是[-7,7]/DT_INT8描述，非packed INT4内核。prefill/decode内部有不同路径，但当前Llm公共thread_num共用；load后改JSON不等于切换了runtime线程。下一步先逐层定位静态激活首个失真算子。
+
+> 小DiT是22层/hidden1024/FFN2048/16×64，LeVo框架、CosyVoice尺寸、随机初始化，不是训练好的CosyVoice或音乐checkpoint。十块79.36s数值PCM：eager127.610s/RTF1.608，加载重叠126.469/1.594，计算重叠109.662/1.382；峰值约1.75GiB、首包16.174s较慢；小DiT手机PC L2=1.1303%，未过1%。旧9030 OMC在新9050均Build失败，未测新NPU延迟；匹配工具链/整VAE/AscendC实现仍待完成。App仍为原v0.1.7，无签名变更。20校准+8留出的QuaRot风格投影数值实验已做，完整旋转checkpoint未部署。当前用户持续授权测试，但仍须守5小时剩余≤5%停新实验边界。
+
 > 2026-10-31 新手机已安装原签名 v0.1.7 并完成同包 App 五块测试：系统自报 Mate 90 Pro Max / CMM-AL00 / Kirin9050，14 逻辑核、MemTotal 约 11.13 GiB。CPU DiT High/W8/6线程/两步、Qwen W4/4线程、VAE Low/W8/6线程＋NEON；没有迁入旧 CosyVoice 手写 Kleidi FFN。40.96 秒数值 PCM 用时 73.356 秒，RTF1.791、峰值2203.3MiB；旧机同包2.290。DiT26.245秒、VAE21.673秒、prefill1.730秒、decode20.780秒/49.23token/s。22个模型夹具在App目录核验哈希，运行结束AWAKE；数值L2与旧机相同2.646%，仍不满足1%。见DEVICE_CPU_SPEED.md和统一报告device_cpu_speed_2026_10_31；不要声称训练好的歌曲、播放流式或芯片受控基准。用户仅要求新机测速，未要求重启跨额度自动实验。
 
 > 同轮补测W4：W8→W4→W4→W8，完整39层CLI High6线程、预热后带回调一次，中位2.980/4.237秒，W4慢42.2%；权重722.2→462.2MB，减少36%。W4五块App RTF与内存未测，不从文件大小推算实测RSS。手机支持i8mm，但未逐算子验证选核。追加结果在同一新机报告ditW4W8Comparison；速度路线仍W8。
