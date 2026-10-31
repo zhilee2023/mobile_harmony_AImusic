@@ -1,5 +1,7 @@
 # mobile_harmony_AImusic · levo-harmony
 
+> [公开LeVo 2架构与单条混合歌曲说明](docs/PUBLIC_LEVO_ARCHITECTURE.md)：约4B双LM→约700M扩散→约150M VAE；默认输出一条歌曲，内部仍有双轨token。已核对公开权重元数据及不同尺寸/codec合同；4B真实权重尚未加载或生成音乐，W4A4KV4仍待验证。
+
 > 2026-10-31 新增[原始 Qwen 语言模型低比特实测](docs/QWEN_LOW_BIT_LANGUAGE_TEST.md)：28层完整词表，W4＋KV16/6线程约25–28token/s，512-token prefill约1.40–1.58秒。实验A4范围＋KV4已测但数值质量失败，A8静态对照也失败；相同权重移除静态激活描述后恢复。没有可用的原生packed W4A4KV4提速结果。另有[随机小DiT十块调度验证](docs/SMALL_DIT_SCHEDULING.md)：计算重叠数值RTF1.382、峰值约1.75GiB，未接入App、未训练音乐、严格L2未过1%。所有数据只发布到同一份统一报告。
 
 > 2026-10-31 新手机同包 App 五块对照：系统自报 Mate 90 Pro Max / Kirin9050；同样 Qwen W4 → CPU DiT W8 两步 → VAE W8＋NEON，40.96 秒数值 PCM 用时 73.356 秒，RTF **1.791**，采样峰值 2203.3 MiB。旧机同包为 93.799 秒 / 2.290；单轮耗时减少约 21.8%。仍是未训练音乐头的流程测试，DiT 对 PC 参考 L2 2.646%，未通过 1% 严格门槛。见[新机对照](docs/DEVICE_CPU_SPEED.md)和统一报告。

@@ -38953,5 +38953,240 @@
     "ascendC": "Official tools extracted and kirin9030 operator skeleton generated. No custom VAE kernel compiled or validated on Kirin9050 yet.",
     "officialDownloadPageObservation": "Public preparations page version hmos-503 lists 9020/X90/9030 plugins. This is not proof that no Kirin9050 package exists elsewhere.",
     "next": "Select exact OMG binary and matching SoC plugin, retain versions/hashes and partition evidence; do not rename a 9030 plugin to 9050 or equate Build failure with NPU slowness."
+  },
+  "public_levo_architecture_2026_10_31": {
+    "audit": {
+      "source": {
+        "repo": "lglg666/SongGeneration-v2-large",
+        "revision": "115805364ad74479fb3764fe65970c92faeb1a5a",
+        "file": "model.pt",
+        "bytes": 12899965446,
+        "sha256": "dc763aa9a76a22a87597c2faf9a51c24d13349ac754699b37e9068b483639def"
+      },
+      "metadataOnly": true,
+      "trainedWeightPayloadLoaded": false,
+      "httpBytesRead": 90204,
+      "tensorCount": 458,
+      "parameterEntries": 5122332672,
+      "groups": {
+        "conditioners": {
+          "tensorCount": 8,
+          "parameters": 722270208,
+          "storageDtypes": [
+            "BF16",
+            "F32"
+          ]
+        },
+        "embeddingsHeadsAndOther": {
+          "tensorCount": 12,
+          "parameters": 213938176,
+          "storageDtypes": [
+            "BF16",
+            "F32"
+          ]
+        },
+        "mixedSemanticLm": {
+          "tensorCount": 327,
+          "parameters": 3106035712,
+          "storageDtypes": [
+            "BF16"
+          ]
+        },
+        "trackSpecificLm": {
+          "tensorCount": 111,
+          "parameters": 1080088576,
+          "storageDtypes": [
+            "F32"
+          ]
+        }
+      },
+      "examples": {
+        "conditioners": {
+          "audiolm.condition_provider.conditioners.prompt_audio.EOT_emb": [
+            1,
+            2048
+          ],
+          "audiolm.condition_provider.conditioners.prompt_audio.emb.0.weight": [
+            16386,
+            2048
+          ],
+          "audiolm.condition_provider.conditioners.description.output_proj.weight": [
+            151659,
+            2048
+          ],
+          "audiolm.condition_provider.conditioners.description.structure_emb.weight": [
+            200,
+            2048
+          ]
+        },
+        "embeddingsHeadsAndOther": {
+          "audiolm.emb.0.weight": [
+            16386,
+            2048
+          ],
+          "audiolm.out_norm.weight": [
+            2048
+          ],
+          "audiolm.out_norm.bias": [
+            2048
+          ],
+          "audiolm.mlp.0.weight": [
+            2048,
+            4096
+          ]
+        },
+        "mixedSemanticLm": {
+          "audiolm.transformer.model.embed_tokens.weight": [
+            16385,
+            2048
+          ],
+          "audiolm.transformer.model.layers.0.self_attn.q_proj.weight": [
+            2048,
+            2048
+          ],
+          "audiolm.transformer.model.layers.0.self_attn.k_proj.weight": [
+            2048,
+            2048
+          ],
+          "audiolm.transformer.model.layers.0.self_attn.v_proj.weight": [
+            2048,
+            2048
+          ]
+        },
+        "trackSpecificLm": {
+          "audiolm.transformer2.model.embed_tokens.weight": [
+            16385,
+            2048
+          ],
+          "audiolm.transformer2.model.layers.0.self_attn.q_proj.weight": [
+            2048,
+            2048
+          ],
+          "audiolm.transformer2.model.layers.0.self_attn.k_proj.weight": [
+            2048,
+            2048
+          ],
+          "audiolm.transformer2.model.layers.0.self_attn.v_proj.weight": [
+            2048,
+            2048
+          ]
+        }
+      },
+      "generationPerformed": false,
+      "wavGenerated": false,
+      "note": "Tensor entries may include tied/shared storage; group counts need semantic state-dict mapping before claiming unique trainable parameters.",
+      "uniqueStorageCount": 336,
+      "uniqueStorageElements": 5122332672,
+      "storagePayloadBytes": 12899831808,
+      "fullSourceSha256Verified": false,
+      "architectureShapesValidated": true
+    },
+    "fullProfile": {
+      "name": "SongGeneration-v2-large",
+      "main_layers": 36,
+      "hidden": 2048,
+      "ffn": 11008,
+      "heads": 16,
+      "track_layers": 12,
+      "codebook_size": 16384,
+      "frame_rate": 25,
+      "sample_rate": 48000,
+      "codec_id": "levo-public-separate-2stream",
+      "route": "hierarchical"
+    },
+    "mixedOnlyProfile": {
+      "name": "SongGeneration-v2-large-mixed-only-ablation",
+      "main_layers": 36,
+      "hidden": 2048,
+      "ffn": 11008,
+      "heads": 16,
+      "track_layers": 0,
+      "codebook_size": 16384,
+      "frame_rate": 25,
+      "sample_rate": 48000,
+      "codec_id": "levo-public-mixed-1rvq",
+      "route": "mixed-only"
+    },
+    "output": "Both routes ultimately produce one stereo mixed song; hierarchical route internally predicts mixed/vocal/accompaniment streams.",
+    "publicRendererArchitectures": {
+      "mixed": {
+        "layers": 39,
+        "hidden": 1200,
+        "heads": 30,
+        "ffn": 4800
+      },
+      "separateConditioned": {
+        "layers": 16,
+        "hidden": 2200,
+        "heads": 20,
+        "ffn": 4400
+      }
+    },
+    "vae": {
+      "paperApproxParameters": 150000000,
+      "latentChannels": 64,
+      "frameRate": 25,
+      "sampleRate": 48000,
+      "outputChannels": 2
+    },
+    "idealAllStoredParametersW4BytesWithoutScales": 2561166336,
+    "kvBudgets": [
+      {
+        "audioSeconds": 30,
+        "assumedPrefixPositions": 512,
+        "delayAllowancePositions": 250,
+        "positionsPerLm": 1512,
+        "cfgBranches": 1,
+        "kv16IdealBytes": 594542592,
+        "kv4IdealBytes": 148635648,
+        "includesQuantizationScalesAllocatorOrActivation": false
+      },
+      {
+        "audioSeconds": 180,
+        "assumedPrefixPositions": 512,
+        "delayAllowancePositions": 250,
+        "positionsPerLm": 5262,
+        "cfgBranches": 1,
+        "kv16IdealBytes": 2069102592,
+        "kv4IdealBytes": 517275648,
+        "includesQuantizationScalesAllocatorOrActivation": false
+      },
+      {
+        "audioSeconds": 270,
+        "assumedPrefixPositions": 512,
+        "delayAllowancePositions": 250,
+        "positionsPerLm": 7512,
+        "cfgBranches": 1,
+        "kv16IdealBytes": 2953838592,
+        "kv4IdealBytes": 738459648,
+        "includesQuantizationScalesAllocatorOrActivation": false
+      }
+    ],
+    "w4a4kv4Target": {
+      "requested": true,
+      "nativePackedA4Validated": false,
+      "public4bCheckpointQuantizationValidated": false,
+      "generationReady": false
+    },
+    "generationStatus": {
+      "trainedPublicWeightPayloadLoaded": false,
+      "fullCheckpointDownloaded": false,
+      "musicGeneratedOnPc": false,
+      "musicGeneratedOnPhone": false
+    },
+    "boundaries": [
+      "This is a 90KB metadata and configuration audit, not a 12.9GB model download or inference test.",
+      "Approximate 4B in the paper refers to LeLM core; checkpoint also stores large conditioning embeddings and other tensors. Do not estimate payload only from the label.",
+      "A4 reduces activation precision/storage, not weight parameter count. Packed W4, embedding storage, KV, CFG branches, runtime packing and activation peaks must be budgeted separately.",
+      "TQ4 executed in prior Qwen tests; full public LeVo KV4 has not been validated. Current static A4/A8 path failed Qwen language regressions.",
+      "Size-independent contracts validate condition widths, pretrained tensor shapes, stream identities and codec IDs. They are not a completed MNN runtime adapter or automatic weight conversion.",
+      "Mixed-only drops the trained track refinement LM and changes the decoder checkpoint; it is a separate quality ablation, not the full 4B chain."
+    ],
+    "sources": [
+      "https://arxiv.org/html/2606.30642v1",
+      "https://huggingface.co/lglg666/SongGeneration-v2-large/blob/115805364ad74479fb3764fe65970c92faeb1a5a/config.yaml",
+      "https://github.com/levo-demo/LeVo/blob/653cbcf4716101834900c75b7d5da43b07e15d5b/codeclm/models/lm_levo.py",
+      "https://github.com/levo-demo/LeVo/blob/653cbcf4716101834900c75b7d5da43b07e15d5b/codeclm/models/codeclm.py"
+    ]
   }
 }
