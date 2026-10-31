@@ -1,5 +1,9 @@
 # LeVo Harmony：给接手Agent的模型适配指南
 
+> 2026-10-31 新手机已安装原签名 v0.1.7 并完成同包 App 五块测试：系统自报 Mate 90 Pro Max / CMM-AL00 / Kirin9050，14 逻辑核、MemTotal 约 11.13 GiB。CPU DiT High/W8/6线程/两步、Qwen W4/4线程、VAE Low/W8/6线程＋NEON；没有迁入旧 CosyVoice 手写 Kleidi FFN。40.96 秒数值 PCM 用时 73.356 秒，RTF1.791、峰值2203.3MiB；旧机同包2.290。DiT26.245秒、VAE21.673秒、prefill1.730秒、decode20.780秒/49.23token/s。22个模型夹具在App目录核验哈希，运行结束AWAKE；数值L2与旧机相同2.646%，仍不满足1%。见DEVICE_CPU_SPEED.md和统一报告device_cpu_speed_2026_10_31；不要声称训练好的歌曲、播放流式或芯片受控基准。用户仅要求新机测速，未要求重启跨额度自动实验。
+
+> 同轮补测W4：W8→W4→W4→W8，完整39层CLI High6线程、预热后带回调一次，中位2.980/4.237秒，W4慢42.2%；权重722.2→462.2MB，减少36%。W4五块App RTF与内存未测，不从文件大小推算实测RSS。手机支持i8mm，但未逐算子验证选核。追加结果在同一新机报告ditW4W8Comparison；速度路线仍W8。
+
 > 最新CANN官方量化与分区更正：见CANN_VAE_QUANTIZATION.md、统一报告vae_cann_quantization_2026_10_30。DDK原包包含DOPT，只是此前只解压了OMG；独立Python3.10跑Quant_INT8-8（权重AbsMax、激活EmaMinMax），20/20条真实VAE前缀激活校准，源latent仍为合成数据。H1四条留出、H4两轮逆序对照通过。四行残差W8A8 46.25–47.01ms，CPU W8同轮39.45–41.85ms；纯K7卷积W8A8 12.26–12.52ms，CPU24.70–24.78ms。FP16波动明显，不能断言W8A8优于FP16。编译证据更正此前“NPU-only”措辞：单残差NPU3/CPU2、三残差NPU7/CPU6，纯Conv NPU1/CPU0；禁回退仅为运行时选项，不会消除已编入的CPU子图。原始数字保留并追加更正字段，App仍为W8＋NEON，未有本轮端到端提速。不要把RunSync约44–45ms全部称为调度开销，尚包含计算、转换与同步。
 
 > 最新纯Conv消融已完成并单列：用户在新普通窗口0%继续授权，截止epoch1793359789。NPU-only/禁回退，六Conv High两轮25.68–31.64ms，对CPU W8 77.18–78.91ms，约2.44–3.07倍；单kernel7/dilation1约2.8–2.9倍。完整三残差High仍191.7–192.4ms，对CPU110.8–111.6ms，所以没有新VAE端到端/NPU App加速。删除Snake/残差改变函数及编译计划，禁止把差额全归给Sin。计数器Scope会清零，修复错误delta并补验两CPU路各288次正弦调用；保留修复前二进制和源码哈希。统一报告vae_pureconv_ablation_2026_10_30，VAE_NPU_FEASIBILITY.md有两轮范围和误差；模型与签名不上传。下一步才是卷积NPU＋CPU逐元素的真实混合边界验证。App保持原W8＋NEON入口。

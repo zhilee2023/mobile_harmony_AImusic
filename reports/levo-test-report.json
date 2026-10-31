@@ -26727,5 +26727,1686 @@
       "Binary calibration needs official magic510 plus uint32 NCHW header; directory/raw concatenation rejected before calibration"
     ],
     "officialDocumentation": "https://developer.huawei.com/consumer/en/doc/hiai-guides/overview-0000001053005655"
+  },
+  "device_cpu_speed_2026_10_31": {
+    "scope": "Same signed v0.1.7 App and selected weights, CPU five-window numerical pipeline; single run per device, not controlled thermal/scheduler benchmark or trained music quality validation",
+    "runId": "mate90-cpu-five-20261031-r1",
+    "device": {
+      "date": "2026-10-31",
+      "runId": "mate90-cpu-five-20261031-r1",
+      "execution": "signed App v0.1.7",
+      "model": "CMM-AL00",
+      "name": "HUAWEI Mate 90 Pro Max",
+      "os": "OpenHarmony-7.0.0.125",
+      "cpuInfo": "Processor\t: AArch64 Processor rev 0 (aarch64)\nprocessor\t: 0\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd25\nCPU revision\t: 0\nCPU physical\t: 0\n\nprocessor\t: 1\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd25\nCPU revision\t: 0\nCPU physical\t: 1\n\nprocessor\t: 2\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd48\nCPU revision\t: 0\nCPU physical\t: 2\n\nprocessor\t: 3\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd48\nCPU revision\t: 0\nCPU physical\t: 3\n\nprocessor\t: 4\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd48\nCPU revision\t: 0\nCPU physical\t: 4\n\nprocessor\t: 5\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd48\nCPU revision\t: 0\nCPU physical\t: 5\n\nprocessor\t: 6\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd48\nCPU revision\t: 0\nCPU physical\t: 6\n\nprocessor\t: 7\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd48\nCPU revision\t: 0\nCPU physical\t: 7\n\nprocessor\t: 8\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd48\nCPU revision\t: 0\nCPU physical\t: 8\n\nprocessor\t: 9\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd48\nCPU revision\t: 0\nCPU physical\t: 9\n\nprocessor\t: 10\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd48\nCPU revision\t: 0\nCPU physical\t: 10\n\nprocessor\t: 11\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd48\nCPU revision\t: 0\nCPU physical\t: 11\n\nprocessor\t: 12\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd07\nCPU revision\t: 0\nCPU physical\t: 12\n\nprocessor\t: 13\nBogoMIPS\t: 2000.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp rpres wfxt rprfm hbc\nCPU implementer\t: 0x48\nCPU architecture: 8\nCPU variant\t: 0x2\nCPU part\t: 0xd07\nCPU revision\t: 0\nCPU physical\t: 13\n\nHardware\t: HUAWEI Kirin9050",
+      "screenDuring": "\n-------------------------------[ability]-------------------------------\n\n\n----------------------------------PowerManagerService----------------------------------\nPOWER STATE DUMP:\nCurrent State: AWAKE  Reason: 40  Time: 54291324\nScreenOffTime: Timeout=600000ms\nDUMP DETAILS:\nLast Screen On: 54324940\nLast Screen Off: 54287622\nLast SuspendDevice: 0\nLast WakeupDevice: 54291160\nLast Refresh: 54324940\nDUMP EACH STATES:\nState: AWAKE   Reason: AOD_SLIDING   Time: 54291324\n   Failure: PLUG_CHANGE   Reason: SetDisplayState(ON) error   From: UNKNOWN   Time: 11193\n\nState: FREEZE   Reason: INIT   Time: 0\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: INACTIVE   Reason: TIMEOUT   Time: 54289115\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: STAND_BY   Reason: UNKNOWN   Time: 0\n   Failure: UNKNOWN   Reason:    From: UNKNOWN   Time: 0\n\nState: DOZE   Reason: INIT   Time: 0\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: SLEEP   Reason: TIMEOUT   Time: 54289127\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: HIBERNATE   Reason: INIT   Time: 0\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: SHUTDOWN   Reason: INIT   Time: 0\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: DIM   Reason: TIMEOUT   Time: 54281613\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n",
+      "memoryDuring": "MemTotal:       11670328 kB\nMemFree:          229652 kB\nMemAvailable:    3286016 kB\nBuffers:               0 kB\nCached:          4491684 kB\nSwapCached:        62820 kB\nActive:          2106984 kB\nInactive:        4507336 kB\nActive(anon):     307184 kB\nInactive(anon):  2705044 kB\nActive(file):    1799800 kB\nInactive(file):  1802292 kB\nActive(purg):          0 kB\nInactive(purg):        0 kB\nPined(purg):           0 kB\nUnevictable:      172220 kB\nFileUnmap:        751969\nFileUnmapFail:     41965\nProtected:        682340 kB\nMlocked:          244056 kB\nSwapTotal:      12582912 kB\nSwapFree:        8634800 kB\nZramUsed:         582304 kB\nDirty:              1928 kB\nWriteback:             0 kB\nAnonPages:       3470828 kB\nMapped:           907292 kB\nShmem:             86684 kB\nSlab:             559028 kB\nSReclaimable:     329840 kB\nSUnreclaim:       229187 kB\nSlabLarge:             0 kB\nKReclaimable:     329900 kB\nKernelStack:       78204 kB\nKernelDynamic:     58520 kB\nPageTables:       230424 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    18415004 kB\nCommitted_AS:   134737572 kB\nVmallocTotal:   536870848 kB\nVmallocUsed:       48956 kB\nVmallocChunk:          0 kB\nPercpu:                0 kB\nHardwareCorrupted:     0 kB\nCmaTotal:        1650688 kB\nCmaFree:         1335340 kB\nCmaUsed:          315348 kB\nIonTotalCache:    242552 kB\nIonTotalUsed:     164412 kB\nGpuTotalUsed:      45180 kB\nDmaHeapTotalCache:   242552 kB\nDmaHeapTotalUsed:   159292 kB\nDmaHeapReusedlistCache:        0 kB\nDmaHeapFreelistCache:        0 kB\nDmaHeapThirdTotalUsed:    19580 kB\nRsvTotalUsed:     622280 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nHugePages_Total:       3\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:            6144 kB\nAshmemUsed:        55844 kB",
+      "installedHapSha256": "b60e3382a055d10addc5aea669002c89f42cb281003ae0ff858ff7c6de9bdff3",
+      "verifiedModelFiles": [
+        {
+          "bytes": 523,
+          "sha256": "32495de6507836af935aebb1804c7341fb16a8e2748470ffcb853434eb7b0f63",
+          "file": "student/config.json"
+        },
+        {
+          "bytes": 554,
+          "sha256": "94d10dc1b098120063d56d9f24558c0de01b38cc14600e6f36d124f38552947f",
+          "file": "student/diagnostic-student.json"
+        },
+        {
+          "bytes": 344788992,
+          "sha256": "1bad11065095e7e4769dcc9917bc5688b097f6740f9cb0451893f91a35f9a649",
+          "file": "student/embeddings_bf16.bin"
+        },
+        {
+          "bytes": 280176,
+          "sha256": "86424c58e9ce871078212307e356dd98227b2065829d83973b718d6bed645d37",
+          "file": "student/llm.mnn"
+        },
+        {
+          "bytes": 248296682,
+          "sha256": "33e5fe41b0cad117d421dce561fd1010f93555724075fd71e181c2b5f82be51d",
+          "file": "student/llm.mnn.weight"
+        },
+        {
+          "bytes": 4701,
+          "sha256": "fe36143eba46b4ab84c9de6b26417b72210337e0bf7f9d5c2a03aa7fe5012f15",
+          "file": "student/llm_config.json"
+        },
+        {
+          "bytes": 3035,
+          "sha256": "31823d82c39c7b4ec550756f91b8ca8945cc01d24e05834bd3d3c29fe694db01",
+          "file": "student/prefix.json"
+        },
+        {
+          "bytes": 4111427,
+          "sha256": "8d9a2d8b2f505b336832042f63bbae99d7989d4e8f7fa2a7e9ec51e8f49eba41",
+          "file": "student/tokenizer.mtok"
+        },
+        {
+          "bytes": 524288,
+          "sha256": "cd24f70fd6ec48bbb65a486ded28b7c7f6bf5a49d489c5afe5f59911ecdfe67d",
+          "file": "dit/attention_mask.f32"
+        },
+        {
+          "bytes": 871192,
+          "sha256": "46764fd36b523311b46706642e6ff3fba332e712cf0b3e5d21305c37c380f0be",
+          "file": "dit/full-w8.mnn"
+        },
+        {
+          "bytes": 722214236,
+          "sha256": "4f460ea3435866b0ebd57bdd0722227d590304d024188ddf4a68d5d1fc440358",
+          "file": "dit/full-w8.mnn.weight"
+        },
+        {
+          "bytes": 2457600,
+          "sha256": "ec288d2af2145ba589a5ca35c09691f0fd65e1349641762a9f3f3d531eba58df",
+          "file": "dit/inputs.f32"
+        },
+        {
+          "bytes": 8,
+          "sha256": "e8665a08c633dff8f2f782f5e6e3d110573f7625f74f45a0cbc5a326d7b0eda5",
+          "file": "dit/timestep.f32"
+        },
+        {
+          "bytes": 131072,
+          "sha256": "4ff8c476edc15ecfda5d411757ebc823860d5c576d58cf5418638794e768c7ed",
+          "file": "dit/w8-reference.f32"
+        },
+        {
+          "bytes": 4096,
+          "sha256": "f319a64c5a14b3a0d95f9a81844a5c5874090f85c898c0a164595207fbd3b072",
+          "file": "aux/bias.f32"
+        },
+        {
+          "bytes": 2097152,
+          "sha256": "86365d790905c39b25ca29be0c078e3136090ac89d046172c07320850bdae3a6",
+          "file": "aux/codebook.f32"
+        },
+        {
+          "bytes": 576,
+          "sha256": "8a41d6d4187460ec52332af6b3158d62f6b72400375de946667a23f5d8333ba2",
+          "file": "aux/mask.f32"
+        },
+        {
+          "bytes": 256,
+          "sha256": "eb47b99df97477270c9fa3b033a330dbb7d4506291f9db2a4ee2f2b46f1a4838",
+          "file": "aux/mean.f32"
+        },
+        {
+          "bytes": 256,
+          "sha256": "9d263c1031fe6dd066871ae0df42c671efbe47dee5982d11853237bac67b3f89",
+          "file": "aux/std.f32"
+        },
+        {
+          "bytes": 131072,
+          "sha256": "cc406481f85d1615d5275d280a29099d46525e947c76482c29695f0c6b01f0d2",
+          "file": "aux/weight.f32"
+        },
+        {
+          "bytes": 196296,
+          "sha256": "ee5b6ed843b7b6ec2305ef14dbfab4cd24165ac75c7d9d357f61ed350556f083",
+          "file": "vae/vae-256-w8.mnn"
+        },
+        {
+          "bytes": 84569334,
+          "sha256": "c07840873f10ecd6949b4a2e8f3ea4a481c37aabf5e33417a59933989862925f",
+          "file": "vae/vae-256-w8.mnn.weight"
+        }
+      ],
+      "screenAfter": "\n-------------------------------[ability]-------------------------------\n\n\n----------------------------------PowerManagerService----------------------------------\nPOWER STATE DUMP:\nCurrent State: AWAKE  Reason: 40  Time: 54291324\nScreenOffTime: Timeout=600000ms\nDUMP DETAILS:\nLast Screen On: 54324940\nLast Screen Off: 54287622\nLast SuspendDevice: 0\nLast WakeupDevice: 54291160\nLast Refresh: 54324940\nDUMP EACH STATES:\nState: AWAKE   Reason: AOD_SLIDING   Time: 54291324\n   Failure: PLUG_CHANGE   Reason: SetDisplayState(ON) error   From: UNKNOWN   Time: 11193\n\nState: FREEZE   Reason: INIT   Time: 0\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: INACTIVE   Reason: TIMEOUT   Time: 54289115\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: STAND_BY   Reason: UNKNOWN   Time: 0\n   Failure: UNKNOWN   Reason:    From: UNKNOWN   Time: 0\n\nState: DOZE   Reason: INIT   Time: 0\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: SLEEP   Reason: TIMEOUT   Time: 54289127\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: HIBERNATE   Reason: INIT   Time: 0\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: SHUTDOWN   Reason: INIT   Time: 0\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n\nState: DIM   Reason: TIMEOUT   Time: 54281613\n   Failure: INIT   Reason:    From: AWAKE   Time: 0\n"
+    },
+    "receipt": {
+      "runId": "mate90-cpu-five-20261031-r1",
+      "policy": "chunks-5-w8-vsin",
+      "hapSha256": "b60e3382a055d10addc5aea669002c89f42cb281003ae0ff858ff7c6de9bdff3",
+      "chainSourceSha256": "3e016ccbacadaf7d8eddafa1dee93162286e4ce4917ee66499f95af1a01be238",
+      "napiSourceSha256": "491f2d8ab1482443fbf0ae64765cde791d046ac8c68b66700723dd874f5dd486",
+      "scope": "Local package installed by HDC immediately before the experiment group"
+    },
+    "baselinePath": "vae_snake_app_validation_2026_10_30.samePackageOriginalW8Neon",
+    "configuration": {
+      "llm": "Qwen3-0.6B diagnostic student, W4/g64 body, W8 untrained music head, CPU Low/4 threads",
+      "dit": "Complete 39-layer W8, CPU High/6 threads, Memory Low, Power High, 2 Euler steps/window; custom CosyVoice Kleidi FFN not migrated",
+      "vae": "Original W8, CPU Low/6 threads, NEON Sin",
+      "stream": "One prefill and persistent KV; five 256-frame windows with 64-frame overlap; 40.96 seconds effective PCM"
+    },
+    "comparison": {
+      "initializationSeconds": {
+        "previousPhone": 2.08789625,
+        "newPhone": 2.441764219,
+        "newOverPrevious": 1.1694854181571521
+      },
+      "prefillSeconds": {
+        "previousPhone": 2.640397813,
+        "newPhone": 1.730452031,
+        "newOverPrevious": 0.6553754977678434
+      },
+      "decodeSeconds": {
+        "previousPhone": 21.900279692999998,
+        "newPhone": 20.78033781900003,
+        "newOverPrevious": 0.9488617547492814
+      },
+      "sumDitSeconds": {
+        "previousPhone": 36.495399375000005,
+        "newPhone": 26.244810155,
+        "newOverPrevious": 0.7191265366170554
+      },
+      "sumVaeSeconds": {
+        "previousPhone": 30.188886872999994,
+        "newPhone": 21.673135001,
+        "newOverPrevious": 0.7179176593087233
+      },
+      "pipelineSecondsThroughPcm": {
+        "previousPhone": 93.799426719,
+        "newPhone": 73.355989063,
+        "newOverPrevious": 0.7820515714105214
+      },
+      "pipelineRtfThroughPcm": {
+        "previousPhone": 2.290025066381836,
+        "newPhone": 1.7909177017333984,
+        "newOverPrevious": 0.7820515714105214
+      },
+      "pipelinePeakRssKiB": {
+        "previousPhone": 2300464,
+        "newPhone": 2256168,
+        "newOverPrevious": 0.9807447541017812
+      },
+      "decodeTokensPerSecond": {
+        "previousPhone": 46.71173219431449,
+        "newPhone": 49.229228557807325,
+        "newOverPrevious": 1.0538943054610004
+      },
+      "firstNumericalPacketSeconds": {
+        "previousPhone": 21.367339375,
+        "newPhone": 17.360927969,
+        "newOverPrevious": 0.8124983492007647
+      }
+    },
+    "pipelineSpeedup": 1.2786880514751515,
+    "pipelineTimeReductionFraction": 0.2179484285894786,
+    "result": {
+      "chunks": [
+        {
+          "chunk": 1,
+          "chunkSeconds": 14.900429375,
+          "contextFrames": 0,
+          "cumulativePcmSeconds": 7.68,
+          "ditTwoStepSeconds": 4.744140937,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 256,
+          "kvPositions": 769,
+          "llmSeconds": 5.6211820379999935,
+          "newCodecIds": 256,
+          "rssKiB": 2057812,
+          "runningRtf": 2.2605374959635416,
+          "systemAvailableKiB": 3274752,
+          "vaeSeconds": 4.433460157,
+          "wallSeconds": 17.360927969
+        },
+        {
+          "chunk": 2,
+          "chunkSeconds": 13.977900468,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 15.36,
+          "ditTwoStepSeconds": 5.96338375,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 448,
+          "kvPositions": 961,
+          "llmSeconds": 3.6995174970000004,
+          "newCodecIds": 192,
+          "rssKiB": 2056808,
+          "runningRtf": 2.0403387349609376,
+          "systemAvailableKiB": 3319808,
+          "vaeSeconds": 4.230812969,
+          "wallSeconds": 31.339602969
+        },
+        {
+          "chunk": 3,
+          "chunkSeconds": 13.180983281,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 23.04,
+          "ditTwoStepSeconds": 5.115080312,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 640,
+          "kvPositions": 1153,
+          "llmSeconds": 3.7447031239999986,
+          "newCodecIds": 192,
+          "rssKiB": 2097880,
+          "runningRtf": 1.932330322265625,
+          "systemAvailableKiB": 3287040,
+          "vaeSeconds": 4.233621406,
+          "wallSeconds": 44.520890625
+        },
+        {
+          "chunk": 4,
+          "chunkSeconds": 14.792103438,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 30.72,
+          "ditTwoStepSeconds": 5.316611249999999,
+          "emittedPcmSeconds": 7.68,
+          "generatedCodesTotal": 832,
+          "kvPositions": 1345,
+          "llmSeconds": 5.006626099000003,
+          "newCodecIds": 192,
+          "rssKiB": 2079956,
+          "runningRtf": 1.93077221171875,
+          "systemAvailableKiB": 3315712,
+          "vaeSeconds": 4.372848438,
+          "wallSeconds": 59.313322344
+        },
+        {
+          "chunk": 5,
+          "chunkSeconds": 14.042047343,
+          "contextFrames": 64,
+          "cumulativePcmSeconds": 40.96,
+          "ditTwoStepSeconds": 5.105593906,
+          "emittedPcmSeconds": 10.24,
+          "generatedCodesTotal": 1024,
+          "kvPositions": 1537,
+          "llmSeconds": 4.438761091999999,
+          "newCodecIds": 192,
+          "rssKiB": 2130620,
+          "runningRtf": 1.7909098777832029,
+          "systemAvailableKiB": 3305472,
+          "vaeSeconds": 4.402392031,
+          "wallSeconds": 73.355668594
+        }
+      ],
+      "decodeSeconds": 20.78033781900003,
+      "decodeTokensPerSecond": 49.229228557807325,
+      "ditPrecision": "High",
+      "ditStepsPerChunk": 2,
+      "ditWeightBits": 8,
+      "eosSuppressedForFixedLengthDiagnostic": true,
+      "finalKvPositions": 1537,
+      "firstNumericalPacketSeconds": 17.360927969,
+      "flowAndMemoryPassed": true,
+      "generatedCodecIds": 1024,
+      "initializationSeconds": 2.441764219,
+      "llmPowerHint": "Normal",
+      "maxCodeWindowIds": 256,
+      "minimumSystemAvailableKiB": 3134464,
+      "music_trained": false,
+      "oneDitSession": true,
+      "oneLlmSession": true,
+      "onePrefill": true,
+      "oneVaeSession": true,
+      "overlapFrames": 64,
+      "pcmAccumulatedAcrossWholeSong": false,
+      "pcmPeak": 0.66943359375,
+      "pcmRms": 0.02586890587616945,
+      "phoneVsPcSameQuantVelocityL2": 0.026458152129098477,
+      "pipelinePeakRssKiB": 2256168,
+      "pipelineRtfThroughPcm": 1.7909177017333984,
+      "pipelineSecondsThroughPcm": 73.355989063,
+      "policy": "all-five-chunks",
+      "prefillSeconds": 1.730452031,
+      "prefillTokens": 514,
+      "real_song_generated": false,
+      "requestedChunks": 5,
+      "retainedPcmTailSamplesPerChannel": 122880,
+      "sampleIntervalMs": 20,
+      "sampledPeakRssKiB": 2256168,
+      "scope": "Five sequential diagnostic codec windows, one LLM KV and one DiT/VAE session each; RANDOM music adapters; no speaker playback or quality proof",
+      "stages": [
+        {
+          "rssKiB": 66320,
+          "seconds": 0.000989219,
+          "stage": "five-chunk-start",
+          "systemAvailableKiB": 4304896
+        },
+        {
+          "rssKiB": 406336,
+          "seconds": 0.454315,
+          "stage": "five-llm-loaded",
+          "systemAvailableKiB": 4028416
+        },
+        {
+          "rssKiB": 1138868,
+          "seconds": 1.6917425,
+          "stage": "five-dit-loaded",
+          "systemAvailableKiB": 3673088
+        },
+        {
+          "rssKiB": 1276752,
+          "seconds": 2.440092656,
+          "stage": "five-all-three-loaded",
+          "systemAvailableKiB": 3608576
+        },
+        {
+          "rssKiB": 1389324,
+          "seconds": 8.173202656,
+          "stage": "chunk-1-llm-ready",
+          "systemAvailableKiB": 3580928
+        },
+        {
+          "rssKiB": 1450916,
+          "seconds": 10.58340375,
+          "stage": "chunk-1-dit-1",
+          "systemAvailableKiB": 3550208
+        },
+        {
+          "rssKiB": 1450916,
+          "seconds": 12.924076875,
+          "stage": "chunk-1-dit-2",
+          "systemAvailableKiB": 3521536
+        },
+        {
+          "rssKiB": 2057808,
+          "seconds": 17.360732031,
+          "stage": "chunk-1-pcm-complete",
+          "systemAvailableKiB": 3274752
+        },
+        {
+          "rssKiB": 2045260,
+          "seconds": 21.133844531,
+          "stage": "chunk-2-llm-ready",
+          "systemAvailableKiB": 3325952
+        },
+        {
+          "rssKiB": 2057040,
+          "seconds": 24.0251875,
+          "stage": "chunk-2-dit-1",
+          "systemAvailableKiB": 3398656
+        },
+        {
+          "rssKiB": 2061408,
+          "seconds": 27.104745625,
+          "stage": "chunk-2-dit-2",
+          "systemAvailableKiB": 3275776
+        },
+        {
+          "rssKiB": 2056808,
+          "seconds": 31.3393625,
+          "stage": "chunk-2-pcm-complete",
+          "systemAvailableKiB": 3319808
+        },
+        {
+          "rssKiB": 2090988,
+          "seconds": 35.16045875,
+          "stage": "chunk-3-llm-ready",
+          "systemAvailableKiB": 3298304
+        },
+        {
+          "rssKiB": 2099912,
+          "seconds": 37.733722188,
+          "stage": "chunk-3-dit-1",
+          "systemAvailableKiB": 3299328
+        },
+        {
+          "rssKiB": 2097472,
+          "seconds": 40.283685,
+          "stage": "chunk-3-dit-2",
+          "systemAvailableKiB": 3305472
+        },
+        {
+          "rssKiB": 2097880,
+          "seconds": 44.520648125,
+          "stage": "chunk-3-pcm-complete",
+          "systemAvailableKiB": 3287040
+        },
+        {
+          "rssKiB": 1984344,
+          "seconds": 49.609321563,
+          "stage": "chunk-4-llm-ready",
+          "systemAvailableKiB": 3329024
+        },
+        {
+          "rssKiB": 2019360,
+          "seconds": 52.32395875,
+          "stage": "chunk-4-dit-1",
+          "systemAvailableKiB": 3304448
+        },
+        {
+          "rssKiB": 2019364,
+          "seconds": 54.936598594,
+          "stage": "chunk-4-dit-2",
+          "systemAvailableKiB": 3313664
+        },
+        {
+          "rssKiB": 2079956,
+          "seconds": 59.313123438,
+          "stage": "chunk-4-pcm-complete",
+          "systemAvailableKiB": 3315712
+        },
+        {
+          "rssKiB": 2129528,
+          "seconds": 63.835212031,
+          "stage": "chunk-5-llm-ready",
+          "systemAvailableKiB": 3326976
+        },
+        {
+          "rssKiB": 2129528,
+          "seconds": 66.3956525,
+          "stage": "chunk-5-dit-1",
+          "systemAvailableKiB": 3308544
+        },
+        {
+          "rssKiB": 2129592,
+          "seconds": 68.94887125,
+          "stage": "chunk-5-dit-2",
+          "systemAvailableKiB": 3308544
+        },
+        {
+          "rssKiB": 2130620,
+          "seconds": 73.355443438,
+          "stage": "chunk-5-pcm-complete",
+          "systemAvailableKiB": 3305472
+        },
+        {
+          "rssKiB": 414572,
+          "seconds": 73.624242813,
+          "stage": "five-all-models-destroyed",
+          "systemAvailableKiB": 5033984
+        },
+        {
+          "rssKiB": 414572,
+          "seconds": 74.626172031,
+          "stage": "five-release-plus-1-second",
+          "systemAvailableKiB": 4971520
+        },
+        {
+          "rssKiB": 326744,
+          "seconds": 78.431471719,
+          "stage": "five-post-timing-parity-measured",
+          "systemAvailableKiB": 5079040
+        }
+      ],
+      "strictNumericalParityPassed": false,
+      "success": true,
+      "sumDitSeconds": 26.244810155,
+      "sumVaeSeconds": 21.673135001,
+      "totalSeconds": 78.431914688,
+      "vaeSnakeFusion": null,
+      "vaeSnakeFusionRequested": false,
+      "vaeThreads": 6,
+      "vaeVariant": "w8-vsin",
+      "vaeVectorSinKernelCalls": 1080,
+      "vaeVectorSinRequested": true,
+      "vaeWeightBits": 8,
+      "validPcmSeconds": 40.96,
+      "variant": "baseline-high-vae6",
+      "windowFrames": 256
+    },
+    "ditW4W8Comparison": {
+      "scope": "Two reversed-order pairs, same fixed input, full 39-layer DiT, CLI CPU High/6 threads; one warmup and one callback/debug forward per process. Not App five-chunk W4 RTF or music quality validation; RSS not sampled in this module probe.",
+      "order": [
+        "w8-r1",
+        "w4-r1",
+        "w4-r2",
+        "w8-r2"
+      ],
+      "runs": [
+        {
+          "case": "w8-r1",
+          "result": {
+            "byCategory": [
+              {
+                "callbackPercent": 25.098291618674246,
+                "calls": 39,
+                "name": "FFN down projection",
+                "seconds": 0.7026182819999999,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 16.295090781445033,
+                "calls": 629,
+                "name": "BinaryOp",
+                "seconds": 0.45617561799999995,
+                "type": "BinaryOp"
+              },
+              {
+                "callbackPercent": 15.298277304232858,
+                "calls": 990,
+                "name": "Raster",
+                "seconds": 0.4282701579999994,
+                "type": "Raster"
+              },
+              {
+                "callbackPercent": 13.082861060383069,
+                "calls": 705,
+                "name": "While",
+                "seconds": 0.3662503209999999,
+                "type": "While"
+              },
+              {
+                "callbackPercent": 12.319942000207437,
+                "calls": 39,
+                "name": "FFN up projection",
+                "seconds": 0.344892657,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 9.250512305815132,
+                "calls": 39,
+                "name": "QKV projection",
+                "seconds": 0.25896499900000003,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 3.439159775583589,
+                "calls": 39,
+                "name": "Attention output projection",
+                "seconds": 0.09627812800000002,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 3.1504886014419986,
+                "calls": 39,
+                "name": "Softmax",
+                "seconds": 0.08819687499999997,
+                "type": "Softmax"
+              },
+              {
+                "callbackPercent": 1.637538436411917,
+                "calls": 43,
+                "name": "UnaryOp",
+                "seconds": 0.045842341000000016,
+                "type": "UnaryOp"
+              },
+              {
+                "callbackPercent": 0.3226953347530677,
+                "calls": 79,
+                "name": "LayerNorm",
+                "seconds": 0.009033748000000003,
+                "type": "LayerNorm"
+              },
+              {
+                "callbackPercent": 0.1051427810516261,
+                "calls": 4,
+                "name": "Other linear/convolution",
+                "seconds": 0.002943437,
+                "type": "Convolution"
+              }
+            ],
+            "byType": [
+              {
+                "callbackPercent": 50.213048481332045,
+                "calls": 160,
+                "name": "Convolution",
+                "seconds": 1.4056975030000003,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 16.295090781445033,
+                "calls": 629,
+                "name": "BinaryOp",
+                "seconds": 0.45617561799999995,
+                "type": "BinaryOp"
+              },
+              {
+                "callbackPercent": 15.298277304232858,
+                "calls": 990,
+                "name": "Raster",
+                "seconds": 0.4282701579999994,
+                "type": "Raster"
+              },
+              {
+                "callbackPercent": 13.082861060383069,
+                "calls": 705,
+                "name": "While",
+                "seconds": 0.3662503209999999,
+                "type": "While"
+              },
+              {
+                "callbackPercent": 3.1504886014419986,
+                "calls": 39,
+                "name": "Softmax",
+                "seconds": 0.08819687499999997,
+                "type": "Softmax"
+              },
+              {
+                "callbackPercent": 1.637538436411917,
+                "calls": 43,
+                "name": "UnaryOp",
+                "seconds": 0.045842341000000016,
+                "type": "UnaryOp"
+              },
+              {
+                "callbackPercent": 0.3226953347530677,
+                "calls": 79,
+                "name": "LayerNorm",
+                "seconds": 0.009033748000000003,
+                "type": "LayerNorm"
+              }
+            ],
+            "callbackSeconds": 2.799466564,
+            "kleidiaiEnabled": false,
+            "memory": "Low",
+            "power": "High",
+            "profiledSeconds": 2.812382812,
+            "relativeL2VsPcSameQuant": 0.026458152129098477,
+            "scope": "Complete39-layer DiT one warmed velocity evaluation, CLI CPU High6threads, callback/debug overhead; not whole-chain RTF",
+            "success": true,
+            "threads": 6,
+            "topNodes": [
+              {
+                "callbackPercent": 0.7865170201761339,
+                "calls": 1,
+                "name": "/cfm/estimator/h.32/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.022018281,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7849765481249735,
+                "calls": 1,
+                "name": "/cfm/estimator/h.1/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.021975156,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7819402553864545,
+                "calls": 1,
+                "name": "/cfm/estimator/h.22/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.021890156,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7774025694703744,
+                "calls": 1,
+                "name": "/cfm/estimator/h.31/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.021763125,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7715978921761468,
+                "calls": 1,
+                "name": "/cfm/estimator/h.19/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.021600625,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6495210635421614,
+                "calls": 1,
+                "name": "/cfm/estimator/h.38/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.018183125,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.642706122351101,
+                "calls": 1,
+                "name": "/cfm/estimator/h.36/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017992343,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6399321653051899,
+                "calls": 1,
+                "name": "/cfm/estimator/h.33/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017914687,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6384977491733315,
+                "calls": 1,
+                "name": "/cfm/estimator/h.2/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017874531,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6380959226202068,
+                "calls": 1,
+                "name": "/cfm/estimator/h.6/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017863282,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6375377448515939,
+                "calls": 1,
+                "name": "/cfm/estimator/h.11/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017847656,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.637359175117478,
+                "calls": 1,
+                "name": "/cfm/estimator/h.7/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017842657,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6370689055316755,
+                "calls": 1,
+                "name": "/cfm/estimator/h.13/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017834531,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6361368351031322,
+                "calls": 1,
+                "name": "/cfm/estimator/h.37/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017808438,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6361312268918387,
+                "calls": 1,
+                "name": "/cfm/estimator/h.18/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017808281,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6359693746283301,
+                "calls": 1,
+                "name": "/cfm/estimator/h.23/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.01780375,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6352661335089981,
+                "calls": 1,
+                "name": "/cfm/estimator/h.12/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017784063,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6352381996158037,
+                "calls": 1,
+                "name": "/cfm/estimator/h.34/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017783281,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6346131162436702,
+                "calls": 1,
+                "name": "/cfm/estimator/h.4/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.017765782,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6341386687124584,
+                "calls": 1,
+                "name": "/cfm/estimator/h.30/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.0177525,
+                "type": "Convolution"
+              }
+            ],
+            "variant": "w8",
+            "warmSeconds": 2.834252657
+          }
+        },
+        {
+          "case": "w4-r1",
+          "result": {
+            "byCategory": [
+              {
+                "callbackPercent": 21.931500449010787,
+                "calls": 39,
+                "name": "FFN down projection",
+                "seconds": 0.9585403180000001,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 19.609044737414884,
+                "calls": 39,
+                "name": "FFN up projection",
+                "seconds": 0.85703484,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 15.248276109795773,
+                "calls": 39,
+                "name": "QKV projection",
+                "seconds": 0.666442657,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 13.326318878200777,
+                "calls": 629,
+                "name": "BinaryOp",
+                "seconds": 0.5824414050000001,
+                "type": "BinaryOp"
+              },
+              {
+                "callbackPercent": 11.879960401297266,
+                "calls": 990,
+                "name": "Raster",
+                "seconds": 0.5192267189999996,
+                "type": "Raster"
+              },
+              {
+                "callbackPercent": 8.977773144384207,
+                "calls": 705,
+                "name": "While",
+                "seconds": 0.39238343700000006,
+                "type": "While"
+              },
+              {
+                "callbackPercent": 5.184148528090785,
+                "calls": 39,
+                "name": "Attention output projection",
+                "seconds": 0.22657890599999997,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 2.338260691320466,
+                "calls": 39,
+                "name": "Softmax",
+                "seconds": 0.102196252,
+                "type": "Softmax"
+              },
+              {
+                "callbackPercent": 1.1126308619037508,
+                "calls": 43,
+                "name": "UnaryOp",
+                "seconds": 0.04862875400000001,
+                "type": "UnaryOp"
+              },
+              {
+                "callbackPercent": 0.2606221420204067,
+                "calls": 79,
+                "name": "LayerNorm",
+                "seconds": 0.011390777000000001,
+                "type": "LayerNorm"
+              },
+              {
+                "callbackPercent": 0.13146405656086096,
+                "calls": 4,
+                "name": "Other linear/convolution",
+                "seconds": 0.005745781,
+                "type": "Convolution"
+              }
+            ],
+            "byType": [
+              {
+                "callbackPercent": 62.10443388087312,
+                "calls": 160,
+                "name": "Convolution",
+                "seconds": 2.7143425020000014,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 13.326318878200777,
+                "calls": 629,
+                "name": "BinaryOp",
+                "seconds": 0.5824414050000001,
+                "type": "BinaryOp"
+              },
+              {
+                "callbackPercent": 11.879960401297266,
+                "calls": 990,
+                "name": "Raster",
+                "seconds": 0.5192267189999996,
+                "type": "Raster"
+              },
+              {
+                "callbackPercent": 8.977773144384207,
+                "calls": 705,
+                "name": "While",
+                "seconds": 0.39238343700000006,
+                "type": "While"
+              },
+              {
+                "callbackPercent": 2.338260691320466,
+                "calls": 39,
+                "name": "Softmax",
+                "seconds": 0.102196252,
+                "type": "Softmax"
+              },
+              {
+                "callbackPercent": 1.1126308619037508,
+                "calls": 43,
+                "name": "UnaryOp",
+                "seconds": 0.04862875400000001,
+                "type": "UnaryOp"
+              },
+              {
+                "callbackPercent": 0.2606221420204067,
+                "calls": 79,
+                "name": "LayerNorm",
+                "seconds": 0.011390777000000001,
+                "type": "LayerNorm"
+              }
+            ],
+            "callbackSeconds": 4.370609846000002,
+            "kleidiaiEnabled": false,
+            "memory": "Low",
+            "power": "High",
+            "profiledSeconds": 4.377969688,
+            "relativeL2VsPcSameQuant": 0.02908964319519587,
+            "scope": "Complete39-layer DiT one warmed velocity evaluation, CLI CPU High6threads, callback/debug overhead; not whole-chain RTF",
+            "success": true,
+            "threads": 6,
+            "topNodes": [
+              {
+                "callbackPercent": 1.4306105601538515,
+                "calls": 1,
+                "name": "/cfm/estimator/h.1/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.062526406,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.8964960355786465,
+                "calls": 1,
+                "name": "/cfm/estimator/h.2/attn/c_attn/Gemm_output_0__matmul_converted",
+                "seconds": 0.039182344,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.8239339421467086,
+                "calls": 1,
+                "name": "/cfm/estimator/h.1/mlp/act/Pow_output_0",
+                "seconds": 0.036010938,
+                "type": "BinaryOp"
+              },
+              {
+                "callbackPercent": 0.8101415190927108,
+                "calls": 1,
+                "name": "/cfm/estimator/h.1/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.035408125,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6501988967513983,
+                "calls": 1,
+                "name": "/cfm/estimator/h.0/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.028417657,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6466596195006145,
+                "calls": 1,
+                "name": "/cfm/estimator/h.28/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.028262969,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6391377858988145,
+                "calls": 1,
+                "name": "/cfm/estimator/h.1/mlp/act/Mul_1_output_0",
+                "seconds": 0.027934219,
+                "type": "BinaryOp"
+              },
+              {
+                "callbackPercent": 0.636385035041629,
+                "calls": 1,
+                "name": "/cfm/estimator/h.8/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.027813907,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.63575580935073,
+                "calls": 1,
+                "name": "/cfm/estimator/h.32/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.027786406,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6345653347525999,
+                "calls": 1,
+                "name": "/cfm/estimator/h.28/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.027734375,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6341899637957296,
+                "calls": 1,
+                "name": "/cfm/estimator/h.22/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.027717969,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6338646316223941,
+                "calls": 1,
+                "name": "/cfm/estimator/h.3/attn/c_attn/Gemm_output_0__matmul_converted",
+                "seconds": 0.02770375,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6330602587490713,
+                "calls": 1,
+                "name": "/cfm/estimator/h.23/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.027668594,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6245624515073678,
+                "calls": 1,
+                "name": "/cfm/estimator/h.2/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.027297188,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6141377049375728,
+                "calls": 1,
+                "name": "/cfm/estimator/h.3/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.026841563,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6116959633097387,
+                "calls": 1,
+                "name": "/cfm/estimator/h.11/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.026734844,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6058365064141666,
+                "calls": 1,
+                "name": "/cfm/estimator/h.2/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.02647875,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5980822796142117,
+                "calls": 1,
+                "name": "/cfm/estimator/h.12/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.026139843,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.593752952434089,
+                "calls": 1,
+                "name": "/cfm/estimator/h.10/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.025950625,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5927698402022954,
+                "calls": 1,
+                "name": "/cfm/estimator/h.8/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.025907657,
+                "type": "Convolution"
+              }
+            ],
+            "variant": "w4",
+            "warmSeconds": 4.368113906
+          }
+        },
+        {
+          "case": "w4-r2",
+          "result": {
+            "byCategory": [
+              {
+                "callbackPercent": 21.932625021828215,
+                "calls": 39,
+                "name": "FFN down projection",
+                "seconds": 0.8970090670000002,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 20.40580367393424,
+                "calls": 39,
+                "name": "FFN up projection",
+                "seconds": 0.8345645309999999,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 15.247857030043935,
+                "calls": 39,
+                "name": "QKV projection",
+                "seconds": 0.6236128139999999,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 12.37780214476209,
+                "calls": 990,
+                "name": "Raster",
+                "seconds": 0.5062321879999999,
+                "type": "Raster"
+              },
+              {
+                "callbackPercent": 11.494978043596948,
+                "calls": 629,
+                "name": "BinaryOp",
+                "seconds": 0.47012610299999985,
+                "type": "BinaryOp"
+              },
+              {
+                "callbackPercent": 9.13380978316436,
+                "calls": 705,
+                "name": "While",
+                "seconds": 0.3735581210000002,
+                "type": "While"
+              },
+              {
+                "callbackPercent": 5.32445309769229,
+                "calls": 39,
+                "name": "Attention output projection",
+                "seconds": 0.21776156300000002,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 2.619246483607788,
+                "calls": 39,
+                "name": "Softmax",
+                "seconds": 0.107122966,
+                "type": "Softmax"
+              },
+              {
+                "callbackPercent": 1.1027556888938306,
+                "calls": 43,
+                "name": "UnaryOp",
+                "seconds": 0.045100932999999975,
+                "type": "UnaryOp"
+              },
+              {
+                "callbackPercent": 0.23581693160259654,
+                "calls": 79,
+                "name": "LayerNorm",
+                "seconds": 0.009644533,
+                "type": "LayerNorm"
+              },
+              {
+                "callbackPercent": 0.1248521008737031,
+                "calls": 4,
+                "name": "Other linear/convolution",
+                "seconds": 0.00510625,
+                "type": "Convolution"
+              }
+            ],
+            "byType": [
+              {
+                "callbackPercent": 63.03559092437241,
+                "calls": 160,
+                "name": "Convolution",
+                "seconds": 2.5780542250000007,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 12.37780214476209,
+                "calls": 990,
+                "name": "Raster",
+                "seconds": 0.5062321879999999,
+                "type": "Raster"
+              },
+              {
+                "callbackPercent": 11.494978043596948,
+                "calls": 629,
+                "name": "BinaryOp",
+                "seconds": 0.47012610299999985,
+                "type": "BinaryOp"
+              },
+              {
+                "callbackPercent": 9.13380978316436,
+                "calls": 705,
+                "name": "While",
+                "seconds": 0.3735581210000002,
+                "type": "While"
+              },
+              {
+                "callbackPercent": 2.619246483607788,
+                "calls": 39,
+                "name": "Softmax",
+                "seconds": 0.107122966,
+                "type": "Softmax"
+              },
+              {
+                "callbackPercent": 1.1027556888938306,
+                "calls": 43,
+                "name": "UnaryOp",
+                "seconds": 0.045100932999999975,
+                "type": "UnaryOp"
+              },
+              {
+                "callbackPercent": 0.23581693160259654,
+                "calls": 79,
+                "name": "LayerNorm",
+                "seconds": 0.009644533,
+                "type": "LayerNorm"
+              }
+            ],
+            "callbackSeconds": 4.089839069,
+            "kleidiaiEnabled": false,
+            "memory": "Low",
+            "power": "High",
+            "profiledSeconds": 4.09699625,
+            "relativeL2VsPcSameQuant": 0.02908964319519587,
+            "scope": "Complete39-layer DiT one warmed velocity evaluation, CLI CPU High6threads, callback/debug overhead; not whole-chain RTF",
+            "success": true,
+            "threads": 6,
+            "topNodes": [
+              {
+                "callbackPercent": 0.707748654938579,
+                "calls": 1,
+                "name": "/cfm/estimator/h.10/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.028945781,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7063007251056216,
+                "calls": 1,
+                "name": "/cfm/estimator/h.35/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.028886563,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6896359373596663,
+                "calls": 1,
+                "name": "/cfm/estimator/h.12/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.028205,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6862854143271426,
+                "calls": 1,
+                "name": "/cfm/estimator/h.34/attn/c_attn/Gemm_output_0__matmul_converted",
+                "seconds": 0.028067969,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6858345897423868,
+                "calls": 1,
+                "name": "/cfm/estimator/h.11/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.028049531,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6850895971036556,
+                "calls": 1,
+                "name": "/cfm/estimator/h.17/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.028019062,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.684871837924144,
+                "calls": 1,
+                "name": "/cfm/estimator/h.16/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.028010156,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6756645807766868,
+                "calls": 1,
+                "name": "/cfm/estimator/h.0/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.027633594,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6499415393011886,
+                "calls": 1,
+                "name": "/cfm/estimator/h.34/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.026581563,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6393168669688798,
+                "calls": 1,
+                "name": "/cfm/estimator/h.16/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.026147031,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6389157264906553,
+                "calls": 1,
+                "name": "/cfm/estimator/h.11/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.026130625,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6383732357073828,
+                "calls": 1,
+                "name": "/cfm/estimator/h.18/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.026108438,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6372614804712258,
+                "calls": 1,
+                "name": "/cfm/estimator/h.0/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.026062969,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6359395947175837,
+                "calls": 1,
+                "name": "/cfm/estimator/h.12/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.026008906,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6349119014687568,
+                "calls": 1,
+                "name": "/cfm/estimator/h.17/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.025966875,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6332538166674744,
+                "calls": 1,
+                "name": "/cfm/estimator/h.9/mlp/c_fc/Gemm_output_0__matmul_converted",
+                "seconds": 0.025899062,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.573983464971394,
+                "calls": 1,
+                "name": "/cfm/estimator/h.33/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.023475,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5711066769605452,
+                "calls": 1,
+                "name": "/cfm/estimator/h.35/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.023357344,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5609404823258585,
+                "calls": 1,
+                "name": "/cfm/estimator/h.23/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.022941563,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5606692247088023,
+                "calls": 1,
+                "name": "/cfm/estimator/h.5/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.022930469,
+                "type": "Convolution"
+              }
+            ],
+            "variant": "w4",
+            "warmSeconds": 3.998665937
+          }
+        },
+        {
+          "case": "w8-r2",
+          "result": {
+            "byCategory": [
+              {
+                "callbackPercent": 23.591699995714475,
+                "calls": 39,
+                "name": "FFN down projection",
+                "seconds": 0.7407839089999999,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 18.34386141227663,
+                "calls": 990,
+                "name": "Raster",
+                "seconds": 0.5760007700000003,
+                "type": "Raster"
+              },
+              {
+                "callbackPercent": 16.63024271738861,
+                "calls": 629,
+                "name": "BinaryOp",
+                "seconds": 0.5221928139999994,
+                "type": "BinaryOp"
+              },
+              {
+                "callbackPercent": 12.5191907505019,
+                "calls": 705,
+                "name": "While",
+                "seconds": 0.3931049930000001,
+                "type": "While"
+              },
+              {
+                "callbackPercent": 11.573680225632806,
+                "calls": 39,
+                "name": "FFN up projection",
+                "seconds": 0.36341578099999994,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 8.741093913528358,
+                "calls": 39,
+                "name": "QKV projection",
+                "seconds": 0.274472027,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 3.29351581881634,
+                "calls": 39,
+                "name": "Attention output projection",
+                "seconds": 0.103417029,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 3.276796239511398,
+                "calls": 39,
+                "name": "Softmax",
+                "seconds": 0.10289203099999998,
+                "type": "Softmax"
+              },
+              {
+                "callbackPercent": 1.6033837956171624,
+                "calls": 43,
+                "name": "UnaryOp",
+                "seconds": 0.050346559,
+                "type": "UnaryOp"
+              },
+              {
+                "callbackPercent": 0.3340595817592831,
+                "calls": 79,
+                "name": "LayerNorm",
+                "seconds": 0.010489534999999998,
+                "type": "LayerNorm"
+              },
+              {
+                "callbackPercent": 0.09247554925299534,
+                "calls": 4,
+                "name": "Other linear/convolution",
+                "seconds": 0.00290375,
+                "type": "Convolution"
+              }
+            ],
+            "byType": [
+              {
+                "callbackPercent": 47.29246550294502,
+                "calls": 160,
+                "name": "Convolution",
+                "seconds": 1.4849924960000012,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 18.34386141227663,
+                "calls": 990,
+                "name": "Raster",
+                "seconds": 0.5760007700000003,
+                "type": "Raster"
+              },
+              {
+                "callbackPercent": 16.63024271738861,
+                "calls": 629,
+                "name": "BinaryOp",
+                "seconds": 0.5221928139999994,
+                "type": "BinaryOp"
+              },
+              {
+                "callbackPercent": 12.5191907505019,
+                "calls": 705,
+                "name": "While",
+                "seconds": 0.3931049930000001,
+                "type": "While"
+              },
+              {
+                "callbackPercent": 3.276796239511398,
+                "calls": 39,
+                "name": "Softmax",
+                "seconds": 0.10289203099999998,
+                "type": "Softmax"
+              },
+              {
+                "callbackPercent": 1.6033837956171624,
+                "calls": 43,
+                "name": "UnaryOp",
+                "seconds": 0.050346559,
+                "type": "UnaryOp"
+              },
+              {
+                "callbackPercent": 0.3340595817592831,
+                "calls": 79,
+                "name": "LayerNorm",
+                "seconds": 0.010489534999999998,
+                "type": "LayerNorm"
+              }
+            ],
+            "callbackSeconds": 3.140019198000001,
+            "kleidiaiEnabled": false,
+            "memory": "Low",
+            "power": "High",
+            "profiledSeconds": 3.147423125,
+            "relativeL2VsPcSameQuant": 0.026458152129098477,
+            "scope": "Complete39-layer DiT one warmed velocity evaluation, CLI CPU High6threads, callback/debug overhead; not whole-chain RTF",
+            "success": true,
+            "threads": 6,
+            "topNodes": [
+              {
+                "callbackPercent": 0.727603035502205,
+                "calls": 1,
+                "name": "/cfm/estimator/h.8/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.022846875,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7269760329662797,
+                "calls": 1,
+                "name": "/cfm/estimator/h.9/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.022827187,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7201588135003497,
+                "calls": 1,
+                "name": "/cfm/estimator/h.6/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.022613125,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7183873275159508,
+                "calls": 1,
+                "name": "/cfm/estimator/h.17/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.0225575,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7104654014284147,
+                "calls": 1,
+                "name": "/cfm/estimator/h.36/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.02230875,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7072956437382901,
+                "calls": 1,
+                "name": "/cfm/estimator/h.7/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.022209219,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.7060765110646943,
+                "calls": 1,
+                "name": "/cfm/estimator/h.22/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.022170938,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6695918615208414,
+                "calls": 1,
+                "name": "/cfm/estimator/h.34/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.021025313,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6455274863577442,
+                "calls": 1,
+                "name": "/cfm/estimator/h.11/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.020269687,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6389491189346541,
+                "calls": 1,
+                "name": "/cfm/estimator/h.16/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.020063125,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.6050271607288432,
+                "calls": 1,
+                "name": "/cfm/estimator/h.33/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.018997969,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5918604577907423,
+                "calls": 1,
+                "name": "/cfm/estimator/h.19/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.018584532,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5901934297664123,
+                "calls": 1,
+                "name": "/cfm/estimator/h.35/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.018532187,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5898650241309765,
+                "calls": 1,
+                "name": "/cfm/estimator/h.28/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.018521875,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5893674157083925,
+                "calls": 1,
+                "name": "/cfm/estimator/h.31/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.01850625,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.588949424633422,
+                "calls": 1,
+                "name": "/cfm/estimator/h.29/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.018493125,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5876556427347039,
+                "calls": 1,
+                "name": "/cfm/estimator/h.20/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.0184525,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5862723072433901,
+                "calls": 1,
+                "name": "/cfm/estimator/h.21/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.018409063,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5857696988513761,
+                "calls": 1,
+                "name": "/cfm/estimator/h.15/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.018393281,
+                "type": "Convolution"
+              },
+              {
+                "callbackPercent": 0.5857398582694906,
+                "calls": 1,
+                "name": "/cfm/estimator/h.25/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "seconds": 0.018392344,
+                "type": "Convolution"
+              }
+            ],
+            "variant": "w8",
+            "warmSeconds": 3.062050625
+          }
+        }
+      ],
+      "profiledSecondsMedian": {
+        "w8": 2.9799029685000002,
+        "w4": 4.237482969
+      },
+      "w4OverW8TimeRatio": 1.4220204529454965,
+      "weightFiles": {
+        "w8": {
+          "bytes": 722214236,
+          "sha256": "4f460ea3435866b0ebd57bdd0722227d590304d024188ddf4a68d5d1fc440358"
+        },
+        "w4": {
+          "bytes": 462169752,
+          "sha256": "d3783c7808d0a699eda3cc8883ed86c06c7def1cb6179ae427710e3b85c54726"
+        }
+      },
+      "decision": "Keep W8 for the current CPU speed route; W4 saves stored weights but is slower in this paired module experiment."
+    }
   }
 }

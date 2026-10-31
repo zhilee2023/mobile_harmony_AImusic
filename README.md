@@ -1,5 +1,7 @@
 # mobile_harmony_AImusic · levo-harmony
 
+> 2026-10-31 新手机同包 App 五块对照：系统自报 Mate 90 Pro Max / Kirin9050；同样 Qwen W4 → CPU DiT W8 两步 → VAE W8＋NEON，40.96 秒数值 PCM 用时 73.356 秒，RTF **1.791**，采样峰值 2203.3 MiB。旧机同包为 93.799 秒 / 2.290；单轮耗时减少约 21.8%。仍是未训练音乐头的流程测试，DiT 对 PC 参考 L2 2.646%，未通过 1% 严格门槛。见[新机对照](docs/DEVICE_CPU_SPEED.md)和统一报告。
+
 > v0.1.7：保留推荐W8＋NEON原入口，同包五块RTF2.290、峰值约2.19GiB。Snake融合接入App后RTF2.697（含首块额外校验），未提速；用户选择原入口，较慢实验按钮已移出常规UI，测试与后端保留。见[VAE记录](docs/VAE_OPTIMIZATION.md)、[DiT后续方向](docs/DIT_ACCELERATION.md)与统一报告。仍是随机音乐头的数值链路，不是训练好的歌曲。
 
 > [CANN官方W8A8量化实测](docs/CANN_VAE_QUANTIZATION.md)：20条校准＋4条留出输入已跑通；四行完整残差46–47ms，仍慢于CPU W8 39–42ms；纯卷积W8A8约12.3–12.5ms，对同轮CPU约2倍。关键更正：残差OMC预编译为NPU3＋CPU2，运行时禁回退不代表纯NPU；旧三残差为NPU7＋CPU6。App未切换，尚无新整链RTF。
