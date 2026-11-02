@@ -69721,5 +69721,3081 @@
       "studentDit": 195416128,
       "sharedVaeDecoder": 84414082
     }
+  },
+  "small90_matched_vae_retest_2026_11_02": {
+    "date": "2026-11-02",
+    "appVersion": "0.1.12",
+    "scope": "Untrained small music model; full 90s numerical chain and fresh-process VAE replay using exactly its captured inputs",
+    "chain": {
+      "runId": "small90-retest-20261102-r3",
+      "date": "2026-11-02",
+      "variant": "small-2-90",
+      "execution": "Installed signed LeVo Harmony App",
+      "hapSha256": "d5693237152abeb96b9d422ebea040a39b76c762a9c2d474386a0f96c7758714",
+      "appVersion": "0.1.12",
+      "displayStable": true,
+      "foregroundStable": true,
+      "foregroundSamples": [
+        {
+          "seconds": 0.4129395,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 4.0715432,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 7.6804721,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 11.3449131,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 14.9869306,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 18.6424234,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 22.2379816,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 26.0075632,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 29.6894032,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 33.3631716,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 37.1070748,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 40.8142644,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 44.4059433,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 48.061732,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 51.7538776,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 55.4206761,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 58.9991225,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 62.677132,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 66.3176337,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 70.0900089,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 73.8905172,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 77.5953638,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 81.4012688,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 85.1155551,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 88.9221901,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 92.6270297,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 96.4621096,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 100.171355,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 103.8642358,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 107.5740762,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 111.2740679,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 115.0232708,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 118.7228968,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 122.3623785,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 126.0854753,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 129.6551412,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 133.2518674,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 136.8703687,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 140.4685089,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 144.0868035,
+          "state": "FOREGROUND"
+        }
+      ],
+      "observedSeconds": 147.5816158,
+      "result": {
+        "audioFileGenerated": false,
+        "codec": {
+          "audioFileGenerated": false,
+          "chunks": [
+            {
+              "chunk": 1,
+              "ditSeconds": 2.616126093,
+              "pcmPeak": 1.0859375,
+              "vaeSeconds": 5.604556875,
+              "validFrames": 256
+            },
+            {
+              "chunk": 2,
+              "ditSeconds": 2.202496561,
+              "pcmPeak": 0.8176043629646301,
+              "vaeSeconds": 4.780960781,
+              "validFrames": 256
+            },
+            {
+              "chunk": 3,
+              "ditSeconds": 2.237104843,
+              "pcmPeak": 1.0693359375,
+              "vaeSeconds": 4.841314219,
+              "validFrames": 256
+            },
+            {
+              "chunk": 4,
+              "ditSeconds": 2.247340469,
+              "pcmPeak": 1.005859375,
+              "vaeSeconds": 4.908768907,
+              "validFrames": 256
+            },
+            {
+              "chunk": 5,
+              "ditSeconds": 2.2402732810000003,
+              "pcmPeak": 1.005859375,
+              "vaeSeconds": 4.833978281,
+              "validFrames": 256
+            },
+            {
+              "chunk": 6,
+              "ditSeconds": 2.3206518750000003,
+              "pcmPeak": 1.0263671875,
+              "vaeSeconds": 4.8871675,
+              "validFrames": 256
+            },
+            {
+              "chunk": 7,
+              "ditSeconds": 2.279244531,
+              "pcmPeak": 1.0224609375,
+              "vaeSeconds": 4.94679625,
+              "validFrames": 256
+            },
+            {
+              "chunk": 8,
+              "ditSeconds": 2.258005313,
+              "pcmPeak": 0.93212890625,
+              "vaeSeconds": 4.924477344,
+              "validFrames": 256
+            },
+            {
+              "chunk": 9,
+              "ditSeconds": 2.247455156,
+              "pcmPeak": 0.77880859375,
+              "vaeSeconds": 4.994717031,
+              "validFrames": 256
+            },
+            {
+              "chunk": 10,
+              "ditSeconds": 2.313769218,
+              "pcmPeak": 0.79931640625,
+              "vaeSeconds": 5.00531375,
+              "validFrames": 256
+            },
+            {
+              "chunk": 11,
+              "ditSeconds": 2.250758594,
+              "pcmPeak": 0.76220703125,
+              "vaeSeconds": 5.024569218,
+              "validFrames": 256
+            },
+            {
+              "chunk": 12,
+              "ditSeconds": 2.242678593,
+              "pcmPeak": 0.8115234375,
+              "vaeSeconds": 5.01000375,
+              "validFrames": 138
+            }
+          ],
+          "clippedSampleFraction": 1.0416666666666667e-06,
+          "codecDevice": "Harmony phone CPU",
+          "codecGuidance": 1.5,
+          "codecOnlyRtf": 0.9878308020777778,
+          "codecSeconds": 88.904771875,
+          "diagnosticOnly": true,
+          "ditSetupSeconds": 0.253086875,
+          "ditSteps": 2,
+          "ditWeightBits": 8,
+          "durationSeconds": 90,
+          "lmDevice": "Harmony phone CPU",
+          "lmGuidance": 1,
+          "lmWeightBits": 4,
+          "minimumSystemAvailableKiB": 4445184,
+          "numericalPcmGenerated": true,
+          "pcmPeak": 1.0859375,
+          "pcmRms": 0.10497028397980976,
+          "performanceFixtureOnly": false,
+          "randomMusicHead": true,
+          "sampledPeakRssKiB": 1149392,
+          "stages": [
+            {
+              "rssKiB": 408232,
+              "seconds": 0.001622343,
+              "stage": "real-public-codes-start",
+              "systemAvailableKiB": 5211136
+            },
+            {
+              "rssKiB": 414400,
+              "seconds": 0.255269687,
+              "stage": "real-dit-loaded",
+              "systemAvailableKiB": 5165056
+            },
+            {
+              "rssKiB": 414400,
+              "seconds": 0.25582375,
+              "stage": "real-vae-loading",
+              "systemAvailableKiB": 5165056
+            },
+            {
+              "rssKiB": 535464,
+              "seconds": 1.310822187,
+              "stage": "real-vae-loaded",
+              "systemAvailableKiB": 5018624
+            },
+            {
+              "rssKiB": 535580,
+              "seconds": 1.338955625,
+              "stage": "chunk-1-dit-0",
+              "systemAvailableKiB": 5013504
+            },
+            {
+              "rssKiB": 575800,
+              "seconds": 2.680924062,
+              "stage": "chunk-1-dit-1",
+              "systemAvailableKiB": 4926464
+            },
+            {
+              "rssKiB": 575800,
+              "seconds": 3.96303,
+              "stage": "chunk-1-dit-2",
+              "systemAvailableKiB": 4922368
+            },
+            {
+              "rssKiB": 575804,
+              "seconds": 3.963865625,
+              "stage": "chunk-1-vae-start",
+              "systemAvailableKiB": 4922368
+            },
+            {
+              "rssKiB": 1143224,
+              "seconds": 9.588686406,
+              "stage": "chunk-1-wav-written",
+              "systemAvailableKiB": 4506624
+            },
+            {
+              "rssKiB": 1143224,
+              "seconds": 9.59405125,
+              "stage": "chunk-2-dit-0",
+              "systemAvailableKiB": 4506624
+            },
+            {
+              "rssKiB": 1145884,
+              "seconds": 10.680760781,
+              "stage": "chunk-2-dit-1",
+              "systemAvailableKiB": 4508672
+            },
+            {
+              "rssKiB": 1145344,
+              "seconds": 11.8008525,
+              "stage": "chunk-2-dit-2",
+              "systemAvailableKiB": 4493312
+            },
+            {
+              "rssKiB": 1145344,
+              "seconds": 11.801495625,
+              "stage": "chunk-2-vae-start",
+              "systemAvailableKiB": 4493312
+            },
+            {
+              "rssKiB": 1149348,
+              "seconds": 16.5977375,
+              "stage": "chunk-2-wav-written",
+              "systemAvailableKiB": 4484096
+            },
+            {
+              "rssKiB": 1149348,
+              "seconds": 16.602972343,
+              "stage": "chunk-3-dit-0",
+              "systemAvailableKiB": 4484096
+            },
+            {
+              "rssKiB": 1149392,
+              "seconds": 17.729328593,
+              "stage": "chunk-3-dit-1",
+              "systemAvailableKiB": 4483072
+            },
+            {
+              "rssKiB": 1149392,
+              "seconds": 18.8416125,
+              "stage": "chunk-3-dit-2",
+              "systemAvailableKiB": 4484096
+            },
+            {
+              "rssKiB": 1149392,
+              "seconds": 18.842222031,
+              "stage": "chunk-3-vae-start",
+              "systemAvailableKiB": 4484096
+            },
+            {
+              "rssKiB": 1145892,
+              "seconds": 23.698740468,
+              "stage": "chunk-3-wav-written",
+              "systemAvailableKiB": 4477952
+            },
+            {
+              "rssKiB": 1136572,
+              "seconds": 23.705000937,
+              "stage": "chunk-4-dit-0",
+              "systemAvailableKiB": 4485120
+            },
+            {
+              "rssKiB": 1142472,
+              "seconds": 24.849573437,
+              "stage": "chunk-4-dit-1",
+              "systemAvailableKiB": 4481024
+            },
+            {
+              "rssKiB": 1145392,
+              "seconds": 25.954997343,
+              "stage": "chunk-4-dit-2",
+              "systemAvailableKiB": 4478976
+            },
+            {
+              "rssKiB": 1145392,
+              "seconds": 25.955674843,
+              "stage": "chunk-4-vae-start",
+              "systemAvailableKiB": 4478976
+            },
+            {
+              "rssKiB": 1144188,
+              "seconds": 30.88333875,
+              "stage": "chunk-4-wav-written",
+              "systemAvailableKiB": 4487168
+            },
+            {
+              "rssKiB": 1136500,
+              "seconds": 30.889780781,
+              "stage": "chunk-5-dit-0",
+              "systemAvailableKiB": 4492288
+            },
+            {
+              "rssKiB": 1145280,
+              "seconds": 31.996962031,
+              "stage": "chunk-5-dit-1",
+              "systemAvailableKiB": 4486144
+            },
+            {
+              "rssKiB": 1145280,
+              "seconds": 33.13288625,
+              "stage": "chunk-5-dit-2",
+              "systemAvailableKiB": 4491264
+            },
+            {
+              "rssKiB": 1145280,
+              "seconds": 33.133607656,
+              "stage": "chunk-5-vae-start",
+              "systemAvailableKiB": 4491264
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 37.9852475,
+              "stage": "chunk-5-wav-written",
+              "systemAvailableKiB": 4493312
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 37.990305937,
+              "stage": "chunk-6-dit-0",
+              "systemAvailableKiB": 4493312
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 39.135170156,
+              "stage": "chunk-6-dit-1",
+              "systemAvailableKiB": 4494336
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 40.313010156,
+              "stage": "chunk-6-dit-2",
+              "systemAvailableKiB": 4494336
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 40.31382,
+              "stage": "chunk-6-vae-start",
+              "systemAvailableKiB": 4494336
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 45.219675,
+              "stage": "chunk-6-wav-written",
+              "systemAvailableKiB": 4494336
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 45.225993437,
+              "stage": "chunk-7-dit-0",
+              "systemAvailableKiB": 4494336
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 46.3647275,
+              "stage": "chunk-7-dit-1",
+              "systemAvailableKiB": 4494336
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 47.507117656,
+              "stage": "chunk-7-dit-2",
+              "systemAvailableKiB": 4493312
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 47.507794843,
+              "stage": "chunk-7-vae-start",
+              "systemAvailableKiB": 4493312
+            },
+            {
+              "rssKiB": 1144720,
+              "seconds": 52.471071875,
+              "stage": "chunk-7-wav-written",
+              "systemAvailableKiB": 4504576
+            },
+            {
+              "rssKiB": 1137032,
+              "seconds": 52.477884062,
+              "stage": "chunk-8-dit-0",
+              "systemAvailableKiB": 4509696
+            },
+            {
+              "rssKiB": 1145288,
+              "seconds": 53.64011875,
+              "stage": "chunk-8-dit-1",
+              "systemAvailableKiB": 4503552
+            },
+            {
+              "rssKiB": 1145288,
+              "seconds": 54.738490937,
+              "stage": "chunk-8-dit-2",
+              "systemAvailableKiB": 4503552
+            },
+            {
+              "rssKiB": 1145288,
+              "seconds": 54.739206875,
+              "stage": "chunk-8-vae-start",
+              "systemAvailableKiB": 4503552
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 59.679262187,
+              "stage": "chunk-8-wav-written",
+              "systemAvailableKiB": 4499456
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 59.684331093,
+              "stage": "chunk-9-dit-0",
+              "systemAvailableKiB": 4499456
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 60.836955468,
+              "stage": "chunk-9-dit-1",
+              "systemAvailableKiB": 4499456
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 61.93376,
+              "stage": "chunk-9-dit-2",
+              "systemAvailableKiB": 4501504
+            },
+            {
+              "rssKiB": 1149292,
+              "seconds": 61.93437125,
+              "stage": "chunk-9-vae-start",
+              "systemAvailableKiB": 4501504
+            },
+            {
+              "rssKiB": 1149280,
+              "seconds": 66.946950937,
+              "stage": "chunk-9-wav-written",
+              "systemAvailableKiB": 4498432
+            },
+            {
+              "rssKiB": 1149280,
+              "seconds": 66.952736718,
+              "stage": "chunk-10-dit-0",
+              "systemAvailableKiB": 4498432
+            },
+            {
+              "rssKiB": 1145252,
+              "seconds": 68.072115781,
+              "stage": "chunk-10-dit-1",
+              "systemAvailableKiB": 4505600
+            },
+            {
+              "rssKiB": 1145252,
+              "seconds": 69.268271406,
+              "stage": "chunk-10-dit-2",
+              "systemAvailableKiB": 4501504
+            },
+            {
+              "rssKiB": 1145252,
+              "seconds": 69.269980781,
+              "stage": "chunk-10-vae-start",
+              "systemAvailableKiB": 4501504
+            },
+            {
+              "rssKiB": 1149096,
+              "seconds": 74.292984062,
+              "stage": "chunk-10-wav-written",
+              "systemAvailableKiB": 4508672
+            },
+            {
+              "rssKiB": 1149096,
+              "seconds": 74.2990125,
+              "stage": "chunk-11-dit-0",
+              "systemAvailableKiB": 4508672
+            },
+            {
+              "rssKiB": 1149096,
+              "seconds": 75.402706718,
+              "stage": "chunk-11-dit-1",
+              "systemAvailableKiB": 4509696
+            },
+            {
+              "rssKiB": 1149096,
+              "seconds": 76.551343281,
+              "stage": "chunk-11-dit-2",
+              "systemAvailableKiB": 4509696
+            },
+            {
+              "rssKiB": 1149096,
+              "seconds": 76.551989531,
+              "stage": "chunk-11-vae-start",
+              "systemAvailableKiB": 4509696
+            },
+            {
+              "rssKiB": 1145024,
+              "seconds": 81.594018906,
+              "stage": "chunk-11-wav-written",
+              "systemAvailableKiB": 4510720
+            },
+            {
+              "rssKiB": 1137336,
+              "seconds": 81.6307375,
+              "stage": "chunk-12-dit-0",
+              "systemAvailableKiB": 4515840
+            },
+            {
+              "rssKiB": 1142336,
+              "seconds": 82.769294375,
+              "stage": "chunk-12-dit-1",
+              "systemAvailableKiB": 4508672
+            },
+            {
+              "rssKiB": 1145256,
+              "seconds": 83.877388906,
+              "stage": "chunk-12-dit-2",
+              "systemAvailableKiB": 4505600
+            },
+            {
+              "rssKiB": 1145256,
+              "seconds": 83.8780975,
+              "stage": "chunk-12-vae-start",
+              "systemAvailableKiB": 4504576
+            },
+            {
+              "rssKiB": 1149260,
+              "seconds": 88.904529062,
+              "stage": "chunk-12-wav-written",
+              "systemAvailableKiB": 4514816
+            }
+          ],
+          "success": true,
+          "totalSeconds": 89.015294218,
+          "trainedLmTokens": false,
+          "vaeCaptureSeconds": 0.032773904000000006,
+          "vaeNeonSinCalls": 1728,
+          "vaeReplayManifest": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/latest.json",
+          "vaeSetupSeconds": 1.054297812,
+          "vaeSinHookDuringBuild": true,
+          "vaeWeightBits": 8,
+          "wholePhoneChain": true
+        },
+        "comparisonScope": "Same App, requested90seconds, 2-step CFG DiT and same pretrained VAE; model sizes, condition contracts and training status differ",
+        "diagnosticOnly": true,
+        "ditSteps": 2,
+        "durationSeconds": 90,
+        "fixedLengthBenchmark": true,
+        "lifetimePolicy": "Serial LLM complete and destroy, then one DiT and one VAE session reused for all chunks",
+        "lm": {
+          "decodeSeconds": 51.97827968400005,
+          "decodeTokensPerSecond": 43.26807300419923,
+          "eosSuppressedForFixedLengthDiagnostic": true,
+          "finalKvPositions": 2763,
+          "frames": 2250,
+          "loadSeconds": 0.554489531,
+          "precision": "low",
+          "prefillSeconds": 2.085800313,
+          "prefixPositions": 514,
+          "threads": 4
+        },
+        "lmStageSeconds": 55.680529063,
+        "memory": {
+          "crossStageQueriesExcludedFromPerStage": 10,
+          "graphicsApiLastError": 0,
+          "graphicsIntervalMs": 1000,
+          "graphicsSamples": 117,
+          "independentRssSampler": true,
+          "inferenceBackend": "CPU",
+          "interpretation": "Shared physical memory; graphics includes App UI and is not model-only dedicated VRAM; sampled peaks may miss shorter transients",
+          "memoryQuerySeconds": 25.80115640899999,
+          "peakRssKiB": 1149392,
+          "perStage": {
+            "dit": {
+              "peakRssKiB": 1149392,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 1091642
+            },
+            "initializationAndCondition": {
+              "peakRssKiB": 78608,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": null
+            },
+            "llm": {
+              "peakRssKiB": 1005136,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 889860
+            },
+            "vae": {
+              "peakRssKiB": 1149392,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 1091642
+            }
+          },
+          "pssIntervalMs": 500,
+          "pssSamples": 233,
+          "rssIntervalMs": 20,
+          "sampledPeakGraphicsKiB": 0,
+          "sampledPeakPssKiB": 1091642
+        },
+        "minimumSystemAvailableKiB": 4438016,
+        "musicTrained": false,
+        "pipelineRtfThroughPcm": 1.6078709392444444,
+        "pipelineSecondsThroughPcm": 144.708383594,
+        "quantization": {
+          "activationQuantization": "No requested static A4",
+          "codecThreads": 6,
+          "ditGuidance": 1.5,
+          "ditPrecision": "High",
+          "ditWeightBits": 8,
+          "inputEmbeddingBits": 16,
+          "kvQuantization": "Default runtime cache, no requested KV4",
+          "lmBodyWeightBits": 4,
+          "lmGuidance": 1,
+          "lmHeadWeightBits": 8,
+          "lmPrecision": "Low",
+          "lmThreads": 4,
+          "repetitionPenalty": 1.1,
+          "samplingSeed": 2307,
+          "temperature": 0.9,
+          "topK": 50,
+          "vaePrecision": "Low",
+          "vaeWeightBits": 8
+        },
+        "requestedDurationSeconds": 90,
+        "requestedMusicCodes": 2250,
+        "sampledPeakRssKiB": 1149392,
+        "stageRtf": {
+          "decode": 0.5775364409333339,
+          "dit": 0.3050656058555556,
+          "llm": 0.6186725451444445,
+          "other": 0.020103623311111027,
+          "prefill": 0.023175559033333334,
+          "total": 1.6078709288222222,
+          "vae": 0.6640291545111112
+        },
+        "stageSeconds": {
+          "decode": 51.97827968400005,
+          "dit": 27.455904527,
+          "llm": 55.680529063,
+          "other": 1.8093260979999926,
+          "prefill": 2.085800313,
+          "total": 144.708383594,
+          "vae": 59.76262390600001
+        },
+        "success": true,
+        "validPcmSeconds": 90,
+        "variant": "small"
+      }
+    },
+    "freshVaeReplay": {
+      "runId": "small90-vae-replay-20261102-r2",
+      "date": "2026-11-02",
+      "variant": "small-vae-90",
+      "execution": "Installed signed LeVo Harmony App",
+      "hapSha256": "d5693237152abeb96b9d422ebea040a39b76c762a9c2d474386a0f96c7758714",
+      "appVersion": "0.1.12",
+      "displayStable": true,
+      "foregroundStable": true,
+      "foregroundSamples": [
+        {
+          "state": "FOREGROUND",
+          "seconds": 0.3948982
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 3.9647678
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 7.5438468
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 11.1920713
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 14.8702332
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 18.4341224
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 22.0310309
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 25.6997443
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 29.307872
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 32.9343651
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 36.5601328
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 40.189754
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 43.8261852
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 47.4384425
+        },
+        {
+          "state": "FOREGROUND",
+          "seconds": 50.9916571
+        }
+      ],
+      "observedSeconds": 54.4922791,
+      "result": {
+        "allRawPcmFingerprintsMatch": true,
+        "chainVaeSeconds": 59.76262390600001,
+        "ditExecuted": false,
+        "durationSeconds": 90,
+        "firstWindowRelativeL2": 0,
+        "fixtureManifest": {
+          "captureSeconds": 0.032773904000000006,
+          "complete": true,
+          "durationSeconds": 90,
+          "kleidiEnabled": false,
+          "neonSin": true,
+          "precision": "Low",
+          "shape": [
+            1,
+            64,
+            256
+          ],
+          "source": "Exact small-chain VAE inputs; raw PCM fingerprints are before overlap crossfade",
+          "threads": 6,
+          "version": 1,
+          "weightBits": 8,
+          "windows": [
+            {
+              "chunk": 1,
+              "latentFingerprint": "840354510023015487",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-1.f32",
+              "rawPcmFingerprint": "12410912025538143013",
+              "referencePcmPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/reference-pcm-1.f32",
+              "vaeSeconds": 5.604556875
+            },
+            {
+              "chunk": 2,
+              "latentFingerprint": "1589959560175024178",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-2.f32",
+              "rawPcmFingerprint": "16378049844399612709",
+              "vaeSeconds": 4.780960781
+            },
+            {
+              "chunk": 3,
+              "latentFingerprint": "10722318764869371198",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-3.f32",
+              "rawPcmFingerprint": "6116303021922984741",
+              "vaeSeconds": 4.841314219
+            },
+            {
+              "chunk": 4,
+              "latentFingerprint": "2919262817858973927",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-4.f32",
+              "rawPcmFingerprint": "14877292002642756389",
+              "vaeSeconds": 4.908768907
+            },
+            {
+              "chunk": 5,
+              "latentFingerprint": "5559077903199017263",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-5.f32",
+              "rawPcmFingerprint": "965964622345962277",
+              "vaeSeconds": 4.833978281
+            },
+            {
+              "chunk": 6,
+              "latentFingerprint": "2234142186455061321",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-6.f32",
+              "rawPcmFingerprint": "7492060811101717285",
+              "vaeSeconds": 4.8871675
+            },
+            {
+              "chunk": 7,
+              "latentFingerprint": "9807665823216997861",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-7.f32",
+              "rawPcmFingerprint": "5007955222136963877",
+              "vaeSeconds": 4.94679625
+            },
+            {
+              "chunk": 8,
+              "latentFingerprint": "7658914732941003389",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-8.f32",
+              "rawPcmFingerprint": "4952418496860365605",
+              "vaeSeconds": 4.924477344
+            },
+            {
+              "chunk": 9,
+              "latentFingerprint": "11622731563258075044",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-9.f32",
+              "rawPcmFingerprint": "11600891954644976421",
+              "vaeSeconds": 4.994717031
+            },
+            {
+              "chunk": 10,
+              "latentFingerprint": "2004700515327375874",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-10.f32",
+              "rawPcmFingerprint": "9215028880192815909",
+              "vaeSeconds": 5.00531375
+            },
+            {
+              "chunk": 11,
+              "latentFingerprint": "12630086213743261163",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-11.f32",
+              "rawPcmFingerprint": "12740382718777434917",
+              "vaeSeconds": 5.024569218
+            },
+            {
+              "chunk": 12,
+              "latentFingerprint": "17720937116100026451",
+              "latentPath": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/1793618497681031/latent-12.f32",
+              "rawPcmFingerprint": "16779235462152078117",
+              "vaeSeconds": 5.01000375
+            }
+          ]
+        },
+        "llmExecuted": false,
+        "memory": {
+          "crossStageQueriesExcludedFromPerStage": 1,
+          "graphicsApiLastError": 0,
+          "graphicsIntervalMs": 1000,
+          "graphicsSamples": 44,
+          "independentRssSampler": true,
+          "inferenceBackend": "CPU",
+          "interpretation": "Shared physical memory; graphics includes App UI and is not model-only dedicated VRAM; sampled peaks may miss shorter transients",
+          "memoryQuerySeconds": 8.821196565,
+          "peakRssKiB": 852572,
+          "perStage": {
+            "dit": {
+              "peakRssKiB": 0,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": null
+            },
+            "initializationAndCondition": {
+              "peakRssKiB": 78844,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": null
+            },
+            "llm": {
+              "peakRssKiB": 0,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": null
+            },
+            "vae": {
+              "peakRssKiB": 852572,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 797492
+            }
+          },
+          "pssIntervalMs": 500,
+          "pssSamples": 88,
+          "rssIntervalMs": 20,
+          "sampledPeakGraphicsKiB": 0,
+          "sampledPeakPssKiB": 797492
+        },
+        "minimumSystemAvailableKiB": 4759552,
+        "quantization": {
+          "kleidiEnabled": false,
+          "neonSin": true,
+          "vaePrecision": "Low",
+          "vaeThreads": 6,
+          "vaeWeightBits": 8
+        },
+        "sampledPeakRssKiB": 857444,
+        "scope": "Fresh process; same 12 captured latent tensors and VAE recipe. No LLM or DiT loaded; not whole-chain RTF. Fingerprints are diagnostic, not cryptographic.",
+        "setupSeconds": 0.718975312,
+        "success": true,
+        "totalSeconds": 53.280924843,
+        "vaeOnly": true,
+        "vaeOnlyComputeRtf": 0.5822868697777779,
+        "vaeSeconds": 52.405818280000005,
+        "wholeChainCompleted": false,
+        "windows": [
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 5.604556875,
+            "chunk": 1,
+            "pcmPeak": 1.0859375,
+            "rawPcmFingerprint": "12410912025538143013",
+            "relativeL2": 0,
+            "vaeSeconds": 4.366001094
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 4.780960781,
+            "chunk": 2,
+            "pcmPeak": 0.83349609375,
+            "rawPcmFingerprint": "16378049844399612709",
+            "vaeSeconds": 4.261369531
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 4.841314219,
+            "chunk": 3,
+            "pcmPeak": 1.0693359375,
+            "rawPcmFingerprint": "6116303021922984741",
+            "vaeSeconds": 4.378005625
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 4.908768907,
+            "chunk": 4,
+            "pcmPeak": 1.005859375,
+            "rawPcmFingerprint": "14877292002642756389",
+            "vaeSeconds": 4.444447344
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 4.833978281,
+            "chunk": 5,
+            "pcmPeak": 1.005859375,
+            "rawPcmFingerprint": "965964622345962277",
+            "vaeSeconds": 4.379306718
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 4.8871675,
+            "chunk": 6,
+            "pcmPeak": 1.0263671875,
+            "rawPcmFingerprint": "7492060811101717285",
+            "vaeSeconds": 4.493905937
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 4.94679625,
+            "chunk": 7,
+            "pcmPeak": 1.0224609375,
+            "rawPcmFingerprint": "5007955222136963877",
+            "vaeSeconds": 4.383649843
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 4.924477344,
+            "chunk": 8,
+            "pcmPeak": 0.93212890625,
+            "rawPcmFingerprint": "4952418496860365605",
+            "vaeSeconds": 4.3283475
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 4.994717031,
+            "chunk": 9,
+            "pcmPeak": 0.77880859375,
+            "rawPcmFingerprint": "11600891954644976421",
+            "vaeSeconds": 4.269932187
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 5.00531375,
+            "chunk": 10,
+            "pcmPeak": 0.79931640625,
+            "rawPcmFingerprint": "9215028880192815909",
+            "vaeSeconds": 4.348496094
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 5.024569218,
+            "chunk": 11,
+            "pcmPeak": 0.76220703125,
+            "rawPcmFingerprint": "12740382718777434917",
+            "vaeSeconds": 4.317842344
+          },
+          {
+            "bitwiseFingerprintMatches": true,
+            "chainVaeSeconds": 5.01000375,
+            "chunk": 12,
+            "pcmPeak": 0.8115234375,
+            "rawPcmFingerprint": "16779235462152078117",
+            "vaeSeconds": 4.434514063
+          }
+        ]
+      }
+    },
+    "comparison": {
+      "oldWholeChainRtf": 2.163444201388889,
+      "retestWholeChainRtf": 1.6078709288222222,
+      "oldStageSeconds": {
+        "decode": 44.983493611999876,
+        "dit": 49.165866249,
+        "llm": 48.1134975,
+        "other": 1.4412171880000102,
+        "prefill": 1.843530781,
+        "total": 194.709978125,
+        "vae": 95.98939718799998
+      },
+      "retestStageSeconds": {
+        "decode": 51.97827968400005,
+        "dit": 27.455904527,
+        "llm": 55.680529063,
+        "other": 1.8093260979999926,
+        "prefill": 2.085800313,
+        "total": 144.708383594,
+        "vae": 59.76262390600001
+      },
+      "matchedChainVaeSeconds": 59.76262390600001,
+      "matchedFreshVaeSeconds": 52.405818280000005,
+      "chainToFreshVaeTimeRatio": 1.1403814665519236,
+      "allRawOutputFingerprintsMatch": true,
+      "firstRawOutputRelativeL2": 0
+    },
+    "earlierCompletedRetest": {
+      "runId": "small90-retest-20261102-r2",
+      "date": "2026-11-02",
+      "variant": "small-2-90",
+      "execution": "Installed signed LeVo Harmony App",
+      "hapSha256": "6572887b3f02f17f778a519a95984131fed2b68593a0ab955d324612e797005f",
+      "appVersion": "0.1.12",
+      "displayStable": true,
+      "foregroundStable": true,
+      "foregroundSamples": [
+        {
+          "seconds": 0.4270035,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 4.0920148,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 7.7614852,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 11.455242,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 15.1707918,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 18.929917,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 22.6753139,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 26.5290199,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 30.2046426,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 33.9482651,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 37.6717951,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 41.4582547,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 45.1652743,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 48.8371753,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 52.5760767,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 56.3378084,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 60.0492472,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 63.8016544,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 67.5414921,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 71.3114255,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 75.0351857,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 78.7395184,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 82.4373782,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 86.1852893,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 89.9381682,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 93.6360301,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 97.4387537,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 101.1043377,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 104.7752916,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 108.4695068,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 112.1334345,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 115.7855283,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 119.3638692,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 123.0918353,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 126.7880664,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 130.5110109,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 134.2840108,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 138.0144747,
+          "state": "FOREGROUND"
+        }
+      ],
+      "observedSeconds": 141.3692302,
+      "result": {
+        "audioFileGenerated": false,
+        "codec": {
+          "audioFileGenerated": false,
+          "chunks": [
+            {
+              "chunk": 1,
+              "ditSeconds": 2.244355782,
+              "pcmPeak": 1.0859375,
+              "vaeSeconds": 4.993922031,
+              "validFrames": 256
+            },
+            {
+              "chunk": 2,
+              "ditSeconds": 2.2158246879999997,
+              "pcmPeak": 0.8176043629646301,
+              "vaeSeconds": 4.82945625,
+              "validFrames": 256
+            },
+            {
+              "chunk": 3,
+              "ditSeconds": 2.228685156,
+              "pcmPeak": 1.0693359375,
+              "vaeSeconds": 4.839669688,
+              "validFrames": 256
+            },
+            {
+              "chunk": 4,
+              "ditSeconds": 2.227212656,
+              "pcmPeak": 1.005859375,
+              "vaeSeconds": 4.873878125,
+              "validFrames": 256
+            },
+            {
+              "chunk": 5,
+              "ditSeconds": 2.203982968,
+              "pcmPeak": 1.005859375,
+              "vaeSeconds": 4.833901875,
+              "validFrames": 256
+            },
+            {
+              "chunk": 6,
+              "ditSeconds": 2.2062929689999997,
+              "pcmPeak": 1.0263671875,
+              "vaeSeconds": 4.913836719,
+              "validFrames": 256
+            },
+            {
+              "chunk": 7,
+              "ditSeconds": 2.225421562,
+              "pcmPeak": 1.0224609375,
+              "vaeSeconds": 4.87005,
+              "validFrames": 256
+            },
+            {
+              "chunk": 8,
+              "ditSeconds": 2.274317343,
+              "pcmPeak": 0.93212890625,
+              "vaeSeconds": 4.823423437,
+              "validFrames": 256
+            },
+            {
+              "chunk": 9,
+              "ditSeconds": 2.2622628120000003,
+              "pcmPeak": 0.77880859375,
+              "vaeSeconds": 4.96440375,
+              "validFrames": 256
+            },
+            {
+              "chunk": 10,
+              "ditSeconds": 2.206911875,
+              "pcmPeak": 0.79931640625,
+              "vaeSeconds": 4.917197812,
+              "validFrames": 256
+            },
+            {
+              "chunk": 11,
+              "ditSeconds": 2.212897812,
+              "pcmPeak": 0.76220703125,
+              "vaeSeconds": 4.950233281,
+              "validFrames": 256
+            },
+            {
+              "chunk": 12,
+              "ditSeconds": 2.320543749,
+              "pcmPeak": 0.8115234375,
+              "vaeSeconds": 4.912794531,
+              "validFrames": 138
+            }
+          ],
+          "clippedSampleFraction": 1.0416666666666667e-06,
+          "codecDevice": "Harmony phone CPU",
+          "codecGuidance": 1.5,
+          "codecOnlyRtf": 0.9629118993111111,
+          "codecSeconds": 86.662070313,
+          "diagnosticOnly": true,
+          "ditSetupSeconds": 0.220827968,
+          "ditSteps": 2,
+          "ditWeightBits": 8,
+          "durationSeconds": 90,
+          "lmDevice": "Harmony phone CPU",
+          "lmGuidance": 1,
+          "lmWeightBits": 4,
+          "minimumSystemAvailableKiB": 4661248,
+          "numericalPcmGenerated": true,
+          "pcmPeak": 1.0859375,
+          "pcmRms": 0.10497028397980976,
+          "performanceFixtureOnly": false,
+          "randomMusicHead": true,
+          "sampledPeakRssKiB": 1154936,
+          "stages": [
+            {
+              "rssKiB": 429652,
+              "seconds": 0.001299219,
+              "stage": "real-public-codes-start",
+              "systemAvailableKiB": 5282816
+            },
+            {
+              "rssKiB": 438912,
+              "seconds": 0.222472657,
+              "stage": "real-dit-loaded",
+              "systemAvailableKiB": 5255168
+            },
+            {
+              "rssKiB": 438912,
+              "seconds": 0.222814375,
+              "stage": "real-vae-loading",
+              "systemAvailableKiB": 5255168
+            },
+            {
+              "rssKiB": 561908,
+              "seconds": 0.793503594,
+              "stage": "real-vae-loaded",
+              "systemAvailableKiB": 5107712
+            },
+            {
+              "rssKiB": 561980,
+              "seconds": 0.815942188,
+              "stage": "chunk-1-dit-0",
+              "systemAvailableKiB": 5105664
+            },
+            {
+              "rssKiB": 602396,
+              "seconds": 1.925261563,
+              "stage": "chunk-1-dit-1",
+              "systemAvailableKiB": 5071872
+            },
+            {
+              "rssKiB": 602396,
+              "seconds": 3.065226407,
+              "stage": "chunk-1-dit-2",
+              "systemAvailableKiB": 5072896
+            },
+            {
+              "rssKiB": 602396,
+              "seconds": 3.065918594,
+              "stage": "chunk-1-vae-start",
+              "systemAvailableKiB": 5072896
+            },
+            {
+              "rssKiB": 1143200,
+              "seconds": 8.080063282,
+              "stage": "chunk-1-wav-written",
+              "systemAvailableKiB": 4694016
+            },
+            {
+              "rssKiB": 1143200,
+              "seconds": 8.085180938,
+              "stage": "chunk-2-dit-0",
+              "systemAvailableKiB": 4694016
+            },
+            {
+              "rssKiB": 1146120,
+              "seconds": 9.195850625,
+              "stage": "chunk-2-dit-1",
+              "systemAvailableKiB": 4695040
+            },
+            {
+              "rssKiB": 1146164,
+              "seconds": 10.302712657,
+              "stage": "chunk-2-dit-2",
+              "systemAvailableKiB": 4691968
+            },
+            {
+              "rssKiB": 1146164,
+              "seconds": 10.303363125,
+              "stage": "chunk-2-vae-start",
+              "systemAvailableKiB": 4691968
+            },
+            {
+              "rssKiB": 1150076,
+              "seconds": 15.148027344,
+              "stage": "chunk-2-wav-written",
+              "systemAvailableKiB": 4689920
+            },
+            {
+              "rssKiB": 1142388,
+              "seconds": 15.154094844,
+              "stage": "chunk-3-dit-0",
+              "systemAvailableKiB": 4695040
+            },
+            {
+              "rssKiB": 1147240,
+              "seconds": 16.278528907,
+              "stage": "chunk-3-dit-1",
+              "systemAvailableKiB": 4691968
+            },
+            {
+              "rssKiB": 1147240,
+              "seconds": 17.384402032,
+              "stage": "chunk-3-dit-2",
+              "systemAvailableKiB": 4690944
+            },
+            {
+              "rssKiB": 1147240,
+              "seconds": 17.385103594,
+              "stage": "chunk-3-vae-start",
+              "systemAvailableKiB": 4690944
+            },
+            {
+              "rssKiB": 1154936,
+              "seconds": 22.240896407,
+              "stage": "chunk-3-wav-written",
+              "systemAvailableKiB": 4680704
+            },
+            {
+              "rssKiB": 1144848,
+              "seconds": 22.2477275,
+              "stage": "chunk-4-dit-0",
+              "systemAvailableKiB": 4687872
+            },
+            {
+              "rssKiB": 1147252,
+              "seconds": 23.383366875,
+              "stage": "chunk-4-dit-1",
+              "systemAvailableKiB": 4688896
+            },
+            {
+              "rssKiB": 1147272,
+              "seconds": 24.476669532,
+              "stage": "chunk-4-dit-2",
+              "systemAvailableKiB": 4692992
+            },
+            {
+              "rssKiB": 1147272,
+              "seconds": 24.477311563,
+              "stage": "chunk-4-vae-start",
+              "systemAvailableKiB": 4692992
+            },
+            {
+              "rssKiB": 1144068,
+              "seconds": 29.367529375,
+              "stage": "chunk-4-wav-written",
+              "systemAvailableKiB": 4684800
+            },
+            {
+              "rssKiB": 1144068,
+              "seconds": 29.372984375,
+              "stage": "chunk-5-dit-0",
+              "systemAvailableKiB": 4684800
+            },
+            {
+              "rssKiB": 1146472,
+              "seconds": 30.474098907,
+              "stage": "chunk-5-dit-1",
+              "systemAvailableKiB": 4683776
+            },
+            {
+              "rssKiB": 1146520,
+              "seconds": 31.578729063,
+              "stage": "chunk-5-dit-2",
+              "systemAvailableKiB": 4684800
+            },
+            {
+              "rssKiB": 1146520,
+              "seconds": 31.579442813,
+              "stage": "chunk-5-vae-start",
+              "systemAvailableKiB": 4684800
+            },
+            {
+              "rssKiB": 1146520,
+              "seconds": 36.428589375,
+              "stage": "chunk-5-wav-written",
+              "systemAvailableKiB": 4692992
+            },
+            {
+              "rssKiB": 1146520,
+              "seconds": 36.433759688,
+              "stage": "chunk-6-dit-0",
+              "systemAvailableKiB": 4692992
+            },
+            {
+              "rssKiB": 1146572,
+              "seconds": 37.530669375,
+              "stage": "chunk-6-dit-1",
+              "systemAvailableKiB": 4686848
+            },
+            {
+              "rssKiB": 1146572,
+              "seconds": 38.641719532,
+              "stage": "chunk-6-dit-2",
+              "systemAvailableKiB": 4687872
+            },
+            {
+              "rssKiB": 1146572,
+              "seconds": 38.642555313,
+              "stage": "chunk-6-vae-start",
+              "systemAvailableKiB": 4687872
+            },
+            {
+              "rssKiB": 1146572,
+              "seconds": 43.575255469,
+              "stage": "chunk-6-wav-written",
+              "systemAvailableKiB": 4671488
+            },
+            {
+              "rssKiB": 1146572,
+              "seconds": 43.58153375,
+              "stage": "chunk-7-dit-0",
+              "systemAvailableKiB": 4671488
+            },
+            {
+              "rssKiB": 1146572,
+              "seconds": 44.668965313,
+              "stage": "chunk-7-dit-1",
+              "systemAvailableKiB": 4676608
+            },
+            {
+              "rssKiB": 1146572,
+              "seconds": 45.808712188,
+              "stage": "chunk-7-dit-2",
+              "systemAvailableKiB": 4675584
+            },
+            {
+              "rssKiB": 1146572,
+              "seconds": 45.809434688,
+              "stage": "chunk-7-vae-start",
+              "systemAvailableKiB": 4675584
+            },
+            {
+              "rssKiB": 1146572,
+              "seconds": 50.697355938,
+              "stage": "chunk-7-wav-written",
+              "systemAvailableKiB": 4706304
+            },
+            {
+              "rssKiB": 1146572,
+              "seconds": 50.702522032,
+              "stage": "chunk-8-dit-0",
+              "systemAvailableKiB": 4706304
+            },
+            {
+              "rssKiB": 1146520,
+              "seconds": 51.857577188,
+              "stage": "chunk-8-dit-1",
+              "systemAvailableKiB": 4697088
+            },
+            {
+              "rssKiB": 1146520,
+              "seconds": 52.978499688,
+              "stage": "chunk-8-dit-2",
+              "systemAvailableKiB": 4692992
+            },
+            {
+              "rssKiB": 1146520,
+              "seconds": 52.979337969,
+              "stage": "chunk-8-vae-start",
+              "systemAvailableKiB": 4691968
+            },
+            {
+              "rssKiB": 1146568,
+              "seconds": 57.818282032,
+              "stage": "chunk-8-wav-written",
+              "systemAvailableKiB": 4679680
+            },
+            {
+              "rssKiB": 1146568,
+              "seconds": 57.826013594,
+              "stage": "chunk-9-dit-0",
+              "systemAvailableKiB": 4681728
+            },
+            {
+              "rssKiB": 1146568,
+              "seconds": 58.954942969,
+              "stage": "chunk-9-dit-1",
+              "systemAvailableKiB": 4681728
+            },
+            {
+              "rssKiB": 1146568,
+              "seconds": 60.0900225,
+              "stage": "chunk-9-dit-2",
+              "systemAvailableKiB": 4680704
+            },
+            {
+              "rssKiB": 1146568,
+              "seconds": 60.09077375,
+              "stage": "chunk-9-vae-start",
+              "systemAvailableKiB": 4680704
+            },
+            {
+              "rssKiB": 1146568,
+              "seconds": 65.073083438,
+              "stage": "chunk-9-wav-written",
+              "systemAvailableKiB": 4683776
+            },
+            {
+              "rssKiB": 1146568,
+              "seconds": 65.079030157,
+              "stage": "chunk-10-dit-0",
+              "systemAvailableKiB": 4683776
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 66.163391875,
+              "stage": "chunk-10-dit-1",
+              "systemAvailableKiB": 4671488
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 67.28772375,
+              "stage": "chunk-10-dit-2",
+              "systemAvailableKiB": 4672512
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 67.288374063,
+              "stage": "chunk-10-vae-start",
+              "systemAvailableKiB": 4672512
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 72.2231375,
+              "stage": "chunk-10-wav-written",
+              "systemAvailableKiB": 4677632
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 72.229002188,
+              "stage": "chunk-11-dit-0",
+              "systemAvailableKiB": 4677632
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 73.334777344,
+              "stage": "chunk-11-dit-1",
+              "systemAvailableKiB": 4677632
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 74.443550938,
+              "stage": "chunk-11-dit-2",
+              "systemAvailableKiB": 4678656
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 74.444444688,
+              "stage": "chunk-11-vae-start",
+              "systemAvailableKiB": 4677632
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 79.410205625,
+              "stage": "chunk-11-wav-written",
+              "systemAvailableKiB": 4679680
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 79.413365313,
+              "stage": "chunk-12-dit-0",
+              "systemAvailableKiB": 4679680
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 80.672298125,
+              "stage": "chunk-12-dit-1",
+              "systemAvailableKiB": 4674560
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 81.73563,
+              "stage": "chunk-12-dit-2",
+              "systemAvailableKiB": 4671488
+            },
+            {
+              "rssKiB": 1146508,
+              "seconds": 81.736390469,
+              "stage": "chunk-12-vae-start",
+              "systemAvailableKiB": 4671488
+            },
+            {
+              "rssKiB": 1146464,
+              "seconds": 86.661852032,
+              "stage": "chunk-12-wav-written",
+              "systemAvailableKiB": 4669440
+            }
+          ],
+          "success": true,
+          "totalSeconds": 86.748426875,
+          "trainedLmTokens": false,
+          "vaeCaptureSeconds": 0.031984844,
+          "vaeNeonSinCalls": 1728,
+          "vaeReplayManifest": "/data/storage/el2/base/haps/entry/files/chain-comparison/small/vae-replay/latest.json",
+          "vaeSetupSeconds": 0.569939844,
+          "vaeSinHookDuringBuild": true,
+          "vaeWeightBits": 8,
+          "wholePhoneChain": true
+        },
+        "comparisonScope": "Same App, requested90seconds, 2-step CFG DiT and same pretrained VAE; model sizes, condition contracts and training status differ",
+        "diagnosticOnly": true,
+        "ditSteps": 2,
+        "durationSeconds": 90,
+        "fixedLengthBenchmark": true,
+        "lifetimePolicy": "Serial LLM complete and destroy, then one DiT and one VAE session reused for all chunks",
+        "lm": {
+          "decodeSeconds": 50.986819500000045,
+          "decodeTokensPerSecond": 44.109438910971846,
+          "eosSuppressedForFixedLengthDiagnostic": true,
+          "finalKvPositions": 2763,
+          "frames": 2250,
+          "loadSeconds": 0.455441719,
+          "precision": "low",
+          "prefillSeconds": 1.8075625,
+          "prefixPositions": 514,
+          "threads": 4
+        },
+        "lmStageSeconds": 54.2313725,
+        "memory": {
+          "crossStageQueriesExcludedFromPerStage": 6,
+          "graphicsApiLastError": 0,
+          "graphicsIntervalMs": 1000,
+          "graphicsSamples": 115,
+          "independentRssSampler": true,
+          "inferenceBackend": "CPU",
+          "interpretation": "Shared physical memory; graphics includes App UI and is not model-only dedicated VRAM; sampled peaks may miss shorter transients",
+          "memoryQuerySeconds": 24.107469846,
+          "peakRssKiB": 1154936,
+          "perStage": {
+            "dit": {
+              "peakRssKiB": 1147272,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 1090613
+            },
+            "initializationAndCondition": {
+              "peakRssKiB": 78916,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": null
+            },
+            "llm": {
+              "peakRssKiB": 998488,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 876986
+            },
+            "vae": {
+              "peakRssKiB": 1154936,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 1090613
+            }
+          },
+          "pssIntervalMs": 500,
+          "pssSamples": 229,
+          "rssIntervalMs": 20,
+          "sampledPeakGraphicsKiB": 0,
+          "sampledPeakPssKiB": 1090613
+        },
+        "minimumSystemAvailableKiB": 4661248,
+        "musicTrained": false,
+        "pipelineRtfThroughPcm": 1.566469826388889,
+        "pipelineSecondsThroughPcm": 140.982283906,
+        "quantization": {
+          "activationQuantization": "No requested static A4",
+          "codecThreads": 6,
+          "ditGuidance": 1.5,
+          "ditPrecision": "High",
+          "ditWeightBits": 8,
+          "inputEmbeddingBits": 16,
+          "kvQuantization": "Default runtime cache, no requested KV4",
+          "lmBodyWeightBits": 4,
+          "lmGuidance": 1,
+          "lmHeadWeightBits": 8,
+          "lmPrecision": "Low",
+          "lmThreads": 4,
+          "repetitionPenalty": 1.1,
+          "samplingSeed": 2307,
+          "temperature": 0.9,
+          "topK": 50,
+          "vaePrecision": "Low",
+          "vaeWeightBits": 8
+        },
+        "requestedDurationSeconds": 90,
+        "requestedMusicCodes": 2250,
+        "sampledPeakRssKiB": 1154936,
+        "stageRtf": {
+          "decode": 0.5665202166666672,
+          "dit": 0.29809677079999997,
+          "llm": 0.6025708055555555,
+          "other": 0.01332705038888883,
+          "prefill": 0.020084027777777777,
+          "total": 1.5664698211777777,
+          "vae": 0.6524751944333335
+        },
+        "stageSeconds": {
+          "decode": 50.986819500000045,
+          "dit": 26.828709372,
+          "llm": 54.2313725,
+          "other": 1.1994345349999946,
+          "prefill": 1.8075625,
+          "total": 140.982283906,
+          "vae": 58.72276749900001
+        },
+        "success": true,
+        "validPcmSeconds": 90,
+        "variant": "small"
+      }
+    },
+    "earlierReplaySetupFailure": {
+      "error": "Missing ARM82 unary selector",
+      "forwardExecuted": false,
+      "fix": "Initialize deferred CPU backend before installing the VAE sine hook; rerun the chain and replay using the same rebuilt HAP"
+    },
+    "sensors": {
+      "small90-retest-20261102-r3": [
+        {
+          "observerElapsedSeconds": 0.3278959,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "320",
+            "4390383",
+            "-797",
+            "5216891",
+            "104259",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":410368,\"seconds\":0.556062032,\"stage\":\"student-lm-loaded\",\"systemAvailableKiB\":4674560}"
+        },
+        {
+          "observerElapsedSeconds": 5.8667349,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "320",
+            "4386340",
+            "-973",
+            "6009354",
+            "105854",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":514528,\"seconds\":5.940556563,\"stage\":\"real-phone-music-codes-200\",\"systemAvailableKiB\":4788224}"
+        },
+        {
+          "observerElapsedSeconds": 11.4563322,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "320",
+            "4379921",
+            "-1105",
+            "6580565",
+            "105860",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":561416,\"seconds\":11.656535313,\"stage\":\"real-phone-music-codes-500\",\"systemAvailableKiB\":4835328}"
+        },
+        {
+          "observerElapsedSeconds": 16.9817562,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "320",
+            "4377265",
+            "-1147",
+            "6771676",
+            "106497",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":559788,\"seconds\":17.19965875,\"stage\":\"real-phone-music-codes-775\",\"systemAvailableKiB\":4858880}"
+        },
+        {
+          "observerElapsedSeconds": 22.4664978,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "320",
+            "4374276",
+            "-1264",
+            "7279993",
+            "106497",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":600344,\"seconds\":22.752956563,\"stage\":\"real-phone-music-codes-1025\",\"systemAvailableKiB\":4826112}"
+        },
+        {
+          "observerElapsedSeconds": 27.9981285,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "330",
+            "4375103",
+            "-1111",
+            "6611882",
+            "106497",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":644856,\"seconds\":28.041012969,\"stage\":\"real-phone-music-codes-1250\",\"systemAvailableKiB\":4825088}"
+        },
+        {
+          "observerElapsedSeconds": 33.5068873,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "330",
+            "4366537",
+            "-1618",
+            "8815440",
+            "106502",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":651492,\"seconds\":33.634350469,\"stage\":\"real-phone-music-codes-1475\",\"systemAvailableKiB\":4841472}"
+        },
+        {
+          "observerElapsedSeconds": 39.1563752,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "330",
+            "4370749",
+            "-1234",
+            "7158061",
+            "107459",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":651796,\"seconds\":38.899505469,\"stage\":\"real-phone-music-codes-1675\",\"systemAvailableKiB\":4852736}"
+        },
+        {
+          "observerElapsedSeconds": 44.6229838,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "330",
+            "4366866",
+            "-1477",
+            "8214063",
+            "108104",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":700140,\"seconds\":44.395850313,\"stage\":\"real-phone-music-codes-1875\",\"systemAvailableKiB\":4854784}"
+        },
+        {
+          "observerElapsedSeconds": 50.1734933,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "330",
+            "4368632",
+            "-1136",
+            "6713300",
+            "106502",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":692568,\"seconds\":50.282848438,\"stage\":\"real-phone-music-codes-2075\",\"systemAvailableKiB\":4872192}"
+        },
+        {
+          "observerElapsedSeconds": 55.829836,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "340",
+            "4341457",
+            "-287",
+            "2997107",
+            "106514",
+            "1200000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":414400,\"seconds\":0.25582375,\"stage\":\"real-vae-loading\",\"systemAvailableKiB\":5165056}"
+        },
+        {
+          "observerElapsedSeconds": 61.3575758,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "340",
+            "4378903",
+            "-664",
+            "4654078",
+            "106264",
+            "1788000",
+            "1642000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":575804,\"seconds\":3.963865625,\"stage\":\"chunk-1-vae-start\",\"systemAvailableKiB\":4922368}"
+        },
+        {
+          "observerElapsedSeconds": 66.9503896,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "340",
+            "4369651",
+            "-1213",
+            "7050849",
+            "106502",
+            "2190000",
+            "2350000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1145884,\"seconds\":10.680760781,\"stage\":\"chunk-2-dit-1\",\"systemAvailableKiB\":4508672}"
+        },
+        {
+          "observerElapsedSeconds": 72.5286628,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "340",
+            "4367841",
+            "-1227",
+            "7109561",
+            "106502",
+            "2190000",
+            "2350000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1149348,\"seconds\":16.602972343,\"stage\":\"chunk-3-dit-0\",\"systemAvailableKiB\":4484096}"
+        },
+        {
+          "observerElapsedSeconds": 78.2034712,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "330",
+            "4363928",
+            "-1431",
+            "8018413",
+            "107465",
+            "2190000",
+            "2350000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1149392,\"seconds\":18.842222031,\"stage\":\"chunk-3-vae-start\",\"systemAvailableKiB\":4484096}"
+        },
+        {
+          "observerElapsedSeconds": 83.8167912,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "330",
+            "4365025",
+            "-1300",
+            "7439981",
+            "107459",
+            "2190000",
+            "2350000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1145392,\"seconds\":25.955674843,\"stage\":\"chunk-4-vae-start\",\"systemAvailableKiB\":4478976}"
+        },
+        {
+          "observerElapsedSeconds": 89.5105778,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "350",
+            "4365444",
+            "-1224",
+            "7108241",
+            "107459",
+            "2190000",
+            "2203000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1145280,\"seconds\":33.133607656,\"stage\":\"chunk-5-vae-start\",\"systemAvailableKiB\":4491264}"
+        },
+        {
+          "observerElapsedSeconds": 95.2065333,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "350",
+            "4365759",
+            "-1189",
+            "6960716",
+            "107869",
+            "2190000",
+            "2350000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1149292,\"seconds\":39.135170156,\"stage\":\"chunk-6-dit-1\",\"systemAvailableKiB\":4494336}"
+        },
+        {
+          "observerElapsedSeconds": 100.9183989,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "350",
+            "4361489",
+            "-1419",
+            "7958990",
+            "107869",
+            "2190000",
+            "2350000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1149292,\"seconds\":45.225993437,\"stage\":\"chunk-7-dit-0\",\"systemAvailableKiB\":4494336}"
+        },
+        {
+          "observerElapsedSeconds": 106.5341326,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "350",
+            "4364350",
+            "-1225",
+            "7111375",
+            "107465",
+            "2190000",
+            "2350000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1149292,\"seconds\":47.507794843,\"stage\":\"chunk-7-vae-start\",\"systemAvailableKiB\":4493312}"
+        },
+        {
+          "observerElapsedSeconds": 112.1585184,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "350",
+            "4366447",
+            "-1177",
+            "6900057",
+            "107225",
+            "2190000",
+            "2350000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1145288,\"seconds\":54.739206875,\"stage\":\"chunk-8-vae-start\",\"systemAvailableKiB\":4503552}"
+        },
+        {
+          "observerElapsedSeconds": 117.7539791,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "350",
+            "4360910",
+            "-1417",
+            "7943595",
+            "107465",
+            "2190000",
+            "2350000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1149292,\"seconds\":61.93437125,\"stage\":\"chunk-9-vae-start\",\"systemAvailableKiB\":4501504}"
+        },
+        {
+          "observerElapsedSeconds": 123.3521745,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "75000",
+            "350",
+            "4366213",
+            "-1010",
+            "6175141",
+            "107459",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1145252,\"seconds\":68.072115781,\"stage\":\"chunk-10-dit-1\",\"systemAvailableKiB\":4505600}"
+        },
+        {
+          "observerElapsedSeconds": 128.871053,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "75000",
+            "360",
+            "4363404",
+            "-1221",
+            "7092698",
+            "107465",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1145252,\"seconds\":69.269980781,\"stage\":\"chunk-10-vae-start\",\"systemAvailableKiB\":4501504}"
+        },
+        {
+          "observerElapsedSeconds": 134.3909788,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "360",
+            "4364016",
+            "-1151",
+            "6774216",
+            "106502",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1149096,\"seconds\":76.551989531,\"stage\":\"chunk-11-vae-start\",\"systemAvailableKiB\":4509696}"
+        },
+        {
+          "observerElapsedSeconds": 139.8877282,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "360",
+            "4361367",
+            "-1343",
+            "7622298",
+            "107465",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1145256,\"seconds\":83.8780975,\"stage\":\"chunk-12-vae-start\",\"systemAvailableKiB\":4504576}"
+        },
+        {
+          "observerElapsedSeconds": 145.5337402,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "360",
+            "4383919",
+            "174",
+            "1012329",
+            "108093",
+            "1200000",
+            "1200000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":1149260,\"seconds\":88.904529062,\"stage\":\"chunk-12-wav-written\",\"systemAvailableKiB\":4514816}"
+        }
+      ],
+      "small90-vae-replay-20261102-r2": [
+        {
+          "observerElapsedSeconds": 0.410558,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "360",
+            "4376285",
+            "-702",
+            "4823209",
+            "106497",
+            "2190000",
+            "1200000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":234648,\"seconds\":0.721545312,\"stage\":\"replay-chunk-1-vae-start\",\"systemAvailableKiB\":5331968}"
+        },
+        {
+          "observerElapsedSeconds": 5.950707,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "75000",
+            "360",
+            "4364867",
+            "-1274",
+            "7310988",
+            "106502",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":848988,\"seconds\":5.09664875,\"stage\":\"replay-chunk-2-vae-start\",\"systemAvailableKiB\":4781056}"
+        },
+        {
+          "observerElapsedSeconds": 11.5076363,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "75000",
+            "360",
+            "4360828",
+            "-1430",
+            "8009760",
+            "108104",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":849012,\"seconds\":9.363491875,\"stage\":\"replay-chunk-3-vae-start\",\"systemAvailableKiB\":4786176}"
+        },
+        {
+          "observerElapsedSeconds": 17.061613,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "75000",
+            "360",
+            "4362779",
+            "-1198",
+            "6972756",
+            "106270",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":849016,\"seconds\":13.747182343,\"stage\":\"replay-chunk-4-vae-start\",\"systemAvailableKiB\":4786176}"
+        },
+        {
+          "observerElapsedSeconds": 22.5838908,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "360",
+            "4358615",
+            "-1414",
+            "7923482",
+            "107230",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":852272,\"seconds\":22.579838281,\"stage\":\"replay-chunk-6-vae-start\",\"systemAvailableKiB\":4784128}"
+        },
+        {
+          "observerElapsedSeconds": 28.1319627,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "360",
+            "4360073",
+            "-1243",
+            "7190211",
+            "107869",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":852272,\"seconds\":27.078510156,\"stage\":\"replay-chunk-7-vae-start\",\"systemAvailableKiB\":4788224}"
+        },
+        {
+          "observerElapsedSeconds": 33.6811585,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "370",
+            "4357180",
+            "-1407",
+            "7905259",
+            "108104",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":852344,\"seconds\":31.466614218,\"stage\":\"replay-chunk-8-vae-start\",\"systemAvailableKiB\":4793344}"
+        },
+        {
+          "observerElapsedSeconds": 39.2140587,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "370",
+            "4356723",
+            "-1401",
+            "7877716",
+            "108104",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":852348,\"seconds\":35.799337656,\"stage\":\"replay-chunk-9-vae-start\",\"systemAvailableKiB\":4795392}"
+        },
+        {
+          "observerElapsedSeconds": 44.7182729,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "370",
+            "4354533",
+            "-1516",
+            "8361928",
+            "107236",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":852276,\"seconds\":44.426913593,\"stage\":\"replay-chunk-11-vae-start\",\"systemAvailableKiB\":4799488}"
+        },
+        {
+          "observerElapsedSeconds": 50.2284237,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "85000",
+            "370",
+            "4355602",
+            "-1407",
+            "7892960",
+            "107465",
+            "2094000",
+            "2033000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":852204,\"seconds\":48.749309062,\"stage\":\"replay-chunk-12-vae-start\",\"systemAvailableKiB\":4790272}"
+        },
+        {
+          "observerElapsedSeconds": 55.8885882,
+          "model": "small",
+          "paths": [
+            "/sys/class/thermal/thermal_zone0/temp",
+            "/sys/class/power_supply/Battery/temp",
+            "/sys/class/power_supply/Battery/voltage_now",
+            "/sys/class/power_supply/Battery/current_now",
+            "/sys/class/power_supply/charge_power/sys_power_now",
+            "/sys/class/power_supply/charge_power/charge_loss_now",
+            "/sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq",
+            "/sys/devices/system/cpu/cpufreq/policy3/scaling_cur_freq",
+            "/sys/class/power_supply/Battery/status",
+            "/sys/class/power_supply/USB/online"
+          ],
+          "rawReadings": [
+            "60000",
+            "370",
+            "4379406",
+            "195",
+            "916838",
+            "107857",
+            "1200000",
+            "1200000",
+            "Charging",
+            "1"
+          ],
+          "progress": "{\"rssKiB\":852164,\"seconds\":53.187864531,\"stage\":\"replay-chunk-12-vae-complete\",\"systemAvailableKiB\":4791296}"
+        }
+      ]
+    },
+    "limitations": [
+      "One sequential pair; thermal/cache/scheduling conditions are observed, not held identical",
+      "Fresh VAE process has no DiT resident, unlike the chain; differences are not attributable solely to earlier LLM execution",
+      "Only the first raw PCM window has a saved full reference and direct L2 comparison; all 12 windows have bit-pattern fingerprints (not cryptographic hashes)",
+      "Captured tensor writes/fingerprints are included in full-chain other time, excluded from VAE run/read time",
+      "SoC thermal sensor is not case temperature; USB-connected battery-terminal V*I is not isolated App or whole-device power",
+      "RSS/PSS are shared physical process memory, not dedicated VRAM; sampled peaks may miss transients"
+    ],
+    "modelSha256": {
+      "vaeGraph": "ee5b6ed843b7b6ec2305ef14dbfab4cd24165ac75c7d9d357f61ed350556f083",
+      "smallVaeWeight": "c07840873f10ecd6949b4a2e8f3ea4a481c37aabf5e33417a59933989862925f",
+      "publicVaeWeight": "c07840873f10ecd6949b4a2e8f3ea4a481c37aabf5e33417a59933989862925f",
+      "weightsIdentical": true
+    },
+    "capturedTensorSha256": {
+      "latent-1.f32": "2dbc7602a446da42bd1e28b4b674ba6c8f306f35e509edc20e1f7d025c00bf84",
+      "latent-10.f32": "0efad3e7d57450f21df7b65b83793144230cec8f1fb23eab14a5bcbeecd7e91e",
+      "latent-11.f32": "127e50302fdaeea43681a672a9e6b52b689adf1d4d2197523df1043a1f3f4e77",
+      "latent-12.f32": "0f8023761e81753ff55eb30ee8e02d4c0eacd2a1e8b82ac884d22bdee72c4009",
+      "latent-2.f32": "7554e947f4eeda96b26f7d7999064293530c6d5b6a83b63559cb259cd589b827",
+      "latent-3.f32": "2c43bc878a29bea1e9e38b3564bd4af8f0d0188e7e5eb779ea1f6ffbcd6b63d4",
+      "latent-4.f32": "e799b2fed7d212f5f32a2454c5c91c7c3146b4e4b7df8f039520f1c65dae6db5",
+      "latent-5.f32": "567e6df92f32119188c9c1839c47d159b19f1d6753d914dc47b479c9ad010ee1",
+      "latent-6.f32": "03bbfb4337bf40815f1a2c12046480f771bde75671c61f8d560a06a551b6f707",
+      "latent-7.f32": "68d3594f226a520c77246fb78a070b0ff0216549d1a6de418e37d4e35daea220",
+      "latent-8.f32": "f8b8de1f28d9a3c78a63b61b8debd1e7587f72d1efce201c34423e26239bdc50",
+      "latent-9.f32": "df405208a67e9f6e8774df645a757aac2fd8cfe06c4d252e8e6a6a324df43e03"
+    }
   }
 }

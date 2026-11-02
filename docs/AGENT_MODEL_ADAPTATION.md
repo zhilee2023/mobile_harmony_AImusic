@@ -217,3 +217,13 @@ Mixed权重：
 - 大小模型量化位宽是权重存储recipe，不等于W4A4KV4或全图INT4计算；精度、线程、KV策略、CFG、前缀、实际窗口数和前台检查必须同时写入报告。
 - 精确源模型计数更新：公开导出Mixed LM3106035712（不含单列条件表）、学生598178304、Mixed DiT751534224、小DiT195416128、VAE解码器84414082。早先“约700M DiT”是量级描述，表格应使用当前源计数及实际ROM文件大小。
 - 90秒公开LM已生成齐2250码，随后退出；用同一码在新进程恢复90秒WAV。6.225是已测LM/Codec计算段合计，排除了失败清理和恢复间隔，不得标成单次端到端。学生单次端到端RTF2.163。析构前检查点与`public-lm-destroy-start`标记已补入源代码，仅构建验证，没有声称修复退出。
+
+## 12. v0.1.12小模型同输入重测
+
+详见`docs/SMALL_90S_RETEST.md`与统一报告`small90_matched_vae_retest_2026_11_02`。小模型90秒完整数值链路重测为140.982/144.708秒，RTF1.566/1.608；旧2.163是历史单次慢测，未在这两轮复现。配对同一HAP、12份完全相同latent，整链VAE59.763秒，独立进程52.406秒，全部原始PCM位模式指纹一致、首窗直接L2=0。两轮完整链路与独立重放均通过前台/未息屏检查。
+
+- 量化未改：LM W4主体/W8头/BF16输入表，CPU Low4；小DiT W8 High请求6，两步CFG1.5；同一VAE W8 Low请求6＋NEON，KleidiAI关闭。不是W4A4KV4。小音乐头/DiT未训练，不声称歌曲质量。
+- 新增开发入口`chain-comparison-small-vae-90`，常规UI不增加旧实验按钮；整链小模型90秒会捕获12份latent及首窗参考PCM，在`small/vae-replay/latest.json`发布完整manifest。`tools/run_comparison_app.ps1 -RecordSensors`现在从App启动即并行采集，不再漏掉LM前段。
+- 独立VAE新进程必须先创建CPU后端，再在延迟resize前挂正弦选择器。`Session(..., false, true)`最后两项为snakeFusion=false、vectorSin=true；直接在全新进程的Session创建之前设置Scope会失败。本次失败未执行前向，已修正并重测同一HAP配对。
+- MNN3.6.1本地`source/backend/cpu/ThreadPool.cpp`按CPU mask复用线程池，不会自动扩大旧池；`CPUBackend.cpp::_resetThreadPool`会将运行时线程数截到返回上限。先创建4线程LLM可能限制后续同mask的6线程Codec。短快照见3个高CPU辅助线程对独立VAE5个，允许CPU为2–13，不等于绑定最快核。下一轮可先初始化6线程运行时再保持LM4/DiT6/VAE6，但本次未改线程池或验证其整链收益。
+- 捕获数据留本机`reports/local/small90-retest`及手机，不上传原始音频/权重。VAE权重SHA256已确认大小两路完全相同，不能因0.6B之名推断其VAE更小。冷进程VAE无DiT共驻，热态/缓存/调度未锁定，不能将12.3%全部归因于LM先运行。

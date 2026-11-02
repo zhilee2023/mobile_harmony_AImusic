@@ -50,14 +50,22 @@ class Session{
   bool snakeValidated=false;double validationSeconds=0,validationL2=0;
 #endif
 public:
-  Session(const std::string& model,bool low,int threads=6,bool snakeFusion=false){
+  Session(const std::string& model,bool low,int threads=6,bool snakeFusion=false,bool vectorSin=false){
     net.reset(MNN::Interpreter::createFromFile(model.c_str()));require(bool(net),"Cannot read MNN model");
     if(snakeFusion){require(low&&threads==6,"Snake runtime requires VAE CPU Low / 6 threads");net->setSessionMode(MNN::Interpreter::Session_Debug);}
     auto weight=model+".weight";net->setExternalFile(weight.c_str());net->setSessionMode(MNN::Interpreter::Session_Resize_Defer);
     net->setSessionHint(MNN::Interpreter::CPU_ENABLE_KLEIDIAI,0);
     MNN::BackendConfig backend;backend.precision=low?MNN::BackendConfig::Precision_Low:MNN::BackendConfig::Precision_High;backend.memory=MNN::BackendConfig::Memory_Low;backend.power=MNN::BackendConfig::Power_High;
     MNN::ScheduleConfig cfg;cfg.type=MNN_FORWARD_CPU;cfg.numThread=threads;cfg.backendConfig=&backend;
-    session=net->createSession(cfg);require(session,"Cannot create MNN session");net->resizeSession(session);net->releaseModel();
+    session=net->createSession(cfg);require(session,"Cannot create MNN session");
+#ifdef LEVO_VAE_VECTOR_SIN
+    // A VAE-only fresh process has no previous runtime to initialize ARM82.
+    // Hook after backend creation and before the deferred graph resize.
+    LevoVaeSin::Scope sinScope(vectorSin);
+#else
+    require(!vectorSin,"Vector sine not compiled");
+#endif
+    net->resizeSession(session);net->releaseModel();
 #ifdef LEVO_VAE_VECTOR_SIN
     if(snakeFusion)snake=std::make_unique<LevoVaeSnake::Runtime>(model,model.substr(0,model.find_last_of("/\\")+1)+"snake-coefficients.json");
 #else

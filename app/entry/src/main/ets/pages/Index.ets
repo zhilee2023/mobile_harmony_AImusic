@@ -6,16 +6,16 @@ import { window } from '@kit.ArkUI';
 interface VaeResult { success: boolean; error?: string; decoderOnlyComputeRtf?: number; sampledPeakRssKiB?: number; }
 interface StageRtf { llm: number; dit: number; vae: number; other: number; total: number; }
 interface ComparisonMemory { peakRssKiB: number; sampledPeakPssKiB?: number; sampledPeakGraphicsKiB?: number; }
-interface ChainResult { success: boolean; error?: string; policy: string; totalSeconds?: number; sampledPeakRssKiB?: number; pipelineRtfThroughPcm?: number; validPcmSeconds?: number; strictNumericalParityPassed?: boolean; stageRtf?: StageRtf; memory?: ComparisonMemory; codecOnly?: boolean; codecOnlyRtf?: number; }
+interface ChainResult { success: boolean; error?: string; policy: string; totalSeconds?: number; sampledPeakRssKiB?: number; pipelineRtfThroughPcm?: number; validPcmSeconds?: number; strictNumericalParityPassed?: boolean; stageRtf?: StageRtf; memory?: ComparisonMemory; codecOnly?: boolean; codecOnlyRtf?: number; vaeOnly?: boolean; vaeOnlyComputeRtf?: number; allRawPcmFingerprintsMatch?: boolean; }
 interface AppMemoryInfo { totalKiB: number; availableKiB: number; appRssLimitKiB: number; appVssLimitKiB: number; processPssKiB: number; processRssKiB: number; }
-interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; chainSerial?: ChainResult; chainKeepLlm?: ChainResult; chainAll?: ChainResult; chainAllW4?: ChainResult; chunks5?: ChainResult; chunks5Tuned?: ChainResult; chunks5W8Vsin?: ChainResult; chunks5W8Snake?: ChainResult; llmShort?: ChainResult; llmLong?: ChainResult; comparisonLarge2?: ChainResult; comparisonSmall2?: ChainResult; comparisonLarge120?: ChainResult; comparisonSmall120?: ChainResult; comparisonLargeCodec120?: ChainResult; comparisonLargeCodec90?: ChainResult; comparisonLarge90?: ChainResult; comparisonSmall90?: ChainResult; memory?: AppMemoryInfo; memoryBeforeRun?: AppMemoryInfo; lastRunId?: string; }
+interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; chainSerial?: ChainResult; chainKeepLlm?: ChainResult; chainAll?: ChainResult; chainAllW4?: ChainResult; chunks5?: ChainResult; chunks5Tuned?: ChainResult; chunks5W8Vsin?: ChainResult; chunks5W8Snake?: ChainResult; llmShort?: ChainResult; llmLong?: ChainResult; comparisonLarge2?: ChainResult; comparisonSmall2?: ChainResult; comparisonLarge120?: ChainResult; comparisonSmall120?: ChainResult; comparisonLargeCodec120?: ChainResult; comparisonLargeCodec90?: ChainResult; comparisonLarge90?: ChainResult; comparisonSmall90?: ChainResult; comparisonSmallVae90?: ChainResult; memory?: AppMemoryInfo; memoryBeforeRun?: AppMemoryInfo; lastRunId?: string; }
 
 @Entry
 @Component
 struct Index {
   @State lyrics: string = '[Verse]\n晚风轻轻吹过窗台\n星光落在你的眼海';
   @State style: number = 0;
-  @State status: string = 'v0.1.11 · 30/90/120秒链路对照与退出原因记录；0.6B音乐模块尚未训练';
+  @State status: string = 'v0.1.12 · 30/90/120秒链路对照与退出原因记录；0.6B音乐模块尚未训练';
   @State memory: string = '';
   @State assets: string = '尚未检查测试文件';
   @State busy: boolean = false;
@@ -39,7 +39,7 @@ struct Index {
       try { fs.writeSync(memoryFile.fd, native.memoryProbe()); } finally { fs.closeSync(memoryFile); }
     } catch (_) {}
     const precision = AppStorage.get<string>('levoDiagnosticPrecision');
-    if (precision === 'chain-comparison-large-2' || precision === 'chain-comparison-small-2' || precision === 'chain-comparison-large-2-120' || precision === 'chain-comparison-small-2-120' || precision === 'chain-comparison-large-2-120-low' || precision === 'chain-comparison-large-codec-120' || precision === 'chain-comparison-large-2-90' || precision === 'chain-comparison-small-2-90' || precision === 'chain-comparison-large-codec-90') {
+    if (precision === 'chain-comparison-large-2' || precision === 'chain-comparison-small-2' || precision === 'chain-comparison-large-2-120' || precision === 'chain-comparison-small-2-120' || precision === 'chain-comparison-large-2-120-low' || precision === 'chain-comparison-large-codec-120' || precision === 'chain-comparison-large-2-90' || precision === 'chain-comparison-small-2-90' || precision === 'chain-comparison-small-vae-90' || precision === 'chain-comparison-large-codec-90') {
       this.diagnosticRunId = AppStorage.get<string>('levoDiagnosticRunId') ?? '';
       AppStorage.delete('levoDiagnosticPrecision'); AppStorage.delete('levoDiagnosticRunId');
       this.runComparison(precision.substring(6)); return;
@@ -150,8 +150,9 @@ struct Index {
       const path = `${this.context().filesDir}/levo-test-report.json`;
       let archive: TestArchive = { version: '0.1.8', scope: 'Matched serial chain comparison; small model is untrained and diagnostic only' };
       try { archive = JSON.parse(fs.readTextSync(path)) as TestArchive; } catch (_) {}
-      archive.version = '0.1.11'; archive.lastRunId = this.diagnosticRunId;
-      if (variant === 'comparison-large-codec-90') archive.comparisonLargeCodec90 = result;
+      archive.version = '0.1.12'; archive.lastRunId = this.diagnosticRunId;
+      if (variant === 'comparison-small-vae-90') archive.comparisonSmallVae90 = result;
+      else if (variant === 'comparison-large-codec-90') archive.comparisonLargeCodec90 = result;
       else if (variant === 'comparison-large-2-90') archive.comparisonLarge90 = result;
       else if (variant === 'comparison-small-2-90') archive.comparisonSmall90 = result;
       else if (variant === 'comparison-large-codec-120') archive.comparisonLargeCodec120 = result;
@@ -160,7 +161,10 @@ struct Index {
       else if (variant === 'comparison-small-2') archive.comparisonSmall2 = result; else archive.comparisonLarge2 = result;
       const file = fs.openSync(path, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE | fs.OpenMode.TRUNC);
       try { fs.writeSync(file.fd, JSON.stringify(archive)); } finally { fs.closeSync(file); }
-      if (result.success && result.codecOnly) {
+      if (result.success && result.vaeOnly) {
+        this.comparisonSummary = `同输入 VAE 重放完成；VAE 计算RTF ${result.vaeOnlyComputeRtf?.toFixed(3)}；输出指纹一致：${result.allRawPcmFingerprintsMatch ? '是' : '否'}`;
+        this.status = '独立VAE对照完成；不是整链RTF';
+      } else if (result.success && result.codecOnly) {
         this.comparisonSummary = `独立DiT/VAE负载完成；Codec RTF ${result.codecOnlyRtf?.toFixed(3)}；不是完整生成RTF。`;
         this.status = '模块测试完成；是否使用重复夹具及输出路径见统一报告';
       } else if (result.success && result.stageRtf) {

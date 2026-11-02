@@ -6,6 +6,18 @@
 #undef LEVO_CHAIN_RUNTIME_ONLY
 inline std::atomic<bool> levoPublicCancelled{false};
 
+// Diagnostic bit-pattern fingerprint, not a cryptographic checksum. Keep the
+// same helper in capture/replay so every raw, pre-crossfade PCM can be compared.
+static std::string levoTensorFingerprint(const std::vector<float>& values){
+    uint64_t hash=14695981039346656037ULL;
+    for(float value:values){uint32_t bits;std::memcpy(&bits,&value,sizeof(bits));hash^=bits;hash*=1099511628211ULL;}
+    return std::to_string(hash);
+}
+static void levoWriteTensor(const std::string& path,const std::vector<float>& values){
+    std::ofstream out(path,std::ios::binary);out.write(reinterpret_cast<const char*>(values.data()),values.size()*sizeof(float));
+    require(out.good(),"Cannot capture VAE tensor");
+}
+
 static void little(std::ofstream& out,uint32_t value,int bytes){
     for(int i=0;i<bytes;++i)out.put(char((value>>(8*i))&255));
 }
@@ -23,6 +35,10 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
         report["lmDevice"]=source.value("lmDevice",std::string("Windows CPU"));
         report["wholePhoneChain"]=source.value("lmDevice",std::string())=="Harmony phone CPU";
         auto codes=source["codes"].get<std::vector<int>>();require(!codes.empty()&&codes.size()<=3000,"Bounded audio: at most120 seconds");
+        const bool capture=source.value("captureVaeLatents",false);
+        const std::string captureDir=capture?root+"/vae-replay/"+std::to_string(std::chrono::system_clock::now().time_since_epoch().count()):"";
+        Json capturedWindows=Json::array();double captureSeconds=0;
+        if(capture)std::filesystem::create_directories(captureDir);
         for(int id:codes)require(id>=0&&id<16384,"Invalid Mixed ID");
         report["ditSteps"]=steps;report["lmGuidance"]=source["lmGuidance"];report["codecGuidance"]=1.5;
         report["ditWeightBits"]=8;report["vaeWeightBits"]=8;report["lmWeightBits"]=4;
@@ -72,8 +88,14 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
             }
             if(index)std::copy_n(context.data(),contextFrames*64,x.data());last=x;
             std::vector<float> latent(frames*64);for(int c=0;c<64;++c)for(int t=0;t<frames;++t)latent[c*frames+t]=x[t*64+c]*stddev[c]+mean[c];
+            Json capturedWindow;
+            if(capture){auto captureTick=Clock::now();const std::string path=captureDir+"/latent-"+std::to_string(index+1)+".f32";
+                levoWriteTensor(path,latent);capturedWindow={{"chunk",index+1},{"latentPath",path},{"latentFingerprint",levoTensorFingerprint(latent)}};captureSeconds+=seconds(captureTick);}
             trace.mark("chunk-"+std::to_string(index+1)+"-vae-start");
             tick=Clock::now();auto pcm=vae->run({{"latent",std::move(latent)}},"pcm",2*pcmFrames);double vaeTime=seconds(tick);
+            if(capture){auto captureTick=Clock::now();capturedWindow["rawPcmFingerprint"]=levoTensorFingerprint(pcm);capturedWindow["vaeSeconds"]=vaeTime;
+                if(!index){const std::string path=captureDir+"/reference-pcm-1.f32";levoWriteTensor(path,pcm);capturedWindow["referencePcmPath"]=path;}
+                capturedWindows.push_back(capturedWindow);captureSeconds+=seconds(captureTick);}
             if(index)for(int c=0;c<2;++c)for(int i=0;i<pcmOverlap;++i){float r=float(i)/(pcmOverlap-1);pcm[c*pcmFrames+i]=tail[c*pcmOverlap+i]*(1-r)+pcm[c*pcmFrames+i]*r;}
             int count=valid*1920-(final?0:pcmOverlap);
             for(int t=0;t<count;++t)for(int c=0;c<2;++c){float value=pcm[c*pcmFrames+t];energy+=double(value)*value;maxPcm=std::max(maxPcm,std::abs(double(value)));clipped+=std::abs(value)>1;
@@ -89,6 +111,11 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
         report["pcmPeak"]=maxPcm;report["clippedSampleFraction"]=double(clipped)/(2*emitted);
         report["codecSeconds"]=seconds(trace.start);report["codecOnlyRtf"]=seconds(trace.start)/(double(totalSamples)/48000);
         report["vaeNeonSinCalls"]=LevoVaeSin::calls.load();report["audioFileGenerated"]=!diagnostic&&!fixtureOnly;report["numericalPcmGenerated"]=true;report["success"]=true;
+        if(capture){Json manifest={{"version",1},{"complete",true},{"durationSeconds",double(totalSamples)/48000},{"shape",{1,64,256}},
+                {"precision","Low"},{"threads",6},{"weightBits",8},{"neonSin",true},{"kleidiEnabled",false},{"windows",capturedWindows},
+                {"captureSeconds",captureSeconds},{"source","Exact small-chain VAE inputs; raw PCM fingerprints are before overlap crossfade"}};
+            const std::string path=root+"/vae-replay/latest.json";std::ofstream out(path);out<<manifest.dump(2);out.close();require(out.good(),"Cannot write replay manifest");
+            report["vaeReplayManifest"]=path;report["vaeCaptureSeconds"]=captureSeconds;}
     }catch(const std::exception& error){report["error"]=error.what();}
     trace.sample();report["sampledPeakRssKiB"]=trace.maxRss.load();report["minimumSystemAvailableKiB"]=trace.minAvailable.load();
     report["totalSeconds"]=seconds(trace.start);report["stages"]=trace.stages;

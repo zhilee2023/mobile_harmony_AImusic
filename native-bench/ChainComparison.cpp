@@ -90,7 +90,7 @@ static Json comparisonStudent(const std::string& root,int frames){
             {"finalKvPositions",model->getCurrentHistory()},{"eosSuppressedForFixedLengthDiagnostic",true},{"precision","low"},{"threads",4}};
         model.reset();report["lmStageSeconds"]=seconds(trace.start);trace.mark("student-lm-destroyed-before-codec");
         Json source={{"source","untrained 0.6B diagnostic student"},{"diagnosticOnly",true},{"lmDevice","Harmony phone CPU"},{"codes",codes},{"lmGuidance",1},
-            {"progressPath",trace.sink}};writePublicJson(root+"/comparison-codes.json",source);
+            {"progressPath",trace.sink},{"captureVaeLatents",frames==2250}};writePublicJson(root+"/comparison-codes.json",source);
         std::string codePath=root+"/comparison-codes.json",steps="2",output="/dev/null",name="small";char* args[]={name.data(),const_cast<char*>(root.c_str()),codePath.data(),steps.data(),output.data()};Json codec;
         const int code=LevoPublicCodecMain(5,args,&codec);report["codec"]=codec;require(code==0,codec.value("error",std::string("Small codec failed")));
         report["validPcmSeconds"]=frames/25.;report["durationSeconds"]=frames/25.;report["pipelineSecondsThroughPcm"]=seconds(trace.start);report["pipelineRtfThroughPcm"]=seconds(trace.start)/(frames/25.);
@@ -129,5 +129,31 @@ std::string LevoRunComparableChain(const std::string& root,const std::string& va
         {"activationQuantization","No requested static A4"},{"kvQuantization","Default runtime cache, no requested KV4"},{"samplingSeed",2307},{"temperature",.9},{"topK",50},{"repetitionPenalty",1.1}};
     result["requestedDurationSeconds"]=frames/25.;result["requestedMusicCodes"]=frames;result["fixedLengthBenchmark"]=longer;
     result["comparisonScope"]="Same App, requested"+std::to_string(frames/25)+"seconds, 2-step CFG DiT and same pretrained VAE; model sizes, condition contracts and training status differ";
+    return result.dump();
+}
+
+std::string LevoRunSmallVaeReplay(const std::string& directory){
+    const std::string root=directory+"/small";ComparisonMemory memory;Trace trace;trace.sink=root+"/progress.jsonl";std::ofstream(trace.sink).close();
+    Json result={{"success",false},{"vaeOnly",true},{"llmExecuted",false},{"ditExecuted",false},{"wholeChainCompleted",false}};
+    try{
+        auto manifest=readJson(root+"/vae-replay/latest.json");const double duration=manifest["durationSeconds"];
+        require(manifest.value("complete",false)&&duration==90&&manifest["windows"].size()==12,"Need complete captured 90-second/12-window fixture");
+        result["fixtureManifest"]=manifest;trace.gate(2600);trace.mark("replay-vae-loading");auto tick=Clock::now();std::unique_ptr<Session> vae;
+        vae=std::make_unique<Session>(root+"/vae/vae-256-w8.mnn",true,6,false,true);
+        result["setupSeconds"]=seconds(tick);trace.mark("replay-vae-loaded");Json rows=Json::array();double totalVae=0,baseline=0,maxL2=0;bool allEqual=true;
+        for(const auto& window:manifest["windows"]){trace.gate(800);int chunk=window["chunk"];auto latent=read(window["latentPath"],64*256);
+            require(levoTensorFingerprint(latent)==window["latentFingerprint"],"Captured latent changed");trace.mark("replay-chunk-"+std::to_string(chunk)+"-vae-start");
+            tick=Clock::now();auto pcm=vae->run({{"latent",std::move(latent)}},"pcm",2*491520);double elapsed=seconds(tick);totalVae+=elapsed;baseline+=window["vaeSeconds"].get<double>();
+            const std::string fingerprint=levoTensorFingerprint(pcm);bool same=fingerprint==window["rawPcmFingerprint"];allEqual=allEqual&&same;
+            Json row={{"chunk",chunk},{"vaeSeconds",elapsed},{"chainVaeSeconds",window["vaeSeconds"]},{"rawPcmFingerprint",fingerprint},{"bitwiseFingerprintMatches",same},{"pcmPeak",peak(pcm)}};
+            if(window.contains("referencePcmPath")){double l2=relative(pcm,read(window["referencePcmPath"],2*491520));row["relativeL2"]=l2;maxL2=std::max(maxL2,l2);}
+            rows.push_back(row);trace.mark("replay-chunk-"+std::to_string(chunk)+"-vae-complete");
+        }
+        result["windows"]=rows;result["vaeSeconds"]=totalVae;result["chainVaeSeconds"]=baseline;result["vaeOnlyComputeRtf"]=totalVae/duration;
+        result["durationSeconds"]=duration;result["allRawPcmFingerprintsMatch"]=allEqual;result["firstWindowRelativeL2"]=maxL2;
+        result["success"]=true;result["scope"]="Fresh process; same 12 captured latent tensors and VAE recipe. No LLM or DiT loaded; not whole-chain RTF. Fingerprints are diagnostic, not cryptographic.";
+    }catch(const std::exception& e){result["error"]=e.what();}
+    result["totalSeconds"]=seconds(trace.start);result["memory"]=memory.finish();result["sampledPeakRssKiB"]=trace.maxRss.load();result["minimumSystemAvailableKiB"]=trace.minAvailable.load();
+    result["quantization"]={{"vaeWeightBits",8},{"vaePrecision","Low"},{"vaeThreads",6},{"neonSin",true},{"kleidiEnabled",false}};
     return result.dump();
 }
