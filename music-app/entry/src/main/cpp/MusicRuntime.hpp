@@ -18,7 +18,7 @@ static Json musicGenerate(const std::string& root,const std::string& lyrics,cons
     PublicPhoneTrace trace;trace.sink=root+"/progress.jsonl";Json report={{"success",false},{"wholePhoneChain",true},{"ditSteps",ditSteps},{"lmGuidance",1},{"ditGuidance",1.5}};
     std::ofstream(trace.sink).close();levoPublicCancelled=false;
     try{
-        require(musicCheckAssets(root)["ready"],"请先导入完整的模型文件");require(frames==375||frames==750,"Unsupported audio duration");require(ditSteps==2||ditSteps==4,"Unsupported DiT steps");
+        require(musicCheckAssets(root)["ready"],"请先导入完整的模型文件");require(frames==375||frames==750||frames==1500||frames==2250||frames==3000,"Unsupported audio duration");require(ditSteps==2||ditSteps==4,"Unsupported DiT steps");
         trace.gate(2600);trace.mark("preparing-current-lyrics-style");
         report["condition"]=prepareMusicPrefix(root,lyrics,style);
         Json config={{"base_dir",root+"/lm/"},{"llm_model","llm.mnn"},{"llm_weight","llm.mnn.weight"},{"llm_config","llm_config.json"},

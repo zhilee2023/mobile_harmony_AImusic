@@ -3,3 +3,5 @@ export const importAsset: (directory: string, name: string, fd: number) => Promi
 export const inspect: (directory: string) => string;
 export const progress: (directory: string) => string;
 export const cancel: () => string;
+export const uiBenchmark: (directory: string) => Promise<string>;
+export const ackUiPhase: (phase: number) => string;

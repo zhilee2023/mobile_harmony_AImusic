@@ -22,7 +22,7 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
         trace.sink=source.value("progressPath",std::string());
         report["lmDevice"]=source.value("lmDevice",std::string("Windows CPU"));
         report["wholePhoneChain"]=source.value("lmDevice",std::string())=="Harmony phone CPU";
-        auto codes=source["codes"].get<std::vector<int>>();require(!codes.empty()&&codes.size()<=1500,"Bounded audio");
+        auto codes=source["codes"].get<std::vector<int>>();require(!codes.empty()&&codes.size()<=3000,"Bounded audio: at most120 seconds");
         for(int id:codes)require(id>=0&&id<16384,"Invalid Mixed ID");
         report["ditSteps"]=steps;report["lmGuidance"]=source["lmGuidance"];report["codecGuidance"]=1.5;
         report["ditWeightBits"]=8;report["vaeWeightBits"]=8;report["lmWeightBits"]=4;

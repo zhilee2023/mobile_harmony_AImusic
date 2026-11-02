@@ -3,10 +3,11 @@ import { common } from '@kit.AbilityKit';
 import { fileIo as fs, picker } from '@kit.CoreFileKit';
 import { media } from '@kit.MediaKit';
 import { window } from '@kit.ArkUI';
+import { lyricSamples } from './LyricsLibrary';
 
 interface AssetState { ready: boolean; count: number; total: number; bytes: number; }
 interface MusicResult { success: boolean; error?: string; cancelled?: boolean; wave?: string; durationSeconds?: number; totalSeconds?: number; wholePhoneRtf?: number; playbackState?: string; playbackValidated?: boolean; }
-interface ProgressState { busy: boolean; stage?: string; }
+interface ProgressState { busy: boolean; stage?: string; uiBenchmarkPhase?: number; uiBenchmarkDecoded?: number; }
 
 @Entry
 @Component
@@ -28,6 +29,8 @@ struct Index {
   @State stageIndex: number = 0;
   @State progressValue: number = 0;
   @State progressDetail: string = '';
+  @State animationEnabled: boolean = true;
+  @State lyricTitle: string = '';
   private stageLabels: string[] = ['理解歌词与风格', '创作旋律与歌声', '还原音乐细节', '合成与保存音频'];
   private player: media.AVPlayer | undefined = undefined;
   private audioFile: fs.File | undefined = undefined;
@@ -38,6 +41,12 @@ struct Index {
   private ctx(): common.UIAbilityContext { return getContext(this) as common.UIAbilityContext; }
   private root(): string { return `${this.ctx().filesDir}/music-models`; }
   private stamp(value: number): string { const sec = Math.floor(value / 1000); return `${Math.floor(sec / 60)}:${(sec % 60).toString().padStart(2, '0')}`; }
+  private randomLyrics(): void {
+    if (this.busy || this.importing) return;
+    const choices = lyricSamples.filter((sample) => sample.lyrics !== this.lyrics);
+    const next = choices[Math.floor(Math.random() * choices.length)];
+    this.lyrics = next.lyrics; this.lyricTitle = next.title;
+  }
   private refresh(): void {
     try {
       const state = JSON.parse(native.inspect(this.root())) as AssetState;
@@ -50,6 +59,9 @@ struct Index {
     try { const last = JSON.parse(fs.readTextSync(`${this.root()}/last-music-result.json`)) as MusicResult;
       if (last.success && last.wave && fs.accessSync(last.wave)) { this.audioPath = last.wave; this.audioDuration = (last.durationSeconds ?? 30) * 1000; }
     } catch (_) {}
+    if (AppStorage.get<boolean>('musicAppUiBenchmark') === true && this.ready) {
+      AppStorage.delete('musicAppUiBenchmark'); setTimeout(() => { this.testUiImpact(); }, 500);
+    }
     if (AppStorage.get<boolean>('musicAppFirstSongCheck') === true && this.ready) {
       AppStorage.delete('musicAppFirstSongCheck'); this.firstSongCheck = true; this.seconds = 15;
       this.lyrics = '[intro-short]\n[verse]\n清晨的风吹过山岗\n我把梦想装进行囊\n[chorus]\n一路向着阳光歌唱\n你是我心中的方向\n[outro-short]';
@@ -66,6 +78,33 @@ struct Index {
   aboutToDisappear(): void { this.releasePlayer(); }
   private async keepAwake(enable: boolean): Promise<void> {
     try { const win = await window.getLastWindow(this.ctx()); await win.setWindowKeepScreenOn(enable); } catch (_) {}
+  }
+  private async testUiImpact(): Promise<void> {
+    if (this.busy || this.importing || !this.ready) return;
+    this.busy = true; this.stageIndex = 1; this.elapsed = 0; this.progressValue = 5;
+    this.status = '正在验证生成速度'; this.progressDetail = '准备与预热'; this.started = Date.now();
+    await this.releasePlayer(); await this.keepAwake(true); let currentPhase = -1;
+    this.timer = setInterval(() => {
+      try {
+        const progress = JSON.parse(native.progress(this.root())) as ProgressState;
+        const phase = progress.uiBenchmarkPhase ?? -1;
+        if (phase > 0 && phase !== currentPhase) {
+          currentPhase = phase; this.animationEnabled = phase !== 2;
+          this.progressDetail = `速度对照 ${phase}/3`; this.progressValue = 10 + (phase - 1) * 30;
+          setTimeout(() => { native.ackUiPhase(phase); }, 250);
+        }
+        if (this.animationEnabled) {
+          this.elapsed = Math.floor((Date.now() - this.started) / 1000);
+          if (phase > 0) this.progressValue = 10 + (phase - 1) * 30 + 25 * (progress.uiBenchmarkDecoded ?? 0) / 128;
+        }
+      } catch (_) {}
+    }, 800);
+    try {
+      const result = JSON.parse(await native.uiBenchmark(this.root())) as MusicResult;
+      this.status = result.success ? '速度对照已完成' : `对照未完成：${result.error ?? '请重试'}`;
+    } catch (error) { this.status = `对照未完成：${String(error)}`; }
+    if (this.timer >= 0) clearInterval(this.timer); this.timer = -1;
+    this.animationEnabled = true; this.busy = false; await this.keepAwake(false);
   }
   private async importModels(): Promise<void> {
     this.importing = true;
@@ -177,12 +216,17 @@ struct Index {
           Blank()
         }.width('100%')
         Column({ space: 12 }) {
-          Text('歌词').fontSize(17).fontWeight(FontWeight.Medium).width('100%')
+          Row() {
+            Text(this.lyricTitle.length > 0 ? `歌词 · ${this.lyricTitle}` : '歌词').fontSize(17).fontWeight(FontWeight.Medium)
+            Blank()
+            Button('随机换歌词').fontSize(13).height(32).backgroundColor('#E5F2ED').fontColor('#237C69')
+              .enabled(!this.busy && !this.importing).onClick(() => { this.randomLyrics(); })
+          }.width('100%')
           if (this.busy) {
             Text(this.lyrics.replace(/\n/g, ' ')).fontSize(15).fontColor('#73847A').maxLines(2).textOverflow({ overflow: TextOverflow.Ellipsis }).width('100%')
           } else {
             TextArea({ text: this.lyrics, placeholder: '写下想唱的歌词…' }).height(210).backgroundColor('#F8F9FB').fontSize(15).borderRadius(14)
-              .onChange((value: string) => { this.lyrics = value; })
+              .onChange((value: string) => { this.lyrics = value; this.lyricTitle = ''; })
           }
           Text('风格').fontSize(17).fontWeight(FontWeight.Medium).width('100%').margin({ top: 2 })
           if (this.busy) {
@@ -193,9 +237,13 @@ struct Index {
           }
           Row({ space: 8 }) {
             Text('时长').fontSize(14).fontColor('#73808E'); Blank()
-            Button('15 秒').fontSize(13).height(33).backgroundColor(this.seconds === 15 ? '#E0F0EA' : '#F1F3F5').fontColor('#335E53').enabled(!this.busy).onClick(() => { this.seconds = 15; })
-            Button('30 秒').fontSize(13).height(33).backgroundColor(this.seconds === 30 ? '#E0F0EA' : '#F1F3F5').fontColor('#335E53').enabled(!this.busy).onClick(() => { this.seconds = 30; })
+            Select([{ value: '15 秒' }, { value: '30 秒' }, { value: '60 秒' }, { value: '90 秒' }, { value: '120 秒' }])
+              .selected([15, 30, 60, 90, 120].indexOf(this.seconds)).value(`${this.seconds} 秒`).font({ size: 15 })
+              .enabled(!this.busy && !this.importing).onSelect((index: number) => { this.seconds = [15, 30, 60, 90, 120][index]; })
           }.width('100%')
+          if (this.seconds > 30) {
+            Text('长音乐为实验选项，请保持应用前台；音乐可能提前结束。').fontSize(12).fontColor('#7D8B85').width('100%')
+          }
         }.padding(18).backgroundColor('#FFFFFF').borderRadius(22).width('100%')
         Button(this.busy ? '创作中…' : '生成音乐').width('100%').height(54).fontSize(17).fontWeight(FontWeight.Medium)
           .backgroundColor('#237C69').enabled(this.ready && !this.busy && !this.importing && this.lyrics.trim().length > 0 && this.style.trim().length > 0)
@@ -205,14 +253,14 @@ struct Index {
             Row() { Text(this.status).fontSize(19).fontWeight(FontWeight.Medium).fontColor('#245B4D'); Blank()
               Text(`${this.elapsed} 秒`).fontSize(15).fontColor('#7D8B85') }.width('100%')
             Progress({ value: this.progressValue, total: 100, type: ProgressType.Linear }).color('#237C69').backgroundColor('#E3EDE8').width('100%')
-              .style({ strokeWidth: 9, enableScanEffect: true, enableSmoothEffect: true })
+              .style({ strokeWidth: 9, enableScanEffect: this.animationEnabled, enableSmoothEffect: this.animationEnabled })
             ForEach(this.stageLabels, (label: string, index: number) => {
               Row({ space: 10 }) {
                 Text(this.stageIndex > index ? '✓' : `${index + 1}`).fontSize(15).fontWeight(FontWeight.Medium)
                   .fontColor(this.stageIndex >= index ? '#237C69' : '#ABB5AE').width(24)
                 Text(label).fontSize(17).fontWeight(this.stageIndex === index ? FontWeight.Medium : FontWeight.Normal)
                   .fontColor(this.stageIndex === index ? '#254F42' : '#8A968F'); Blank()
-                if (this.stageIndex === index) { LoadingProgress().width(18).height(18).color('#237C69') }
+                if (this.stageIndex === index && this.animationEnabled) { LoadingProgress().width(18).height(18).color('#237C69') }
               }.width('100%')
             })
             Row() { Text(this.progressDetail).fontSize(14).fontColor('#7D8B85'); Blank()
