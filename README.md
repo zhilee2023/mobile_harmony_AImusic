@@ -1,6 +1,6 @@
 # mobile_harmony_AImusic · levo-harmony
 
-> [公开LeVo 2架构与单条混合歌曲说明](docs/PUBLIC_LEVO_ARCHITECTURE.md)：约4B双LM→约700M扩散→约150M VAE；默认输出一条歌曲，内部仍有双轨token。已核对公开权重元数据及不同尺寸/codec合同；4B真实权重尚未加载或生成音乐，W4A4KV4仍待验证。
+> 2026-11-02 公开主 Mixed LM 已完成[真实音乐生成验证](experiments/public_mixed_validation/README.md)：主 LM W4 / 头 W8 → DiT W8 四步 / CFG1.5 → VAE W8＋NEON。手机 LM 关闭 CFG，单分支；完整 30 秒 WAV 用时 247.545 秒，RTF8.252，峰值 RSS3956.8MiB，尚未听感验收或接入 App。公开约4B双LM架构见[架构说明](docs/PUBLIC_LEVO_ARCHITECTURE.md)；本次省略 track LM，是 Mixed-only 路线。0.6B 方案继续保留，见[小模型优化保留清单](docs/SMALL_MODEL_OPTIMIZATION_BASELINE.md)，W4A4KV4 仍待验证。
 
 > 2026-10-31 新增[原始 Qwen 语言模型低比特实测](docs/QWEN_LOW_BIT_LANGUAGE_TEST.md)：28层完整词表，W4＋KV16/6线程约25–28token/s，512-token prefill约1.40–1.58秒。实验A4范围＋KV4已测但数值质量失败，A8静态对照也失败；相同权重移除静态激活描述后恢复。没有可用的原生packed W4A4KV4提速结果。另有[随机小DiT十块调度验证](docs/SMALL_DIT_SCHEDULING.md)：计算重叠数值RTF1.382、峰值约1.75GiB，未接入App、未训练音乐、严格L2未过1%。所有数据只发布到同一份统一报告。
 

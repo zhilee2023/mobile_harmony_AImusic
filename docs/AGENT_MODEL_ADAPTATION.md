@@ -1,5 +1,9 @@
 # LeVo Harmony：给接手Agent的模型适配指南
 
+> 2026-11-02 用户明确要求保留并复用小模型的优化。先读 [小模型优化保留清单](SMALL_MODEL_OPTIMIZATION_BASELINE.md)：0.6B 学生 W4/头W8、KV 连续增量、W8 DiT、VAE W8＋NEON Sin、有界分块和生命周期结论均须保留。公开大 Mixed LM 验证使用独立目录，不覆盖旧模型、App 和报告；迁移优化须确认实际选核/调用次数，不能把旧小模型 RTF 用于公开大模型。
+
+> 同日真实公开主 Mixed LM 的整条真机 CLI 链路已通过：见 `experiments/public_mixed_validation/README.md` 和统一报告 `public_mixed_music_2026_11_02`。LM W4/头W8，CPU High / 4线程，CFG=1 单分支；DiT W8 / High / 6线程，四步、CFG=1.5；VAE W8 / Low / 6线程，NEON Sin实调用576次。30秒WAV用时247.545秒，完整RTF8.252，峰值RSS3956.8MiB，最低系统可用2313MiB，AWAKE且无中途息屏。属于真实训练权重生成，仍待听感验收；没有替换0.6B随机音乐头原型或公开大模型App入口。双LM-CFG High会在KV扩容触发内存保护，CPU Low大LM加载发生MNN allocBuffer断言，不能声称这两条通过。早期独立Codec的RTF2.449不含LM，不得当整链成绩；四步大LM整链后半段变慢，未做热状态受控比较。
+
 > 2026-10-31 最新独立CLI实验已统一记录：见 QWEN_LOW_BIT_LANGUAGE_TEST.md、SMALL_DIT_SCHEDULING.md。原始28层Qwen完整已训练语言头W4/g64＋KV16/6线程约25–28token/s，prefill512约1.40–1.58s。实验Smooth A4范围/KV4和A8静态对照质量失败，High出现非有限值；同一smoothed W4权重去掉静态激活描述后手机参考token一致率恢复94.53%。不要声称已部署原生W4A4KV4；A4是[-7,7]/DT_INT8描述，非packed INT4内核。prefill/decode内部有不同路径，但当前Llm公共thread_num共用；load后改JSON不等于切换了runtime线程。下一步先逐层定位静态激活首个失真算子。
 
 > 小DiT是22层/hidden1024/FFN2048/16×64，LeVo框架、CosyVoice尺寸、随机初始化，不是训练好的CosyVoice或音乐checkpoint。十块79.36s数值PCM：eager127.610s/RTF1.608，加载重叠126.469/1.594，计算重叠109.662/1.382；峰值约1.75GiB、首包16.174s较慢；小DiT手机PC L2=1.1303%，未过1%。旧9030 OMC在新9050均Build失败，未测新NPU延迟；匹配工具链/整VAE/AscendC实现仍待完成。App仍为原v0.1.7，无签名变更。20校准+8留出的QuaRot风格投影数值实验已做，完整旋转checkpoint未部署。当前用户持续授权测试，但仍须守5小时剩余≤5%停新实验边界。

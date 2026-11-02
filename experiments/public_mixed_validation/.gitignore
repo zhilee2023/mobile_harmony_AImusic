@@ -1,0 +1,4 @@
+artifacts/
+native-build/
+*.log
+__pycache__/
