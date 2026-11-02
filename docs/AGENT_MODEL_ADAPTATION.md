@@ -1,5 +1,7 @@
 # LeVo Harmony：给接手Agent的模型适配指南
 
+> 2026-11-02最终模型／温度审计见[模型与温度总结](MODEL_THERMAL_SUMMARY.md)。公开90秒日志有12块Codec事件，与父观察器退出记录的归属未消解；旧“LM后、Codec前退出”判断撤回，原任务退出阶段未确认，6.225仍只计分阶段恢复。不要把旧温度图中间整列当纯LM或尾段当空闲。两款App的电脑测试脚本默认每5秒采样，同一JSON保存telemetry；37项测试通过，本轮仅做待机采样接入检查。
+
 > 2026-11-02 用户明确要求保留并复用小模型的优化。先读 [小模型优化保留清单](SMALL_MODEL_OPTIMIZATION_BASELINE.md)：0.6B 学生 W4/头W8、KV 连续增量、W8 DiT、VAE W8＋NEON Sin、有界分块和生命周期结论均须保留。公开大 Mixed LM 验证使用独立目录，不覆盖旧模型、App 和报告；迁移优化须确认实际选核/调用次数，不能把旧小模型 RTF 用于公开大模型。
 
 > 最新默认已变更：LeVo音乐v1.0.3常用生成入口为公开模型DiT两步、CFG1.5，LM CFG1；四步底层运行时保留。界面去掉“大模型”、阶段17/19字号、真实阶段进度＋扫描动画，已截图验证。该App实际30秒195.026秒/RTF6.501，RSS4077.6MiB，生成与AVPlayer播放通过，记录music_app_v103_2026_11_02。另在LeVo Harmony v0.1.8统一串行30秒两步对照：公开模型170.255秒/RTF5.675/RSS3887.3MiB，小模型44.155秒/RTF1.472/RSS1177.8MiB，见CHAIN_COMPARISON.md与serial_chain_comparison_2026_11_02。小DiT为22层/1024/FFN2048未训练尺寸原型，不能称为CosyVoice语音权重或歌曲能力。RSS20ms，HiDebug PSS500ms、图形1000ms名义采样，HiDebug PSS含SwapPss；图形API两轮成功返回0。保留每阶段峰值、查询开销和冷热/调度限制，不能把两App的RTF混写。

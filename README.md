@@ -1,5 +1,7 @@
 # mobile_harmony_AImusic · levo-harmony
 
+> **最终模型／温度总结**：小模型0.598B LM＋195.416M DiT＋84.414M VAE，当前包约0.844GiB；公开主Mixed 3.106B LM＋751.534M DiT＋84.414M VAE，当前包约3.642GiB。小模型90秒重测RTF1.566–1.608、RSS约1.10GiB，音乐适配层未训练。电脑观察两款App测试时现默认约5秒采样，并附到同一测试JSON；37项测试通过。电池端交换功率不是整机功耗。见[完整表格／温度图／公开90秒归属更正](docs/MODEL_THERMAL_SUMMARY.md)。
+
 > **模型替换已接入LeVo音乐v1.0.6**：顶部“歌曲模型”菜单支持独立模型包发现/切换，默认模型保留。真实PT VAE→ONNX→MNN后完成15秒歌曲生成/播放（89.944秒，RTF5.996）；ONNX小DiT新包30秒数值链路44.596秒、RTF1.487，750码与重构前一致。当前33项测试通过。见[完整总结](docs/PROJECT_SUMMARY.md)、[替换与部署命令](docs/MODEL_DEPLOYMENT.md)及[Agent skill](skills/levo-model-adaptation/SKILL.md)。这是替换/部署验收，未把不同轮次时延当成受控优化收益。
 
 > **最新小模型重测：v0.1.12，90秒数值链路连续两轮RTF 1.566 / 1.608**，峰值RSS约1.10GiB。相同12份latent的VAE整链59.763秒、独立52.406秒（少12.3%），全部输出指纹一致、首窗L2=0；此前RTF2.163的慢速未复现。量化和线程请求未改，小模型仍未训练。见[同输入重测与线程池线索](docs/SMALL_90S_RETEST.md)，旧实验与公开模型记录均保留。

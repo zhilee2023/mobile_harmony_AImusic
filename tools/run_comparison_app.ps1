@@ -2,8 +2,10 @@ param(
   [Parameter(Mandatory=$true)][ValidateSet('large-2','small-2','large-2-120','small-2-120','large-2-120-low','large-codec-120','large-codec-90','large-2-90','small-2-90','small-vae-90')][string]$Variant,
   [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9-]+$')][string]$RunId,
   [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9]+$')][string]$Device,
-  [switch]$RecordSensors,
-  [ValidatePattern('^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$')][string]$ModelBundle=''
+  [switch]$RecordSensors=$true,
+  [ValidatePattern('^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$')][string]$ModelBundle='',
+  [ValidateRange(1,60)][double]$SensorIntervalSeconds=5,
+  [string]$Python='python'
 )
 $ErrorActionPreference='Stop'
 $cmpHdc='C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\toolchains\hdc.exe'
@@ -25,8 +27,9 @@ if($ModelBundle){$cmpWant+=" --ps levoModelBundle $ModelBundle"}
 $cmpPid=(& $cmpHdc -t $Device shell 'pidof com.zhilee.levoharmony').Trim()
 if($cmpPid -notmatch '^\d+$'){throw 'No unique live App PID'}
 $cmpSensorJob=$null
-if($RecordSensors){$cmpSensorJob=Start-Job -ScriptBlock {param($script,$device,$run,$model,$bundle); & $script -Device $device -RunId $run -Model $model -BundleId $bundle} -ArgumentList (Join-Path $PSScriptRoot 'observe_power_thermal.ps1'),$Device,$RunId,$cmpModel,$ModelBundle}
+if($RecordSensors){$cmpSensorJob=Start-Job -ScriptBlock {param($script,$device,$run,$model,$bundle,$interval,$stop); & $script -Device $device -RunId $run -Model $model -BundleId $bundle -IntervalSeconds $interval -StopFile $stop} -ArgumentList (Join-Path $PSScriptRoot 'observe_power_thermal.ps1'),$Device,$RunId,$cmpModel,$ModelBundle,$SensorIntervalSeconds,$cmpReport}
 $cmpClock=[System.Diagnostics.Stopwatch]::StartNew();$cmpLast='';$cmpForegroundStable=$true;$cmpForegroundSamples=@()
+try {
 while($cmpClock.Elapsed.TotalSeconds -lt 1500){
   $raw=(& $cmpHdc -t $Device shell "cat $cmpRemote/levo-test-report.json") -join "`n"
   try{$archive=$raw | ConvertFrom-Json}catch{$archive=$null}
@@ -34,7 +37,7 @@ while($cmpClock.Elapsed.TotalSeconds -lt 1500){
     $cmpAfter=(& $cmpHdc -t $Device shell 'hidumper -s PowerManagerService -a -s') -join "`n"
     $offBefore=[regex]::Match($cmpBefore,'Last Screen Off:\s*(\d+)').Groups[1].Value
     $offAfter=[regex]::Match($cmpAfter,'Last Screen Off:\s*(\d+)').Groups[1].Value
-    $record=[ordered]@{runId=$RunId;date='2026-11-02';variant=$Variant;modelBundle=$ModelBundle;execution='Installed signed LeVo Harmony App';
+    $record=[ordered]@{runId=$RunId;date=(Get-Date -Format 'yyyy-MM-dd');variant=$Variant;modelBundle=$ModelBundle;observedAppPid=$cmpPid;execution='Installed signed LeVo Harmony App';
       hapSha256=$cmpHapSha;appVersion=$archive.version;
       displayStable=($cmpAfter -match 'Current State: AWAKE') -and $offBefore -eq $offAfter;
       foregroundStable=$cmpForegroundStable;foregroundSamples=$cmpForegroundSamples;
@@ -42,7 +45,6 @@ while($cmpClock.Elapsed.TotalSeconds -lt 1500){
     [System.IO.File]::WriteAllText($cmpReport,($record | ConvertTo-Json -Depth 70),[System.Text.UTF8Encoding]::new($false))
     $record.result | Select-Object success,error,stageSeconds,stageRtf,memory | ConvertTo-Json -Depth 8
     if(-not $record.result.success){throw 'Comparison stopped; result preserved'}
-    if($cmpSensorJob){Wait-Job $cmpSensorJob -Timeout 15 | Out-Null;Stop-Job $cmpSensorJob;Remove-Job $cmpSensorJob}
     return
   }
   $live=((& $cmpHdc -t $Device shell 'pidof com.zhilee.levoharmony') -join '').Trim()
@@ -57,3 +59,21 @@ while($cmpClock.Elapsed.TotalSeconds -lt 1500){
   Start-Sleep -Seconds 3
 }
 throw 'Observer timeout; inspect existing process before any restart'
+} catch {
+  if(!(Test-Path -LiteralPath $cmpReport)){
+    $partial=[ordered]@{runId=$RunId;date=(Get-Date -Format 'yyyy-MM-dd');variant=$Variant;modelBundle=$ModelBundle;
+      observedAppPid=$cmpPid;hapSha256=$cmpHapSha;complete=$false;observerError=$_.Exception.Message;
+      foregroundSamples=$cmpForegroundSamples;lastObservedProgressText=$progress;
+      scope='Observer stopped without an archived native completion; not a completed E2E result'}
+    [IO.File]::WriteAllText($cmpReport,($partial|ConvertTo-Json -Depth 30),[Text.UTF8Encoding]::new($false))
+  }
+  throw
+} finally {
+  if($cmpSensorJob){
+    Wait-Job $cmpSensorJob -Timeout 10 | Out-Null;Stop-Job $cmpSensorJob;Remove-Job $cmpSensorJob
+    try {
+      & $Python -X utf8 (Join-Path $PSScriptRoot 'summarize_telemetry.py') --log (Join-Path $cmpRoot "reports/power-thermal-$RunId.jsonl") --attach-report $cmpReport
+      if($LASTEXITCODE -ne 0){Write-Warning 'Sensor summary was not attached; preserve the raw sensor log'}
+    } catch {Write-Warning "Sensor summary failed: $($_.Exception.Message); native test report is preserved"}
+  }
+}

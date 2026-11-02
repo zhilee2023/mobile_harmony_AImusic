@@ -1,7 +1,8 @@
 param([Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9]+$')][string]$Device,
       [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$')][string]$ModelId,
       [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9-]+$')][string]$RunId,
-      [switch]$Attach)
+      [switch]$Attach,[switch]$RecordSensors=$true,
+      [ValidateRange(1,60)][double]$SensorIntervalSeconds=5,[string]$Python='python')
 $ErrorActionPreference='Stop'
 if($ModelId.Contains('..')){throw 'Invalid model ID'}
 $testHdc='C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\toolchains\hdc.exe'
@@ -21,8 +22,11 @@ if(!$Attach){
 }
 $testPid=((& $testHdc -t $Device shell 'pidof com.zhilee.levomusic') -join '').Trim()
 if($testPid -notmatch '^\d+$'){throw 'No unique Music App process'}
+$testSensorJob=$null
+if($RecordSensors){$testSensorJob=Start-Job -ScriptBlock {param($script,$device,$run,$bundle,$interval,$stop);& $script -Device $device -RunId $run -Model public -App music -BundleId $bundle -IntervalSeconds $interval -StopFile $stop} -ArgumentList (Join-Path $PSScriptRoot 'observe_power_thermal.ps1'),$Device,$RunId,$ModelId,$SensorIntervalSeconds,$testOutput}
 $testClock=[Diagnostics.Stopwatch]::StartNew();$testSamples=@();$testFirstProgress=$null;$testLast=''
 $testConfigId='';$testHap=(Get-FileHash -LiteralPath (Join-Path $testRoot 'music-app\entry\build\default\outputs\default\entry-default-signed.hap') -Algorithm SHA256).Hash.ToLower()
+try {
 while($testClock.Elapsed.TotalSeconds -lt 900){
   $testMission=(& $testHdc -t $Device shell 'aa dump -l') -join "`n"
   $match=[regex]::Match($testMission,'(?s)app name \[com\.zhilee\.levomusic\].*?state #([A-Z]+)')
@@ -36,7 +40,7 @@ while($testClock.Elapsed.TotalSeconds -lt 900){
   if($result -and (($result.lm.runId -eq $testConfigId -and $testConfigId) -or $newError)){
     $selection=((& $testHdc -t $Device shell "cat $testFiles/last-model-selection.json") -join "`n")|ConvertFrom-Json
     $after=(& $testHdc -t $Device shell 'hidumper -s PowerManagerService -a -s') -join "`n"
-    $record=[ordered]@{runId=$RunId;modelId=$ModelId;hapSha256=$testHap;attachedToRunningGeneration=[bool]$Attach;
+    $record=[ordered]@{runId=$RunId;modelId=$ModelId;observedAppPid=$testPid;hapSha256=$testHap;attachedToRunningGeneration=[bool]$Attach;
       firstObservedProgress=$testFirstProgress;foregroundSamples=$testSamples;foregroundStableDuringObservation=(@($testSamples|Where-Object {$_.state -ne 'FOREGROUND'}).Count -eq 0);
       screenRemainedOnDuringObservation=($after -match 'Current State: AWAKE') -and ([regex]::Match($testBefore,'Last Screen Off:\s*(\d+)').Groups[1].Value -eq [regex]::Match($after,'Last Screen Off:\s*(\d+)').Groups[1].Value);
       selection=$selection;result=$result;scope='Installed Music App model-selection and real generation acceptance, not a controlled speed comparison'}
@@ -51,3 +55,21 @@ while($testClock.Elapsed.TotalSeconds -lt 900){
   Start-Sleep -Seconds 3
 }
 throw 'Generation observer deadline; inspect existing process before restarting'
+} catch {
+  if(!(Test-Path -LiteralPath $testOutput)){
+    $partial=[ordered]@{runId=$RunId;modelId=$ModelId;observedAppPid=$testPid;hapSha256=$testHap;
+      complete=$false;observerError=$_.Exception.Message;attachedToRunningGeneration=[bool]$Attach;
+      foregroundSamples=$testSamples;lastObservedProgressText=$progress;
+      scope='Observer stopped without an archived native completion; not a completed E2E result'}
+    [IO.File]::WriteAllText($testOutput,($partial|ConvertTo-Json -Depth 30),[Text.UTF8Encoding]::new($false))
+  }
+  throw
+} finally {
+  if($testSensorJob){
+    Wait-Job $testSensorJob -Timeout 10 | Out-Null;Stop-Job $testSensorJob;Remove-Job $testSensorJob
+    try {
+      & $Python -X utf8 (Join-Path $PSScriptRoot 'summarize_telemetry.py') --log (Join-Path $testRoot "reports/power-thermal-$RunId.jsonl") --attach-report $testOutput
+      if($LASTEXITCODE -ne 0){Write-Warning 'Sensor summary was not attached; preserve the raw sensor log'}
+    } catch {Write-Warning "Sensor summary failed: $($_.Exception.Message); native test report is preserved"}
+  }
+}

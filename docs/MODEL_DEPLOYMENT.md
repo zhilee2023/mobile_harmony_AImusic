@@ -90,6 +90,8 @@ powershell -File tools/run_comparison_app.ps1 -Device YOUR_DEVICE_ID -Variant sm
 
 产品短生成验证用`tools/test_music_model.ps1`，默认启动15秒测试，`-Attach`仅观察现有任务并明确记录观察起点。研究入口保留30/90/120秒、同输入VAE重放；实验不全部加入产品菜单。
 
+这两个电脑测试入口默认约每5秒采样一次温度、电池电压／电流与CPU频率，结束后附加到**同一个测试JSON**的`telemetry`字段。可用`-SensorIntervalSeconds 5`调整1–60秒间隔，或`-RecordSensors:$false`关闭；必要时用`-Python <python.exe>`指定解释器。任务完成、观察器退出或手机进程变化会停止采样。缺失节点为null，不补0。USB供电下电池端交换功率不是App／整机功耗；换手机要重新核对单位。这是电脑观察期间采样，不是独立App后台监控或定时重跑。图表、验证及历史日志归属更正见[模型与温度总结](MODEL_THERMAL_SUMMARY.md)。
+
 ## 本轮验证边界
 
 - 真实VAE原始PT：182个张量，84.414M参数；ONNX对Torch L2约0.000296%，MNN W8对ONNX约7.13%，输出形状与有限值通过。
