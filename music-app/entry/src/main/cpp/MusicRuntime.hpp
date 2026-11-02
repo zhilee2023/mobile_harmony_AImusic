@@ -14,7 +14,7 @@ static Json musicCheckAssets(const std::string& root){
     }
     return {{"ready",missing.empty()},{"count",ready},{"total",musicAssetInventory().size()},{"bytes",total},{"missing",missing}};
 }
-static Json musicGenerate(const std::string& root,const std::string& lyrics,const std::string& style,int frames,int ditSteps=4){
+static Json musicGenerate(const std::string& root,const std::string& lyrics,const std::string& style,int frames,int ditSteps=4,bool fixedLengthDiagnostic=false,bool lowLmPrecision=false){
     PublicPhoneTrace trace;trace.sink=root+"/progress.jsonl";Json report={{"success",false},{"wholePhoneChain",true},{"ditSteps",ditSteps},{"lmGuidance",1},{"ditGuidance",1.5}};
     std::ofstream(trace.sink).close();levoPublicCancelled=false;
     try{
@@ -23,8 +23,8 @@ static Json musicGenerate(const std::string& root,const std::string& lyrics,cons
         report["condition"]=prepareMusicPrefix(root,lyrics,style);
         Json config={{"base_dir",root+"/lm/"},{"llm_model","llm.mnn"},{"llm_weight","llm.mnn.weight"},{"llm_config","llm_config.json"},
             {"tokenizer_file","tokenizer.mtok"},{"embedding_file","generation-embeddings-bf16.bin"},{"backend_type","cpu"},
-            {"thread_num",4},{"precision","high"},{"memory","low"},{"power","high"},{"reuse_kv",false},{"attention_mode",8},
-            {"levo_lm_guidance",1},{"levo_run_id",std::to_string(std::chrono::system_clock::now().time_since_epoch().count())},{"levo_progress_path",trace.sink}};
+            {"thread_num",4},{"precision",lowLmPrecision?"low":"high"},{"memory","low"},{"power","high"},{"reuse_kv",false},{"attention_mode",8},
+            {"levo_lm_guidance",1},{"levo_force_music_frames",fixedLengthDiagnostic},{"levo_run_id",std::to_string(std::chrono::system_clock::now().time_since_epoch().count())},{"levo_progress_path",trace.sink}};
         writePublicJson(root+"/lm/config-phone.json",config);
         report["lm"]=generatePublicTokens(root,frames,trace,false);trace.gate(1500);
         std::filesystem::create_directories(root+"/songs");std::string wave=root+"/songs/"+config["levo_run_id"].get<std::string>()+".wav";

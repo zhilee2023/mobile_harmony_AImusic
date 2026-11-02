@@ -16,9 +16,9 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
         {"trainedLmTokens",true},{"randomMusicHead",false},{"wholePhoneChain",false}};
     try{
         std::string root=argv[1];int steps=std::stoi(argv[3]);require(steps>=2&&steps<=20,"Bounded steps");
-        auto source=readJson(argv[2]);const bool diagnostic=source.value("diagnosticOnly",false);
+        auto source=readJson(argv[2]);const bool diagnostic=source.value("diagnosticOnly",false),fixtureOnly=source.value("performanceFixtureOnly",false);
         require(source["source"]=="trained public LeVo v2-large primary Mixed LM"||(diagnostic&&source["source"]=="untrained 0.6B diagnostic student"),"Wrong token source");
-        report["trainedLmTokens"]=!diagnostic;report["randomMusicHead"]=diagnostic;report["diagnosticOnly"]=diagnostic;
+        report["trainedLmTokens"]=!diagnostic;report["randomMusicHead"]=diagnostic;report["diagnosticOnly"]=diagnostic;report["performanceFixtureOnly"]=fixtureOnly;
         trace.sink=source.value("progressPath",std::string());
         report["lmDevice"]=source.value("lmDevice",std::string("Windows CPU"));
         report["wholePhoneChain"]=source.value("lmDevice",std::string())=="Harmony phone CPU";
@@ -29,7 +29,7 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
         trace.gate(1536);trace.mark("real-public-codes-start");
         auto tick=Clock::now();Session dit(root+"/dit/full-w8.mnn",false,6);report["ditSetupSeconds"]=seconds(tick);
         trace.mark("real-dit-loaded");trace.gate(1024);
-        tick=Clock::now();std::unique_ptr<Session> vae;
+        trace.mark("real-vae-loading");tick=Clock::now();std::unique_ptr<Session> vae;
         {LevoVaeSin::Scope sinScope(true);vae=std::make_unique<Session>(root+"/vae/vae-256-w8.mnn",true,6);}
         report["vaeSetupSeconds"]=seconds(tick);report["vaeSinHookDuringBuild"]=true;
         trace.mark("real-vae-loaded");
@@ -88,7 +88,7 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
         report["chunks"]=chunks;report["durationSeconds"]=double(totalSamples)/48000;report["pcmRms"]=std::sqrt(energy/(2*emitted));
         report["pcmPeak"]=maxPcm;report["clippedSampleFraction"]=double(clipped)/(2*emitted);
         report["codecSeconds"]=seconds(trace.start);report["codecOnlyRtf"]=seconds(trace.start)/(double(totalSamples)/48000);
-        report["vaeNeonSinCalls"]=LevoVaeSin::calls.load();report["audioFileGenerated"]=!diagnostic;report["numericalPcmGenerated"]=true;report["success"]=true;
+        report["vaeNeonSinCalls"]=LevoVaeSin::calls.load();report["audioFileGenerated"]=!diagnostic&&!fixtureOnly;report["numericalPcmGenerated"]=true;report["success"]=true;
     }catch(const std::exception& error){report["error"]=error.what();}
     trace.sample();report["sampledPeakRssKiB"]=trace.maxRss.load();report["minimumSystemAvailableKiB"]=trace.minAvailable.load();
     report["totalSeconds"]=seconds(trace.start);report["stages"]=trace.stages;

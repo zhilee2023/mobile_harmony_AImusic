@@ -1,5 +1,6 @@
 .deps/
 .codec-deps/
+.plot-deps/
 .venv/
 __pycache__/
 *.pyc

@@ -6,20 +6,21 @@ import { window } from '@kit.ArkUI';
 interface VaeResult { success: boolean; error?: string; decoderOnlyComputeRtf?: number; sampledPeakRssKiB?: number; }
 interface StageRtf { llm: number; dit: number; vae: number; other: number; total: number; }
 interface ComparisonMemory { peakRssKiB: number; sampledPeakPssKiB?: number; sampledPeakGraphicsKiB?: number; }
-interface ChainResult { success: boolean; error?: string; policy: string; totalSeconds?: number; sampledPeakRssKiB?: number; pipelineRtfThroughPcm?: number; validPcmSeconds?: number; strictNumericalParityPassed?: boolean; stageRtf?: StageRtf; memory?: ComparisonMemory; }
+interface ChainResult { success: boolean; error?: string; policy: string; totalSeconds?: number; sampledPeakRssKiB?: number; pipelineRtfThroughPcm?: number; validPcmSeconds?: number; strictNumericalParityPassed?: boolean; stageRtf?: StageRtf; memory?: ComparisonMemory; codecOnly?: boolean; codecOnlyRtf?: number; }
 interface AppMemoryInfo { totalKiB: number; availableKiB: number; appRssLimitKiB: number; appVssLimitKiB: number; processPssKiB: number; processRssKiB: number; }
-interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; chainSerial?: ChainResult; chainKeepLlm?: ChainResult; chainAll?: ChainResult; chainAllW4?: ChainResult; chunks5?: ChainResult; chunks5Tuned?: ChainResult; chunks5W8Vsin?: ChainResult; chunks5W8Snake?: ChainResult; llmShort?: ChainResult; llmLong?: ChainResult; comparisonLarge2?: ChainResult; comparisonSmall2?: ChainResult; memory?: AppMemoryInfo; memoryBeforeRun?: AppMemoryInfo; lastRunId?: string; }
+interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; chainSerial?: ChainResult; chainKeepLlm?: ChainResult; chainAll?: ChainResult; chainAllW4?: ChainResult; chunks5?: ChainResult; chunks5Tuned?: ChainResult; chunks5W8Vsin?: ChainResult; chunks5W8Snake?: ChainResult; llmShort?: ChainResult; llmLong?: ChainResult; comparisonLarge2?: ChainResult; comparisonSmall2?: ChainResult; comparisonLarge120?: ChainResult; comparisonSmall120?: ChainResult; comparisonLargeCodec120?: ChainResult; comparisonLargeCodec90?: ChainResult; comparisonLarge90?: ChainResult; comparisonSmall90?: ChainResult; memory?: AppMemoryInfo; memoryBeforeRun?: AppMemoryInfo; lastRunId?: string; }
 
 @Entry
 @Component
 struct Index {
   @State lyrics: string = '[Verse]\n晚风轻轻吹过窗台\n星光落在你的眼海';
   @State style: number = 0;
-  @State status: string = 'v0.1.8 · 串行链路对照；原W8＋NEON入口保留，0.6B音乐模块尚未训练';
+  @State status: string = 'v0.1.11 · 30/90/120秒链路对照与退出原因记录；0.6B音乐模块尚未训练';
   @State memory: string = '';
   @State assets: string = '尚未检查测试文件';
   @State busy: boolean = false;
   @State comparisonSummary: string = '';
+  @State comparisonSeconds: number = 30;
   private diagnosticRunId: string = '';
   private required: string[] = ['fixture.json', 'vae-256-fp32.mnn', 'vae-256-fp32.mnn.weight',
     'latent-0.f32', 'latent-1.f32', 'latent-2.f32', 'pcm-0.f32', 'pcm-1.f32', 'pcm-2.f32',
@@ -33,8 +34,12 @@ struct Index {
   }
   aboutToAppear(): void {
     this.refresh();
+    try {
+      const memoryFile = fs.openSync(`${this.context().filesDir}/startup-memory.json`, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE | fs.OpenMode.TRUNC);
+      try { fs.writeSync(memoryFile.fd, native.memoryProbe()); } finally { fs.closeSync(memoryFile); }
+    } catch (_) {}
     const precision = AppStorage.get<string>('levoDiagnosticPrecision');
-    if (precision === 'chain-comparison-large-2' || precision === 'chain-comparison-small-2') {
+    if (precision === 'chain-comparison-large-2' || precision === 'chain-comparison-small-2' || precision === 'chain-comparison-large-2-120' || precision === 'chain-comparison-small-2-120' || precision === 'chain-comparison-large-2-120-low' || precision === 'chain-comparison-large-codec-120' || precision === 'chain-comparison-large-2-90' || precision === 'chain-comparison-small-2-90' || precision === 'chain-comparison-large-codec-90') {
       this.diagnosticRunId = AppStorage.get<string>('levoDiagnosticRunId') ?? '';
       AppStorage.delete('levoDiagnosticPrecision'); AppStorage.delete('levoDiagnosticRunId');
       this.runComparison(precision.substring(6)); return;
@@ -135,7 +140,9 @@ struct Index {
   }
   private async runComparison(variant: string): Promise<void> {
     if (this.busy) return; this.busy = true;
-    this.status = variant === 'comparison-small-2' ? '0.6B＋小DiT：30秒等效数值链路，LM释放后运行两步DiT和VAE' : '公开预训练模型：30秒完整歌曲，LM释放后运行两步DiT和VAE';
+    const duration = variant.includes('-90') ? 90 : (variant.includes('-120') ? 120 : 30);
+    this.comparisonSeconds = duration;
+    this.status = variant.includes('small') ? `0.6B＋小DiT：${duration}秒等效数值链路，LM释放后运行两步DiT和VAE` : `公开预训练模型：${duration}秒歌曲链路，LM释放后运行两步DiT和VAE`;
     try {
       const win = await window.getLastWindow(this.context()); await win.setWindowKeepScreenOn(true);
       const raw = await native.runThreeModuleChain(`${this.context().filesDir}/chain-comparison`, variant);
@@ -143,11 +150,20 @@ struct Index {
       const path = `${this.context().filesDir}/levo-test-report.json`;
       let archive: TestArchive = { version: '0.1.8', scope: 'Matched serial chain comparison; small model is untrained and diagnostic only' };
       try { archive = JSON.parse(fs.readTextSync(path)) as TestArchive; } catch (_) {}
-      archive.version = '0.1.8'; archive.lastRunId = this.diagnosticRunId;
-      if (variant === 'comparison-small-2') archive.comparisonSmall2 = result; else archive.comparisonLarge2 = result;
+      archive.version = '0.1.11'; archive.lastRunId = this.diagnosticRunId;
+      if (variant === 'comparison-large-codec-90') archive.comparisonLargeCodec90 = result;
+      else if (variant === 'comparison-large-2-90') archive.comparisonLarge90 = result;
+      else if (variant === 'comparison-small-2-90') archive.comparisonSmall90 = result;
+      else if (variant === 'comparison-large-codec-120') archive.comparisonLargeCodec120 = result;
+      else if (variant === 'comparison-small-2-120') archive.comparisonSmall120 = result;
+      else if (variant === 'comparison-large-2-120' || variant === 'comparison-large-2-120-low') archive.comparisonLarge120 = result;
+      else if (variant === 'comparison-small-2') archive.comparisonSmall2 = result; else archive.comparisonLarge2 = result;
       const file = fs.openSync(path, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE | fs.OpenMode.TRUNC);
       try { fs.writeSync(file.fd, JSON.stringify(archive)); } finally { fs.closeSync(file); }
-      if (result.success && result.stageRtf) {
+      if (result.success && result.codecOnly) {
+        this.comparisonSummary = `独立DiT/VAE负载完成；Codec RTF ${result.codecOnlyRtf?.toFixed(3)}；不是完整生成RTF。`;
+        this.status = '模块测试完成；是否使用重复夹具及输出路径见统一报告';
+      } else if (result.success && result.stageRtf) {
         const rtf = result.stageRtf;
         const pss = result.memory?.sampledPeakPssKiB; const graphics = result.memory?.sampledPeakGraphicsKiB;
         const pssText = typeof pss === 'number' ? `${(pss / 1024).toFixed(1)} MiB` : '不可用';
@@ -174,9 +190,12 @@ struct Index {
         Text(this.memory).fontColor('#76E0C8').fontSize(13).width('100%')
         Text(this.status).fontColor('#E9C882').width('100%')
         Text('串行链路对照').fontSize(22).fontWeight(FontWeight.Bold).fontColor('#F0F4FA').width('100%')
-        Text('统一30秒、LM单分支、DiT两步/CFG1.5、同一VAE；小DiT为CosyVoice尺寸原型，音乐头与小DiT未训练。').fontSize(15).fontColor('#A9B9D2')
-        Button('公开模型 · DiT两步').enabled(!this.busy).width('100%').onClick(() => { this.runComparison('comparison-large-2'); })
-        Button('0.6B＋小DiT · 两步').enabled(!this.busy).width('100%').onClick(() => { this.runComparison('comparison-small-2'); })
+        Text('LM主体W4/头W8，DiT与VAE W8；单分支LM、两步DiT/CFG1.5。120秒固定3000码；小模型未训练，仅测流程。').fontSize(15).fontColor('#A9B9D2')
+        Select([{ value: '30 秒对照' }, { value: '90 秒对照' }, { value: '120 秒对照' }]).selected([30, 90, 120].indexOf(this.comparisonSeconds))
+          .enabled(!this.busy).onSelect((index: number) => { this.comparisonSeconds = [30, 90, 120][index]; })
+        Text('公开模型沿用CPU High；CPU Low加载失败的补测入口已收起，开发复现仍保留。').fontSize(13).fontColor('#A9B9D2')
+        Button('公开模型 · DiT两步').enabled(!this.busy).width('100%').onClick(() => { this.runComparison(this.comparisonSeconds === 90 ? 'comparison-large-2-90' : (this.comparisonSeconds === 120 ? 'comparison-large-2-120' : 'comparison-large-2')); })
+        Button('0.6B＋小DiT · 两步').enabled(!this.busy).width('100%').onClick(() => { this.runComparison(this.comparisonSeconds === 90 ? 'comparison-small-2-90' : (this.comparisonSeconds === 120 ? 'comparison-small-2-120' : 'comparison-small-2')); })
         if (this.comparisonSummary.length > 0) { Text(this.comparisonSummary).fontSize(17).fontColor('#76E0C8').width('100%') }
         Text('10.24 秒分块实验').fontSize(22).fontWeight(FontWeight.Bold).fontColor('#F0F4FA').width('100%')
         Text(this.assets).fontColor('#A9B9D2').width('100%')

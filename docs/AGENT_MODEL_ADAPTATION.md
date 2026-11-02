@@ -205,3 +205,15 @@ Mixed权重：
 - 不提交模型、`.deps`、下载分块、证书、密码、设备个人数据或本地签名配置。
 - 当前用户约定：本5小时窗口剩余≤5%即停新实验，不自动使用credits或下一窗口。写此交接时已到停止线；后续Agent先查询用量并确认恢复授权，不擅自继续计算。
 - 未完成的优先级：真实Qwen加载 → 修复并严格加载Mixed DiT → 真实音乐数据训练 → VAE/DiT导出对齐 → 手机短音频。先做可复核结果，不承诺现有权重可无训练变成音乐0.6B。
+
+## 11. 2026-11-02真机状态与测试口径更新
+
+上文首次规划及当时5小时窗口的停止记录保留为历史，不代表当前模型/App仍未落地。后续已经完成公开主Mixed LM真实加载、W4主体/W8头→W8 DiT→W8 VAE的手机30秒歌曲生成与播放，以及独立签名LeVo音乐App；0.6B的音乐头及小DiT仍未训练。当前以`docs/MUSIC_APP.md`、`docs/CHAIN_COMPARISON.md`、`docs/CHAIN_COMPARISON_90S.md`和`docs/CHAIN_COMPARISON_120S.md`及统一报告为准。
+
+- 公开Mixed DiT是39层、hidden1200、FFN4800；小DiT是22层、hidden1024、FFN2048、195416128参数。不要把它们和官方双轨DiT权重接口混用。
+- 0.6B LM的CPU Low配置不能直接当作公开Mixed LM的可用配置。公开LM补测CPU Low在`Llm::load → WrapExecution → Arm82Backend → CPUBackend::allocBuffer(size=0)`触发SIGABRT；保留开发复现接口，常规UI收起该失败入口，公开主线仍为CPU High。
+- “屏幕亮着”不等于“App前台”。新的对照脚本每约3秒检查Ability的FOREGROUND状态；仅有awake检查的历史长测不能当作严格前台性能基线。观察到后台调度/冻结会显著拉长模块耗时。
+- 每阶段日志中的即时RSS不是峰值。公开LM长上下文的20ms采样曾捕获超过5GiB的瞬时峰值；需要保存中途maxRSS/minAvailable，否则SIGKILL后会丢失峰值证据。NORMAL/子码9、空消息本身不能证明OOM。
+- 大小模型量化位宽是权重存储recipe，不等于W4A4KV4或全图INT4计算；精度、线程、KV策略、CFG、前缀、实际窗口数和前台检查必须同时写入报告。
+- 精确源模型计数更新：公开导出Mixed LM3106035712（不含单列条件表）、学生598178304、Mixed DiT751534224、小DiT195416128、VAE解码器84414082。早先“约700M DiT”是量级描述，表格应使用当前源计数及实际ROM文件大小。
+- 90秒公开LM已生成齐2250码，随后退出；用同一码在新进程恢复90秒WAV。6.225是已测LM/Codec计算段合计，排除了失败清理和恢复间隔，不得标成单次端到端。学生单次端到端RTF2.163。析构前检查点与`public-lm-destroy-start`标记已补入源代码，仅构建验证，没有声称修复退出。
