@@ -3,9 +3,9 @@
 static std::atomic<bool> musicBusy{false};
 static std::string jsText(napi_env env,napi_value value){size_t size=0;napi_get_value_string_utf8(env,value,nullptr,0,&size);require(size<32768,"Input too long");std::string text(size+1,'\0');napi_get_value_string_utf8(env,value,text.data(),text.size(),&size);text.resize(size);return text;}
 static napi_value jsJson(napi_env env,const Json& value){napi_value result;auto text=value.dump();napi_create_string_utf8(env,text.c_str(),text.size(),&result);return result;}
-struct MusicTask {napi_async_work work{};napi_deferred deferred{};std::string root,lyrics,style,name;int frames=750,fd=-1;bool importing=false;Json result;~MusicTask(){if(fd>=0)close(fd);}};
+struct MusicTask {napi_async_work work{};napi_deferred deferred{};std::string root,lyrics,style,name;int frames=750,fd=-1,ditSteps=2;bool importing=false;Json result;~MusicTask(){if(fd>=0)close(fd);}};
 static void executeMusic(napi_env,void* data){auto& task=*static_cast<MusicTask*>(data);try{
-    if(!task.importing){task.result=musicGenerate(task.root,task.lyrics,task.style,task.frames);return;}
+    if(!task.importing){task.result=musicGenerate(task.root,task.lyrics,task.style,task.frames,task.ditSteps);return;}
     const Json* asset=nullptr;for(const auto& item:musicAssetInventory())if(item["name"]==task.name)asset=&item;
     require(asset,"不是此模型所需的文件");std::filesystem::path dest=task.root+"/"+(*asset)["relative"].get<std::string>();std::filesystem::create_directories(dest.parent_path());
     std::string temp=dest.string()+".importing";std::ofstream out(temp,std::ios::binary);require(out.good(),"Cannot create imported model file");

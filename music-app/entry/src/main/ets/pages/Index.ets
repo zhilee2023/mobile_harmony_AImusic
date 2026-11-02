@@ -25,11 +25,16 @@ struct Index {
   @State audioDuration: number = 30000;
   @State seconds: number = 30;
   @State resultNote: string = '';
+  @State stageIndex: number = 0;
+  @State progressValue: number = 0;
+  @State progressDetail: string = '';
+  private stageLabels: string[] = ['理解歌词与风格', '创作旋律与歌声', '还原音乐细节', '合成与保存音频'];
   private player: media.AVPlayer | undefined = undefined;
   private audioFile: fs.File | undefined = undefined;
   private timer: number = -1;
   private started: number = 0;
   private firstSongCheck: boolean = false;
+  private ditSteps: number = 2;
   private ctx(): common.UIAbilityContext { return getContext(this) as common.UIAbilityContext; }
   private root(): string { return `${this.ctx().filesDir}/music-models`; }
   private stamp(value: number): string { const sec = Math.floor(value / 1000); return `${Math.floor(sec / 60)}:${(sec % 60).toString().padStart(2, '0')}`; }
@@ -37,8 +42,8 @@ struct Index {
     try {
       const state = JSON.parse(native.inspect(this.root())) as AssetState;
       this.ready = state.ready;
-      this.modelStatus = state.ready ? '大模型已就绪 · 本地生成' : `大模型 ${state.count}/${state.total} · 需导入约 ${(state.bytes / 1073741824).toFixed(1)} GB`;
-    } catch (_) { this.modelStatus = '请导入大模型文件'; }
+      this.modelStatus = state.ready ? '已就绪 · 本地生成' : `模型 ${state.count}/${state.total} · 需导入约 ${(state.bytes / 1073741824).toFixed(1)} GB`;
+    } catch (_) { this.modelStatus = '请导入模型文件'; }
   }
   aboutToAppear(): void {
     this.refresh();
@@ -47,6 +52,12 @@ struct Index {
     } catch (_) {}
     if (AppStorage.get<boolean>('musicAppFirstSongCheck') === true && this.ready) {
       AppStorage.delete('musicAppFirstSongCheck'); this.firstSongCheck = true; this.seconds = 15;
+      this.lyrics = '[intro-short]\n[verse]\n清晨的风吹过山岗\n我把梦想装进行囊\n[chorus]\n一路向着阳光歌唱\n你是我心中的方向\n[outro-short]';
+      this.style = 'male, warm intimate vocal, Mandarin folk pop, acoustic guitar, gentle piano, light drums, hopeful, 88 BPM';
+      setTimeout(() => { this.generate(); }, 500);
+    }
+    if (AppStorage.get<boolean>('musicAppThirtySecondCheck') === true && this.ready) {
+      AppStorage.delete('musicAppThirtySecondCheck'); this.firstSongCheck = true; this.seconds = 30;
       this.lyrics = '[intro-short]\n[verse]\n清晨的风吹过山岗\n我把梦想装进行囊\n[chorus]\n一路向着阳光歌唱\n你是我心中的方向\n[outro-short]';
       this.style = 'male, warm intimate vocal, Mandarin folk pop, acoustic guitar, gentle piano, light drums, hopeful, 88 BPM';
       setTimeout(() => { this.generate(); }, 500);
@@ -75,14 +86,28 @@ struct Index {
   }
   private async generate(): Promise<void> {
     if (this.busy || this.importing || !this.ready) return;
-    this.busy = true; this.elapsed = 0; this.started = Date.now(); this.status = '正在准备歌词与风格';
+    this.busy = true; this.elapsed = 0; this.stageIndex = 0; this.progressValue = 2; this.progressDetail = '正在准备';
+    this.started = Date.now(); this.status = '正在准备歌词与风格';
     await this.releasePlayer(); await this.keepAwake(true);
     this.timer = setInterval(() => {
       this.elapsed = Math.floor((Date.now() - this.started) / 1000);
       try { const progress = JSON.parse(native.progress(this.root())) as ProgressState; const stage = progress.stage ?? '';
-        if (stage.startsWith('real-phone-music-codes-')) this.status = '正在创作旋律与歌声';
-        else if (stage.startsWith('chunk-')) this.status = '正在合成音乐';
-        else if (stage.includes('prefill') || stage.includes('loaded')) this.status = '正在理解歌词与风格';
+        if (stage.startsWith('real-phone-music-codes-')) {
+          const count = Number(stage.substring('real-phone-music-codes-'.length)); this.stageIndex = 1;
+          this.status = '正在创作旋律与歌声'; this.progressDetail = '旋律正在成形';
+          this.progressValue = Math.max(this.progressValue, 8 + 52 * count / (this.seconds * 25));
+        } else if (stage.startsWith('chunk-')) {
+          const parts = stage.split('-'); const chunk = Number(parts[1]);
+          const chunks = Math.max(1, Math.ceil((this.seconds * 25 - 256) / 192) + 1);
+          const completed = parts[2] === 'wav'; const vocal = parts[2] === 'vae';
+          const step = parts[2] === 'dit' ? Number(parts[3]) : this.ditSteps;
+          this.stageIndex = vocal || completed ? 3 : 2;
+          this.status = this.stageLabels[this.stageIndex]; this.progressDetail = `片段 ${chunk}/${chunks}`;
+          this.progressValue = Math.max(this.progressValue, 60 + 39 * ((chunk - 1) + (completed ? 1 : step / (this.ditSteps + 1))) / chunks);
+        } else if (stage.includes('prefill') || stage.includes('loaded')) {
+          this.stageIndex = 0; this.status = '正在理解歌词与风格'; this.progressDetail = '正在理解你的创作';
+          this.progressValue = Math.max(this.progressValue, 5);
+        }
       } catch (_) {}
     }, 800);
     try {
@@ -91,6 +116,7 @@ struct Index {
       if (result.success && result.wave) {
         this.audioPath = result.wave; this.audioDuration = (result.durationSeconds ?? this.seconds) * 1000;
         this.playPosition = 0; this.status = '你的音乐已完成';
+        this.progressValue = 100; this.stageIndex = 4; this.progressDetail = '已完成';
         this.resultNote = `${(result.durationSeconds ?? 0).toFixed(1)} 秒音乐 · 用时 ${(result.totalSeconds ?? 0).toFixed(0)} 秒`;
       } else { this.status = result.cancelled ? '本次创作已停止' : `生成未完成：${result.error ?? '请重试'}`; }
     } catch (error) { this.status = `生成未完成：${String(error)}`; }
@@ -149,15 +175,22 @@ struct Index {
             Text('把文字，唱成一首歌').fontSize(14).fontColor('#73808E')
           }.alignItems(HorizontalAlign.Start)
           Blank()
-          Text('大模型').fontSize(12).fontColor('#297A6D').padding({ left: 12, right: 12, top: 7, bottom: 7 }).backgroundColor('#E7F2EF').borderRadius(20)
         }.width('100%')
         Column({ space: 12 }) {
           Text('歌词').fontSize(17).fontWeight(FontWeight.Medium).width('100%')
-          TextArea({ text: this.lyrics, placeholder: '写下想唱的歌词…' }).height(210).backgroundColor('#F8F9FB').fontSize(15).borderRadius(14)
-            .enabled(!this.busy).onChange((value: string) => { this.lyrics = value; })
+          if (this.busy) {
+            Text(this.lyrics.replace(/\n/g, ' ')).fontSize(15).fontColor('#73847A').maxLines(2).textOverflow({ overflow: TextOverflow.Ellipsis }).width('100%')
+          } else {
+            TextArea({ text: this.lyrics, placeholder: '写下想唱的歌词…' }).height(210).backgroundColor('#F8F9FB').fontSize(15).borderRadius(14)
+              .onChange((value: string) => { this.lyrics = value; })
+          }
           Text('风格').fontSize(17).fontWeight(FontWeight.Medium).width('100%').margin({ top: 2 })
-          TextArea({ text: this.style, placeholder: '例如：温暖女声、中文流行、钢琴与吉他' }).height(88).backgroundColor('#F8F9FB').fontSize(14).borderRadius(14)
-            .enabled(!this.busy).onChange((value: string) => { this.style = value; })
+          if (this.busy) {
+            Text(this.style).fontSize(14).fontColor('#73847A').maxLines(2).textOverflow({ overflow: TextOverflow.Ellipsis }).width('100%')
+          } else {
+            TextArea({ text: this.style, placeholder: '例如：温暖女声、中文流行、钢琴与吉他' }).height(88).backgroundColor('#F8F9FB').fontSize(14).borderRadius(14)
+              .onChange((value: string) => { this.style = value; })
+          }
           Row({ space: 8 }) {
             Text('时长').fontSize(14).fontColor('#73808E'); Blank()
             Button('15 秒').fontSize(13).height(33).backgroundColor(this.seconds === 15 ? '#E0F0EA' : '#F1F3F5').fontColor('#335E53').enabled(!this.busy).onClick(() => { this.seconds = 15; })
@@ -168,10 +201,24 @@ struct Index {
           .backgroundColor('#237C69').enabled(this.ready && !this.busy && !this.importing && this.lyrics.trim().length > 0 && this.style.trim().length > 0)
           .onClick(() => { this.generate(); })
         if (this.busy) {
-          Row({ space: 10 }) { LoadingProgress().width(22).height(22).color('#237C69'); Text(`${this.status} · ${this.elapsed} 秒`).fontSize(14).fontColor('#60726B'); Blank()
-            Text('停止').fontColor('#7D8B85').fontSize(13).onClick(() => { native.cancel(); this.status = '正在停止…'; })
-          }.width('100%')
-        } else { Text(this.status).fontSize(13).fontColor('#748279').width('100%') }
+          Column({ space: 14 }) {
+            Row() { Text(this.status).fontSize(19).fontWeight(FontWeight.Medium).fontColor('#245B4D'); Blank()
+              Text(`${this.elapsed} 秒`).fontSize(15).fontColor('#7D8B85') }.width('100%')
+            Progress({ value: this.progressValue, total: 100, type: ProgressType.Linear }).color('#237C69').backgroundColor('#E3EDE8').width('100%')
+              .style({ strokeWidth: 9, enableScanEffect: true, enableSmoothEffect: true })
+            ForEach(this.stageLabels, (label: string, index: number) => {
+              Row({ space: 10 }) {
+                Text(this.stageIndex > index ? '✓' : `${index + 1}`).fontSize(15).fontWeight(FontWeight.Medium)
+                  .fontColor(this.stageIndex >= index ? '#237C69' : '#ABB5AE').width(24)
+                Text(label).fontSize(17).fontWeight(this.stageIndex === index ? FontWeight.Medium : FontWeight.Normal)
+                  .fontColor(this.stageIndex === index ? '#254F42' : '#8A968F'); Blank()
+                if (this.stageIndex === index) { LoadingProgress().width(18).height(18).color('#237C69') }
+              }.width('100%')
+            })
+            Row() { Text(this.progressDetail).fontSize(14).fontColor('#7D8B85'); Blank()
+              Text('停止').fontColor('#6F8277').fontSize(15).onClick(() => { native.cancel(); this.status = '正在停止…'; }) }.width('100%')
+          }.padding(18).backgroundColor('#FFFFFF').borderRadius(20).width('100%')
+        } else { Text(this.status).fontSize(17).fontColor('#648073').width('100%') }
         if (this.audioPath.length > 0) {
           Column({ space: 12 }) {
             Row() { Text('我的音乐').fontSize(17).fontWeight(FontWeight.Medium); Blank(); Text('WAV').fontSize(11).fontColor('#88948E') }.width('100%')

@@ -1,21 +1,25 @@
 import native from 'libentry.so';
 import { common } from '@kit.AbilityKit';
 import { fileIo as fs, picker } from '@kit.CoreFileKit';
+import { window } from '@kit.ArkUI';
 
 interface VaeResult { success: boolean; error?: string; decoderOnlyComputeRtf?: number; sampledPeakRssKiB?: number; }
-interface ChainResult { success: boolean; error?: string; policy: string; totalSeconds?: number; sampledPeakRssKiB?: number; pipelineRtfThroughPcm?: number; validPcmSeconds?: number; strictNumericalParityPassed?: boolean; }
+interface StageRtf { llm: number; dit: number; vae: number; other: number; total: number; }
+interface ComparisonMemory { peakRssKiB: number; sampledPeakPssKiB?: number; sampledPeakGraphicsKiB?: number; }
+interface ChainResult { success: boolean; error?: string; policy: string; totalSeconds?: number; sampledPeakRssKiB?: number; pipelineRtfThroughPcm?: number; validPcmSeconds?: number; strictNumericalParityPassed?: boolean; stageRtf?: StageRtf; memory?: ComparisonMemory; }
 interface AppMemoryInfo { totalKiB: number; availableKiB: number; appRssLimitKiB: number; appVssLimitKiB: number; processPssKiB: number; processRssKiB: number; }
-interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; chainSerial?: ChainResult; chainKeepLlm?: ChainResult; chainAll?: ChainResult; chainAllW4?: ChainResult; chunks5?: ChainResult; chunks5Tuned?: ChainResult; chunks5W8Vsin?: ChainResult; chunks5W8Snake?: ChainResult; llmShort?: ChainResult; llmLong?: ChainResult; memory?: AppMemoryInfo; memoryBeforeRun?: AppMemoryInfo; lastRunId?: string; }
+interface TestArchive { version: string; scope: string; high?: VaeResult; low?: VaeResult; chainSerial?: ChainResult; chainKeepLlm?: ChainResult; chainAll?: ChainResult; chainAllW4?: ChainResult; chunks5?: ChainResult; chunks5Tuned?: ChainResult; chunks5W8Vsin?: ChainResult; chunks5W8Snake?: ChainResult; llmShort?: ChainResult; llmLong?: ChainResult; comparisonLarge2?: ChainResult; comparisonSmall2?: ChainResult; memory?: AppMemoryInfo; memoryBeforeRun?: AppMemoryInfo; lastRunId?: string; }
 
 @Entry
 @Component
 struct Index {
   @State lyrics: string = '[Verse]\n晚风轻轻吹过窗台\n星光落在你的眼海';
   @State style: number = 0;
-  @State status: string = 'v0.1.7 · 推荐W8＋NEON原入口；尚无训练好的0.6B音乐权重';
+  @State status: string = 'v0.1.8 · 串行链路对照；原W8＋NEON入口保留，0.6B音乐模块尚未训练';
   @State memory: string = '';
   @State assets: string = '尚未检查测试文件';
   @State busy: boolean = false;
+  @State comparisonSummary: string = '';
   private diagnosticRunId: string = '';
   private required: string[] = ['fixture.json', 'vae-256-fp32.mnn', 'vae-256-fp32.mnn.weight',
     'latent-0.f32', 'latent-1.f32', 'latent-2.f32', 'pcm-0.f32', 'pcm-1.f32', 'pcm-2.f32',
@@ -30,6 +34,11 @@ struct Index {
   aboutToAppear(): void {
     this.refresh();
     const precision = AppStorage.get<string>('levoDiagnosticPrecision');
+    if (precision === 'chain-comparison-large-2' || precision === 'chain-comparison-small-2') {
+      this.diagnosticRunId = AppStorage.get<string>('levoDiagnosticRunId') ?? '';
+      AppStorage.delete('levoDiagnosticPrecision'); AppStorage.delete('levoDiagnosticRunId');
+      this.runComparison(precision.substring(6)); return;
+    }
     if (precision === 'high' || precision === 'low') {
       this.diagnosticRunId = AppStorage.get<string>('levoDiagnosticRunId') ?? '';
       AppStorage.delete('levoDiagnosticPrecision');
@@ -124,6 +133,32 @@ struct Index {
     this.diagnosticRunId = '';
     this.busy = false;
   }
+  private async runComparison(variant: string): Promise<void> {
+    if (this.busy) return; this.busy = true;
+    this.status = variant === 'comparison-small-2' ? '0.6B＋小DiT：30秒等效数值链路，LM释放后运行两步DiT和VAE' : '公开预训练模型：30秒完整歌曲，LM释放后运行两步DiT和VAE';
+    try {
+      const win = await window.getLastWindow(this.context()); await win.setWindowKeepScreenOn(true);
+      const raw = await native.runThreeModuleChain(`${this.context().filesDir}/chain-comparison`, variant);
+      const result = JSON.parse(raw) as ChainResult;
+      const path = `${this.context().filesDir}/levo-test-report.json`;
+      let archive: TestArchive = { version: '0.1.8', scope: 'Matched serial chain comparison; small model is untrained and diagnostic only' };
+      try { archive = JSON.parse(fs.readTextSync(path)) as TestArchive; } catch (_) {}
+      archive.version = '0.1.8'; archive.lastRunId = this.diagnosticRunId;
+      if (variant === 'comparison-small-2') archive.comparisonSmall2 = result; else archive.comparisonLarge2 = result;
+      const file = fs.openSync(path, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE | fs.OpenMode.TRUNC);
+      try { fs.writeSync(file.fd, JSON.stringify(archive)); } finally { fs.closeSync(file); }
+      if (result.success && result.stageRtf) {
+        const rtf = result.stageRtf;
+        const pss = result.memory?.sampledPeakPssKiB; const graphics = result.memory?.sampledPeakGraphicsKiB;
+        const pssText = typeof pss === 'number' ? `${(pss / 1024).toFixed(1)} MiB` : '不可用';
+        const graphicsText = typeof graphics === 'number' ? `${(graphics / 1024).toFixed(1)} MiB` : '不可用';
+        this.comparisonSummary = `LLM RTF ${rtf.llm.toFixed(3)} · DiT ${rtf.dit.toFixed(3)} · VAE ${rtf.vae.toFixed(3)}\n总RTF ${rtf.total.toFixed(3)} · RSS峰值 ${((result.memory?.peakRssKiB ?? 0) / 1024).toFixed(1)} MiB\nPSS峰值 ${pssText} · 图形内存 ${graphicsText}`;
+        this.status = '串行对照完成；详细配置与采样信息已写入统一报告';
+      } else { this.status = `对照停止：${result.error ?? '查看报告'}`; }
+    } catch (error) { this.status = `对照失败：${String(error)}`; }
+    try { const win = await window.getLastWindow(this.context()); await win.setWindowKeepScreenOn(false); } catch (_) {}
+    this.busy = false; this.diagnosticRunId = '';
+  }
   build() {
     Scroll() {
       Column({ space: 18 }) {
@@ -138,6 +173,11 @@ struct Index {
           .onClick(() => { this.memory = native.memoryProbe(); })
         Text(this.memory).fontColor('#76E0C8').fontSize(13).width('100%')
         Text(this.status).fontColor('#E9C882').width('100%')
+        Text('串行链路对照').fontSize(22).fontWeight(FontWeight.Bold).fontColor('#F0F4FA').width('100%')
+        Text('统一30秒、LM单分支、DiT两步/CFG1.5、同一VAE；小DiT为CosyVoice尺寸原型，音乐头与小DiT未训练。').fontSize(15).fontColor('#A9B9D2')
+        Button('公开模型 · DiT两步').enabled(!this.busy).width('100%').onClick(() => { this.runComparison('comparison-large-2'); })
+        Button('0.6B＋小DiT · 两步').enabled(!this.busy).width('100%').onClick(() => { this.runComparison('comparison-small-2'); })
+        if (this.comparisonSummary.length > 0) { Text(this.comparisonSummary).fontSize(17).fontColor('#76E0C8').width('100%') }
         Text('10.24 秒分块实验').fontSize(22).fontWeight(FontWeight.Bold).fontColor('#F0F4FA').width('100%')
         Text(this.assets).fontColor('#A9B9D2').width('100%')
         Button('导入12个测试文件').enabled(!this.busy).width('100%').onClick(() => { this.importFiles(); })

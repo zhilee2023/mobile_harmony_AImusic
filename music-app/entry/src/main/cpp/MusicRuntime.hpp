@@ -14,11 +14,11 @@ static Json musicCheckAssets(const std::string& root){
     }
     return {{"ready",missing.empty()},{"count",ready},{"total",musicAssetInventory().size()},{"bytes",total},{"missing",missing}};
 }
-static Json musicGenerate(const std::string& root,const std::string& lyrics,const std::string& style,int frames){
-    PublicPhoneTrace trace;trace.sink=root+"/progress.jsonl";Json report={{"success",false},{"wholePhoneChain",true},{"ditSteps",4},{"lmGuidance",1},{"ditGuidance",1.5}};
+static Json musicGenerate(const std::string& root,const std::string& lyrics,const std::string& style,int frames,int ditSteps=4){
+    PublicPhoneTrace trace;trace.sink=root+"/progress.jsonl";Json report={{"success",false},{"wholePhoneChain",true},{"ditSteps",ditSteps},{"lmGuidance",1},{"ditGuidance",1.5}};
     std::ofstream(trace.sink).close();levoPublicCancelled=false;
     try{
-        require(musicCheckAssets(root)["ready"],"请先导入完整的大模型文件");require(frames==375||frames==750,"Unsupported audio duration");
+        require(musicCheckAssets(root)["ready"],"请先导入完整的模型文件");require(frames==375||frames==750,"Unsupported audio duration");require(ditSteps==2||ditSteps==4,"Unsupported DiT steps");
         trace.gate(2600);trace.mark("preparing-current-lyrics-style");
         report["condition"]=prepareMusicPrefix(root,lyrics,style);
         Json config={{"base_dir",root+"/lm/"},{"llm_model","llm.mnn"},{"llm_weight","llm.mnn.weight"},{"llm_config","llm_config.json"},
@@ -28,7 +28,7 @@ static Json musicGenerate(const std::string& root,const std::string& lyrics,cons
         writePublicJson(root+"/lm/config-phone.json",config);
         report["lm"]=generatePublicTokens(root,frames,trace,false);trace.gate(1500);
         std::filesystem::create_directories(root+"/songs");std::string wave=root+"/songs/"+config["levo_run_id"].get<std::string>()+".wav";
-        std::string codes=root+"/phone-generated-codes.json",steps="4",label="LevoMusic";
+        std::string codes=root+"/phone-generated-codes.json",steps=std::to_string(ditSteps),label="LevoMusic";
         char* args[]={label.data(),const_cast<char*>(root.c_str()),codes.data(),steps.data(),wave.data()};Json codec;
         const int error=LevoPublicCodecMain(5,args,&codec);report["codec"]=codec;require(error==0,codec.value("error",std::string("Audio decode failed")));
         report["wave"]=wave;report["durationSeconds"]=codec["durationSeconds"];report["totalSeconds"]=seconds(trace.start);

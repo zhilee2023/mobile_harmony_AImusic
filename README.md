@@ -1,6 +1,8 @@
 # mobile_harmony_AImusic · levo-harmony
 
-> 新增独立 **LeVo 音乐** 大模型 App：简洁歌词/风格输入、15/30 秒真实生成、试听与保存，已签名安装。模型19个文件共约3.64GiB，保持原小模型App并存。自定义条件四组token对照与完整embedding字节对齐通过；实际App完成30秒WAV，223.593秒、RTF7.453、峰值RSS3869.8MiB，播放器实际播放通过，仍待听感验收。见[使用与构建说明](docs/MUSIC_APP.md)。
+> 独立 **LeVo 音乐** App：简洁歌词/风格输入、15/30秒真实生成、试听与保存，已签名安装。模型19个文件共约3.64GiB，保持原小模型App并存。自定义条件四组token对照与完整embedding字节对齐通过；播放器实际播放通过，听感由用户验收。见[使用与构建说明](docs/MUSIC_APP.md)。
+
+> 当前 **LeVo 音乐 v1.0.3** 已去掉界面“大模型”字样、放大四步骤并加入动画进度条，生成入口改为DiT两步/CFG1.5，实际App完成30秒并播放：195.026秒、RTF6.501、峰值RSS4077.6MiB。另在 **LeVo Harmony v0.1.8** 做统一串行两步对照：公开模型RTF5.675 / 小模型数值RTF1.472，各部RTF、量化配置与RSS/PSS/图形内存见[对照表](docs/CHAIN_COMPARISON.md)。不同App结果和历史四步结果分别保留。
 
 > 2026-11-02 公开主 Mixed LM 已完成[真实音乐生成验证](experiments/public_mixed_validation/README.md)：主 LM W4 / 头 W8 → DiT W8 四步 / CFG1.5 → VAE W8＋NEON。手机 LM 关闭 CFG，单分支；完整 30 秒 WAV 用时 247.545 秒，RTF8.252，峰值 RSS3956.8MiB，尚未听感验收或接入 App。公开约4B双LM架构见[架构说明](docs/PUBLIC_LEVO_ARCHITECTURE.md)；本次省略 track LM，是 Mixed-only 路线。0.6B 方案继续保留，见[小模型优化保留清单](docs/SMALL_MODEL_OPTIMIZATION_BASELINE.md)，W4A4KV4 仍待验证。
 

@@ -1,7 +1,9 @@
 // Actual pretrained-LM codes, rendered on the connected Harmony phone.
 // Source metadata distinguishes PC-generated codes from whole-phone runs.
 #define LEVO_CHAIN_LIBRARY
+#define LEVO_CHAIN_RUNTIME_ONLY
 #include "ChainBench.cpp"
+#undef LEVO_CHAIN_RUNTIME_ONLY
 inline std::atomic<bool> levoPublicCancelled{false};
 
 static void little(std::ofstream& out,uint32_t value,int bytes){
@@ -14,7 +16,9 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
         {"trainedLmTokens",true},{"randomMusicHead",false},{"wholePhoneChain",false}};
     try{
         std::string root=argv[1];int steps=std::stoi(argv[3]);require(steps>=2&&steps<=20,"Bounded steps");
-        auto source=readJson(argv[2]);require(source["source"]=="trained public LeVo v2-large primary Mixed LM","Wrong token source");
+        auto source=readJson(argv[2]);const bool diagnostic=source.value("diagnosticOnly",false);
+        require(source["source"]=="trained public LeVo v2-large primary Mixed LM"||(diagnostic&&source["source"]=="untrained 0.6B diagnostic student"),"Wrong token source");
+        report["trainedLmTokens"]=!diagnostic;report["randomMusicHead"]=diagnostic;report["diagnosticOnly"]=diagnostic;
         trace.sink=source.value("progressPath",std::string());
         report["lmDevice"]=source.value("lmDevice",std::string("Windows CPU"));
         report["wholePhoneChain"]=source.value("lmDevice",std::string())=="Harmony phone CPU";
@@ -47,6 +51,7 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
             for(int t=0;t<valid;++t)for(int c=0;c<1024;++c){float sum=bias[c];for(int k=0;k<32;++k)sum+=book[codes[start+t]*32+k]*weight[c*32+k];mu[t*1024+c]=sum;}
             if(!last.empty())std::copy_n(last.data()+(frames-contextFrames)*64,contextFrames*64,context.data());
             for(auto& value:noise)value=normal(rng);x=noise;
+            trace.mark("chunk-"+std::to_string(index+1)+"-dit-0");
             double ditTime=0;
             for(int step=0;step<steps;++step){
                 require(!levoPublicCancelled.load(),"Generation cancelled");
@@ -67,6 +72,7 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
             }
             if(index)std::copy_n(context.data(),contextFrames*64,x.data());last=x;
             std::vector<float> latent(frames*64);for(int c=0;c<64;++c)for(int t=0;t<frames;++t)latent[c*frames+t]=x[t*64+c]*stddev[c]+mean[c];
+            trace.mark("chunk-"+std::to_string(index+1)+"-vae-start");
             tick=Clock::now();auto pcm=vae->run({{"latent",std::move(latent)}},"pcm",2*pcmFrames);double vaeTime=seconds(tick);
             if(index)for(int c=0;c<2;++c)for(int i=0;i<pcmOverlap;++i){float r=float(i)/(pcmOverlap-1);pcm[c*pcmFrames+i]=tail[c*pcmOverlap+i]*(1-r)+pcm[c*pcmFrames+i]*r;}
             int count=valid*1920-(final?0:pcmOverlap);
@@ -82,7 +88,7 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
         report["chunks"]=chunks;report["durationSeconds"]=double(totalSamples)/48000;report["pcmRms"]=std::sqrt(energy/(2*emitted));
         report["pcmPeak"]=maxPcm;report["clippedSampleFraction"]=double(clipped)/(2*emitted);
         report["codecSeconds"]=seconds(trace.start);report["codecOnlyRtf"]=seconds(trace.start)/(double(totalSamples)/48000);
-        report["vaeNeonSinCalls"]=LevoVaeSin::calls.load();report["audioFileGenerated"]=true;report["success"]=true;
+        report["vaeNeonSinCalls"]=LevoVaeSin::calls.load();report["audioFileGenerated"]=!diagnostic;report["numericalPcmGenerated"]=true;report["success"]=true;
     }catch(const std::exception& error){report["error"]=error.what();}
     trace.sample();report["sampledPeakRssKiB"]=trace.maxRss.load();report["minimumSystemAvailableKiB"]=trace.minAvailable.load();
     report["totalSeconds"]=seconds(trace.start);report["stages"]=trace.stages;

@@ -26,6 +26,7 @@
 using Json=nlohmann::json;
 using Clock=std::chrono::steady_clock;
 using MNN::Transformer::Llm;
+inline std::atomic<void(*)(const char*)> levoStageHook{nullptr};
 static double seconds(Clock::time_point tick){return std::chrono::duration<double>(Clock::now()-tick).count();}
 static long resident(){long a=0,b=0;std::ifstream("/proc/self/statm")>>a>>b;return b*sysconf(_SC_PAGESIZE)/1024;}
 static long available(){std::ifstream in("/proc/meminfo");std::string line;while(std::getline(in,line))if(line.rfind("MemAvailable:",0)==0)return std::stol(line.substr(13));return -1;}
@@ -39,7 +40,7 @@ struct Trace{
   Trace(){sampler=std::thread([this]{while(!stop){sample();std::this_thread::sleep_for(std::chrono::milliseconds(20));}});}
   ~Trace(){stop=true;sampler.join();}
   void sample(){long value=resident(),old=maxRss.load();while(value>old&&!maxRss.compare_exchange_weak(old,value)){}value=available();old=minAvailable.load();if(value>=0)while(value<old&&!minAvailable.compare_exchange_weak(old,value)){};}
-  void mark(const std::string& name){sample();Json row={{"stage",name},{"seconds",seconds(start)},{"rssKiB",resident()},{"systemAvailableKiB",available()}};stages.push_back(row);if(!sink.empty()){std::ofstream out(sink,std::ios::app);out<<row.dump()<<'\n';}std::cout<<"LEVO_CHAIN_PROGRESS "<<row.dump()<<std::endl;}
+  void mark(const std::string& name){if(auto hook=levoStageHook.load())hook(name.c_str());sample();Json row={{"stage",name},{"seconds",seconds(start)},{"rssKiB",resident()},{"systemAvailableKiB",available()}};stages.push_back(row);if(!sink.empty()){std::ofstream out(sink,std::ios::app);out<<row.dump()<<'\n';}std::cout<<"LEVO_CHAIN_PROGRESS "<<row.dump()<<std::endl;}
   void gate(long mib=1024){sample();require(available()>=mib*1024,"System available below stage safety gate");require(resident()<5L*1024*1024,"Process RSS reached5GiB diagnostic stop");}
 };
 class Session{
@@ -86,6 +87,7 @@ public:
     return Json();
   }
 };
+#ifndef LEVO_CHAIN_RUNTIME_ONLY
 std::string LevoRunChainBench(const std::string& dir,const std::string& requestedPolicy){
   bool w4=requestedPolicy.size()>3&&requestedPolicy.substr(requestedPolicy.size()-3)=="-w4";
   std::string policy=w4?requestedPolicy.substr(0,requestedPolicy.size()-3):requestedPolicy;
@@ -251,3 +253,5 @@ std::string LevoRunChunks(const std::string& dir,int chunks,const std::string& d
 #ifndef LEVO_CHAIN_LIBRARY
 int main(int argc,char** argv){if(argc!=3)return 2;std::string policy=argv[2];auto result=policy=="chunks-5"?LevoRunFiveChunks(argv[1]):policy=="chunks-5-w8-vsin"?LevoRunFiveChunks(argv[1],false,"w8-vsin"):policy=="chunks-5-w8-snake"?LevoRunFiveChunks(argv[1],false,"w8-snake"):LevoRunChainBench(argv[1],policy);std::cout<<"LEVO_CHAIN_REPORT "<<result<<std::endl;return Json::parse(result)["success"].get<bool>()?0:1;}
 #endif
+
+#endif // LEVO_CHAIN_RUNTIME_ONLY

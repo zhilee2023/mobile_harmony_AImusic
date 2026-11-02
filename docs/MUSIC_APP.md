@@ -1,13 +1,14 @@
 # LeVo 音乐：独立的大模型歌曲 App
 
-2026-11-02，新包名 `com.zhilee.levomusic`，显示名 **LeVo 音乐**，绿色音符图标。与原 `com.zhilee.levoharmony` 小模型研究 App 并存。源码在 `music-app/`，不替换 0.6B 模型、App、历史实验或优化清单。
+2026-11-02，当前 v1.0.3，包名 `com.zhilee.levomusic`，显示名 **LeVo 音乐**，绿色音符图标。与原 `com.zhilee.levoharmony` 小模型研究 App 并存。源码在 `music-app/`，不替换 0.6B 模型、App、历史实验或优化清单。
 
 ## 已实现
 
 - 简洁单页：歌词、风格、15 / 30 秒、生成、状态与计时；完成后出现播放、进度条和保存 WAV。
+- v1.0.3去掉界面所有“大模型”字样；生成时收起长输入预览，四个步骤字号17、当前阶段标题19，使用带扫描动画与平滑过渡的进度条。进度依据真实token/片段阶段，不按时间伪造完成率。
 - 使用公开检查点的真实预训练主 Mixed LM。输入由手机上的 Qwen2 tokenizer 和原始训练 embedding 表编码，编辑歌词与风格会改变输入；没有用预计算歌曲 token 代替用户输入。
 - 原生异步任务，UI 线程保持响应；生成期间保持屏幕亮起，可请求停止，模型在前向边界响应取消。
-- LM 主体 W4 / 头 W8，CPU High / 4 线程，LM CFG=1；DiT W8、CPU High / 6 线程、四步、CFG=1.5；VAE W8、CPU Low / 6 线程、建图期间挂接 NEON Sin。
+- LM 主体 W4 / 头 W8，CPU High / 4 线程，LM CFG=1；DiT W8、CPU High / 6 线程、默认两步、CFG=1.5；VAE W8、CPU Low / 6 线程、建图期间挂接 NEON Sin。四步运行时保留，常用生成入口已按用户要求改为两步。
 - LM 生成完后释放，再执行有界的 DiT/VAE 分块，写 48 kHz 双声道 WAV；完成后播放。目前是生成后试听，不是边生成边播。
 - 模型导入在原生异步任务中复制文件，避免主线程同步复制 GB 级模型；只导出一份生成报告。
 
@@ -20,10 +21,12 @@
 - 手机端四组中文、英文、标点、emoji、章节标签输入，对固定版本 HF tokenizer 的 token ID 全部一致。
 - 原始样例完整音乐输入 embedding 文件与 PC 参考逐字节一致，SHA256 都是 `8813a0a155cbcdc256a08c7d6d68428afdef11d67e2b78a72b77c821a8955018`。
 - 已查看手机截图：新版页面、当前歌词、风格、生成状态和模型就绪信息正常显示，生成时页面保持响应。
-- 已取回签名 App 内的真实自定义歌曲：30 秒双声道 WAV，耗时 223.593 秒，完整 RTF **7.453**，峰值 RSS **3869.8 MiB**。LM 阶段123.684秒，DiT68.938秒，VAE25.602秒，其余为准备/加载等开销。
+- 最新v1.0.3已取回实际App中的两步30秒歌曲并完成播放，耗时 **195.026秒**，完整RTF **6.501**，峰值RSS **4077.6MiB**。LM阶段134.720秒、DiT32.365秒、VAE23.447秒、其他4.494秒。其750个生成code与LeVo Harmony两步对照完全相同，不能把两次不同App的时延混用。
+- 历史v1.0.1四步App样例仍保留：223.593秒、RTF7.453、峰值RSS3869.8MiB。它与两步对照的歌词/风格和生成code相同，方便试听，但不是热状态受控的性能消融。
 - WAV 5,760,044 字节、48 kHz、双声道，时长和非静音检查通过；播放器回调确认实际进入 playing/completed 状态，`playbackValidated=true`。当前记录最终播放器状态 released，保留已经成功播放的标记。
 - USB 一度断开，恢复后已取回音频和完整报告；结果写入统一报告 `music_app_2026_11_02`。这是实际 App 数据，之前 CLI 的 RTF8.252 单独保留。两轮未控制热状态和调度，不把差异归因于特定优化。
 - 听感和歌词清晰度仍待用户试听验收，生成/播放通过不代表达到官方完整分轨路线的音质。
+- 同日LeVo Harmony v0.1.8还完成公开模型/小模型的统一串行测试：总RTF5.675 / 1.472，RSS峰值3887.3 / 1177.8MiB。见[完整数值、量化和采样口径](CHAIN_COMPARISON.md)。小模型未训练，不代表能生成同等歌曲。
 
 ## 直接使用
 
@@ -39,7 +42,7 @@
 
 打开 `C:\levo-harmony\music-app`，在 DevEco 的 Signing Configs 为新包名生成调试签名，并关联 default 产品。旧研究 App 的 Profile 绑定旧包名，不能用于新包名。参考[华为调试 Profile 文档](https://developer.huawei.com/consumer/cn/doc/doccenter-getting-started/agc-help-debug-profile-0000002248181278)。
 
-本机产物：`C:\levo-harmony\dist\LeVo-Music-v1.0.1-signed.hap`。原研究 App 保持安装。
+本机产物：`C:\levo-harmony\dist\LeVo-Music-v1.0.3-signed.hap`。原研究 App 保持安装，已更新到v0.1.8以增加串行对照入口。
 
 ## 模型准备
 
