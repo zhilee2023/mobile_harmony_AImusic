@@ -2,6 +2,8 @@
 
 > 2026-11-02 用户明确要求保留并复用小模型的优化。先读 [小模型优化保留清单](SMALL_MODEL_OPTIMIZATION_BASELINE.md)：0.6B 学生 W4/头W8、KV 连续增量、W8 DiT、VAE W8＋NEON Sin、有界分块和生命周期结论均须保留。公开大 Mixed LM 验证使用独立目录，不覆盖旧模型、App 和报告；迁移优化须确认实际选核/调用次数，不能把旧小模型 RTF 用于公开大模型。
 
+> 新增独立 `music-app/`，包名 `com.zhilee.levomusic`（LeVo 音乐，绿色音符），已用户签名并安装，旧包不替换。自定义歌词/风格由原训练条件表和手机 tokenizer 编码，19 个资产共3.641GiB；四组 HF token 夹具与完整参考 embedding SHA 一致。LM CFG1、DiT四步/CFG1.5，VAE W8＋NEON；原生 async、进度、取消、播放/保存已编译接入。App 内15秒真实自定义歌曲验收已启动，发现结果文件后USB断开，须取回 `files/music-models/last-music-result.json`、WAV与playbackValidated后再声称整体验收通过；不要用旧CLI RTF冒充App成绩。见 MUSIC_APP.md。实际签名配置 `music-app/build-profile.json5` 被忽略，只提交无凭据模板。
+
 > 同日真实公开主 Mixed LM 的整条真机 CLI 链路已通过：见 `experiments/public_mixed_validation/README.md` 和统一报告 `public_mixed_music_2026_11_02`。LM W4/头W8，CPU High / 4线程，CFG=1 单分支；DiT W8 / High / 6线程，四步、CFG=1.5；VAE W8 / Low / 6线程，NEON Sin实调用576次。30秒WAV用时247.545秒，完整RTF8.252，峰值RSS3956.8MiB，最低系统可用2313MiB，AWAKE且无中途息屏。属于真实训练权重生成，仍待听感验收；没有替换0.6B随机音乐头原型或公开大模型App入口。双LM-CFG High会在KV扩容触发内存保护，CPU Low大LM加载发生MNN allocBuffer断言，不能声称这两条通过。早期独立Codec的RTF2.449不含LM，不得当整链成绩；四步大LM整链后半段变慢，未做热状态受控比较。
 
 > 2026-10-31 最新独立CLI实验已统一记录：见 QWEN_LOW_BIT_LANGUAGE_TEST.md、SMALL_DIT_SCHEDULING.md。原始28层Qwen完整已训练语言头W4/g64＋KV16/6线程约25–28token/s，prefill512约1.40–1.58s。实验Smooth A4范围/KV4和A8静态对照质量失败，High出现非有限值；同一smoothed W4权重去掉静态激活描述后手机参考token一致率恢复94.53%。不要声称已部署原生W4A4KV4；A4是[-7,7]/DT_INT8描述，非packed INT4内核。prefill/decode内部有不同路径，但当前Llm公共thread_num共用；load后改JSON不等于切换了runtime线程。下一步先逐层定位静态激活首个失真算子。

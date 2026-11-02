@@ -9,6 +9,7 @@ using PublicLlm=std::unique_ptr<Llm,decltype(&Llm::destroy)>;
 // diagnostic's 5 GiB limit unchanged; this test has a separate bounded budget.
 struct PublicPhoneTrace:Trace{
     void gate(long mib=1024){
+        require(!levoPublicCancelled.load(),"Generation cancelled");
         sample();require(available()>=std::max(mib,1200L)*1024,"Public LM system-available memory gate");
         require(resident()<7L*1024*1024,"Public LM process RSS reached7GiB diagnostic stop");
     }
@@ -61,7 +62,8 @@ static Json generatePublicTokens(const std::string& root,int frames,PublicPhoneT
         {"temperature",.9},{"topK",50},{"recentTokenWindow",50},{"seed",2307},{"prefixPositions",953},
         {"threads",4},{"precision",config["precision"]},{"maxFramesRequested",frames},{"probe",checks},
         {"lmLoadSeconds",first.second+secondLoad},{"samplingGenerator","C++ mt19937"},
-        {"lmInstances",guidance>1?2:1},{"runId",config.value("levo_run_id",std::string("unspecified"))}};
+        {"lmInstances",guidance>1?2:1},{"runId",config.value("levo_run_id",std::string("unspecified"))},
+        {"progressPath",config.value("levo_progress_path",std::string())}};
     std::vector<int> condPrefix(953),nullPrefix(953);std::iota(condPrefix.begin(),condPrefix.end(),16386);
     std::iota(nullPrefix.begin(),nullPrefix.end(),16386+953);
     std::mt19937 generator(2307);std::vector<int> codes;std::vector<double> timings;bool eos=false;double prefill=0;
@@ -102,6 +104,7 @@ static Json generatePublicTokens(const std::string& root,int frames,PublicPhoneT
     writePublicJson(root+"/phone-generated-codes.json",result);return result;
 }
 
+#ifndef LEVO_PUBLIC_PHONE_LIBRARY
 int main(int argc,char** argv){
     if(argc!=5){std::cerr<<"publicRoot codecRoot frames probe|generate\n";return 2;}
     PublicPhoneTrace trace;Json report={{"success",false},{"wholePhoneChain",true},{"randomMusicHead",false},
@@ -129,3 +132,4 @@ int main(int argc,char** argv){
     writePublicJson(root+"/whole-phone-report.json",report);std::cout<<"LEVO_PUBLIC_PHONE_REPORT "<<report.dump()<<std::endl;
     return report["success"].get<bool>()?0:1;
 }
+#endif

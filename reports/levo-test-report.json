@@ -42750,5 +42750,52 @@
       }
     ],
     "reproductionSourceDirectory": "experiments/public_mixed_validation"
+  },
+  "music_app_2026_11_02": {
+    "bundleName": "com.zhilee.levomusic",
+    "version": "1.0.1",
+    "installed": true,
+    "signedHapSha256": "a64e464d2a8ac3a7232366bcb5730361bb14a7b10086b3b8582f7ae5110b5dec",
+    "signedHapBytes": 7318953,
+    "assetCount": 19,
+    "assetBytes": 3909444738,
+    "all19AssetHashesVerifiedOnPhone": true,
+    "nativeTokenizerTests": {
+      "cases": [
+        {
+          "lyricTokens": 20,
+          "seconds": 0.418098437,
+          "styleTokens": 15
+        },
+        {
+          "lyricTokens": 19,
+          "seconds": 0.383199531,
+          "styleTokens": 18
+        },
+        {
+          "lyricTokens": 22,
+          "seconds": 0.3794975,
+          "styleTokens": 11
+        },
+        {
+          "lyricTokens": 55,
+          "seconds": 0.376943906,
+          "styleTokens": 27
+        }
+      ],
+      "success": true
+    },
+    "canonicalEmbeddingFileSha256": "8813a0a155cbcdc256a08c7d6d68428afdef11d67e2b78a72b77c821a8955018",
+    "canonicalEmbeddingExactParity": true,
+    "editableLyricsAndStyle": true,
+    "lmGuidance": 1,
+    "ditSteps": 4,
+    "ditGuidance": 1.5,
+    "uiScreenshotReviewed": true,
+    "appGenerationStarted": true,
+    "appGenerationResultRetrieved": false,
+    "appPlaybackValidated": false,
+    "verificationStatus": "USB disconnected before result and playback retrieval; do not substitute CLI results",
+    "oldStudentAppPreserved": true
   }
 }

@@ -30,3 +30,13 @@ native-build/
 app/entry/src/main/cpp/levo-local.cmake
 dist/
 .__convert_external_data.bin
+music-app/build-profile.json5
+music-app/.hvigor/
+music-app/.idea/
+music-app/.appanalyzer/
+music-app/.clangd
+music-app/.clang-tidy
+music-app/oh_modules/
+music-app/entry/oh_modules/
+music-app/entry/.cxx/
+music-app/entry/build/

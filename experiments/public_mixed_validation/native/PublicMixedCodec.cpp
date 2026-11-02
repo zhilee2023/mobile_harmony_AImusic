@@ -2,6 +2,7 @@
 // Source metadata distinguishes PC-generated codes from whole-phone runs.
 #define LEVO_CHAIN_LIBRARY
 #include "ChainBench.cpp"
+inline std::atomic<bool> levoPublicCancelled{false};
 
 static void little(std::ofstream& out,uint32_t value,int bytes){
     for(int i=0;i<bytes;++i)out.put(char((value>>(8*i))&255));
@@ -14,6 +15,7 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
     try{
         std::string root=argv[1];int steps=std::stoi(argv[3]);require(steps>=2&&steps<=20,"Bounded steps");
         auto source=readJson(argv[2]);require(source["source"]=="trained public LeVo v2-large primary Mixed LM","Wrong token source");
+        trace.sink=source.value("progressPath",std::string());
         report["lmDevice"]=source.value("lmDevice",std::string("Windows CPU"));
         report["wholePhoneChain"]=source.value("lmDevice",std::string())=="Harmony phone CPU";
         auto codes=source["codes"].get<std::vector<int>>();require(!codes.empty()&&codes.size()<=1500,"Bounded audio");
@@ -40,12 +42,14 @@ int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
         int index=0;
         for(size_t start=0;;start+=hop,++index){
             trace.gate(800);int valid=std::min(size_t(frames),codes.size()-start);bool final=start+valid>=codes.size();
+            require(!levoPublicCancelled.load(),"Generation cancelled");
             std::vector<float> mu(frames*1024),context(frames*64,0),noise(frames*64),x;
             for(int t=0;t<valid;++t)for(int c=0;c<1024;++c){float sum=bias[c];for(int k=0;k<32;++k)sum+=book[codes[start+t]*32+k]*weight[c*32+k];mu[t*1024+c]=sum;}
             if(!last.empty())std::copy_n(last.data()+(frames-contextFrames)*64,contextFrames*64,context.data());
             for(auto& value:noise)value=normal(rng);x=noise;
             double ditTime=0;
             for(int step=0;step<steps;++step){
+                require(!levoPublicCancelled.load(),"Generation cancelled");
                 trace.gate(800);float t=float(step)/steps;
                 if(index)for(int i=0;i<contextFrames*64;++i)x[i]=(1-(1-1e-4f)*t)*noise[i]+t*context[i];
                 std::vector<float> input(2*frames*1200,0),attn(2*frames*frames,0);
