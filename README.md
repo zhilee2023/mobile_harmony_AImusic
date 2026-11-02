@@ -1,6 +1,6 @@
 # mobile_harmony_AImusic · levo-harmony
 
-> 新增独立 **LeVo 音乐** 大模型 App：简洁歌词/风格输入、15/30 秒真实生成、试听与保存，已签名安装。模型 19 个文件共约3.64GiB，保持原小模型 App 并存。自定义条件四组 token 对照与完整 embedding 字节对齐通过；App 内最终 WAV/播放验收因 USB 断开暂待取回。见[使用与构建说明](docs/MUSIC_APP.md)。
+> 新增独立 **LeVo 音乐** 大模型 App：简洁歌词/风格输入、15/30 秒真实生成、试听与保存，已签名安装。模型19个文件共约3.64GiB，保持原小模型App并存。自定义条件四组token对照与完整embedding字节对齐通过；实际App完成30秒WAV，223.593秒、RTF7.453、峰值RSS3869.8MiB，播放器实际播放通过，仍待听感验收。见[使用与构建说明](docs/MUSIC_APP.md)。
 
 > 2026-11-02 公开主 Mixed LM 已完成[真实音乐生成验证](experiments/public_mixed_validation/README.md)：主 LM W4 / 头 W8 → DiT W8 四步 / CFG1.5 → VAE W8＋NEON。手机 LM 关闭 CFG，单分支；完整 30 秒 WAV 用时 247.545 秒，RTF8.252，峰值 RSS3956.8MiB，尚未听感验收或接入 App。公开约4B双LM架构见[架构说明](docs/PUBLIC_LEVO_ARCHITECTURE.md)；本次省略 track LM，是 Mixed-only 路线。0.6B 方案继续保留，见[小模型优化保留清单](docs/SMALL_MODEL_OPTIMIZATION_BASELINE.md)，W4A4KV4 仍待验证。
 
