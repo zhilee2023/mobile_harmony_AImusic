@@ -1,5 +1,7 @@
 # LeVo 音乐：独立的大模型歌曲 App
 
+> 后续v1.0.6已增加“歌曲模型”选择与独立模型包接口。真实PT重新导出VAE的新包已完成15秒歌曲生成和播放，模型往返切换与不存在ID拒绝通过。最新结构/命令见[模型部署](MODEL_DEPLOYMENT.md)，全部状态见[完整总结](PROJECT_SUMMARY.md)；下文v1.0.5及旧性能记录保留。
+
 2026-11-02，当前 v1.0.5，包名 `com.zhilee.levomusic`，显示名 **LeVo 音乐**，绿色音符图标。与原 `com.zhilee.levoharmony` 小模型研究 App 并存。源码在 `music-app/`，不替换 0.6B 模型、App、历史实验或优化清单。
 
 ## 已实现

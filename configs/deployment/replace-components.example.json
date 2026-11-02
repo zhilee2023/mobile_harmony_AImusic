@@ -1,0 +1,8 @@
+{
+  "profile": "public-mixed-v2",
+  "modelId": "my-song-model-v2",
+  "displayName": "我的歌曲模型",
+  "baseDirectory": "${ROOT}/models/bundles/public-base-v1",
+  "components": {"dit": "${ROOT}/models/prepared/new-dit/component.json"},
+  "training": {"llm": "pretrained", "dit": "pretrained", "vae": "pretrained"}
+}

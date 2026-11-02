@@ -1,0 +1,4 @@
+interface:
+  display_name: "LeVo 模型适配与部署"
+  short_description: "导入并校验 LeVo 权重，转换模型包，部署并验证 Harmony 应用切换"
+  default_prompt: "使用 $levo-model-adaptation 将新的 PT 或 ONNX 权重适配为可部署模型包，并验证模型切换与生成。"

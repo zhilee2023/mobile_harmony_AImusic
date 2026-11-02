@@ -1,5 +1,6 @@
 #include <napi/native_api.h>
 #include "MusicRuntime.hpp"
+#include "../../../../../runtime/include/levo/ModelCatalog.hpp"
 #include "MusicUiBenchmark.hpp"
 static std::atomic<bool> musicBusy{false};
 static std::string jsText(napi_env env,napi_value value){size_t size=0;napi_get_value_string_utf8(env,value,nullptr,0,&size);require(size<32768,"Input too long");std::string text(size+1,'\0');napi_get_value_string_utf8(env,value,text.data(),text.size(),&size);text.resize(size);return text;}
@@ -8,8 +9,8 @@ struct MusicTask {napi_async_work work{};napi_deferred deferred{};std::string ro
 static void executeMusic(napi_env,void* data){auto& task=*static_cast<MusicTask*>(data);try{
     if(task.benchmark){task.result=musicUiBenchmark(task.root);return;}
     if(!task.importing){task.result=musicGenerate(task.root,task.lyrics,task.style,task.frames,task.ditSteps);return;}
-    const Json* asset=nullptr;for(const auto& item:musicAssetInventory())if(item["name"]==task.name)asset=&item;
-    require(asset,"不是此模型所需的文件");std::filesystem::path dest=task.root+"/"+(*asset)["relative"].get<std::string>();std::filesystem::create_directories(dest.parent_path());
+    const auto assets=LevoBundle::assets(task.root,musicAssetInventory());const Json* asset=nullptr;for(const auto& item:assets)if(item["name"]==task.name)asset=&item;
+    require(asset,"不是此模型所需的文件");std::filesystem::path dest=LevoBundle::path(task.root,(*asset)["relative"]);std::filesystem::create_directories(dest.parent_path());
     std::string temp=dest.string()+".importing";std::ofstream out(temp,std::ios::binary);require(out.good(),"Cannot create imported model file");
     std::vector<char> buffer(1024*1024);uint64_t copied=0;ssize_t count=0;
     while((count=read(task.fd,buffer.data(),buffer.size()))>0){out.write(buffer.data(),count);copied+=count;require(out.good()&&copied<=(*asset)["bytes"].get<uint64_t>(),"模型文件大小不匹配");}
@@ -31,6 +32,10 @@ static napi_value UiBenchmark(napi_env env,napi_callback_info info){return sched
 static napi_value AckUiPhase(napi_env env,napi_callback_info info){size_t count=1;napi_value arg;napi_get_cb_info(env,info,&count,&arg,nullptr,nullptr);int phase=-1;if(count==1)napi_get_value_int32(env,arg,&phase);musicUiAcknowledged=phase;return jsJson(env,{{"success",true}});}
 static napi_value Import(napi_env env,napi_callback_info info){return scheduleMusic(env,info,true);}
 static napi_value Cancel(napi_env env,napi_callback_info){levoPublicCancelled=true;return jsJson(env,{{"success",true}});}
+static napi_value Models(napi_env env,napi_callback_info info){size_t count=1;napi_value arg;napi_get_cb_info(env,info,&count,&arg,nullptr,nullptr);
+    try{require(count==1,"Expected App files directory");return jsJson(env,LevoBundle::musicModels(jsText(env,arg),musicAssetInventory()));}catch(const std::exception& e){return jsJson(env,{{"success",false},{"error",e.what()}});}}
+static napi_value SelectModel(napi_env env,napi_callback_info info){size_t count=2;napi_value args[2];napi_get_cb_info(env,info,&count,args,nullptr,nullptr);
+    try{require(count==2&&!musicBusy.load(),"请等待当前生成或导入完成后再切换模型");return jsJson(env,LevoBundle::selectMusicModel(jsText(env,args[0]),jsText(env,args[1]),musicAssetInventory()));}catch(const std::exception& e){return jsJson(env,{{"success",false},{"error",e.what()}});}}
 static napi_value Inspect(napi_env env,napi_callback_info info){size_t count=1;napi_value arg;napi_get_cb_info(env,info,&count,&arg,nullptr,nullptr);try{return jsJson(env,musicCheckAssets(jsText(env,arg)));}catch(const std::exception& e){return jsJson(env,{{"ready",false},{"error",e.what()}});}}
 static napi_value Progress(napi_env env,napi_callback_info info){size_t count=1;napi_value arg;napi_get_cb_info(env,info,&count,&arg,nullptr,nullptr);Json result={{"busy",musicBusy.load()}};
     result["uiBenchmarkPhase"]=musicUiPhase.load();result["uiBenchmarkDecoded"]=musicUiDecoded.load();
@@ -38,7 +43,8 @@ static napi_value Progress(napi_env env,napi_callback_info info){size_t count=1;
 static napi_value Init(napi_env env,napi_value exports){napi_property_descriptor props[]={
     {"generate",nullptr,Generate,nullptr,nullptr,nullptr,napi_default,nullptr},{"importAsset",nullptr,Import,nullptr,nullptr,nullptr,napi_default,nullptr},
     {"inspect",nullptr,Inspect,nullptr,nullptr,nullptr,napi_default,nullptr},{"progress",nullptr,Progress,nullptr,nullptr,nullptr,napi_default,nullptr},{"cancel",nullptr,Cancel,nullptr,nullptr,nullptr,napi_default,nullptr},
-    {"uiBenchmark",nullptr,UiBenchmark,nullptr,nullptr,nullptr,napi_default,nullptr},{"ackUiPhase",nullptr,AckUiPhase,nullptr,nullptr,nullptr,napi_default,nullptr}};
-    napi_define_properties(env,exports,7,props);return exports;}
+    {"uiBenchmark",nullptr,UiBenchmark,nullptr,nullptr,nullptr,napi_default,nullptr},{"ackUiPhase",nullptr,AckUiPhase,nullptr,nullptr,nullptr,napi_default,nullptr},
+    {"models",nullptr,Models,nullptr,nullptr,nullptr,napi_default,nullptr},{"selectModel",nullptr,SelectModel,nullptr,nullptr,nullptr,napi_default,nullptr}};
+    napi_define_properties(env,exports,9,props);return exports;}
 static napi_module module={1,0,nullptr,Init,"entry",nullptr,{0}};
 extern "C" __attribute__((constructor)) void RegisterMusic(){napi_module_register(&module);}

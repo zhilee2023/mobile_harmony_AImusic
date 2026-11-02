@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "student-mixed-v1",
+  "family": "small",
+  "description": "26-layer Qwen3 music student and CosyVoice-sized music-interface DiT; training status is declared per bundle",
+  "modules": {
+    "llm": {"architecture": "hf-causal-lm", "modelType": "qwen3", "layers": 26, "hidden": 1024, "intermediate": 3072, "outputClasses": 16385, "weightBits": 4, "headBits": 8, "groupSize": 64, "precision": "low", "threads": 4},
+    "dit": {"architecture": "levo-small-dit", "layers": 22, "hidden": 1024, "intermediate": 2048, "heads": 16, "weightBits": 8, "groupSize": 64, "precision": "high", "threads": 6},
+    "vae": {"architecture": "levo-oobleck-decoder", "weightBits": 8, "groupSize": 64, "precision": "low", "threads": 6}
+  },
+  "contract": {"id": "levo-mixed-1rvq-25hz-64ch-48k-v1", "vocabulary": 16384, "frameRate": 25, "windowFrames": 256, "contextFrames": 64, "hopFrames": 192, "conditionWidth": 1024, "ditInputWidth": 1200, "latentChannels": 64, "sampleRate": 48000, "audioChannels": 2, "samplesPerLatent": 1920},
+  "runtime": {"backend": "cpu", "memory": "low", "power": "high", "ditSteps": 2, "ditGuidance": 1.5, "lmGuidance": 1, "vaeVectorSin": true, "kleidi": false, "staticActivationBits": null, "kvBits": null}
+}

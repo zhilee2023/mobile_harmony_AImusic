@@ -5,3 +5,5 @@ export const progress: (directory: string) => string;
 export const cancel: () => string;
 export const uiBenchmark: (directory: string) => Promise<string>;
 export const ackUiPhase: (phase: number) => string;
+export const models: (filesDirectory: string) => string;
+export const selectModel: (filesDirectory: string, id: string) => string;

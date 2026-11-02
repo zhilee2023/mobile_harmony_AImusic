@@ -1,0 +1,7 @@
+{
+  "profile": "student-mixed-v1",
+  "module": "llm",
+  "training": "unknown",
+  "source": {"path": "${ROOT}/incoming/student.pt", "format": "checkpoint", "configDirectory": "${ROOT}/models/qwen3-0.6b-26layers-unrecovered", "tokenizerDirectory": "${ROOT}/models/qwen3-0.6b", "checkpointLayout": "student-training"},
+  "recipe": {"weightBits": 4, "headBits": 8, "groupSize": 64, "precision": "low", "threads": 4}
+}

@@ -15,13 +15,14 @@ interface TestArchive { version: string; scope: string; high?: VaeResult; low?: 
 struct Index {
   @State lyrics: string = '[Verse]\n晚风轻轻吹过窗台\n星光落在你的眼海';
   @State style: number = 0;
-  @State status: string = 'v0.1.12 · 30/90/120秒链路对照与退出原因记录；0.6B音乐模块尚未训练';
+  @State status: string = 'v0.1.13 · 30/90/120秒链路对照与退出原因记录；0.6B音乐模块尚未训练';
   @State memory: string = '';
   @State assets: string = '尚未检查测试文件';
   @State busy: boolean = false;
   @State comparisonSummary: string = '';
   @State comparisonSeconds: number = 30;
   private diagnosticRunId: string = '';
+  private diagnosticBundleId: string = '';
   private required: string[] = ['fixture.json', 'vae-256-fp32.mnn', 'vae-256-fp32.mnn.weight',
     'latent-0.f32', 'latent-1.f32', 'latent-2.f32', 'pcm-0.f32', 'pcm-1.f32', 'pcm-2.f32',
     'emit-0.f32', 'emit-1.f32', 'emit-2.f32'];
@@ -39,6 +40,8 @@ struct Index {
       try { fs.writeSync(memoryFile.fd, native.memoryProbe()); } finally { fs.closeSync(memoryFile); }
     } catch (_) {}
     const precision = AppStorage.get<string>('levoDiagnosticPrecision');
+    this.diagnosticBundleId = AppStorage.get<string>('levoModelBundle') ?? '';
+    AppStorage.delete('levoModelBundle');
     if (precision === 'chain-comparison-large-2' || precision === 'chain-comparison-small-2' || precision === 'chain-comparison-large-2-120' || precision === 'chain-comparison-small-2-120' || precision === 'chain-comparison-large-2-120-low' || precision === 'chain-comparison-large-codec-120' || precision === 'chain-comparison-large-2-90' || precision === 'chain-comparison-small-2-90' || precision === 'chain-comparison-small-vae-90' || precision === 'chain-comparison-large-codec-90') {
       this.diagnosticRunId = AppStorage.get<string>('levoDiagnosticRunId') ?? '';
       AppStorage.delete('levoDiagnosticPrecision'); AppStorage.delete('levoDiagnosticRunId');
@@ -145,12 +148,13 @@ struct Index {
     this.status = variant.includes('small') ? `0.6B＋小DiT：${duration}秒等效数值链路，LM释放后运行两步DiT和VAE` : `公开预训练模型：${duration}秒歌曲链路，LM释放后运行两步DiT和VAE`;
     try {
       const win = await window.getLastWindow(this.context()); await win.setWindowKeepScreenOn(true);
-      const raw = await native.runThreeModuleChain(`${this.context().filesDir}/chain-comparison`, variant);
+      const directory = this.diagnosticBundleId.length > 0 ? `${this.context().filesDir}/model-bundles/${this.diagnosticBundleId}` : `${this.context().filesDir}/chain-comparison`;
+      const raw = await native.runThreeModuleChain(directory, variant);
       const result = JSON.parse(raw) as ChainResult;
       const path = `${this.context().filesDir}/levo-test-report.json`;
       let archive: TestArchive = { version: '0.1.8', scope: 'Matched serial chain comparison; small model is untrained and diagnostic only' };
       try { archive = JSON.parse(fs.readTextSync(path)) as TestArchive; } catch (_) {}
-      archive.version = '0.1.12'; archive.lastRunId = this.diagnosticRunId;
+      archive.version = '0.1.13'; archive.lastRunId = this.diagnosticRunId;
       if (variant === 'comparison-small-vae-90') archive.comparisonSmallVae90 = result;
       else if (variant === 'comparison-large-codec-90') archive.comparisonLargeCodec90 = result;
       else if (variant === 'comparison-large-2-90') archive.comparisonLarge90 = result;
@@ -177,7 +181,7 @@ struct Index {
       } else { this.status = `对照停止：${result.error ?? '查看报告'}`; }
     } catch (error) { this.status = `对照失败：${String(error)}`; }
     try { const win = await window.getLastWindow(this.context()); await win.setWindowKeepScreenOn(false); } catch (_) {}
-    this.busy = false; this.diagnosticRunId = '';
+    this.busy = false; this.diagnosticRunId = ''; this.diagnosticBundleId = '';
   }
   build() {
     Scroll() {

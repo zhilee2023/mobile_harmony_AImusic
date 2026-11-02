@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "experiments": [
+    {"id": "serial-chain", "families": ["public", "small"], "entry": "tools/run_comparison_app.ps1", "parameters": {"Variant": ["large-2", "small-2", "large-2-90", "small-2-90", "large-2-120", "small-2-120"], "ModelBundle": "immutable modelId", "RecordSensors": true}, "scope": "Full chain, stage RTF and RSS/PSS; trained status from selected architecture", "status": "baseline"},
+    {"id": "matched-vae-replay", "families": ["small"], "entry": "tools/run_comparison_app.ps1", "parameters": {"Variant": "small-vae-90", "ModelBundle": "same bundle used in preceding 90s run"}, "scope": "Exact captured inputs, fresh VAE process, output parity; not full-chain RTF", "status": "retained"},
+    {"id": "dit-weight-recipe", "families": ["public", "small"], "entry": "tools/modelctl.py prepare", "parameters": {"module": "dit", "recipe.weightBits": [4, 8, 16], "recipe.groupSize": [32, 48, 64, 128]}, "scope": "Isolated component conversion and numerical validation; compare full-chain after packing a new modelId", "status": "experimental"},
+    {"id": "dit-hotspots", "families": ["public", "small"], "entry": "native-bench/DitProfile.cpp", "scope": "CPU operator callbacks; legacy standalone fixture interface preserved", "status": "retained"},
+    {"id": "vae-hotspots-and-snake", "families": ["public", "small"], "entry": "native-bench/VaeProfile.cpp; native-bench/VaeSnakeFusion.cpp", "scope": "Kernel profiling/fusion probes; callback fusion is not the default App pipeline", "status": "retained"},
+    {"id": "vae-cann-subgraphs", "families": ["public", "small"], "entry": "native-bench/VaeNpuOffline.cpp", "scope": "Hardware/toolchain-specific OMC subgraphs; not an integrated VAE NPU path", "status": "experimental"},
+    {"id": "llm-low-bit", "families": ["small"], "entry": "native-bench/QwenActivationAudit.cpp; native-bench/QwenLanguageBench.cpp", "scope": "A4/KV4 quality and runtime probes; not the default music recipe", "status": "retained"}
+  ]
+}

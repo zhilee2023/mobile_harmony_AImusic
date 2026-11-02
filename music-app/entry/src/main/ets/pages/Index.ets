@@ -8,6 +8,11 @@ import { lyricSamples } from './LyricsLibrary';
 interface AssetState { ready: boolean; count: number; total: number; bytes: number; }
 interface MusicResult { success: boolean; error?: string; cancelled?: boolean; wave?: string; durationSeconds?: number; totalSeconds?: number; wholePhoneRtf?: number; playbackState?: string; playbackValidated?: boolean; }
 interface ProgressState { busy: boolean; stage?: string; uiBenchmarkPhase?: number; uiBenchmarkDecoded?: number; }
+interface ActiveModel { id: string; }
+interface ModelChoice { id: string; name: string; ready: boolean; availableForMusic: boolean; }
+interface ModelCatalog { success: boolean; error?: string; activeId: string; entries: ModelChoice[]; }
+interface ModelSelectionRecord { requested: string; result: ModelSelection; catalog: ModelCatalog; }
+interface ModelSelection { success: boolean; error?: string; activeId?: string; }
 
 @Entry
 @Component
@@ -19,6 +24,9 @@ struct Index {
   @State importing: boolean = false;
   @State status: string = '写下歌词，选择属于你的声音。';
   @State modelStatus: string = '正在检查本地模型';
+  @State models: ModelChoice[] = [];
+  @State modelIndex: number = 0;
+  @State modelName: string = '默认歌曲模型';
   @State elapsed: number = 0;
   @State audioPath: string = '';
   @State playing: boolean = false;
@@ -39,7 +47,13 @@ struct Index {
   private firstSongCheck: boolean = false;
   private ditSteps: number = 2;
   private ctx(): common.UIAbilityContext { return getContext(this) as common.UIAbilityContext; }
-  private root(): string { return `${this.ctx().filesDir}/music-models`; }
+  private root(): string {
+    try {
+      const marker = JSON.parse(fs.readTextSync(`${this.ctx().filesDir}/active-model.json`)) as ActiveModel;
+      if (marker.id !== 'builtin' && /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$/.test(marker.id) && !marker.id.includes('..')) return `${this.ctx().filesDir}/model-bundles/${marker.id}`;
+    } catch (_) {}
+    return `${this.ctx().filesDir}/music-models`;
+  }
   private stamp(value: number): string { const sec = Math.floor(value / 1000); return `${Math.floor(sec / 60)}:${(sec % 60).toString().padStart(2, '0')}`; }
   private randomLyrics(): void {
     if (this.busy || this.importing) return;
@@ -49,6 +63,12 @@ struct Index {
   }
   private refresh(): void {
     try {
+      const catalog = JSON.parse(native.models(this.ctx().filesDir)) as ModelCatalog;
+      if (catalog.success) {
+        this.models = catalog.entries.filter((entry: ModelChoice) => entry.availableForMusic);
+        this.modelIndex = Math.max(0, this.models.findIndex((entry: ModelChoice) => entry.id === catalog.activeId));
+        this.modelName = this.models[this.modelIndex]?.name ?? '默认歌曲模型';
+      }
       const state = JSON.parse(native.inspect(this.root())) as AssetState;
       this.ready = state.ready;
       this.modelStatus = state.ready ? '已就绪 · 本地生成' : `模型 ${state.count}/${state.total} · 需导入约 ${(state.bytes / 1073741824).toFixed(1)} GB`;
@@ -56,6 +76,8 @@ struct Index {
   }
   aboutToAppear(): void {
     this.refresh();
+    const requestedModel = AppStorage.get<string>('musicAppSelectModel');
+    if (requestedModel) { AppStorage.delete('musicAppSelectModel'); this.chooseModel(requestedModel); }
     try { const last = JSON.parse(fs.readTextSync(`${this.root()}/last-music-result.json`)) as MusicResult;
       if (last.success && last.wave && fs.accessSync(last.wave)) { this.audioPath = last.wave; this.audioDuration = (last.durationSeconds ?? 30) * 1000; }
     } catch (_) {}
@@ -76,6 +98,16 @@ struct Index {
     }
   }
   aboutToDisappear(): void { this.releasePlayer(); }
+  private chooseModel(id: string): void {
+    if (this.busy || this.importing) return;
+    const selected = JSON.parse(native.selectModel(this.ctx().filesDir, id)) as ModelSelection;
+    this.status = selected.success ? '模型已切换，可以开始创作。' : (selected.error ?? '模型切换失败');
+    this.refresh();
+    try {
+      const file = fs.openSync(`${this.ctx().filesDir}/last-model-selection.json`, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE | fs.OpenMode.TRUNC);
+      try { const record: ModelSelectionRecord = { requested: id, result: selected, catalog: JSON.parse(native.models(this.ctx().filesDir)) as ModelCatalog }; fs.writeSync(file.fd, JSON.stringify(record)); } finally { fs.closeSync(file); }
+    } catch (_) {}
+  }
   private async keepAwake(enable: boolean): Promise<void> {
     try { const win = await window.getLastWindow(this.ctx()); await win.setWindowKeepScreenOn(enable); } catch (_) {}
   }
@@ -215,6 +247,15 @@ struct Index {
           }.alignItems(HorizontalAlign.Start)
           Blank()
         }.width('100%')
+        Row({ space: 10 }) {
+          Text('歌曲模型').fontSize(15).fontColor('#73808E')
+          Blank()
+          Select(this.models.map((entry: ModelChoice): SelectOption => { return { value: entry.name }; }))
+            .selected(this.modelIndex).value(this.modelName).font({ size: 15 }).enabled(!this.busy && !this.importing)
+            .onSelect((index: number) => { this.chooseModel(this.models[index].id); })
+          Button('刷新').fontSize(12).height(30).backgroundColor('#E5F2ED').fontColor('#237C69')
+            .enabled(!this.busy && !this.importing).onClick(() => { this.refresh(); })
+        }.padding(14).backgroundColor('#FFFFFF').borderRadius(18).width('100%')
         Column({ space: 12 }) {
           Row() {
             Text(this.lyricTitle.length > 0 ? `歌词 · ${this.lyricTitle}` : '歌词').fontSize(17).fontWeight(FontWeight.Medium)

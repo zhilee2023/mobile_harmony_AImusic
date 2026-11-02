@@ -1,6 +1,7 @@
 .deps/
 .codec-deps/
 .plot-deps/
+incoming/
 .venv/
 __pycache__/
 *.pyc
@@ -41,3 +42,4 @@ music-app/oh_modules/
 music-app/entry/oh_modules/
 music-app/entry/.cxx/
 music-app/entry/build/
+music-app/entry/src/main/cpp/music-local.cmake

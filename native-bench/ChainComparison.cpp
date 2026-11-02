@@ -68,9 +68,11 @@ static Json comparisonStudent(const std::string& root,int frames){
     PublicPhoneTrace trace;trace.sink=root+"/progress.jsonl";std::ofstream(trace.sink).close();levoPublicCancelled=false;
     Json report={{"success",false},{"diagnosticOnly",true},{"musicTrained",false},{"variant","small"},{"ditSteps",2}};
     try{
-        trace.gate(2600);auto metadata=readJson(root+"/student/diagnostic-student.json");require(metadata["music_trained"]==false,"Expected diagnostic student");
+        trace.gate(2600);auto metadata=readJson(root+"/student/diagnostic-student.json");
+        if(LevoBundle::exists(root)){require(LevoBundle::inspect(root,Json::array())["ready"],"Incomplete selected model bundle");report["modelBundle"]=LevoBundle::load(root)["modelId"];}
+        else require(metadata["music_trained"]==false,"Expected diagnostic student");
         auto prefix=readJson(root+"/student/prefix.json").get<std::vector<int>>();require(prefix.size()==514,"Expected student 514-position prefix");
-        auto config=readJson(root+"/student/config.json");config["base_dir"]=root+"/student/";config["thread_num"]=4;config["precision"]="low";
+        auto config=readJson(root+"/student/config.json");auto lmPolicy=LevoBundle::policy(root,"llm","low",4);config["base_dir"]=root+"/student/";config["thread_num"]=lmPolicy["threads"];config["precision"]=lmPolicy["precision"];
         config["memory"]="low";config["power"]="high";config["reuse_kv"]=false;config["attention_mode"]=8;config["cosyvoice_kleidiai"]=false;
         writePublicJson(root+"/student/comparison-config.json",config);auto tick=Clock::now();
         trace.mark("student-lm-loading");PublicLlm model(Llm::createLLM(root+"/student/comparison-config.json"),&Llm::destroy);require(model&&model->load(),"Student load failed");
@@ -87,7 +89,7 @@ static Json comparisonStudent(const std::string& root,int frames){
             if(!i||codes.size()%25==0)trace.mark("real-phone-music-codes-"+std::to_string(codes.size()));
         }
         report["lm"]={{"loadSeconds",load},{"prefillSeconds",prefill},{"decodeSeconds",decode},{"decodeTokensPerSecond",(frames-1)/decode},{"prefixPositions",514},{"frames",codes.size()},
-            {"finalKvPositions",model->getCurrentHistory()},{"eosSuppressedForFixedLengthDiagnostic",true},{"precision","low"},{"threads",4}};
+            {"finalKvPositions",model->getCurrentHistory()},{"eosSuppressedForFixedLengthDiagnostic",true},{"precision",lmPolicy["precision"]},{"threads",lmPolicy["threads"]}};
         model.reset();report["lmStageSeconds"]=seconds(trace.start);trace.mark("student-lm-destroyed-before-codec");
         Json source={{"source","untrained 0.6B diagnostic student"},{"diagnosticOnly",true},{"lmDevice","Harmony phone CPU"},{"codes",codes},{"lmGuidance",1},
             {"progressPath",trace.sink},{"captureVaeLatents",frames==2250}};writePublicJson(root+"/comparison-codes.json",source);
@@ -106,8 +108,8 @@ std::string LevoRunComparableChain(const std::string& root,const std::string& va
     const bool small=variant=="small-2"||variant=="small-2-120"||variant=="small-2-90";const int frames=ninety?2250:(longer?3000:750);
     try{
         require(variant=="large-2"||variant=="small-2"||longer,"Invalid comparison variant");
-        if(small)result=comparisonStudent(root+"/small",frames);
-        else{auto input=readJson(root+"/input.json");result=musicGenerate(root+"/public",input["lyrics"],input["style"],frames,2,longer,lowPublic);
+        if(small)result=comparisonStudent(LevoBundle::comparisonRoot(root,"small"),frames);
+        else{auto input=readJson(root+"/input.json");result=musicGenerate(LevoBundle::comparisonRoot(root,"public"),input["lyrics"],input["style"],frames,2,longer,lowPublic);
             result["variant"]="large";result["lmStageSeconds"]=result.contains("lm")?result["lm"]["totalLmSeconds"]:Json(nullptr);
             result["validPcmSeconds"]=result.value("durationSeconds",0.0);result["pipelineRtfThroughPcm"]=result.value("wholePhoneRtf",0.0);
         }
@@ -128,18 +130,27 @@ std::string LevoRunComparableChain(const std::string& root,const std::string& va
         {"lmPrecision",small||lowPublic?"Low":"High"},{"ditPrecision","High"},{"vaePrecision","Low"},{"lmThreads",4},{"codecThreads",6},
         {"activationQuantization","No requested static A4"},{"kvQuantization","Default runtime cache, no requested KV4"},{"samplingSeed",2307},{"temperature",.9},{"topK",50},{"repetitionPenalty",1.1}};
     result["requestedDurationSeconds"]=frames/25.;result["requestedMusicCodes"]=frames;result["fixedLengthBenchmark"]=longer;
+    if(LevoBundle::exists(root)){auto bundle=LevoBundle::load(root);result["bundleModules"]=bundle["modules"];
+        const auto& lm=bundle["modules"]["llm"];const auto& dit=bundle["modules"]["dit"];const auto& vae=bundle["modules"]["vae"];
+        result["quantization"]["lmBodyWeightBits"]=lm["recipe"]["weightBits"];result["quantization"]["lmHeadWeightBits"]=lm["recipe"].value("headBits",Json(nullptr));
+        result["quantization"]["ditWeightBits"]=dit["recipe"]["weightBits"];result["quantization"]["vaeWeightBits"]=vae["recipe"]["weightBits"];
+        result["quantization"]["lmThreads"]=lm["runtime"]["threads"];result["quantization"]["ditThreads"]=dit["runtime"]["threads"];result["quantization"]["vaeThreads"]=vae["runtime"]["threads"];
+        result["quantization"]["codecThreads"]=dit["runtime"]["threads"]==vae["runtime"]["threads"]?dit["runtime"]["threads"]:Json(nullptr);
+        result["quantization"]["lmPrecision"]=lm["runtime"]["precision"];result["quantization"]["ditPrecision"]=dit["runtime"]["precision"];result["quantization"]["vaePrecision"]=vae["runtime"]["precision"];
+        result["quantization"]["source"]="Bundle declaration; runtime policy recorded separately from observed kernel precision";}
     result["comparisonScope"]="Same App, requested"+std::to_string(frames/25)+"seconds, 2-step CFG DiT and same pretrained VAE; model sizes, condition contracts and training status differ";
     return result.dump();
 }
 
 std::string LevoRunSmallVaeReplay(const std::string& directory){
-    const std::string root=directory+"/small";ComparisonMemory memory;Trace trace;trace.sink=root+"/progress.jsonl";std::ofstream(trace.sink).close();
+    const std::string root=LevoBundle::comparisonRoot(directory,"small");ComparisonMemory memory;Trace trace;trace.sink=root+"/progress.jsonl";std::ofstream(trace.sink).close();
     Json result={{"success",false},{"vaeOnly",true},{"llmExecuted",false},{"ditExecuted",false},{"wholeChainCompleted",false}};
     try{
         auto manifest=readJson(root+"/vae-replay/latest.json");const double duration=manifest["durationSeconds"];
         require(manifest.value("complete",false)&&duration==90&&manifest["windows"].size()==12,"Need complete captured 90-second/12-window fixture");
         result["fixtureManifest"]=manifest;trace.gate(2600);trace.mark("replay-vae-loading");auto tick=Clock::now();std::unique_ptr<Session> vae;
-        vae=std::make_unique<Session>(root+"/vae/vae-256-w8.mnn",true,6,false,true);
+        auto policy=LevoBundle::policy(root,"vae","low",6);
+        vae=std::make_unique<Session>(LevoBundle::modulePath(root,"vae","vae/vae-256-w8.mnn"),policy["precision"]=="low",policy["threads"],false,true);
         result["setupSeconds"]=seconds(tick);trace.mark("replay-vae-loaded");Json rows=Json::array();double totalVae=0,baseline=0,maxL2=0;bool allEqual=true;
         for(const auto& window:manifest["windows"]){trace.gate(800);int chunk=window["chunk"];auto latent=read(window["latentPath"],64*256);
             require(levoTensorFingerprint(latent)==window["latentFingerprint"],"Captured latent changed");trace.mark("replay-chunk-"+std::to_string(chunk)+"-vae-start");

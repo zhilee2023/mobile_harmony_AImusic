@@ -1,0 +1,8 @@
+{
+  "profile": "public-mixed-v2",
+  "module": "dit",
+  "training": "pretrained",
+  "source": {"path": "${ROOT}/incoming/new-dit.onnx", "format": "onnx"},
+  "recipe": {"weightBits": 8, "groupSize": 64, "precision": "high", "threads": 6},
+  "maxRelativeL2": 0.1
+}

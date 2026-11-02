@@ -1,5 +1,7 @@
 # mobile_harmony_AImusic · levo-harmony
 
+> **模型替换已接入LeVo音乐v1.0.6**：顶部“歌曲模型”菜单支持独立模型包发现/切换，默认模型保留。真实PT VAE→ONNX→MNN后完成15秒歌曲生成/播放（89.944秒，RTF5.996）；ONNX小DiT新包30秒数值链路44.596秒、RTF1.487，750码与重构前一致。当前33项测试通过。见[完整总结](docs/PROJECT_SUMMARY.md)、[替换与部署命令](docs/MODEL_DEPLOYMENT.md)及[Agent skill](skills/levo-model-adaptation/SKILL.md)。这是替换/部署验收，未把不同轮次时延当成受控优化收益。
+
 > **最新小模型重测：v0.1.12，90秒数值链路连续两轮RTF 1.566 / 1.608**，峰值RSS约1.10GiB。相同12份latent的VAE整链59.763秒、独立52.406秒（少12.3%），全部输出指纹一致、首窗L2=0；此前RTF2.163的慢速未复现。量化和线程请求未改，小模型仍未训练。见[同输入重测与线程池线索](docs/SMALL_90S_RETEST.md)，旧实验与公开模型记录均保留。
 
 > **2026-11-02：LeVo Harmony v0.1.11，90秒真机记录**：0.598B原型单次端到端RTF **2.163**、RSS峰值 **1.19GiB**；公开主Mixed LM生成齐2250个code后退出，再以原码恢复90秒WAV，已测计算段合计RTF **6.225**（**不是单次端到端**），退出前已捕获RSS至少 **5.43GiB**。Mixed DiT精确源参数 **751.534M**，小DiT **195.416M**，共用VAE **84.414M**。详见[参数、ROM、量化、阶段RTF与温度/功率图](docs/CHAIN_COMPARISON_90S.md)；[120秒失败与模块记录](docs/CHAIN_COMPARISON_120S.md)保留。功率曲线为USB充电条件下电池端交换功率幅值，不是App/SoC功耗。

@@ -14,6 +14,8 @@ export default class EntryAbility extends UIAbility {
       AppStorage.setOrCreate<string>('levoDiagnosticPrecision', precision as string);
       const runId = want.parameters?.['levoDiagnosticRunId'];
       if (typeof runId === 'string') AppStorage.setOrCreate<string>('levoDiagnosticRunId', runId);
+      const bundle = want.parameters?.['levoModelBundle'];
+      if (typeof bundle === 'string' && /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$/.test(bundle) && !bundle.includes('..')) AppStorage.setOrCreate<string>('levoModelBundle', bundle);
     }
   }
   onWindowStageCreate(stage: window.WindowStage): void { stage.loadContent('pages/Index'); }

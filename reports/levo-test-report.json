@@ -72797,5 +72797,3036 @@
       "latent-8.f32": "f8b8de1f28d9a3c78a63b61b8debd1e7587f72d1efce201c34423e26239bdc50",
       "latent-9.f32": "df405208a67e9f6e8774df645a757aac2fd8cfe06c4d252e8e6a6a324df43e03"
     }
+  },
+  "modular_model_deployment_2026_11_02": {
+    "date": "2026-11-02",
+    "musicAppVersion": "1.0.6",
+    "researchAppVersion": "0.1.13",
+    "scope": "Model discovery/selection, strict PT and ONNX conversion, independent deployment slots, real music and diagnostic student acceptance",
+    "publicMusic": {
+      "runId": "public-pt-vae-20261102-r1",
+      "modelId": "public-pt-vae-test-v1",
+      "hapSha256": "4a06ef9b44e5844cff06c94252454ee77553f0542036392464804efe372e283c",
+      "attachedToRunningGeneration": true,
+      "firstObservedProgress": {
+        "rssKiB": 1046576,
+        "seconds": 8.415322656,
+        "stage": "chunk-1-vae-start",
+        "systemAvailableKiB": 5180416
+      },
+      "foregroundSamples": [
+        {
+          "seconds": 0.2619065,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 4.1250275,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 7.9551183,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 11.7339065,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 15.4744223,
+          "state": "FOREGROUND"
+        }
+      ],
+      "foregroundStableDuringObservation": true,
+      "screenRemainedOnDuringObservation": true,
+      "selection": {
+        "requested": "public-pt-vae-test-v1",
+        "result": {
+          "activeId": "public-pt-vae-test-v1",
+          "success": true
+        },
+        "catalog": {
+          "activeId": "public-pt-vae-test-v1",
+          "entries": [
+            {
+              "availableForMusic": true,
+              "id": "builtin",
+              "legacy": true,
+              "name": "默认歌曲模型",
+              "ready": true
+            },
+            {
+              "availableForMusic": true,
+              "id": "public-pt-vae-test-v1",
+              "name": "可替换模型验证",
+              "profile": "public-mixed-v2",
+              "qualityValidated": false,
+              "ready": true
+            }
+          ],
+          "success": true
+        }
+      },
+      "result": {
+        "codec": {
+          "audioFileGenerated": true,
+          "chunks": [
+            {
+              "chunk": 1,
+              "ditSeconds": 6.2404579689999995,
+              "pcmPeak": 1.2099609375,
+              "vaeSeconds": 5.252365781,
+              "validFrames": 256
+            },
+            {
+              "chunk": 2,
+              "ditSeconds": 6.293222500000001,
+              "pcmPeak": 1.2890625,
+              "vaeSeconds": 5.2071375,
+              "validFrames": 183
+            }
+          ],
+          "clippedSampleFraction": 8.263888888888889e-05,
+          "codecDevice": "Harmony phone CPU",
+          "codecGuidance": 1.5,
+          "codecOnlyRtf": 1.6804546562666667,
+          "codecSeconds": 25.206819375,
+          "diagnosticOnly": false,
+          "ditSetupSeconds": 1.191231094,
+          "ditSteps": 2,
+          "ditWeightBits": 8,
+          "durationSeconds": 15,
+          "lmDevice": "Harmony phone CPU",
+          "lmGuidance": 1,
+          "lmWeightBits": 4,
+          "minimumSystemAvailableKiB": 4513792,
+          "numericalPcmGenerated": true,
+          "pcmPeak": 1.2890625,
+          "pcmRms": 0.1871508263614814,
+          "performanceFixtureOnly": false,
+          "randomMusicHead": false,
+          "requestedRuntime": {
+            "dit": {
+              "precision": "high",
+              "threads": 6
+            },
+            "vae": {
+              "precision": "low",
+              "threads": 6
+            }
+          },
+          "sampledPeakRssKiB": 1665984,
+          "stages": [
+            {
+              "rssKiB": 181096,
+              "seconds": 0.006510781,
+              "stage": "real-public-codes-start",
+              "systemAvailableKiB": 6069248
+            },
+            {
+              "rssKiB": 840320,
+              "seconds": 1.198869062,
+              "stage": "real-dit-loaded",
+              "systemAvailableKiB": 5415936
+            },
+            {
+              "rssKiB": 840320,
+              "seconds": 1.199318281,
+              "stage": "real-vae-loading",
+              "systemAvailableKiB": 5415936
+            },
+            {
+              "rssKiB": 983704,
+              "seconds": 2.132997656,
+              "stage": "real-vae-loaded",
+              "systemAvailableKiB": 5241856
+            },
+            {
+              "rssKiB": 984032,
+              "seconds": 2.165988437,
+              "stage": "chunk-1-dit-0",
+              "systemAvailableKiB": 5242880
+            },
+            {
+              "rssKiB": 1049328,
+              "seconds": 5.223238906,
+              "stage": "chunk-1-dit-1",
+              "systemAvailableKiB": 5187584
+            },
+            {
+              "rssKiB": 1046572,
+              "seconds": 8.4149525,
+              "stage": "chunk-1-dit-2",
+              "systemAvailableKiB": 5180416
+            },
+            {
+              "rssKiB": 1046576,
+              "seconds": 8.415322656,
+              "stage": "chunk-1-vae-start",
+              "systemAvailableKiB": 5180416
+            },
+            {
+              "rssKiB": 1662908,
+              "seconds": 13.683862344,
+              "stage": "chunk-1-wav-written",
+              "systemAvailableKiB": 4552704
+            },
+            {
+              "rssKiB": 1662908,
+              "seconds": 13.687704062,
+              "stage": "chunk-2-dit-0",
+              "systemAvailableKiB": 4552704
+            },
+            {
+              "rssKiB": 1662964,
+              "seconds": 16.804412344,
+              "stage": "chunk-2-dit-1",
+              "systemAvailableKiB": 4548608
+            },
+            {
+              "rssKiB": 1662772,
+              "seconds": 19.982646094,
+              "stage": "chunk-2-dit-2",
+              "systemAvailableKiB": 4545536
+            },
+            {
+              "rssKiB": 1662740,
+              "seconds": 19.982988125,
+              "stage": "chunk-2-vae-start",
+              "systemAvailableKiB": 4545536
+            },
+            {
+              "rssKiB": 1664128,
+              "seconds": 25.206575469,
+              "stage": "chunk-2-wav-written",
+              "systemAvailableKiB": 4513792
+            }
+          ],
+          "success": true,
+          "totalSeconds": 25.392525469,
+          "trainedLmTokens": true,
+          "vaeNeonSinCalls": 288,
+          "vaeSetupSeconds": 0.932909062,
+          "vaeSinHookDuringBuild": true,
+          "vaeWeightBits": 8,
+          "wholePhoneChain": true
+        },
+        "condition": {
+          "allConditionEmbeddingsTrained": true,
+          "lyricTokenIds": [
+            151644,
+            151649,
+            198,
+            151646,
+            198,
+            109131,
+            9370,
+            109520,
+            38182,
+            57811,
+            100448,
+            198,
+            110267,
+            102294,
+            98641,
+            71817,
+            102781,
+            198,
+            151647,
+            198,
+            102351,
+            112643,
+            104166,
+            113375,
+            198,
+            56568,
+            104927,
+            109323,
+            100696,
+            198,
+            151652
+          ],
+          "lyrics": "[intro-short]\n[verse]\n清晨的风吹过山岗\n我把梦想装进行囊\n[chorus]\n一路向着阳光歌唱\n你是我心中的方向\n[outro-short]",
+          "seconds": 0.466040781,
+          "style": "male, warm intimate vocal, Mandarin folk pop, acoustic guitar, gentle piano, light drums, hopeful, 88 BPM",
+          "styleTokenIds": [
+            151644,
+            36476,
+            11,
+            8205,
+            31387,
+            25407,
+            11,
+            82771,
+            27936,
+            2420,
+            11,
+            44066,
+            16986,
+            11,
+            21700,
+            26278,
+            11,
+            3100,
+            46289,
+            11,
+            37550,
+            11,
+            220,
+            23,
+            23,
+            88219
+          ]
+        },
+        "ditGuidance": 1.5,
+        "ditSteps": 2,
+        "durationSeconds": 15,
+        "lm": {
+          "audioSeconds": 15,
+          "bodyBits": 4,
+          "checkpointMinimumSystemAvailableKiB": 2659328,
+          "checkpointPid": 6810,
+          "checkpointSampledPeakRssKiB": 3575692,
+          "codes": [
+            1092,
+            301,
+            13078,
+            4071,
+            5952,
+            1172,
+            13078,
+            4585,
+            2920,
+            10435,
+            13078,
+            13078,
+            15456,
+            5293,
+            181,
+            13078,
+            2154,
+            13607,
+            13826,
+            161,
+            15973,
+            6837,
+            8963,
+            2258,
+            9886,
+            14827,
+            3778,
+            7570,
+            7903,
+            6801,
+            6284,
+            5270,
+            12473,
+            4912,
+            4600,
+            4945,
+            8951,
+            4907,
+            9256,
+            1398,
+            11614,
+            8246,
+            4960,
+            1004,
+            12538,
+            9653,
+            11485,
+            4049,
+            13415,
+            6533,
+            3148,
+            13207,
+            11531,
+            10164,
+            13158,
+            11230,
+            14526,
+            14841,
+            1304,
+            4673,
+            14928,
+            3979,
+            3742,
+            844,
+            9181,
+            1161,
+            14171,
+            5587,
+            13012,
+            14573,
+            12780,
+            8091,
+            2099,
+            14784,
+            4599,
+            791,
+            6741,
+            1584,
+            7380,
+            11853,
+            12599,
+            16337,
+            9273,
+            13297,
+            6915,
+            13598,
+            10030,
+            14745,
+            7074,
+            2237,
+            173,
+            1968,
+            4149,
+            5237,
+            15553,
+            12489,
+            10953,
+            5006,
+            128,
+            8340,
+            12214,
+            12867,
+            13679,
+            1514,
+            3512,
+            3789,
+            6650,
+            6262,
+            3770,
+            1558,
+            12495,
+            11794,
+            2607,
+            7439,
+            7449,
+            7644,
+            3219,
+            1475,
+            8295,
+            3961,
+            12277,
+            11165,
+            11697,
+            6837,
+            1395,
+            14062,
+            4155,
+            14114,
+            14452,
+            13031,
+            15610,
+            9485,
+            5983,
+            15207,
+            15610,
+            1349,
+            6339,
+            8040,
+            1605,
+            13783,
+            13837,
+            12760,
+            914,
+            4599,
+            7501,
+            5060,
+            11644,
+            11531,
+            4463,
+            9518,
+            1246,
+            6685,
+            4679,
+            11215,
+            11529,
+            10735,
+            10735,
+            852,
+            10001,
+            3404,
+            7163,
+            13561,
+            7558,
+            1728,
+            1077,
+            3900,
+            7625,
+            13989,
+            11761,
+            13929,
+            14353,
+            6766,
+            10954,
+            13754,
+            13085,
+            255,
+            3846,
+            10393,
+            14535,
+            10522,
+            13373,
+            14949,
+            8988,
+            5580,
+            4298,
+            14518,
+            7074,
+            15002,
+            13573,
+            13601,
+            2038,
+            10916,
+            554,
+            2778,
+            12274,
+            9699,
+            3364,
+            7946,
+            6741,
+            1508,
+            6956,
+            14882,
+            5581,
+            325,
+            8627,
+            744,
+            14296,
+            640,
+            10748,
+            5843,
+            15020,
+            14395,
+            15868,
+            284,
+            7501,
+            11644,
+            12942,
+            16355,
+            8037,
+            2922,
+            15946,
+            3137,
+            15770,
+            15188,
+            6533,
+            5195,
+            1532,
+            1096,
+            9181,
+            15977,
+            9816,
+            4080,
+            1728,
+            8644,
+            14868,
+            12554,
+            15560,
+            10069,
+            14858,
+            7316,
+            7404,
+            8465,
+            4488,
+            8211,
+            4761,
+            13421,
+            1686,
+            14306,
+            13786,
+            211,
+            3513,
+            13728,
+            1660,
+            12293,
+            9352,
+            15647,
+            11466,
+            5432,
+            7337,
+            11996,
+            7772,
+            11486,
+            11321,
+            16219,
+            12939,
+            14632,
+            4428,
+            429,
+            9700,
+            15671,
+            13801,
+            12731,
+            8072,
+            16109,
+            6757,
+            11005,
+            11120,
+            13510,
+            11329,
+            14188,
+            14859,
+            5265,
+            7847,
+            3131,
+            2109,
+            11177,
+            4973,
+            7489,
+            5460,
+            15493,
+            3473,
+            8970,
+            2823,
+            3517,
+            10136,
+            11377,
+            12400,
+            4790,
+            10680,
+            2589,
+            309,
+            12813,
+            3277,
+            6650,
+            12942,
+            1948,
+            9551,
+            13728,
+            14252,
+            3513,
+            10040,
+            8988,
+            4843,
+            211,
+            10629,
+            9731,
+            4717,
+            14306,
+            13786,
+            9129,
+            8676,
+            4933,
+            10280,
+            10998,
+            3740,
+            3820,
+            5127,
+            14750,
+            358,
+            15784,
+            11466,
+            12925,
+            6804,
+            8983,
+            4244,
+            3713,
+            13373,
+            13206,
+            11321,
+            2306,
+            5265,
+            13586,
+            7337,
+            14297,
+            1917,
+            9428,
+            8017,
+            4417,
+            2788,
+            4864,
+            15868,
+            7501,
+            11601,
+            9649,
+            15560,
+            5387,
+            14858,
+            9327,
+            304,
+            15589,
+            1840,
+            2847,
+            11288,
+            11644,
+            12332,
+            10424,
+            9796,
+            8901,
+            2038,
+            2158,
+            14578,
+            284,
+            6533,
+            6017,
+            15351
+          ],
+          "conditionedKvPositions": 1327,
+          "decodeSeconds": 38.63668593699998,
+          "decodeTokensPerSecond": 9.679919251092992,
+          "eos": false,
+          "eosSuppressedForFixedLengthDiagnostic": false,
+          "frames": 375,
+          "headBits": 8,
+          "legacyReferenceApplied": false,
+          "lmCleanupCompleted": true,
+          "lmDevice": "Harmony phone CPU",
+          "lmGuidance": 1,
+          "lmInstances": 1,
+          "lmLoadSeconds": 4.09272875,
+          "lmSecondsThroughLastToken": 63.630791563,
+          "maxFramesRequested": 375,
+          "mixedOnly": true,
+          "precision": "high",
+          "prefillSeconds": 20.729799219,
+          "prefixPositions": 953,
+          "probe": [],
+          "progressPath": "/data/storage/el2/base/haps/entry/files/model-bundles/public-pt-vae-test-v1/progress.jsonl",
+          "randomMusicHead": false,
+          "recentTokenWindow": 50,
+          "runId": "1793621985830810",
+          "samplingGenerator": "C++ mt19937",
+          "seed": 2307,
+          "source": "trained public LeVo v2-large primary Mixed LM",
+          "temperature": 0.9,
+          "threads": 4,
+          "tokenSeconds": [
+            20.729799219,
+            0.114319687,
+            0.084880625,
+            0.086063125,
+            0.087959375,
+            0.083659531,
+            0.087390781,
+            0.085973906,
+            0.100434219,
+            0.084559688,
+            0.08770375,
+            0.088612656,
+            0.086711562,
+            0.089255625,
+            0.088186094,
+            0.087742344,
+            0.091426875,
+            0.088117344,
+            0.0878125,
+            0.086148906,
+            0.091329062,
+            0.087445,
+            0.088223281,
+            0.08935625,
+            0.088905469,
+            0.0904675,
+            0.087657344,
+            0.087370625,
+            0.089953282,
+            0.0918525,
+            0.091829219,
+            0.095718281,
+            0.101020313,
+            0.094540937,
+            0.088273281,
+            0.092305938,
+            0.094431094,
+            0.086883125,
+            0.085220938,
+            0.089033282,
+            0.091426406,
+            0.091584219,
+            0.091745156,
+            0.104673437,
+            0.099511562,
+            0.10025875,
+            0.088238281,
+            0.087957343,
+            0.094355469,
+            0.0905825,
+            0.085493125,
+            0.086301094,
+            0.090605468,
+            0.096675468,
+            0.092583281,
+            0.089731563,
+            0.095144218,
+            0.097331875,
+            0.091439219,
+            0.092517812,
+            0.095792187,
+            0.092750312,
+            0.085244375,
+            0.0903275,
+            0.090419375,
+            0.783037187,
+            0.08448625,
+            0.084550156,
+            0.08392625,
+            0.088105625,
+            0.087147343,
+            0.090952656,
+            0.090119063,
+            0.095245781,
+            0.09707625,
+            0.094604532,
+            0.0959725,
+            0.092655157,
+            0.092874062,
+            0.092202656,
+            0.090379844,
+            0.0897125,
+            0.088257031,
+            0.091217657,
+            0.092526407,
+            0.097958125,
+            0.096058437,
+            0.097924063,
+            0.092016406,
+            0.091196875,
+            0.091160781,
+            0.097096563,
+            0.092695313,
+            0.096865469,
+            0.094163282,
+            0.092060938,
+            0.095474687,
+            0.094194063,
+            0.092408437,
+            0.097649687,
+            0.097564687,
+            0.098526875,
+            0.094442344,
+            0.097700938,
+            0.0850825,
+            0.09239375,
+            0.093648906,
+            0.092388906,
+            0.099304062,
+            0.0866275,
+            0.095169062,
+            0.092638125,
+            0.0936025,
+            0.089601406,
+            0.092443438,
+            0.093041875,
+            0.095309844,
+            0.101436406,
+            0.093043594,
+            0.100714687,
+            0.085076719,
+            0.09255125,
+            0.094052344,
+            0.095071407,
+            0.095269219,
+            0.096592813,
+            0.098085157,
+            0.097596562,
+            0.093224219,
+            0.097620469,
+            0.676675781,
+            0.097213906,
+            0.0884775,
+            0.087455625,
+            0.089305157,
+            0.09069,
+            0.092188906,
+            0.091889218,
+            0.092769062,
+            0.096644218,
+            0.103117968,
+            0.09700125,
+            0.083305,
+            0.106109063,
+            0.095098125,
+            0.096240781,
+            0.093698906,
+            0.097918437,
+            0.101877032,
+            0.094410781,
+            0.093562968,
+            0.094580938,
+            0.09136875,
+            0.096840625,
+            0.098019218,
+            0.099814531,
+            0.109760782,
+            0.094371093,
+            0.088203594,
+            0.093525,
+            0.094263125,
+            0.092761093,
+            0.094876406,
+            0.097597188,
+            0.100490781,
+            0.105218437,
+            0.088601406,
+            0.092781875,
+            0.089967031,
+            0.090925469,
+            0.095630312,
+            0.096525312,
+            0.10059625,
+            0.085254688,
+            0.090959375,
+            0.092417344,
+            0.093848593,
+            0.088940469,
+            0.091735,
+            0.094400937,
+            0.094645469,
+            0.097899219,
+            0.099936562,
+            0.092745,
+            0.103875625,
+            0.098858125,
+            0.09706875,
+            0.094431093,
+            0.09724875,
+            0.095591406,
+            0.097345313,
+            0.096578125,
+            0.098050625,
+            0.099462031,
+            0.08442125,
+            0.632281406,
+            0.086268281,
+            0.08913625,
+            0.090060625,
+            0.091500313,
+            0.090854688,
+            0.093967031,
+            0.093597188,
+            0.098094688,
+            0.117636406,
+            0.108949531,
+            0.098633125,
+            0.088852032,
+            0.095546562,
+            0.089417188,
+            0.090953125,
+            0.089753437,
+            0.091869062,
+            0.093789843,
+            0.095172813,
+            0.095533282,
+            0.102386875,
+            0.093757656,
+            0.101072969,
+            0.093265469,
+            0.089059843,
+            0.097526875,
+            0.090141407,
+            0.094527968,
+            0.093564688,
+            0.101161406,
+            0.097989375,
+            0.098606563,
+            0.096679531,
+            0.100671406,
+            0.096680625,
+            0.096799532,
+            0.100657656,
+            0.098777343,
+            0.087905938,
+            0.098410625,
+            0.101636719,
+            0.085310937,
+            0.096261406,
+            0.095584375,
+            0.095438593,
+            0.096877812,
+            0.094739532,
+            0.102471718,
+            0.091113906,
+            0.097742813,
+            0.095241875,
+            0.096445,
+            0.095362657,
+            0.098744375,
+            0.099849687,
+            0.107571406,
+            0.083641719,
+            0.098085313,
+            0.092063281,
+            0.094538281,
+            0.096163125,
+            0.097269531,
+            0.09963625,
+            0.088769375,
+            0.68171125,
+            0.090142968,
+            0.091119532,
+            0.090046094,
+            0.091492344,
+            0.094279531,
+            0.09554625,
+            0.095716407,
+            0.092889063,
+            0.096112969,
+            0.099886563,
+            0.100553281,
+            0.09733125,
+            0.088656094,
+            0.10096625,
+            0.091662188,
+            0.0994925,
+            0.097682031,
+            0.098903281,
+            0.095862188,
+            0.096533282,
+            0.097954375,
+            0.100895625,
+            0.099694844,
+            0.102700625,
+            0.100473281,
+            0.094657344,
+            0.096730781,
+            0.097100312,
+            0.095367812,
+            0.097087813,
+            0.0979725,
+            0.100533438,
+            0.101495469,
+            0.094955937,
+            0.098921093,
+            0.09800875,
+            0.096645782,
+            0.098251406,
+            0.096221406,
+            0.101754844,
+            0.100438281,
+            0.099293906,
+            0.108703281,
+            0.103925938,
+            0.095140625,
+            0.092009375,
+            0.096671406,
+            0.094863593,
+            0.096775469,
+            0.098791875,
+            0.103389688,
+            0.093509375,
+            0.104117344,
+            0.091439844,
+            0.100118125,
+            0.098951719,
+            0.100187812,
+            0.097726875,
+            0.097839063,
+            0.100851563,
+            0.100558282,
+            0.093570157,
+            0.099458906,
+            0.09906375,
+            0.771213906,
+            0.09388,
+            0.092015313,
+            0.09794625,
+            0.091306875,
+            0.094802344,
+            0.094959218,
+            0.0947725,
+            0.095845,
+            0.098927188,
+            0.094282969,
+            0.109508125,
+            0.085786875,
+            0.09727625,
+            0.098382968,
+            0.099465468,
+            0.098144219,
+            0.096207812,
+            0.097418125,
+            0.101444844,
+            0.110684062,
+            0.099599375,
+            0.106258125,
+            0.092690781,
+            0.101990312,
+            0.099505156,
+            0.100055,
+            0.098479375,
+            0.101500156,
+            0.098025781,
+            0.106402344,
+            0.104362344,
+            0.107294844,
+            0.090490469,
+            0.102262657,
+            0.100158282,
+            0.100907343,
+            0.097798282,
+            0.100568438,
+            0.104314688,
+            0.099779062,
+            0.093566719,
+            0.100611094,
+            0.099912657,
+            0.099371719,
+            0.099376719,
+            0.104649844,
+            0.098169219,
+            0.10361,
+            0.103887969
+          ],
+          "topK": 50,
+          "totalLmSeconds": 64.053586094,
+          "unconditionalKvPositions": 0
+        },
+        "lmGuidance": 1,
+        "minimumSystemAvailableKiB": 2659328,
+        "modelBundle": "public-pt-vae-test-v1",
+        "sampledPeakRssKiB": 3575692,
+        "success": true,
+        "totalSeconds": 89.944497187,
+        "wave": "/data/storage/el2/base/haps/entry/files/model-bundles/public-pt-vae-test-v1/songs/1793621985830810.wav",
+        "wholePhoneChain": true,
+        "wholePhoneRtf": 5.996283020800001,
+        "playbackState": "playing",
+        "playbackValidated": true
+      },
+      "scope": "Installed Music App model-selection and real generation acceptance, not a controlled speed comparison"
+    },
+    "publicStageSeconds": {
+      "llm": 64.053586094,
+      "dit": 12.533680469,
+      "vae": 10.459503281,
+      "other": 2.8977273429999997,
+      "total": 89.944497187
+    },
+    "publicStageRtf": {
+      "llm": 4.270239072933333,
+      "dit": 0.8355786979333334,
+      "vae": 0.6973002187333334,
+      "other": 0.19318182286666666,
+      "total": 5.996299812466666
+    },
+    "playback": {
+      "validated": true,
+      "state": "completed"
+    },
+    "wavValidation": {
+      "frames": 720000,
+      "sampleRate": 48000,
+      "channels": 2,
+      "sampleBytes": 2
+    },
+    "switchRoundTrip": [
+      {
+        "requested": "builtin",
+        "result": {
+          "activeId": "builtin",
+          "success": true
+        },
+        "catalog": {
+          "activeId": "builtin",
+          "entries": [
+            {
+              "availableForMusic": true,
+              "id": "builtin",
+              "legacy": true,
+              "name": "默认歌曲模型",
+              "ready": true
+            },
+            {
+              "availableForMusic": true,
+              "id": "public-pt-vae-test-v1",
+              "name": "可替换模型验证",
+              "profile": "public-mixed-v2",
+              "qualityValidated": false,
+              "ready": true
+            }
+          ],
+          "success": true
+        }
+      },
+      {
+        "requested": "public-pt-vae-test-v1",
+        "result": {
+          "activeId": "public-pt-vae-test-v1",
+          "success": true
+        },
+        "catalog": {
+          "activeId": "public-pt-vae-test-v1",
+          "entries": [
+            {
+              "availableForMusic": true,
+              "id": "builtin",
+              "legacy": true,
+              "name": "默认歌曲模型",
+              "ready": true
+            },
+            {
+              "availableForMusic": true,
+              "id": "public-pt-vae-test-v1",
+              "name": "可替换模型验证",
+              "profile": "public-mixed-v2",
+              "qualityValidated": false,
+              "ready": true
+            }
+          ],
+          "success": true
+        }
+      },
+      {
+        "requested": "missing-model-test",
+        "result": {
+          "error": "模型尚未导入，请先部署完整模型包",
+          "success": false
+        },
+        "catalog": {
+          "activeId": "public-pt-vae-test-v1",
+          "entries": [
+            {
+              "availableForMusic": true,
+              "id": "builtin",
+              "legacy": true,
+              "name": "默认歌曲模型",
+              "ready": true
+            },
+            {
+              "availableForMusic": true,
+              "id": "public-pt-vae-test-v1",
+              "name": "可替换模型验证",
+              "profile": "public-mixed-v2",
+              "qualityValidated": false,
+              "ready": true
+            }
+          ],
+          "success": true
+        }
+      },
+      {
+        "requested": "public-pt-vae-test-v1",
+        "result": {
+          "activeId": "public-pt-vae-test-v1",
+          "success": true
+        },
+        "catalog": {
+          "activeId": "public-pt-vae-test-v1",
+          "entries": [
+            {
+              "availableForMusic": true,
+              "id": "builtin",
+              "legacy": true,
+              "name": "默认歌曲模型",
+              "ready": true
+            },
+            {
+              "availableForMusic": true,
+              "id": "public-pt-vae-test-v1",
+              "name": "可替换模型验证",
+              "profile": "public-mixed-v2",
+              "qualityValidated": false,
+              "ready": true
+            }
+          ],
+          "success": true
+        }
+      }
+    ],
+    "studentForegroundAcceptance": {
+      "runId": "modular-student-onnx-20261102-r2",
+      "date": "2026-11-02",
+      "variant": "small-2",
+      "modelBundle": "student-onnx-test-v1",
+      "execution": "Installed signed LeVo Harmony App",
+      "hapSha256": "8868671520ff5cdb3ad55875e05d670f8d8969c04106d4ae7ec284eb215996c5",
+      "appVersion": "0.1.13",
+      "displayStable": true,
+      "foregroundStable": true,
+      "foregroundSamples": [
+        {
+          "seconds": 0.3837539,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 4.0028272,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 7.6046308,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 11.2524055,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 15.0552626,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 18.8502267,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 22.5526604,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 26.3641235,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 30.0690204,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 33.7581813,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 37.4480961,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 41.1820337,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 44.8469046,
+          "state": "FOREGROUND"
+        }
+      ],
+      "observedSeconds": 48.3655904,
+      "result": {
+        "audioFileGenerated": false,
+        "bundleModules": {
+          "dit": {
+            "externalWeight": "dit/dit.mnn.weight",
+            "path": "dit/dit.mnn",
+            "recipe": {
+              "architecture": "levo-small-dit",
+              "groupSize": 64,
+              "heads": 16,
+              "hidden": 1024,
+              "intermediate": 2048,
+              "layers": 22,
+              "precision": "high",
+              "threads": 6,
+              "weightBits": 8
+            },
+            "runtime": {
+              "precision": "high",
+              "threads": 6
+            },
+            "training": "untrained",
+            "validation": {
+              "finite": true,
+              "fixture": "seed2307 synthetic; no listening/quality validation",
+              "mnnVsOnnxL2": 0.016410200986120366,
+              "outputShape": [
+                2,
+                256,
+                64
+              ],
+              "status": "passed",
+              "tolerance": 0.1
+            }
+          },
+          "llm": {
+            "externalWeight": "student/llm.mnn.weight",
+            "path": "student/llm.mnn",
+            "recipe": {
+              "architecture": "hf-causal-lm",
+              "groupSize": 64,
+              "headBits": 8,
+              "hidden": 1024,
+              "intermediate": 3072,
+              "layers": 26,
+              "modelType": "qwen3",
+              "outputClasses": 16385,
+              "precision": "low",
+              "threads": 4,
+              "weightBits": 4
+            },
+            "runtime": {
+              "precision": "low",
+              "threads": 4
+            },
+            "training": "untrained",
+            "validation": {
+              "numericParityVerified": false,
+              "status": "baseline-declared"
+            }
+          },
+          "vae": {
+            "externalWeight": "vae/vae-256-w8.mnn.weight",
+            "path": "vae/vae-256-w8.mnn",
+            "recipe": {
+              "architecture": "levo-oobleck-decoder",
+              "groupSize": 64,
+              "precision": "low",
+              "threads": 6,
+              "weightBits": 8
+            },
+            "runtime": {
+              "precision": "low",
+              "threads": 6
+            },
+            "training": "pretrained",
+            "validation": {
+              "numericParityVerified": false,
+              "status": "baseline-declared"
+            }
+          }
+        },
+        "codec": {
+          "audioFileGenerated": false,
+          "chunks": [
+            {
+              "chunk": 1,
+              "ditSeconds": 2.071150625,
+              "pcmPeak": 1.0859375,
+              "vaeSeconds": 4.780837969,
+              "validFrames": 256
+            },
+            {
+              "chunk": 2,
+              "ditSeconds": 2.183990156,
+              "pcmPeak": 0.8176043629646301,
+              "vaeSeconds": 4.804309687,
+              "validFrames": 256
+            },
+            {
+              "chunk": 3,
+              "ditSeconds": 2.145519532,
+              "pcmPeak": 1.0693359375,
+              "vaeSeconds": 4.703558438,
+              "validFrames": 256
+            },
+            {
+              "chunk": 4,
+              "ditSeconds": 2.157681874,
+              "pcmPeak": 2.173828125,
+              "vaeSeconds": 4.850141875,
+              "validFrames": 174
+            }
+          ],
+          "clippedSampleFraction": 1.7361111111111112e-06,
+          "codecDevice": "Harmony phone CPU",
+          "codecGuidance": 1.5,
+          "codecOnlyRtf": 0.9545276562666667,
+          "codecSeconds": 28.635828906,
+          "diagnosticOnly": true,
+          "ditSetupSeconds": 0.153917031,
+          "ditSteps": 2,
+          "ditWeightBits": 8,
+          "durationSeconds": 30,
+          "lmDevice": "Harmony phone CPU",
+          "lmGuidance": 1,
+          "lmWeightBits": 4,
+          "minimumSystemAvailableKiB": 4470784,
+          "numericalPcmGenerated": true,
+          "pcmPeak": 1.0859375,
+          "pcmRms": 0.10697697888965803,
+          "performanceFixtureOnly": false,
+          "randomMusicHead": true,
+          "requestedRuntime": {
+            "dit": {
+              "precision": "high",
+              "threads": 6
+            },
+            "vae": {
+              "precision": "low",
+              "threads": 6
+            }
+          },
+          "sampledPeakRssKiB": 1152360,
+          "stages": [
+            {
+              "rssKiB": 386944,
+              "seconds": 0.002405938,
+              "stage": "real-public-codes-start",
+              "systemAvailableKiB": 5240832
+            },
+            {
+              "rssKiB": 402568,
+              "seconds": 0.157279375,
+              "stage": "real-dit-loaded",
+              "systemAvailableKiB": 5225472
+            },
+            {
+              "rssKiB": 402568,
+              "seconds": 0.157681563,
+              "stage": "real-vae-loading",
+              "systemAvailableKiB": 5225472
+            },
+            {
+              "rssKiB": 522684,
+              "seconds": 0.834507188,
+              "stage": "real-vae-loaded",
+              "systemAvailableKiB": 5091328
+            },
+            {
+              "rssKiB": 522684,
+              "seconds": 0.854918281,
+              "stage": "chunk-1-dit-0",
+              "systemAvailableKiB": 5087232
+            },
+            {
+              "rssKiB": 563772,
+              "seconds": 1.887298594,
+              "stage": "chunk-1-dit-1",
+              "systemAvailableKiB": 5061632
+            },
+            {
+              "rssKiB": 527324,
+              "seconds": 2.931829063,
+              "stage": "chunk-1-dit-2",
+              "systemAvailableKiB": 5098496
+            },
+            {
+              "rssKiB": 527324,
+              "seconds": 2.932144063,
+              "stage": "chunk-1-vae-start",
+              "systemAvailableKiB": 5098496
+            },
+            {
+              "rssKiB": 1142812,
+              "seconds": 7.726301094,
+              "stage": "chunk-1-wav-written",
+              "systemAvailableKiB": 4489216
+            },
+            {
+              "rssKiB": 1142812,
+              "seconds": 7.731418125,
+              "stage": "chunk-2-dit-0",
+              "systemAvailableKiB": 4489216
+            },
+            {
+              "rssKiB": 1145472,
+              "seconds": 8.796308125,
+              "stage": "chunk-2-dit-1",
+              "systemAvailableKiB": 4483072
+            },
+            {
+              "rssKiB": 1145472,
+              "seconds": 9.917094844,
+              "stage": "chunk-2-dit-2",
+              "systemAvailableKiB": 4492288
+            },
+            {
+              "rssKiB": 1145472,
+              "seconds": 9.91737875,
+              "stage": "chunk-2-vae-start",
+              "systemAvailableKiB": 4492288
+            },
+            {
+              "rssKiB": 1149316,
+              "seconds": 14.735202969,
+              "stage": "chunk-2-wav-written",
+              "systemAvailableKiB": 4490240
+            },
+            {
+              "rssKiB": 1138556,
+              "seconds": 14.741714375,
+              "stage": "chunk-3-dit-0",
+              "systemAvailableKiB": 4500480
+            },
+            {
+              "rssKiB": 1144904,
+              "seconds": 15.821292969,
+              "stage": "chunk-3-dit-1",
+              "systemAvailableKiB": 4503552
+            },
+            {
+              "rssKiB": 1144904,
+              "seconds": 16.889211094,
+              "stage": "chunk-3-dit-2",
+              "systemAvailableKiB": 4500480
+            },
+            {
+              "rssKiB": 1144904,
+              "seconds": 16.889538125,
+              "stage": "chunk-3-vae-start",
+              "systemAvailableKiB": 4500480
+            },
+            {
+              "rssKiB": 1143584,
+              "seconds": 21.606534844,
+              "stage": "chunk-3-wav-written",
+              "systemAvailableKiB": 4498432
+            },
+            {
+              "rssKiB": 1135896,
+              "seconds": 21.611176719,
+              "stage": "chunk-4-dit-0",
+              "systemAvailableKiB": 4506624
+            },
+            {
+              "rssKiB": 1144656,
+              "seconds": 22.690733281,
+              "stage": "chunk-4-dit-1",
+              "systemAvailableKiB": 4495360
+            },
+            {
+              "rssKiB": 1144656,
+              "seconds": 23.771617813,
+              "stage": "chunk-4-dit-2",
+              "systemAvailableKiB": 4498432
+            },
+            {
+              "rssKiB": 1144656,
+              "seconds": 23.771947813,
+              "stage": "chunk-4-vae-start",
+              "systemAvailableKiB": 4498432
+            },
+            {
+              "rssKiB": 1152360,
+              "seconds": 28.634385,
+              "stage": "chunk-4-wav-written",
+              "systemAvailableKiB": 4490240
+            }
+          ],
+          "success": true,
+          "totalSeconds": 28.720388281,
+          "trainedLmTokens": false,
+          "vaeNeonSinCalls": 576,
+          "vaeSetupSeconds": 0.676187657,
+          "vaeSinHookDuringBuild": true,
+          "vaeWeightBits": 8,
+          "wholePhoneChain": true
+        },
+        "comparisonScope": "Same App, requested30seconds, 2-step CFG DiT and same pretrained VAE; model sizes, condition contracts and training status differ",
+        "diagnosticOnly": true,
+        "ditSteps": 2,
+        "durationSeconds": 30,
+        "fixedLengthBenchmark": false,
+        "lifetimePolicy": "Serial LLM complete and destroy, then one DiT and one VAE session reused for all chunks",
+        "lm": {
+          "decodeSeconds": 13.195771401000002,
+          "decodeTokensPerSecond": 56.76060741270793,
+          "eosSuppressedForFixedLengthDiagnostic": true,
+          "finalKvPositions": 1263,
+          "frames": 750,
+          "loadSeconds": 0.418103125,
+          "precision": "low",
+          "prefillSeconds": 1.89448,
+          "prefixPositions": 514,
+          "threads": 4
+        },
+        "lmStageSeconds": 15.853967968,
+        "memory": {
+          "crossStageQueriesExcludedFromPerStage": 1,
+          "graphicsApiLastError": 0,
+          "graphicsIntervalMs": 1000,
+          "graphicsSamples": 37,
+          "independentRssSampler": true,
+          "inferenceBackend": "CPU",
+          "interpretation": "Shared physical memory; graphics includes App UI and is not model-only dedicated VRAM; sampled peaks may miss shorter transients",
+          "memoryQuerySeconds": 7.096489215000001,
+          "peakRssKiB": 1152360,
+          "perStage": {
+            "dit": {
+              "peakRssKiB": 1145472,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 1087478
+            },
+            "initializationAndCondition": {
+              "peakRssKiB": 78856,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": null
+            },
+            "llm": {
+              "peakRssKiB": 689596,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 623008
+            },
+            "vae": {
+              "peakRssKiB": 1152360,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 1087478
+            }
+          },
+          "pssIntervalMs": 500,
+          "pssSamples": 74,
+          "rssIntervalMs": 20,
+          "sampledPeakGraphicsKiB": 0,
+          "sampledPeakPssKiB": 1087478
+        },
+        "minimumSystemAvailableKiB": 4470784,
+        "modelBundle": "student-onnx-test-v1",
+        "musicTrained": false,
+        "pipelineRtfThroughPcm": 1.4865355260333333,
+        "pipelineSecondsThroughPcm": 44.596065156,
+        "quantization": {
+          "activationQuantization": "No requested static A4",
+          "codecThreads": 6,
+          "ditGuidance": 1.5,
+          "ditPrecision": "high",
+          "ditThreads": 6,
+          "ditWeightBits": 8,
+          "inputEmbeddingBits": 16,
+          "kvQuantization": "Default runtime cache, no requested KV4",
+          "lmBodyWeightBits": 4,
+          "lmGuidance": 1,
+          "lmHeadWeightBits": 8,
+          "lmPrecision": "low",
+          "lmThreads": 4,
+          "repetitionPenalty": 1.1,
+          "samplingSeed": 2307,
+          "source": "Bundle declaration; runtime policy recorded separately from observed kernel precision",
+          "temperature": 0.9,
+          "topK": 50,
+          "vaePrecision": "low",
+          "vaeThreads": 6,
+          "vaeWeightBits": 8
+        },
+        "requestedDurationSeconds": 30,
+        "requestedMusicCodes": 750,
+        "sampledPeakRssKiB": 1149316,
+        "stageRtf": {
+          "decode": 0.43985904670000003,
+          "dit": 0.28527807289999996,
+          "llm": 0.5284655989333333,
+          "other": 0.034830234400000035,
+          "prefill": 0.06314933333333334,
+          "total": 1.4865355052,
+          "vae": 0.6379615989666667
+        },
+        "stageSeconds": {
+          "decode": 13.195771401000002,
+          "dit": 8.558342187,
+          "llm": 15.853967968,
+          "other": 1.0449070320000011,
+          "prefill": 1.89448,
+          "total": 44.596065156,
+          "vae": 19.138847969
+        },
+        "success": true,
+        "validPcmSeconds": 30,
+        "variant": "small"
+      }
+    },
+    "studentBackgroundRunExcludedFromPerformanceBaseline": {
+      "runId": "modular-student-onnx-20261102-r1",
+      "date": "2026-11-02",
+      "variant": "small-2",
+      "modelBundle": "student-onnx-test-v1",
+      "execution": "Installed signed LeVo Harmony App",
+      "hapSha256": "8868671520ff5cdb3ad55875e05d670f8d8969c04106d4ae7ec284eb215996c5",
+      "appVersion": "0.1.13",
+      "displayStable": true,
+      "foregroundStable": false,
+      "foregroundSamples": [
+        {
+          "seconds": 0.3961217,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 4.0221757,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 7.7317398,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 11.3758813,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 15.1179395,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 18.9409376,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 22.6997638,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 26.4757531,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 30.1383161,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 33.9131887,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 37.603975,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 41.4655142,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 45.2033252,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 48.9215202,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 52.6999156,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 56.3762781,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 60.1489364,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 63.8509569,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 67.6567967,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 71.379411,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 75.1612936,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 78.8811059,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 82.6136551,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 86.2924343,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 90.0136244,
+          "state": "BACKGROUND"
+        },
+        {
+          "seconds": 93.5511035,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 97.164797,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 100.9431044,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 104.6308907,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 108.2392141,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 111.948237,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 115.6859021,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 119.3875334,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 123.1403139,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 126.8714032,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 130.5494701,
+          "state": "FOREGROUND"
+        },
+        {
+          "seconds": 134.2148859,
+          "state": "FOREGROUND"
+        }
+      ],
+      "observedSeconds": 137.7280088,
+      "result": {
+        "audioFileGenerated": false,
+        "bundleModules": {
+          "dit": {
+            "externalWeight": "dit/dit.mnn.weight",
+            "path": "dit/dit.mnn",
+            "recipe": {
+              "architecture": "levo-small-dit",
+              "groupSize": 64,
+              "heads": 16,
+              "hidden": 1024,
+              "intermediate": 2048,
+              "layers": 22,
+              "precision": "high",
+              "threads": 6,
+              "weightBits": 8
+            },
+            "runtime": {
+              "precision": "high",
+              "threads": 6
+            },
+            "training": "untrained",
+            "validation": {
+              "finite": true,
+              "fixture": "seed2307 synthetic; no listening/quality validation",
+              "mnnVsOnnxL2": 0.016410200986120366,
+              "outputShape": [
+                2,
+                256,
+                64
+              ],
+              "status": "passed",
+              "tolerance": 0.1
+            }
+          },
+          "llm": {
+            "externalWeight": "student/llm.mnn.weight",
+            "path": "student/llm.mnn",
+            "recipe": {
+              "architecture": "hf-causal-lm",
+              "groupSize": 64,
+              "headBits": 8,
+              "hidden": 1024,
+              "intermediate": 3072,
+              "layers": 26,
+              "modelType": "qwen3",
+              "outputClasses": 16385,
+              "precision": "low",
+              "threads": 4,
+              "weightBits": 4
+            },
+            "runtime": {
+              "precision": "low",
+              "threads": 4
+            },
+            "training": "untrained",
+            "validation": {
+              "numericParityVerified": false,
+              "status": "baseline-declared"
+            }
+          },
+          "vae": {
+            "externalWeight": "vae/vae-256-w8.mnn.weight",
+            "path": "vae/vae-256-w8.mnn",
+            "recipe": {
+              "architecture": "levo-oobleck-decoder",
+              "groupSize": 64,
+              "precision": "low",
+              "threads": 6,
+              "weightBits": 8
+            },
+            "runtime": {
+              "precision": "low",
+              "threads": 6
+            },
+            "training": "pretrained",
+            "validation": {
+              "numericParityVerified": false,
+              "status": "baseline-declared"
+            }
+          }
+        },
+        "codec": {
+          "audioFileGenerated": false,
+          "chunks": [
+            {
+              "chunk": 1,
+              "ditSeconds": 2.154481719,
+              "pcmPeak": 1.0859375,
+              "vaeSeconds": 4.812302969,
+              "validFrames": 256
+            },
+            {
+              "chunk": 2,
+              "ditSeconds": 2.179985313,
+              "pcmPeak": 0.8176043629646301,
+              "vaeSeconds": 4.754440156,
+              "validFrames": 256
+            },
+            {
+              "chunk": 3,
+              "ditSeconds": 2.149498595,
+              "pcmPeak": 1.0693359375,
+              "vaeSeconds": 4.793298438,
+              "validFrames": 256
+            },
+            {
+              "chunk": 4,
+              "ditSeconds": 2.228705781,
+              "pcmPeak": 2.173828125,
+              "vaeSeconds": 4.794192187,
+              "validFrames": 174
+            }
+          ],
+          "clippedSampleFraction": 1.7361111111111112e-06,
+          "codecDevice": "Harmony phone CPU",
+          "codecGuidance": 1.5,
+          "codecOnlyRtf": 0.9639213802000001,
+          "codecSeconds": 28.917640781,
+          "diagnosticOnly": true,
+          "ditSetupSeconds": 0.294537343,
+          "ditSteps": 2,
+          "ditWeightBits": 8,
+          "durationSeconds": 30,
+          "lmDevice": "Harmony phone CPU",
+          "lmGuidance": 1,
+          "lmWeightBits": 4,
+          "minimumSystemAvailableKiB": 4600832,
+          "numericalPcmGenerated": true,
+          "pcmPeak": 1.0859375,
+          "pcmRms": 0.10697697888965803,
+          "performanceFixtureOnly": false,
+          "randomMusicHead": true,
+          "requestedRuntime": {
+            "dit": {
+              "precision": "high",
+              "threads": 6
+            },
+            "vae": {
+              "precision": "low",
+              "threads": 6
+            }
+          },
+          "sampledPeakRssKiB": 1132752,
+          "stages": [
+            {
+              "rssKiB": 345988,
+              "seconds": 0.001902656,
+              "stage": "real-public-codes-start",
+              "systemAvailableKiB": 5374976
+            },
+            {
+              "rssKiB": 367240,
+              "seconds": 0.297572656,
+              "stage": "real-dit-loaded",
+              "systemAvailableKiB": 5357568
+            },
+            {
+              "rssKiB": 367240,
+              "seconds": 0.297949375,
+              "stage": "real-vae-loading",
+              "systemAvailableKiB": 5357568
+            },
+            {
+              "rssKiB": 490648,
+              "seconds": 0.944117812,
+              "stage": "real-vae-loaded",
+              "systemAvailableKiB": 5222400
+            },
+            {
+              "rssKiB": 470536,
+              "seconds": 0.972336093,
+              "stage": "chunk-1-dit-0",
+              "systemAvailableKiB": 5223424
+            },
+            {
+              "rssKiB": 506556,
+              "seconds": 2.05175,
+              "stage": "chunk-1-dit-1",
+              "systemAvailableKiB": 5217280
+            },
+            {
+              "rssKiB": 506484,
+              "seconds": 3.131967968,
+              "stage": "chunk-1-dit-2",
+              "systemAvailableKiB": 5218304
+            },
+            {
+              "rssKiB": 506484,
+              "seconds": 3.132335937,
+              "stage": "chunk-1-vae-start",
+              "systemAvailableKiB": 5218304
+            },
+            {
+              "rssKiB": 1128660,
+              "seconds": 7.957314687,
+              "stage": "chunk-1-wav-written",
+              "systemAvailableKiB": 4600832
+            },
+            {
+              "rssKiB": 1120960,
+              "seconds": 7.962361875,
+              "stage": "chunk-2-dit-0",
+              "systemAvailableKiB": 4608000
+            },
+            {
+              "rssKiB": 1125772,
+              "seconds": 9.056771718,
+              "stage": "chunk-2-dit-1",
+              "systemAvailableKiB": 4609024
+            },
+            {
+              "rssKiB": 1125772,
+              "seconds": 10.144050937,
+              "stage": "chunk-2-dit-2",
+              "systemAvailableKiB": 4610048
+            },
+            {
+              "rssKiB": 1125772,
+              "seconds": 10.144375312,
+              "stage": "chunk-2-vae-start",
+              "systemAvailableKiB": 4610048
+            },
+            {
+              "rssKiB": 1129960,
+              "seconds": 14.912212343,
+              "stage": "chunk-2-wav-written",
+              "systemAvailableKiB": 4608000
+            },
+            {
+              "rssKiB": 1122260,
+              "seconds": 14.917561718,
+              "stage": "chunk-3-dit-0",
+              "systemAvailableKiB": 4615168
+            },
+            {
+              "rssKiB": 1122112,
+              "seconds": 16.000657812,
+              "stage": "chunk-3-dit-1",
+              "systemAvailableKiB": 4616192
+            },
+            {
+              "rssKiB": 1125044,
+              "seconds": 17.068638593,
+              "stage": "chunk-3-dit-2",
+              "systemAvailableKiB": 4621312
+            },
+            {
+              "rssKiB": 1125044,
+              "seconds": 17.06898375,
+              "stage": "chunk-3-vae-start",
+              "systemAvailableKiB": 4621312
+            },
+            {
+              "rssKiB": 1132752,
+              "seconds": 21.875764062,
+              "stage": "chunk-3-wav-written",
+              "systemAvailableKiB": 4603904
+            },
+            {
+              "rssKiB": 1122640,
+              "seconds": 21.879813281,
+              "stage": "chunk-4-dit-0",
+              "systemAvailableKiB": 4614144
+            },
+            {
+              "rssKiB": 1125092,
+              "seconds": 22.95191,
+              "stage": "chunk-4-dit-1",
+              "systemAvailableKiB": 4615168
+            },
+            {
+              "rssKiB": 1125092,
+              "seconds": 24.110326562,
+              "stage": "chunk-4-dit-2",
+              "systemAvailableKiB": 4617216
+            },
+            {
+              "rssKiB": 1125092,
+              "seconds": 24.110620781,
+              "stage": "chunk-4-vae-start",
+              "systemAvailableKiB": 4617216
+            },
+            {
+              "rssKiB": 1127972,
+              "seconds": 28.917112031,
+              "stage": "chunk-4-wav-written",
+              "systemAvailableKiB": 4613120
+            }
+          ],
+          "success": true,
+          "totalSeconds": 29.00843875,
+          "trainedLmTokens": false,
+          "vaeNeonSinCalls": 576,
+          "vaeSetupSeconds": 0.645455625,
+          "vaeSinHookDuringBuild": true,
+          "vaeWeightBits": 8,
+          "wholePhoneChain": true
+        },
+        "comparisonScope": "Same App, requested30seconds, 2-step CFG DiT and same pretrained VAE; model sizes, condition contracts and training status differ",
+        "diagnosticOnly": true,
+        "ditSteps": 2,
+        "durationSeconds": 30,
+        "fixedLengthBenchmark": false,
+        "lifetimePolicy": "Serial LLM complete and destroy, then one DiT and one VAE session reused for all chunks",
+        "lm": {
+          "decodeSeconds": 12.839878282999994,
+          "decodeTokensPerSecond": 58.33388631040813,
+          "eosSuppressedForFixedLengthDiagnostic": true,
+          "finalKvPositions": 1263,
+          "frames": 750,
+          "loadSeconds": 0.394522812,
+          "precision": "low",
+          "prefillSeconds": 93.316023438,
+          "prefixPositions": 514,
+          "threads": 4
+        },
+        "lmStageSeconds": 106.892039063,
+        "memory": {
+          "crossStageQueriesExcludedFromPerStage": 3,
+          "graphicsApiLastError": 0,
+          "graphicsIntervalMs": 1000,
+          "graphicsSamples": 38,
+          "independentRssSampler": true,
+          "inferenceBackend": "CPU",
+          "interpretation": "Shared physical memory; graphics includes App UI and is not model-only dedicated VRAM; sampled peaks may miss shorter transients",
+          "memoryQuerySeconds": 7.9574940609999985,
+          "peakRssKiB": 1132752,
+          "perStage": {
+            "dit": {
+              "peakRssKiB": 1125772,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 1088385
+            },
+            "initializationAndCondition": {
+              "peakRssKiB": 77356,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": null
+            },
+            "llm": {
+              "peakRssKiB": 650072,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 542911
+            },
+            "vae": {
+              "peakRssKiB": 1132752,
+              "sampledPeakGraphicsKiB": 0,
+              "sampledPeakPssKiB": 1088385
+            }
+          },
+          "pssIntervalMs": 500,
+          "pssSamples": 76,
+          "rssIntervalMs": 20,
+          "sampledPeakGraphicsKiB": 0,
+          "sampledPeakPssKiB": 1088385
+        },
+        "minimumSystemAvailableKiB": 4600832,
+        "modelBundle": "student-onnx-test-v1",
+        "musicTrained": false,
+        "pipelineRtfThroughPcm": 4.5306898646,
+        "pipelineSecondsThroughPcm": 135.920695625,
+        "quantization": {
+          "activationQuantization": "No requested static A4",
+          "codecThreads": 6,
+          "ditGuidance": 1.5,
+          "ditPrecision": "high",
+          "ditThreads": 6,
+          "ditWeightBits": 8,
+          "inputEmbeddingBits": 16,
+          "kvQuantization": "Default runtime cache, no requested KV4",
+          "lmBodyWeightBits": 4,
+          "lmGuidance": 1,
+          "lmHeadWeightBits": 8,
+          "lmPrecision": "low",
+          "lmThreads": 4,
+          "repetitionPenalty": 1.1,
+          "samplingSeed": 2307,
+          "source": "Bundle declaration; runtime policy recorded separately from observed kernel precision",
+          "temperature": 0.9,
+          "topK": 50,
+          "vaePrecision": "low",
+          "vaeThreads": 6,
+          "vaeWeightBits": 8
+        },
+        "requestedDurationSeconds": 30,
+        "requestedMusicCodes": 750,
+        "sampledPeakRssKiB": 1132752,
+        "stageRtf": {
+          "decode": 0.42799594276666647,
+          "dit": 0.29042238026666667,
+          "llm": 3.5630679687666666,
+          "other": 0.038725046800000364,
+          "prefill": 3.1105341146,
+          "total": 4.530689854166667,
+          "vae": 0.6384744583333333
+        },
+        "stageSeconds": {
+          "decode": 12.839878282999994,
+          "dit": 8.712671408,
+          "llm": 106.892039063,
+          "other": 1.161751404000011,
+          "prefill": 93.316023438,
+          "total": 135.920695625,
+          "vae": 19.15423375
+        },
+        "success": true,
+        "validPcmSeconds": 30,
+        "variant": "small"
+      }
+    },
+    "studentRegression": {
+      "comparedFirstCodes": 750,
+      "llmCodesMatchPrior": true,
+      "reconvertedDitExternalWeightsMatchPrior": true
+    },
+    "components": {
+      "realPtVae": {
+        "schemaVersion": 1,
+        "profile": "public-mixed-v2",
+        "contract": "levo-mixed-1rvq-25hz-64ch-48k-v1",
+        "module": "vae",
+        "sourceFormat": "checkpoint",
+        "sourceSha256": "fca67667e0027651291ee6a2f2ed8415d93718c5ac50a0c21b102840ab6d0855",
+        "recipe": {
+          "architecture": "levo-oobleck-decoder",
+          "weightBits": 8,
+          "groupSize": 64,
+          "precision": "low",
+          "threads": 6
+        },
+        "training": "pretrained",
+        "validation": {
+          "status": "passed",
+          "finite": true,
+          "mnnVsOnnxL2": 0.07131073177689626,
+          "tolerance": 0.1,
+          "outputShape": [
+            1,
+            2,
+            491520
+          ],
+          "fixture": "seed2307 synthetic; no listening/quality validation",
+          "onnxVsTorchL2": 2.9640269625378584e-06
+        },
+        "strictLoad": {
+          "strict": true,
+          "tensors": 182,
+          "parameters": 84414082
+        },
+        "onnxContract": {
+          "inputs": {
+            "latent": [
+              1,
+              64,
+              256
+            ]
+          },
+          "outputs": {
+            "pcm": [
+              1,
+              2,
+              491520
+            ]
+          }
+        },
+        "converterArgs": [
+          "-f",
+          "ONNX",
+          "--modelFile",
+          "C:\\levo-harmony\\models\\prepared\\vae-pt-v2\\model.onnx",
+          "--MNNModel",
+          "C:\\levo-harmony\\models\\prepared\\vae-pt-v2\\model.mnn",
+          "--bizCode",
+          "levo-model-bundle",
+          "--saveExternalData",
+          "--weightQuantBits",
+          "8",
+          "--weightQuantBlock",
+          "64"
+        ],
+        "graph": "model.mnn",
+        "files": [
+          {
+            "name": "model.mnn",
+            "bytes": 197040,
+            "sha256": "581b2dea32afb16d926ab646ac267e7bc4bccae76f1ed2cc9c0efa316fd659c4"
+          },
+          {
+            "name": "model.mnn.weight",
+            "bytes": 85861638,
+            "sha256": "bd1d93bba68827b22f746f9c0235bc0014711b9fa0e3c7d35e79d08c4c998b7c"
+          }
+        ]
+      },
+      "realOnnxStudentDit": {
+        "schemaVersion": 1,
+        "profile": "student-mixed-v1",
+        "contract": "levo-mixed-1rvq-25hz-64ch-48k-v1",
+        "module": "dit",
+        "sourceFormat": "onnx",
+        "sourceSha256": "b69e84b352b7ae755c45055d4252ac87a38499e61dfdca94c50c896f7565202a",
+        "recipe": {
+          "architecture": "levo-small-dit",
+          "layers": 22,
+          "hidden": 1024,
+          "intermediate": 2048,
+          "heads": 16,
+          "weightBits": 8,
+          "groupSize": 64,
+          "precision": "high",
+          "threads": 6
+        },
+        "training": "untrained",
+        "validation": {
+          "status": "passed",
+          "finite": true,
+          "mnnVsOnnxL2": 0.016410200986120366,
+          "tolerance": 0.1,
+          "outputShape": [
+            2,
+            256,
+            64
+          ],
+          "fixture": "seed2307 synthetic; no listening/quality validation"
+        },
+        "onnxContract": {
+          "inputs": {
+            "inputs": [
+              2,
+              256,
+              1200
+            ],
+            "timestep": [
+              2
+            ],
+            "attention_mask": [
+              2,
+              1,
+              256,
+              256
+            ]
+          },
+          "outputs": {
+            "velocity": [
+              2,
+              256,
+              64
+            ]
+          }
+        },
+        "converterArgs": [
+          "-f",
+          "ONNX",
+          "--modelFile",
+          "C:\\levo-harmony\\models\\small-music-dit-22-1024\\small-external.onnx",
+          "--MNNModel",
+          "C:\\levo-harmony\\models\\prepared\\dit-onnx-v1\\model.mnn",
+          "--bizCode",
+          "levo-model-bundle",
+          "--saveExternalData",
+          "--weightQuantBits",
+          "8",
+          "--weightQuantBlock",
+          "64"
+        ],
+        "graph": "model.mnn",
+        "files": [
+          {
+            "name": "model.mnn",
+            "bytes": 486840,
+            "sha256": "e194541c2e5da3732ac176d29c7cdbe1d6efb3f6b516f45608e58153cf38ebd5"
+          },
+          {
+            "name": "model.mnn.weight",
+            "bytes": 221684024,
+            "sha256": "a14ee082f58acfd588807ad804c49eb19121933f962544b8d0de68599fa4db58"
+          }
+        ]
+      },
+      "torchscriptContractMicroModel": {
+        "schemaVersion": 1,
+        "profile": "student-mixed-v1",
+        "contract": "levo-mixed-1rvq-25hz-64ch-48k-v1",
+        "module": "dit",
+        "sourceFormat": "torchscript",
+        "sourceSha256": "fd1ce59d692c506b8a91e84d85329e52090b74213ace21d4a7314e0d2a2b3fed",
+        "recipe": {
+          "architecture": "levo-small-dit",
+          "layers": 22,
+          "hidden": 1024,
+          "intermediate": 2048,
+          "heads": 16,
+          "weightBits": 8,
+          "groupSize": 64,
+          "precision": "high",
+          "threads": 6
+        },
+        "training": "untrained",
+        "validation": {
+          "status": "passed",
+          "finite": true,
+          "mnnVsOnnxL2": 0.008168544130621559,
+          "tolerance": 0.1,
+          "outputShape": [
+            2,
+            256,
+            64
+          ],
+          "fixture": "seed2307 synthetic; no listening/quality validation",
+          "onnxVsTorchL2": 1.4328416730946653e-07
+        },
+        "onnxContract": {
+          "inputs": {
+            "inputs": [
+              2,
+              256,
+              1200
+            ],
+            "timestep": [
+              2
+            ],
+            "attention_mask": [
+              2,
+              1,
+              256,
+              256
+            ]
+          },
+          "outputs": {
+            "velocity": [
+              2,
+              256,
+              64
+            ]
+          }
+        },
+        "converterArgs": [
+          "-f",
+          "ONNX",
+          "--modelFile",
+          "C:\\levo-harmony\\models\\prepared\\torchscript-contract-test\\model.onnx",
+          "--MNNModel",
+          "C:\\levo-harmony\\models\\prepared\\torchscript-contract-test\\model.mnn",
+          "--bizCode",
+          "levo-model-bundle",
+          "--saveExternalData",
+          "--weightQuantBits",
+          "8",
+          "--weightQuantBlock",
+          "64"
+        ],
+        "graph": "model.mnn",
+        "files": [
+          {
+            "name": "model.mnn",
+            "bytes": 5120,
+            "sha256": "b5a367cf19efb8d37f6844fcd6cbf39fa92889b1323ee162b334dc92926e9e2e"
+          },
+          {
+            "name": "model.mnn.weight",
+            "bytes": 77830,
+            "sha256": "6098dd88112164e7543c0e9b3a414be1f392008dc8359c5a5d9aad81258b16c0"
+          }
+        ]
+      }
+    },
+    "bundles": {
+      "public": {
+        "schemaVersion": 1,
+        "modelId": "public-pt-vae-test-v1",
+        "displayName": "可替换模型验证",
+        "profile": "public-mixed-v2",
+        "family": "public",
+        "contract": {
+          "id": "levo-mixed-1rvq-25hz-64ch-48k-v1",
+          "vocabulary": 16384,
+          "frameRate": 25,
+          "windowFrames": 256,
+          "contextFrames": 64,
+          "hopFrames": 192,
+          "conditionWidth": 1024,
+          "ditInputWidth": 1200,
+          "latentChannels": 64,
+          "sampleRate": 48000,
+          "audioChannels": 2,
+          "samplesPerLatent": 1920
+        },
+        "runtime": {
+          "backend": "cpu",
+          "memory": "low",
+          "power": "high",
+          "ditSteps": 2,
+          "ditGuidance": 1.5,
+          "lmGuidance": 1,
+          "vaeVectorSin": true,
+          "kleidi": false,
+          "staticActivationBits": null,
+          "kvBits": null
+        },
+        "modules": {
+          "llm": {
+            "path": "lm/llm.mnn",
+            "externalWeight": "lm/llm.mnn.weight",
+            "runtime": {
+              "precision": "high",
+              "threads": 4
+            },
+            "recipe": {
+              "architecture": "hf-causal-lm",
+              "modelType": "llama",
+              "layers": 36,
+              "hidden": 2048,
+              "intermediate": 11008,
+              "outputClasses": 16385,
+              "weightBits": 4,
+              "headBits": 8,
+              "groupSize": 64,
+              "precision": "high",
+              "threads": 4
+            },
+            "training": "pretrained",
+            "validation": {
+              "status": "baseline-declared",
+              "numericParityVerified": false
+            }
+          },
+          "dit": {
+            "path": "dit/full-w8.mnn",
+            "externalWeight": "dit/full-w8.mnn.weight",
+            "runtime": {
+              "precision": "high",
+              "threads": 6
+            },
+            "recipe": {
+              "architecture": "levo-mixed-dit",
+              "layers": 39,
+              "hidden": 1200,
+              "intermediate": 4800,
+              "heads": 30,
+              "weightBits": 8,
+              "groupSize": 64,
+              "precision": "high",
+              "threads": 6
+            },
+            "training": "pretrained",
+            "validation": {
+              "status": "baseline-declared",
+              "numericParityVerified": false
+            }
+          },
+          "vae": {
+            "path": "vae/vae.mnn",
+            "externalWeight": "vae/vae.mnn.weight",
+            "runtime": {
+              "precision": "low",
+              "threads": 6
+            },
+            "recipe": {
+              "architecture": "levo-oobleck-decoder",
+              "weightBits": 8,
+              "groupSize": 64,
+              "precision": "low",
+              "threads": 6
+            },
+            "training": "pretrained",
+            "validation": {
+              "status": "passed",
+              "finite": true,
+              "mnnVsOnnxL2": 0.07131073177689626,
+              "tolerance": 0.1,
+              "outputShape": [
+                1,
+                2,
+                491520
+              ],
+              "fixture": "seed2307 synthetic; no listening/quality validation",
+              "onnxVsTorchL2": 2.9640269625378584e-06
+            }
+          }
+        },
+        "musicTrained": true,
+        "qualityValidated": false,
+        "legacyMappingProbe": false,
+        "assets": [
+          {
+            "name": "bias.f32",
+            "relative": "aux/bias.f32",
+            "bytes": 4096,
+            "sha256": "f319a64c5a14b3a0d95f9a81844a5c5874090f85c898c0a164595207fbd3b072"
+          },
+          {
+            "name": "codebook.f32",
+            "relative": "aux/codebook.f32",
+            "bytes": 2097152,
+            "sha256": "86365d790905c39b25ca29be0c078e3136090ac89d046172c07320850bdae3a6"
+          },
+          {
+            "name": "mask.f32",
+            "relative": "aux/mask.f32",
+            "bytes": 576,
+            "sha256": "8a41d6d4187460ec52332af6b3158d62f6b72400375de946667a23f5d8333ba2"
+          },
+          {
+            "name": "mean.f32",
+            "relative": "aux/mean.f32",
+            "bytes": 256,
+            "sha256": "eb47b99df97477270c9fa3b033a330dbb7d4506291f9db2a4ee2f2b46f1a4838"
+          },
+          {
+            "name": "std.f32",
+            "relative": "aux/std.f32",
+            "bytes": 256,
+            "sha256": "9d263c1031fe6dd066871ae0df42c671efbe47dee5982d11853237bac67b3f89"
+          },
+          {
+            "name": "weight.f32",
+            "relative": "aux/weight.f32",
+            "bytes": 131072,
+            "sha256": "cc406481f85d1615d5275d280a29099d46525e947c76482c29695f0c6b01f0d2"
+          },
+          {
+            "name": "conditions.safetensors",
+            "relative": "conditions.safetensors",
+            "bytes": 1377420224,
+            "sha256": "c2172792404ab5a912144e58147384a381706f2c0b925aa8c65882b037c367bb"
+          },
+          {
+            "name": "full-w8.mnn",
+            "relative": "dit/full-w8.mnn",
+            "bytes": 871192,
+            "sha256": "46764fd36b523311b46706642e6ff3fba332e712cf0b3e5d21305c37c380f0be"
+          },
+          {
+            "name": "full-w8.mnn.weight",
+            "relative": "dit/full-w8.mnn.weight",
+            "bytes": 722214236,
+            "sha256": "4f460ea3435866b0ebd57bdd0722227d590304d024188ddf4a68d5d1fc440358"
+          },
+          {
+            "name": "input.json",
+            "relative": "input.json",
+            "bytes": 290,
+            "sha256": "3b5b61bd9f129eb7e49d80b4aa86ee003a0f76461912c5a47967af5bb6d04067"
+          },
+          {
+            "name": "llm.mnn",
+            "relative": "lm/llm.mnn",
+            "bytes": 297872,
+            "sha256": "35b56c9a711a1806fbe6ad9646537244b1ebae60fe08b84708b499a1e65521d2"
+          },
+          {
+            "name": "llm.mnn.weight",
+            "relative": "lm/llm.mnn.weight",
+            "bytes": 1650155246,
+            "sha256": "c126ce53532b14ccb5c51298c45bea3e4c82db6db007224d5d6da445fcd4aa79"
+          },
+          {
+            "name": "llm_config.json",
+            "relative": "lm/llm_config.json",
+            "bytes": 730,
+            "sha256": "9549e92338194a97ccb1ad7c89c7def6eb233f01934f18389d25570e886579f4"
+          },
+          {
+            "name": "mapping-0-reference.f32",
+            "relative": "lm/mapping-0-reference.f32",
+            "bytes": 65540,
+            "sha256": "008d0a7402d924d2fb9bc0ca193c3b02eb3bdb04578fe6451e5d24ff9282a9fc"
+          },
+          {
+            "name": "mapping-1-reference.f32",
+            "relative": "lm/mapping-1-reference.f32",
+            "bytes": 65540,
+            "sha256": "e6e120131b46c22db2a7f6c888c5929d565c4ebb1c9082888e198500dab71af7"
+          },
+          {
+            "name": "tokenizer.mtok",
+            "relative": "lm/tokenizer.mtok",
+            "bytes": 4106992,
+            "sha256": "81b7fb6617b9209f9e9b70b553f94c034666ad8e4f21c1a1d65f0b1bc8f8966b"
+          },
+          {
+            "name": "mapping-prefix.bf16",
+            "relative": "mapping-prefix.bf16",
+            "bytes": 131072,
+            "sha256": "b8f3d97d51522adc9b1ce6c3f8f5062c0e405b328302ed8b3b6a378902e0785a"
+          },
+          {
+            "name": "music-embeddings-bf16.bin",
+            "relative": "music-embeddings-bf16.bin",
+            "bytes": 67117056,
+            "sha256": "74eaf70aa5e8812eab79e42d06dec04fa32d3d35cf927d16930e90c0a2a45cd1"
+          },
+          {
+            "name": "vae.mnn",
+            "relative": "vae/vae.mnn",
+            "bytes": 197040,
+            "sha256": "581b2dea32afb16d926ab646ac267e7bc4bccae76f1ed2cc9c0efa316fd659c4"
+          },
+          {
+            "name": "vae.mnn.weight",
+            "relative": "vae/vae.mnn.weight",
+            "bytes": 85861638,
+            "sha256": "bd1d93bba68827b22f746f9c0235bc0014711b9fa0e3c7d35e79d08c4c998b7c"
+          }
+        ],
+        "provenance": {
+          "baseModelId": "public-base-v1",
+          "scope": "Training status is supplied by the model owner; integrity and numerical checks do not prove music quality"
+        }
+      },
+      "small": {
+        "schemaVersion": 1,
+        "modelId": "student-onnx-test-v1",
+        "displayName": "0.6B结构研究模型",
+        "profile": "student-mixed-v1",
+        "family": "small",
+        "contract": {
+          "id": "levo-mixed-1rvq-25hz-64ch-48k-v1",
+          "vocabulary": 16384,
+          "frameRate": 25,
+          "windowFrames": 256,
+          "contextFrames": 64,
+          "hopFrames": 192,
+          "conditionWidth": 1024,
+          "ditInputWidth": 1200,
+          "latentChannels": 64,
+          "sampleRate": 48000,
+          "audioChannels": 2,
+          "samplesPerLatent": 1920
+        },
+        "runtime": {
+          "backend": "cpu",
+          "memory": "low",
+          "power": "high",
+          "ditSteps": 2,
+          "ditGuidance": 1.5,
+          "lmGuidance": 1,
+          "vaeVectorSin": true,
+          "kleidi": false,
+          "staticActivationBits": null,
+          "kvBits": null
+        },
+        "modules": {
+          "llm": {
+            "path": "student/llm.mnn",
+            "externalWeight": "student/llm.mnn.weight",
+            "runtime": {
+              "precision": "low",
+              "threads": 4
+            },
+            "recipe": {
+              "architecture": "hf-causal-lm",
+              "modelType": "qwen3",
+              "layers": 26,
+              "hidden": 1024,
+              "intermediate": 3072,
+              "outputClasses": 16385,
+              "weightBits": 4,
+              "headBits": 8,
+              "groupSize": 64,
+              "precision": "low",
+              "threads": 4
+            },
+            "training": "untrained",
+            "validation": {
+              "status": "baseline-declared",
+              "numericParityVerified": false
+            }
+          },
+          "dit": {
+            "path": "dit/dit.mnn",
+            "externalWeight": "dit/dit.mnn.weight",
+            "runtime": {
+              "precision": "high",
+              "threads": 6
+            },
+            "recipe": {
+              "architecture": "levo-small-dit",
+              "layers": 22,
+              "hidden": 1024,
+              "intermediate": 2048,
+              "heads": 16,
+              "weightBits": 8,
+              "groupSize": 64,
+              "precision": "high",
+              "threads": 6
+            },
+            "training": "untrained",
+            "validation": {
+              "status": "passed",
+              "finite": true,
+              "mnnVsOnnxL2": 0.016410200986120366,
+              "tolerance": 0.1,
+              "outputShape": [
+                2,
+                256,
+                64
+              ],
+              "fixture": "seed2307 synthetic; no listening/quality validation"
+            }
+          },
+          "vae": {
+            "path": "vae/vae-256-w8.mnn",
+            "externalWeight": "vae/vae-256-w8.mnn.weight",
+            "runtime": {
+              "precision": "low",
+              "threads": 6
+            },
+            "recipe": {
+              "architecture": "levo-oobleck-decoder",
+              "weightBits": 8,
+              "groupSize": 64,
+              "precision": "low",
+              "threads": 6
+            },
+            "training": "pretrained",
+            "validation": {
+              "status": "baseline-declared",
+              "numericParityVerified": false
+            }
+          }
+        },
+        "musicTrained": false,
+        "qualityValidated": false,
+        "legacyMappingProbe": false,
+        "assets": [
+          {
+            "name": "bias.f32",
+            "relative": "aux/bias.f32",
+            "bytes": 4096,
+            "sha256": "f319a64c5a14b3a0d95f9a81844a5c5874090f85c898c0a164595207fbd3b072"
+          },
+          {
+            "name": "codebook.f32",
+            "relative": "aux/codebook.f32",
+            "bytes": 2097152,
+            "sha256": "86365d790905c39b25ca29be0c078e3136090ac89d046172c07320850bdae3a6"
+          },
+          {
+            "name": "mask.f32",
+            "relative": "aux/mask.f32",
+            "bytes": 576,
+            "sha256": "8a41d6d4187460ec52332af6b3158d62f6b72400375de946667a23f5d8333ba2"
+          },
+          {
+            "name": "mean.f32",
+            "relative": "aux/mean.f32",
+            "bytes": 256,
+            "sha256": "eb47b99df97477270c9fa3b033a330dbb7d4506291f9db2a4ee2f2b46f1a4838"
+          },
+          {
+            "name": "std.f32",
+            "relative": "aux/std.f32",
+            "bytes": 256,
+            "sha256": "9d263c1031fe6dd066871ae0df42c671efbe47dee5982d11853237bac67b3f89"
+          },
+          {
+            "name": "weight.f32",
+            "relative": "aux/weight.f32",
+            "bytes": 131072,
+            "sha256": "cc406481f85d1615d5275d280a29099d46525e947c76482c29695f0c6b01f0d2"
+          },
+          {
+            "name": "dit.mnn",
+            "relative": "dit/dit.mnn",
+            "bytes": 486840,
+            "sha256": "e194541c2e5da3732ac176d29c7cdbe1d6efb3f6b516f45608e58153cf38ebd5"
+          },
+          {
+            "name": "dit.mnn.weight",
+            "relative": "dit/dit.mnn.weight",
+            "bytes": 221684024,
+            "sha256": "a14ee082f58acfd588807ad804c49eb19121933f962544b8d0de68599fa4db58"
+          },
+          {
+            "name": "config.json",
+            "relative": "student/config.json",
+            "bytes": 523,
+            "sha256": "32495de6507836af935aebb1804c7341fb16a8e2748470ffcb853434eb7b0f63"
+          },
+          {
+            "name": "diagnostic-student.json",
+            "relative": "student/diagnostic-student.json",
+            "bytes": 554,
+            "sha256": "94d10dc1b098120063d56d9f24558c0de01b38cc14600e6f36d124f38552947f"
+          },
+          {
+            "name": "embeddings_bf16.bin",
+            "relative": "student/embeddings_bf16.bin",
+            "bytes": 344788992,
+            "sha256": "1bad11065095e7e4769dcc9917bc5688b097f6740f9cb0451893f91a35f9a649"
+          },
+          {
+            "name": "llm.mnn",
+            "relative": "student/llm.mnn",
+            "bytes": 280176,
+            "sha256": "86424c58e9ce871078212307e356dd98227b2065829d83973b718d6bed645d37"
+          },
+          {
+            "name": "llm.mnn.weight",
+            "relative": "student/llm.mnn.weight",
+            "bytes": 248296682,
+            "sha256": "33e5fe41b0cad117d421dce561fd1010f93555724075fd71e181c2b5f82be51d"
+          },
+          {
+            "name": "llm_config.json",
+            "relative": "student/llm_config.json",
+            "bytes": 4701,
+            "sha256": "fe36143eba46b4ab84c9de6b26417b72210337e0bf7f9d5c2a03aa7fe5012f15"
+          },
+          {
+            "name": "prefix.json",
+            "relative": "student/prefix.json",
+            "bytes": 3035,
+            "sha256": "31823d82c39c7b4ec550756f91b8ca8945cc01d24e05834bd3d3c29fe694db01"
+          },
+          {
+            "name": "tokenizer.mtok",
+            "relative": "student/tokenizer.mtok",
+            "bytes": 4111427,
+            "sha256": "8d9a2d8b2f505b336832042f63bbae99d7989d4e8f7fa2a7e9ec51e8f49eba41"
+          },
+          {
+            "name": "vae-256-w8.mnn",
+            "relative": "vae/vae-256-w8.mnn",
+            "bytes": 196296,
+            "sha256": "ee5b6ed843b7b6ec2305ef14dbfab4cd24165ac75c7d9d357f61ed350556f083"
+          },
+          {
+            "name": "vae-256-w8.mnn.weight",
+            "relative": "vae/vae-256-w8.mnn.weight",
+            "bytes": 84569334,
+            "sha256": "c07840873f10ecd6949b4a2e8f3ea4a481c37aabf5e33417a59933989862925f"
+          }
+        ],
+        "provenance": {
+          "baseModelId": "student-bundle-v1",
+          "scope": "Training status is supplied by the model owner; integrity and numerical checks do not prove music quality"
+        }
+      }
+    },
+    "validation": {
+      "unitSuite": {
+        "tests": 33,
+        "passed": true
+      },
+      "bothSignedAppsBuiltAndInstalled": true,
+      "originalModelPreserved": true,
+      "newVaeStrictTensors": 182,
+      "initialVaeToleranceRejection": {
+        "maxRelativeL2": 0.05,
+        "observedL2": 0.07131073177689626,
+        "componentPublished": false
+      },
+      "subsequentVaeCompatibilityBudget": {
+        "maxRelativeL2": 0.1,
+        "basis": "Existing W8 VAE PC baseline approximately 6%; preserve measured 7.13%, not a listening-quality acceptance"
+      }
+    },
+    "limits": [
+      "Public observer attached during Codec; it is not full-run foreground validation or a controlled speed comparison",
+      "Small foreground retest is complete; earlier background wall time is retained and excluded from the baseline",
+      "Student music adapters and DiT remain untrained; new training is not inferred from model packaging",
+      "LM checkpoint adapter has a miniature strict-load/RoPE unit test; a new full music LM export still needs its own phone validation",
+      "TorchScript acceptance is a micro-model contract test, not the full model",
+      "NPU/GPU routes are retained experiments; deployed inference here is CPU"
+    ]
   }
 }

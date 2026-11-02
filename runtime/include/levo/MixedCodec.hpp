@@ -1,0 +1,125 @@
+#pragma once
+// Actual pretrained-LM codes, rendered on the connected Harmony phone.
+// Source metadata distinguishes PC-generated codes from whole-phone runs.
+#include "RuntimeSupport.hpp"
+#include "ModelBundle.hpp"
+inline std::atomic<bool> levoPublicCancelled{false};
+
+// Diagnostic bit-pattern fingerprint, not a cryptographic checksum. Keep the
+// same helper in capture/replay so every raw, pre-crossfade PCM can be compared.
+static std::string levoTensorFingerprint(const std::vector<float>& values){
+    uint64_t hash=14695981039346656037ULL;
+    for(float value:values){uint32_t bits;std::memcpy(&bits,&value,sizeof(bits));hash^=bits;hash*=1099511628211ULL;}
+    return std::to_string(hash);
+}
+static void levoWriteTensor(const std::string& path,const std::vector<float>& values){
+    std::ofstream out(path,std::ios::binary);out.write(reinterpret_cast<const char*>(values.data()),values.size()*sizeof(float));
+    require(out.good(),"Cannot capture VAE tensor");
+}
+
+static void little(std::ofstream& out,uint32_t value,int bytes){
+    for(int i=0;i<bytes;++i)out.put(char((value>>(8*i))&255));
+}
+
+inline int LevoPublicCodecMain(int argc,char** argv,Json* captured=nullptr){
+    if(argc!=5){std::cerr<<"codecRoot codes.json steps output.wav\n";return 2;}
+    Trace trace;Json report={{"success",false},{"lmDevice","Windows CPU"},{"codecDevice","Harmony phone CPU"},
+        {"trainedLmTokens",true},{"randomMusicHead",false},{"wholePhoneChain",false}};
+    try{
+        std::string root=argv[1];int steps=std::stoi(argv[3]);require(steps>=2&&steps<=20,"Bounded steps");
+        auto source=readJson(argv[2]);const bool diagnostic=source.value("diagnosticOnly",false),fixtureOnly=source.value("performanceFixtureOnly",false);
+        require(source["source"]=="trained public LeVo v2-large primary Mixed LM"||(diagnostic&&source["source"]=="untrained 0.6B diagnostic student"),"Wrong token source");
+        report["trainedLmTokens"]=!diagnostic;report["randomMusicHead"]=diagnostic;report["diagnosticOnly"]=diagnostic;report["performanceFixtureOnly"]=fixtureOnly;
+        trace.sink=source.value("progressPath",std::string());
+        report["lmDevice"]=source.value("lmDevice",std::string("Windows CPU"));
+        report["wholePhoneChain"]=source.value("lmDevice",std::string())=="Harmony phone CPU";
+        auto codes=source["codes"].get<std::vector<int>>();require(!codes.empty()&&codes.size()<=3000,"Bounded audio: at most120 seconds");
+        const bool capture=source.value("captureVaeLatents",false);
+        const std::string captureDir=capture?root+"/vae-replay/"+std::to_string(std::chrono::system_clock::now().time_since_epoch().count()):"";
+        Json capturedWindows=Json::array();double captureSeconds=0;
+        if(capture)std::filesystem::create_directories(captureDir);
+        for(int id:codes)require(id>=0&&id<16384,"Invalid Mixed ID");
+        report["ditSteps"]=steps;report["lmGuidance"]=source["lmGuidance"];report["codecGuidance"]=1.5;
+        report["ditWeightBits"]=LevoBundle::weightBits(root,"dit",8);report["vaeWeightBits"]=LevoBundle::weightBits(root,"vae",8);report["lmWeightBits"]=LevoBundle::weightBits(root,"llm",4);
+        trace.gate(1536);trace.mark("real-public-codes-start");
+        auto ditPolicy=LevoBundle::policy(root,"dit","high",6),vaePolicy=LevoBundle::policy(root,"vae","low",6);
+        report["requestedRuntime"]={{"dit",ditPolicy},{"vae",vaePolicy}};
+        auto tick=Clock::now();Session dit(LevoBundle::modulePath(root,"dit","dit/full-w8.mnn"),ditPolicy["precision"]=="low",ditPolicy["threads"]);report["ditSetupSeconds"]=seconds(tick);
+        trace.mark("real-dit-loaded");trace.gate(1024);
+        trace.mark("real-vae-loading");tick=Clock::now();std::unique_ptr<Session> vae;
+        vae=std::make_unique<Session>(LevoBundle::modulePath(root,"vae","vae/vae-256-w8.mnn"),vaePolicy["precision"]=="low",vaePolicy["threads"],false,true);
+        report["vaeSetupSeconds"]=seconds(tick);report["vaeSinHookDuringBuild"]=true;
+        trace.mark("real-vae-loaded");
+        auto book=read(root+"/aux/codebook.f32",16384*32),weight=read(root+"/aux/weight.f32",1024*32),bias=read(root+"/aux/bias.f32",1024);
+        auto masks=read(root+"/aux/mask.f32",3*48),mean=read(root+"/aux/mean.f32",64),stddev=read(root+"/aux/std.f32",64);
+        constexpr int frames=256,hop=192,contextFrames=64,pcmFrames=frames*1920,pcmOverlap=contextFrames*1920;
+        std::mt19937 rng(2307);std::normal_distribution<float> normal;
+        std::vector<float> last,tail;Json chunks=Json::array();double energy=0,maxPcm=0;size_t clipped=0,emitted=0;
+        std::ofstream output(argv[4],std::ios::binary);require(output.good(),"Cannot write WAV");
+        const uint32_t totalSamples=codes.size()*1920;
+        output.write("RIFF",4);little(output,36+totalSamples*4,4);output.write("WAVEfmt ",8);little(output,16,4);
+        little(output,1,2);little(output,2,2);little(output,48000,4);little(output,192000,4);little(output,4,2);little(output,16,2);
+        output.write("data",4);little(output,totalSamples*4,4);
+        int index=0;
+        for(size_t start=0;;start+=hop,++index){
+            trace.gate(800);int valid=std::min(size_t(frames),codes.size()-start);bool final=start+valid>=codes.size();
+            require(!levoPublicCancelled.load(),"Generation cancelled");
+            std::vector<float> mu(frames*1024),context(frames*64,0),noise(frames*64),x;
+            for(int t=0;t<valid;++t)for(int c=0;c<1024;++c){float sum=bias[c];for(int k=0;k<32;++k)sum+=book[codes[start+t]*32+k]*weight[c*32+k];mu[t*1024+c]=sum;}
+            if(!last.empty())std::copy_n(last.data()+(frames-contextFrames)*64,contextFrames*64,context.data());
+            for(auto& value:noise)value=normal(rng);x=noise;
+            trace.mark("chunk-"+std::to_string(index+1)+"-dit-0");
+            double ditTime=0;
+            for(int step=0;step<steps;++step){
+                require(!levoPublicCancelled.load(),"Generation cancelled");
+                trace.gate(800);float t=float(step)/steps;
+                if(index)for(int i=0;i<contextFrames*64;++i)x[i]=(1-(1-1e-4f)*t)*noise[i]+t*context[i];
+                std::vector<float> input(2*frames*1200,0),attn(2*frames*frames,0);
+                for(int b=0;b<2;++b)for(int row=0;row<frames;++row){
+                    int id=row>=valid?0:(index&&row<contextFrames?1:2);size_t off=(b*frames+row)*1200;
+                    std::copy_n(masks.data()+id*48,48,input.data()+off);
+                    std::copy_n(context.data()+row*64,64,input.data()+off+48);
+                    if(b)std::copy_n(mu.data()+row*1024,1024,input.data()+off+112);
+                    std::copy_n(x.data()+row*64,64,input.data()+off+1136);
+                    if(row<valid)std::fill_n(attn.data()+(b*frames+row)*frames,valid,1.f);
+                }
+                tick=Clock::now();auto velocity=dit.run({{"inputs",std::move(input)},{"timestep",{t,t}},{"attention_mask",std::move(attn)}},"velocity",2*frames*64);
+                ditTime+=seconds(tick);for(size_t j=0;j<x.size();++j)x[j]+=(velocity[j]+1.5f*(velocity[x.size()+j]-velocity[j]))/steps;
+                peak(x);trace.mark("chunk-"+std::to_string(index+1)+"-dit-"+std::to_string(step+1));
+            }
+            if(index)std::copy_n(context.data(),contextFrames*64,x.data());last=x;
+            std::vector<float> latent(frames*64);for(int c=0;c<64;++c)for(int t=0;t<frames;++t)latent[c*frames+t]=x[t*64+c]*stddev[c]+mean[c];
+            Json capturedWindow;
+            if(capture){auto captureTick=Clock::now();const std::string path=captureDir+"/latent-"+std::to_string(index+1)+".f32";
+                levoWriteTensor(path,latent);capturedWindow={{"chunk",index+1},{"latentPath",path},{"latentFingerprint",levoTensorFingerprint(latent)}};captureSeconds+=seconds(captureTick);}
+            trace.mark("chunk-"+std::to_string(index+1)+"-vae-start");
+            tick=Clock::now();auto pcm=vae->run({{"latent",std::move(latent)}},"pcm",2*pcmFrames);double vaeTime=seconds(tick);
+            if(capture){auto captureTick=Clock::now();capturedWindow["rawPcmFingerprint"]=levoTensorFingerprint(pcm);capturedWindow["vaeSeconds"]=vaeTime;
+                if(!index){const std::string path=captureDir+"/reference-pcm-1.f32";levoWriteTensor(path,pcm);capturedWindow["referencePcmPath"]=path;}
+                capturedWindows.push_back(capturedWindow);captureSeconds+=seconds(captureTick);}
+            if(index)for(int c=0;c<2;++c)for(int i=0;i<pcmOverlap;++i){float r=float(i)/(pcmOverlap-1);pcm[c*pcmFrames+i]=tail[c*pcmOverlap+i]*(1-r)+pcm[c*pcmFrames+i]*r;}
+            int count=valid*1920-(final?0:pcmOverlap);
+            for(int t=0;t<count;++t)for(int c=0;c<2;++c){float value=pcm[c*pcmFrames+t];energy+=double(value)*value;maxPcm=std::max(maxPcm,std::abs(double(value)));clipped+=std::abs(value)>1;
+                int16_t sample=int16_t(std::max(-1.f,std::min(1.f,value))*32767);little(output,uint16_t(sample),2);}
+            emitted+=count;
+            if(!final){tail.resize(2*pcmOverlap);for(int c=0;c<2;++c)std::copy_n(pcm.data()+c*pcmFrames+valid*1920-pcmOverlap,pcmOverlap,tail.data()+c*pcmOverlap);}
+            chunks.push_back({{"chunk",index+1},{"validFrames",valid},{"ditSeconds",ditTime},{"vaeSeconds",vaeTime},{"pcmPeak",peak(pcm)}});
+            output.flush();trace.mark("chunk-"+std::to_string(index+1)+"-wav-written");
+            if(final)break;
+        }
+        require(emitted==totalSamples&&output.good(),"WAV duration/write failure");
+        report["chunks"]=chunks;report["durationSeconds"]=double(totalSamples)/48000;report["pcmRms"]=std::sqrt(energy/(2*emitted));
+        report["pcmPeak"]=maxPcm;report["clippedSampleFraction"]=double(clipped)/(2*emitted);
+        report["codecSeconds"]=seconds(trace.start);report["codecOnlyRtf"]=seconds(trace.start)/(double(totalSamples)/48000);
+        report["vaeNeonSinCalls"]=LevoVaeSin::calls.load();report["audioFileGenerated"]=!diagnostic&&!fixtureOnly;report["numericalPcmGenerated"]=true;report["success"]=true;
+        if(capture){Json manifest={{"version",1},{"complete",true},{"durationSeconds",double(totalSamples)/48000},{"shape",{1,64,256}},
+                {"precision",vaePolicy["precision"]},{"threads",vaePolicy["threads"]},{"weightBits",LevoBundle::weightBits(root,"vae",8)},{"neonSin",true},{"kleidiEnabled",false},{"windows",capturedWindows},
+                {"captureSeconds",captureSeconds},{"source","Exact small-chain VAE inputs; raw PCM fingerprints are before overlap crossfade"}};
+            const std::string path=root+"/vae-replay/latest.json";std::ofstream out(path);out<<manifest.dump(2);out.close();require(out.good(),"Cannot write replay manifest");
+            report["vaeReplayManifest"]=path;report["vaeCaptureSeconds"]=captureSeconds;}
+    }catch(const std::exception& error){report["error"]=error.what();}
+    trace.sample();report["sampledPeakRssKiB"]=trace.maxRss.load();report["minimumSystemAvailableKiB"]=trace.minAvailable.load();
+    report["totalSeconds"]=seconds(trace.start);report["stages"]=trace.stages;
+    if(captured)*captured=report;
+    std::cout<<"LEVO_PUBLIC_CODEC_REPORT "<<report.dump()<<std::endl;return report["success"].get<bool>()?0:1;
+}

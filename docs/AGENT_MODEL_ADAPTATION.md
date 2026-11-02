@@ -227,3 +227,13 @@ Mixed权重：
 - 独立VAE新进程必须先创建CPU后端，再在延迟resize前挂正弦选择器。`Session(..., false, true)`最后两项为snakeFusion=false、vectorSin=true；直接在全新进程的Session创建之前设置Scope会失败。本次失败未执行前向，已修正并重测同一HAP配对。
 - MNN3.6.1本地`source/backend/cpu/ThreadPool.cpp`按CPU mask复用线程池，不会自动扩大旧池；`CPUBackend.cpp::_resetThreadPool`会将运行时线程数截到返回上限。先创建4线程LLM可能限制后续同mask的6线程Codec。短快照见3个高CPU辅助线程对独立VAE5个，允许CPU为2–13，不等于绑定最快核。下一轮可先初始化6线程运行时再保持LM4/DiT6/VAE6，但本次未改线程池或验证其整链收益。
 - 捕获数据留本机`reports/local/small90-retest`及手机，不上传原始音频/权重。VAE权重SHA256已确认大小两路完全相同，不能因0.6B之名推断其VAE更小。冷进程VAE无DiT共驻，热态/缓存/调度未锁定，不能将12.3%全部归因于LM先运行。
+
+## 13. v1.0.6产品换模型与v0.1.13研究入口
+
+新工作优先读[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)、[MODEL_DEPLOYMENT.md](MODEL_DEPLOYMENT.md)和仓库`skills/levo-model-adaptation/SKILL.md`。原生推理已移到`runtime/include/levo`；App与旧CLI留兼容入口，不再让产品直接包含实验.cpp。两个profile、模型包、实际模块路径、recipe、SHA与训练状态声明由统一工具管理。
+
+`modelctl inspect/prepare/pack/verify/deploy`支持张量PT/Torch/safetensors、TorchScript、合同兼容ONNX和MNN。普通HF KV图不是MNN LM图，结构不匹配会停止，缺少音乐权重不会随机补齐。代码中新的LM raw-checkpoint适配有小规模strict/RoPE单元验证，不等于新完整LM音乐质量已过。
+
+产品“歌曲模型”菜单已实际验证默认/新包/无效ID/恢复新包。真实PT VAE182张量strict通过，W8误差7.13%：先5%失败、再显式10%兼容范围记录，不宣称音质验收。新包15秒真实音乐89.944秒，RTF5.996、RSS3491.9MiB，并播放完成。小DiT ONNX新包30秒44.596秒、RTF1.487、RSS1125.4MiB；750码与旧链路一致。此前后台135.921秒完整保留但排除性能基线。当前33项单元测试通过，统一报告追加`modular_model_deployment_2026_11_02`；旧41个区块不变。
+
+未训练学生不出现在产品歌曲模型菜单，继续用研究App的`-ModelBundle`选择。训练后学生自由歌词/风格生成仍需要条件适配，不可只翻转musicTrained。当前主线仍CPU、两步DiT，公开长上下文退出和NPU整模块加速尚未解决。
