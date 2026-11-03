@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "experiments": [
+    {"id": "hidden-sequence-conditioning", "families": ["private-hidden-research"], "entry": "tools/inspect_hidden_conditioning.py", "parameters": {"contract": "configs/conditioning/hidden-sequence.example.json", "seconds": [60, 300]}, "scope": "Research-only alignment/window/storage checks and optional MNN hidden output helper; requires trained conditioner and new runtime adapter, no private model or App execution", "status": "experimental"},
     {"id": "serial-chain", "families": ["public", "small"], "entry": "tools/run_comparison_app.ps1", "parameters": {"Variant": ["large-2", "small-2", "large-2-90", "small-2-90", "large-2-120", "small-2-120"], "ModelBundle": "immutable modelId", "RecordSensors": true}, "scope": "Full chain, stage RTF and RSS/PSS; trained status from selected architecture", "status": "baseline"},
     {"id": "matched-vae-replay", "families": ["small"], "entry": "tools/run_comparison_app.ps1", "parameters": {"Variant": "small-vae-90", "ModelBundle": "same bundle used in preceding 90s run"}, "scope": "Exact captured inputs, fresh VAE process, output parity; not full-chain RTF", "status": "retained"},
     {"id": "dit-weight-recipe", "families": ["public", "small"], "entry": "tools/modelctl.py prepare", "parameters": {"module": "dit", "recipe.weightBits": [4, 8, 16], "recipe.groupSize": [32, 48, 64, 128]}, "scope": "Isolated component conversion and numerical validation; compare full-chain after packing a new modelId", "status": "experimental"},

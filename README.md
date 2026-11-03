@@ -1,5 +1,7 @@
 # mobile_harmony_AImusic · levo-harmony
 
+> [LLM逐token最后层hidden → Diffusion适配指南](docs/HIDDEN_STATE_CONDITIONING.md)：prefill最后hidden是第一个生成token的预测条件；含MNN双输出读取、训练接口／时间对齐、分块内存工具。46项CPU测试通过，尚未接入私有hidden-conditioned模型。
+
 > [一张表查看大小模型：手机型号、CPU核心／线程、ROM、参数、量化及60秒RTF](docs/CONSOLIDATED_MODEL_COMPARISON.md)。对应基线模型资产ROM：LeVo 4B约3.641GiB，0.6B原型约0.844GiB；CPU推理，请求线程数不等于固定绑定核心数。
 
 > 汇总名称：**LeVo 4B（Mixed-only）**，实测部署为3.106B LM＋751.534M DiT＋84.414M VAE，约3.942B，不含官方track LM。LM主体W4/g64、音乐头W8、输入／条件表BF16；DiT W8/g64；VAE W8；Codec辅助表FP32。未启用静态A4或KV4。详见[各部分量化和60秒测试](docs/COOLED_60S_COMPARISON.md#配方)。

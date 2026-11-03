@@ -94856,5 +94856,185 @@
       "Requested threads do not establish fixed core IDs or actual thread-pool size",
       "Historical affinity is not a fresh measurement of this run"
     ]
+  },
+  "hidden_sequence_conditioning_research_2026_11_03": {
+    "date": "2026-11-03",
+    "scope": "CPU research, graph metadata checks and native header syntax only; no App integration, private checkpoint inference, phone RTF or generated music",
+    "userInterface": {
+      "hidden": "[B,T,H] last layer per generated token",
+      "alignment": "predictor",
+      "firstCondition": "Last prefix hidden from prefill predicts the first sampled token",
+      "normalizationPoint": "Needs training implementation confirmation; example uses post_final_norm"
+    },
+    "currentRuntime": {
+      "conditioning": "sampled music token -> 16384x32 codebook -> trained 32-to-1024 projection -> DiT",
+      "changed": false,
+      "privateHiddenModelDeployed": false
+    },
+    "mnn": {
+      "version": "3.6.1",
+      "publicApis": [
+        "Llm::getOutputIndex",
+        "Llm::getOutputs"
+      ],
+      "loadConfiguration": "hidden_states=true before load",
+      "copyLifetime": "Copy current hidden before the next forward/reset/destruction; do not forward again to retrieve it",
+      "defaultExporterSemantics": "Non-MTP/non-speculative path selects positions with logits_index and returns post-final-norm hidden; runtime indices need verification",
+      "inspectedGraphs": {
+        "public": {
+          "graphSha256": "35b56c9a711a1806fbe6ad9646537244b1ebae60fe08b84708b499a1e65521d2",
+          "lmConfig": {
+            "hiddenSize": 2048,
+            "sha256": "9549e92338194a97ccb1ad7c89c7def6eb233f01934f18389d25570e886579f4"
+          },
+          "mnnGraph": {
+            "outputs": [
+              "logits",
+              "hidden_states"
+            ],
+            "metadataJsonSha256": "479f16c3a2d8f8b56a5772d9895dc5ae718d70dc16dd9841985a92c87e81a94d",
+            "semanticsVerified": false,
+            "note": "Output names do not prove normalization, layout, alignment or quantized hidden parity"
+          },
+          "trainingProvenanceDeclaredComplete": false,
+          "currentAppCompatible": false,
+          "scope": "Existing graph metadata and configuration only, not hidden inference parity or a private hidden-conditioned checkpoint"
+        },
+        "student": {
+          "graphSha256": "86424c58e9ce871078212307e356dd98227b2065829d83973b718d6bed645d37",
+          "lmConfig": {
+            "hiddenSize": 1024,
+            "sha256": "fe36143eba46b4ab84c9de6b26417b72210337e0bf7f9d5c2a03aa7fe5012f15"
+          },
+          "mnnGraph": {
+            "outputs": [
+              "logits",
+              "hidden_states"
+            ],
+            "metadataJsonSha256": "fdc8f8544219b51a425568b8851120ea4ca1775a851e48d528c295c92f602c19",
+            "semanticsVerified": false,
+            "note": "Output names do not prove normalization, layout, alignment or quantized hidden parity"
+          },
+          "trainingProvenanceDeclaredComplete": false,
+          "currentAppCompatible": false,
+          "scope": "Existing graph metadata and configuration only, not hidden inference parity or a private hidden-conditioned checkpoint"
+        }
+      }
+    },
+    "validation": {
+      "unitTests": {
+        "passed": 46,
+        "added": 9,
+        "syntheticModel": "Untrained two-layer width-32 Qwen3; fixed tokens, CPU eager attention",
+        "hiddenCheck": "Both predictor and consumed-token cached outputs match full teacher forcing at rtol=atol=1e-5; definitions differ by one position",
+        "realMnnHiddenNumericalParityVerified": false
+      },
+      "nativeHelper": {
+        "file": "runtime/include/levo/experimental/HiddenStateTap.hpp",
+        "target": "aarch64-linux-ohos",
+        "syntaxCheckExitCode": 0,
+        "linkedInApp": false,
+        "deviceExecuted": false,
+        "acceptedOutput": "[1,1,H] float32 graph tensor, finite values, owned copy"
+      }
+    },
+    "memoryArithmeticExample": {
+      "hiddenSize": 2560,
+      "conditionWidth": 1024,
+      "sourceTokenRateHz": 25,
+      "windowFrames": 256,
+      "contextFrames": 64,
+      "durations": {
+        "60": {
+          "frames": 1500,
+          "windows": 8,
+          "tensorStorage": {
+            "hidden": {
+              "fullSequenceFp32Bytes": 15360000,
+              "windowFp32Bytes": 2621440,
+              "fullSequenceFp16Bytes": 7680000,
+              "windowFp16Bytes": 1310720
+            },
+            "condition": {
+              "fullSequenceFp32Bytes": 6144000,
+              "windowFp32Bytes": 1048576,
+              "fullSequenceFp16Bytes": 3072000,
+              "windowFp16Bytes": 524288
+            }
+          },
+          "alignmentFirstPosition": 513,
+          "alignmentLastPosition": 2012
+        },
+        "120": {
+          "frames": 3000,
+          "windows": 16,
+          "tensorStorage": {
+            "hidden": {
+              "fullSequenceFp32Bytes": 30720000,
+              "windowFp32Bytes": 2621440,
+              "fullSequenceFp16Bytes": 15360000,
+              "windowFp16Bytes": 1310720
+            },
+            "condition": {
+              "fullSequenceFp32Bytes": 12288000,
+              "windowFp32Bytes": 1048576,
+              "fullSequenceFp16Bytes": 6144000,
+              "windowFp16Bytes": 524288
+            }
+          },
+          "alignmentFirstPosition": 513,
+          "alignmentLastPosition": 3512
+        },
+        "300": {
+          "frames": 7500,
+          "windows": 39,
+          "tensorStorage": {
+            "hidden": {
+              "fullSequenceFp32Bytes": 76800000,
+              "windowFp32Bytes": 2621440,
+              "fullSequenceFp16Bytes": 38400000,
+              "windowFp16Bytes": 1310720
+            },
+            "condition": {
+              "fullSequenceFp32Bytes": 30720000,
+              "windowFp32Bytes": 1048576,
+              "fullSequenceFp16Bytes": 15360000,
+              "windowFp16Bytes": 524288
+            }
+          },
+          "alignmentFirstPosition": 513,
+          "alignmentLastPosition": 8012
+        }
+      },
+      "scope": "Tensor storage arithmetic only; not a measurement or private Qwen 3B configuration",
+      "excludes": [
+        "Weights and packing",
+        "KV and its growth",
+        "DiT/VAE activations",
+        "Allocator/co-residency overhead"
+      ]
+    },
+    "deliverables": [
+      "docs/HIDDEN_STATE_CONDITIONING.md",
+      "configs/conditioning/hidden-sequence.example.json",
+      "tools/inspect_hidden_conditioning.py",
+      "levo_harmony/deployment/hidden_conditioning.py",
+      "runtime/include/levo/experimental/HiddenStateTap.hpp",
+      "tests/test_hidden_conditioning.py"
+    ],
+    "remaining": [
+      "Private LM config/checkpoint and exact norm point",
+      "Matching trained conditioner/DiT and temporal/CFG definitions",
+      "New hidden contract bundle/runtime adapter",
+      "MNN same-token hidden parity and downstream audio/quality validation",
+      "Phone co-residency, bounded queues, KV growth and full-chain RTF"
+    ],
+    "sources": [
+      "https://github.com/alibaba/MNN/blob/3.6.1/transformers/llm/export/utils/model.py",
+      "https://github.com/alibaba/MNN/blob/3.6.1/transformers/llm/export/llmexport.py",
+      "https://github.com/alibaba/MNN/blob/3.6.1/transformers/llm/engine/src/llm.cpp",
+      "https://github.com/alibaba/MNN/blob/3.6.1/transformers/llm/engine/include/llm/llm.hpp",
+      "https://huggingface.co/docs/transformers/en/model_doc/qwen3"
+    ]
   }
 }

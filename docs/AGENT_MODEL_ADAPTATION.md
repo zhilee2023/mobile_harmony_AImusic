@@ -1,5 +1,7 @@
 # LeVo Harmony：给接手Agent的模型适配指南
 
+> 2026-11-03新增[逐token最后层hidden → Diffusion适配](HIDDEN_STATE_CONDITIONING.md)：用户定义包含prefill最后hidden作为第一项，须匹配训练时norm、token对齐、conditioner与DiT；现有App仍为token/codebook条件。研究检查工具与C++读取helper不等于私有模型已部署。
+
 > 2026-11-02最终模型／温度审计见[模型与温度总结](MODEL_THERMAL_SUMMARY.md)。公开90秒日志有12块Codec事件，与父观察器退出记录的归属未消解；旧“LM后、Codec前退出”判断撤回，原任务退出阶段未确认，6.225仍只计分阶段恢复。不要把旧温度图中间整列当纯LM或尾段当空闲。两款App的电脑测试脚本默认每5秒采样，同一JSON保存telemetry；37项测试通过，本轮仅做待机采样接入检查。
 
 > 2026-11-02 用户明确要求保留并复用小模型的优化。先读 [小模型优化保留清单](SMALL_MODEL_OPTIMIZATION_BASELINE.md)：0.6B 学生 W4/头W8、KV 连续增量、W8 DiT、VAE W8＋NEON Sin、有界分块和生命周期结论均须保留。公开大 Mixed LM 验证使用独立目录，不覆盖旧模型、App 和报告；迁移优化须确认实际选核/调用次数，不能把旧小模型 RTF 用于公开大模型。

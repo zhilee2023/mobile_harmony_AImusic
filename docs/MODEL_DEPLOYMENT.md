@@ -2,6 +2,8 @@
 
 统一入口为`tools/modelctl.py`。电脑端负责Torch/PT/ONNX转换与校验，手机只加载准备好的MNN模型包；不在手机上运行Python转换器。
 
+若新模型使用每token最后层hidden作为Diffusion条件，先看[hidden条件适配指南](HIDDEN_STATE_CONDITIONING.md)。当前部署合同仍为token/codebook条件；研究检查工具不会把不兼容的hidden接口直接打包进App。
+
 ## 代码分层
 
 | 位置 | 职责 |
