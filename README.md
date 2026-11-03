@@ -1,5 +1,7 @@
 # mobile_harmony_AImusic · levo-harmony
 
+> [hidden条件速度优化真机记录](docs/HIDDEN_CONDITIONING_SPEED.md)：0.6B骨干三线程候选，预热prefill＋255 decode相邻对照少约8%–12%；hidden直接缓冲约0.7ms/256项，合成affine整块约5–6倍。均为独立CLI模块结果，App默认值及私有整链RTF未改变。
+
 > [LLM逐token最后层hidden → Diffusion适配指南](docs/HIDDEN_STATE_CONDITIONING.md)：prefill最后hidden是第一个生成token的预测条件；含MNN双输出读取、训练接口／时间对齐、分块内存工具。46项CPU测试通过，尚未接入私有hidden-conditioned模型。
 
 > [一张表查看大小模型：手机型号、CPU核心／线程、ROM、参数、量化及60秒RTF](docs/CONSOLIDATED_MODEL_COMPARISON.md)。对应基线模型资产ROM：LeVo 4B约3.641GiB，0.6B原型约0.844GiB；CPU推理，请求线程数不等于固定绑定核心数。

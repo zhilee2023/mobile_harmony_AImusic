@@ -95036,5 +95036,1725 @@
       "https://github.com/alibaba/MNN/blob/3.6.1/transformers/llm/engine/include/llm/llm.hpp",
       "https://huggingface.co/docs/transformers/en/model_doc/qwen3"
     ]
+  },
+  "hidden_conditioning_speed_2026_11_03": {
+    "scope": "Phone CLI interface/operator probes, not private-model music or App end-to-end RTF",
+    "studentTrainingStatus": "Music adapters/head untrained; real pretrained/pruned 0.6B backbone",
+    "runs": [
+      {
+        "runId": "hidden-speed-20261103-r3",
+        "suite": "outputs",
+        "binarySha256": "51e9634d48d0fa79df1b33237c5fb01ab0ba0b7a8f97ab6def1302f518cf1acb",
+        "cases": [
+          {
+            "temperatureBeforeRaw": "290",
+            "temperatureAfterRaw": "280",
+            "name": "1-logits-t4",
+            "displayStable": true,
+            "result": {
+              "conditionFrames": 256,
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.370505312,
+              "minimumSystemAvailableKiB": 4313088,
+              "mode": "logits",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 4,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 71.45456291574804,
+                  "decodeSeconds": 3.5687014179999967,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0,
+                  "hiddenStorageBytes": 0,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0004581299999999997,
+                  "prefillSeconds": 1.49640625,
+                  "round": 1,
+                  "roundWallSeconds": 5.069804375
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 68.632090203603,
+                  "decodeSeconds": 3.715463119999997,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0,
+                  "hiddenStorageBytes": 0,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005103009999999994,
+                  "prefillSeconds": 1.592029063,
+                  "round": 2,
+                  "roundWallSeconds": 5.312940469
+                }
+              ],
+              "sampledPeakRssKiB": 481740,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297620,
+                  "seconds": 0.373427344,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4494336
+                },
+                {
+                  "rssKiB": 420188,
+                  "seconds": 5.467673281,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4384768
+                },
+                {
+                  "rssKiB": 420184,
+                  "seconds": 10.789205469,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4385792
+                },
+                {
+                  "rssKiB": 10688,
+                  "seconds": 10.824081094,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4795392
+                }
+              ],
+              "success": true,
+              "totalSeconds": 10.824423437
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": null
+            }
+          },
+          {
+            "temperatureBeforeRaw": "290",
+            "temperatureAfterRaw": "290",
+            "name": "2-buffer-t4",
+            "displayStable": true,
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.370479531,
+              "minimumSystemAvailableKiB": 4330496,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 4,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 66.07005787867656,
+                  "decodeSeconds": 3.8595395279999996,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0006449939999999998,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005154619999999997,
+                  "prefillSeconds": 1.536872188,
+                  "round": 1,
+                  "roundWallSeconds": 5.402055156
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 64.89341702745399,
+                  "decodeSeconds": 3.9295203069999993,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0007196870000000001,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005320259999999996,
+                  "prefillSeconds": 1.781768125,
+                  "round": 2,
+                  "roundWallSeconds": 5.7172575
+                }
+              ],
+              "sampledPeakRssKiB": 469864,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297796,
+                  "seconds": 0.373297188,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4509696
+                },
+                {
+                  "rssKiB": 421460,
+                  "seconds": 5.803075313,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4383744
+                },
+                {
+                  "rssKiB": 421444,
+                  "seconds": 11.529818594,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4384768
+                },
+                {
+                  "rssKiB": 10900,
+                  "seconds": 11.564253125,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4794368
+                }
+              ],
+              "success": true,
+              "totalSeconds": 11.564570156
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          },
+          {
+            "temperatureBeforeRaw": "290",
+            "temperatureAfterRaw": "300",
+            "name": "3-allocated-t4",
+            "displayStable": true,
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.368847969,
+              "minimumSystemAvailableKiB": 4370432,
+              "mode": "allocated",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 4,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 64.40308755978594,
+                  "decodeSeconds": 3.9594375000000004,
+                  "extraPerTokenHiddenAllocations": 256,
+                  "hiddenHandoffSeconds": 0.0022245290000000003,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005726579999999995,
+                  "prefillSeconds": 1.597346719,
+                  "round": 1,
+                  "roundWallSeconds": 5.563969062
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 64.2953222544939,
+                  "decodeSeconds": 3.9660739080000007,
+                  "extraPerTokenHiddenAllocations": 256,
+                  "hiddenHandoffSeconds": 0.0022840499999999993,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0006053160000000001,
+                  "prefillSeconds": 1.813105,
+                  "round": 2,
+                  "roundWallSeconds": 5.786622344
+                }
+              ],
+              "sampledPeakRssKiB": 451032,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297596,
+                  "seconds": 0.371423125,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4508672
+                },
+                {
+                  "rssKiB": 422276,
+                  "seconds": 5.967977656,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4392960
+                },
+                {
+                  "rssKiB": 422284,
+                  "seconds": 11.763439375,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4393984
+                },
+                {
+                  "rssKiB": 10692,
+                  "seconds": 11.799551875,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4805632
+                }
+              ],
+              "success": true,
+              "totalSeconds": 11.799832344
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          },
+          {
+            "temperatureBeforeRaw": "300",
+            "temperatureAfterRaw": "310",
+            "name": "4-buffer-t6",
+            "displayStable": true,
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.371006563,
+              "minimumSystemAvailableKiB": 4334592,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 6,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 60.61466169329632,
+                  "decodeSeconds": 4.206902964999997,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0007634359999999999,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005723410000000002,
+                  "prefillSeconds": 1.767627031,
+                  "round": 1,
+                  "roundWallSeconds": 5.980947344
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 61.16033980947668,
+                  "decodeSeconds": 4.169368594,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0007436010000000006,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0006018749999999999,
+                  "prefillSeconds": 1.9603325,
+                  "round": 2,
+                  "roundWallSeconds": 6.135886719
+                }
+              ],
+              "sampledPeakRssKiB": 469740,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297480,
+                  "seconds": 0.373540625,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4517888
+                },
+                {
+                  "rssKiB": 421196,
+                  "seconds": 6.384960157,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4378624
+                },
+                {
+                  "rssKiB": 421208,
+                  "seconds": 12.530440938,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4384768
+                },
+                {
+                  "rssKiB": 10704,
+                  "seconds": 12.568706094,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4794368
+                }
+              ],
+              "success": true,
+              "totalSeconds": 12.569026875
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          },
+          {
+            "temperatureBeforeRaw": "310",
+            "temperatureAfterRaw": "310",
+            "name": "5-buffer-t4",
+            "displayStable": true,
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.372235782,
+              "minimumSystemAvailableKiB": 4323328,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 4,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 63.46534799776933,
+                  "decodeSeconds": 4.017940625000003,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.000711715,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005465649999999995,
+                  "prefillSeconds": 1.589218125,
+                  "round": 1,
+                  "roundWallSeconds": 5.612950625
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 63.8627902611808,
+                  "decodeSeconds": 3.9929354630000025,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0006943709999999997,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005553189999999993,
+                  "prefillSeconds": 1.80869875,
+                  "round": 2,
+                  "roundWallSeconds": 5.807895937
+                }
+              ],
+              "sampledPeakRssKiB": 470768,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297640,
+                  "seconds": 0.37474375,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4501504
+                },
+                {
+                  "rssKiB": 421296,
+                  "seconds": 6.032897344,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4370432
+                },
+                {
+                  "rssKiB": 421316,
+                  "seconds": 11.850972344,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4365312
+                },
+                {
+                  "rssKiB": 10676,
+                  "seconds": 11.886825938,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4776960
+                }
+              ],
+              "success": true,
+              "totalSeconds": 11.8871225
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          },
+          {
+            "temperatureBeforeRaw": "310",
+            "temperatureAfterRaw": "320",
+            "name": "6-logits-t4",
+            "displayStable": true,
+            "result": {
+              "conditionFrames": 256,
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.368287344,
+              "minimumSystemAvailableKiB": 4375552,
+              "mode": "logits",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 4,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 62.41550525452836,
+                  "decodeSeconds": 4.085523284000001,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0,
+                  "hiddenStorageBytes": 0,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005539099999999999,
+                  "prefillSeconds": 1.643516719,
+                  "round": 1,
+                  "roundWallSeconds": 5.734436406
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 61.814744588704066,
+                  "decodeSeconds": 4.125229371999999,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0,
+                  "hiddenStorageBytes": 0,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005678119999999995,
+                  "prefillSeconds": 1.795637812,
+                  "round": 2,
+                  "roundWallSeconds": 5.926838437
+                }
+              ],
+              "sampledPeakRssKiB": 479840,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297732,
+                  "seconds": 0.37077875,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4491264
+                },
+                {
+                  "rssKiB": 420260,
+                  "seconds": 6.144620156,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4430848
+                },
+                {
+                  "rssKiB": 420236,
+                  "seconds": 12.081824063,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4431872
+                },
+                {
+                  "rssKiB": 10716,
+                  "seconds": 12.115713594,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4841472
+                }
+              ],
+              "success": true,
+              "totalSeconds": 12.116008281
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": null
+            }
+          }
+        ]
+      },
+      {
+        "runId": "hidden-speed-20261103-threads-r1",
+        "suite": "threads",
+        "binarySha256": "2d33f6f8d82e76ae2c073aad301889193c3f92776af047e841d3b69e0078dacd",
+        "cases": [
+          {
+            "displayStable": true,
+            "name": "1-buffer-t3",
+            "temperatureBeforeRaw": "310",
+            "temperatureAfterRaw": "310",
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.367650782,
+              "minimumSystemAvailableKiB": 4382720,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 3,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 76.36373474952873,
+                  "decodeSeconds": 3.3392814120000027,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0005926620000000002,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0004706279999999992,
+                  "prefillSeconds": 1.706695313,
+                  "round": 1,
+                  "roundWallSeconds": 5.05147125
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 73.79114779566225,
+                  "decodeSeconds": 3.455699059,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0006473370000000003,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005379719999999997,
+                  "prefillSeconds": 1.872039063,
+                  "round": 2,
+                  "roundWallSeconds": 5.333492031
+                }
+              ],
+              "sampledPeakRssKiB": 479976,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297840,
+                  "seconds": 0.37046,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4569088
+                },
+                {
+                  "rssKiB": 421504,
+                  "seconds": 5.450041407,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4431872
+                },
+                {
+                  "rssKiB": 421504,
+                  "seconds": 10.791897813,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4430848
+                },
+                {
+                  "rssKiB": 10896,
+                  "seconds": 10.825315313,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4841472
+                }
+              ],
+              "success": true,
+              "totalSeconds": 10.825574688
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          },
+          {
+            "displayStable": true,
+            "name": "2-buffer-t4",
+            "temperatureBeforeRaw": "310",
+            "temperatureAfterRaw": "310",
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.36656,
+              "minimumSystemAvailableKiB": 4378624,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 4,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 64.99820430990327,
+                  "decodeSeconds": 3.923185304999997,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0007131089999999995,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005139109999999997,
+                  "prefillSeconds": 1.550170156,
+                  "round": 1,
+                  "roundWallSeconds": 5.479654219
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 64.34285912541023,
+                  "decodeSeconds": 3.96314375,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.000662809999999999,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005221909999999998,
+                  "prefillSeconds": 1.738830937,
+                  "round": 2,
+                  "roundWallSeconds": 5.707843906
+                }
+              ],
+              "sampledPeakRssKiB": 478732,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297916,
+                  "seconds": 0.36902625,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4558848
+                },
+                {
+                  "rssKiB": 421584,
+                  "seconds": 5.879896875,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4420608
+                },
+                {
+                  "rssKiB": 421592,
+                  "seconds": 11.597246563,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4425728
+                },
+                {
+                  "rssKiB": 11048,
+                  "seconds": 11.628406563,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4836352
+                }
+              ],
+              "success": true,
+              "totalSeconds": 11.628705313
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          },
+          {
+            "displayStable": true,
+            "name": "3-buffer-t2",
+            "temperatureBeforeRaw": "310",
+            "temperatureAfterRaw": "320",
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.367177344,
+              "minimumSystemAvailableKiB": 4372480,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 2,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 53.83398044529344,
+                  "decodeSeconds": 4.736785165999999,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0007524989999999997,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005293779999999993,
+                  "prefillSeconds": 2.368181562,
+                  "round": 1,
+                  "roundWallSeconds": 7.110687187
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 54.699673952061026,
+                  "decodeSeconds": 4.6618193780000015,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0007532770000000003,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005589,
+                  "prefillSeconds": 2.493842813,
+                  "round": 2,
+                  "roundWallSeconds": 7.161596406
+                }
+              ],
+              "sampledPeakRssKiB": 473224,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297796,
+                  "seconds": 0.370678906,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4547584
+                },
+                {
+                  "rssKiB": 421444,
+                  "seconds": 7.510597031,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4419584
+                },
+                {
+                  "rssKiB": 421464,
+                  "seconds": 14.680856719,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4416512
+                },
+                {
+                  "rssKiB": 10928,
+                  "seconds": 14.714795,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4826112
+                }
+              ],
+              "success": true,
+              "totalSeconds": 14.715059531
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          },
+          {
+            "displayStable": true,
+            "name": "4-buffer-t4",
+            "temperatureBeforeRaw": "320",
+            "temperatureAfterRaw": "330",
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.369505468,
+              "minimumSystemAvailableKiB": 4378624,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 4,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 64.02455783989434,
+                  "decodeSeconds": 3.982846717000003,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0007053199999999997,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005465639999999995,
+                  "prefillSeconds": 1.605857188,
+                  "round": 1,
+                  "roundWallSeconds": 5.59514625
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 62.806948765346306,
+                  "decodeSeconds": 4.060060312000001,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0007218739999999998,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005801550000000002,
+                  "prefillSeconds": 1.84172625,
+                  "round": 2,
+                  "roundWallSeconds": 5.907927969
+                }
+              ],
+              "sampledPeakRssKiB": 457388,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297608,
+                  "seconds": 0.372094062,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4538368
+                },
+                {
+                  "rssKiB": 421220,
+                  "seconds": 5.99806,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4406272
+                },
+                {
+                  "rssKiB": 421208,
+                  "seconds": 11.916066719,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4403200
+                },
+                {
+                  "rssKiB": 10664,
+                  "seconds": 11.952994375,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4813824
+                }
+              ],
+              "success": true,
+              "totalSeconds": 11.953330625
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          }
+        ]
+      },
+      {
+        "runId": "hidden-speed-20261103-confirm-r1",
+        "suite": "threads-confirm",
+        "binarySha256": "c2dec7441ee566d0c5d5309dd3d1589041e4055d0a60f23a7d5c77c334ec644b",
+        "cases": [
+          {
+            "name": "1-buffer-t3",
+            "displayStable": true,
+            "temperatureAfterRaw": "330",
+            "temperatureBeforeRaw": "330",
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.362928281,
+              "minimumSystemAvailableKiB": 4359168,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 3,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 74.48910595072785,
+                  "decodeSeconds": 3.4233193800000006,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0005265629999999995,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0004773449999999999,
+                  "prefillSeconds": 1.712282187,
+                  "round": 1,
+                  "roundWallSeconds": 5.140793594
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 72.47213480663325,
+                  "decodeSeconds": 3.518593741999998,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0005618639999999996,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005138959999999997,
+                  "prefillSeconds": 1.912410625,
+                  "round": 2,
+                  "roundWallSeconds": 5.43693375
+                }
+              ],
+              "sampledPeakRssKiB": 479596,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297952,
+                  "seconds": 0.365653437,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4543488
+                },
+                {
+                  "rssKiB": 421604,
+                  "seconds": 5.534177656,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4411392
+                },
+                {
+                  "rssKiB": 421628,
+                  "seconds": 10.979940937,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4411392
+                },
+                {
+                  "rssKiB": 11020,
+                  "seconds": 11.0143875,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4822016
+                }
+              ],
+              "success": true,
+              "totalSeconds": 11.014665937
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          },
+          {
+            "name": "2-buffer-t4",
+            "displayStable": true,
+            "temperatureAfterRaw": "330",
+            "temperatureBeforeRaw": "330",
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.365282656,
+              "minimumSystemAvailableKiB": 4348928,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 4,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 65.04806714294551,
+                  "decodeSeconds": 3.920177972999999,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0005373429999999999,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005292239999999999,
+                  "prefillSeconds": 1.585667813,
+                  "round": 1,
+                  "roundWallSeconds": 5.511354844
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 61.962147390252284,
+                  "decodeSeconds": 4.115415793999998,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0005903160000000005,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005695389999999992,
+                  "prefillSeconds": 1.800409844,
+                  "round": 2,
+                  "roundWallSeconds": 5.922283281
+                }
+              ],
+              "sampledPeakRssKiB": 489408,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297772,
+                  "seconds": 0.36788125,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4536320
+                },
+                {
+                  "rssKiB": 421360,
+                  "seconds": 5.934509062,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4411392
+                },
+                {
+                  "rssKiB": 421376,
+                  "seconds": 11.870316718,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4416512
+                },
+                {
+                  "rssKiB": 10712,
+                  "seconds": 11.912747031,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4827136
+                }
+              ],
+              "success": true,
+              "totalSeconds": 11.913082656
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          },
+          {
+            "name": "3-buffer-t3",
+            "displayStable": true,
+            "temperatureAfterRaw": "340",
+            "temperatureBeforeRaw": "330",
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.367004844,
+              "minimumSystemAvailableKiB": 4389888,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 3,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 69.60677075115228,
+                  "decodeSeconds": 3.6634367209999996,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0005637520000000005,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005592159999999995,
+                  "prefillSeconds": 1.8276675,
+                  "round": 1,
+                  "roundWallSeconds": 5.496662812
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 65.48224314635775,
+                  "decodeSeconds": 3.894185472999998,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0006281319999999996,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0005995279999999998,
+                  "prefillSeconds": 1.927652031,
+                  "round": 2,
+                  "roundWallSeconds": 5.82910625
+                }
+              ],
+              "sampledPeakRssKiB": 476068,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297788,
+                  "seconds": 0.369526719,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4537344
+                },
+                {
+                  "rssKiB": 421160,
+                  "seconds": 5.896179844,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4526080
+                },
+                {
+                  "rssKiB": 421208,
+                  "seconds": 11.735733282,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4510720
+                },
+                {
+                  "rssKiB": 10732,
+                  "seconds": 11.779777032,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4921344
+                }
+              ],
+              "success": true,
+              "totalSeconds": 11.780110782
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          },
+          {
+            "name": "4-buffer-t4",
+            "displayStable": true,
+            "temperatureAfterRaw": "340",
+            "temperatureBeforeRaw": "340",
+            "result": {
+              "conditionFrames": 256,
+              "firstHiddenElements": 1024,
+              "firstHiddenShape": [
+                1,
+                1024,
+                1,
+                1
+              ],
+              "firstHiddenType": {
+                "bits": 32,
+                "code": 2
+              },
+              "hiddenWidth": 1024,
+              "loadSeconds": 0.367723906,
+              "minimumSystemAvailableKiB": 4186112,
+              "mode": "buffer",
+              "prefixPositions": 514,
+              "recipe": {
+                "activationBitsRequested": null,
+                "bodyWeightBits": 4,
+                "headWeightBits": 8,
+                "kvBitsRequested": null,
+                "precision": "low"
+              },
+              "requestedThreads": 4,
+              "rounds": [
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 62.59378037971486,
+                  "decodeSeconds": 4.0738871890000015,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0006054609999999995,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.0006100079999999994,
+                  "prefillSeconds": 1.699367187,
+                  "round": 1,
+                  "roundWallSeconds": 5.779621093
+                },
+                {
+                  "decodeForwards": 255,
+                  "decodeForwardsPerSecond": 57.578173150153006,
+                  "decodeSeconds": 4.428761561000002,
+                  "extraPerTokenHiddenAllocations": 0,
+                  "hiddenHandoffSeconds": 0.0006670360000000003,
+                  "hiddenStorageBytes": 1048576,
+                  "kvPositions": 769,
+                  "logitsCopySeconds": 0.000619375,
+                  "prefillSeconds": 2.172055468,
+                  "round": 2,
+                  "roundWallSeconds": 6.606909687
+                }
+              ],
+              "sampledPeakRssKiB": 476476,
+              "scope": "Fresh CLI process, fixed-token student LLM only; no sampling, conditioner, DiT, VAE or music RTF",
+              "stages": [
+                {
+                  "rssKiB": 297728,
+                  "seconds": 0.370587187,
+                  "stage": "hidden-probe-loaded",
+                  "systemAvailableKiB": 4572160
+                },
+                {
+                  "rssKiB": 421496,
+                  "seconds": 6.181162187,
+                  "stage": "hidden-probe-round-1",
+                  "systemAvailableKiB": 4463616
+                },
+                {
+                  "rssKiB": 409216,
+                  "seconds": 12.799546562,
+                  "stage": "hidden-probe-round-2",
+                  "systemAvailableKiB": 4399104
+                },
+                {
+                  "rssKiB": 10976,
+                  "seconds": 12.862242969,
+                  "stage": "hidden-probe-destroyed",
+                  "systemAvailableKiB": 4799488
+                }
+              ],
+              "success": true,
+              "totalSeconds": 12.862622969
+            },
+            "numericalValidation": {
+              "logitsBitwiseEqualToReference": true,
+              "hiddenBitwiseEqualToReference": true
+            }
+          }
+        ]
+      }
+    ],
+    "projectionFixtures": [
+      {
+        "minimumSystemAvailableKiB": 4832256,
+        "precision": "high",
+        "requestedThreads": 4,
+        "rows": [
+          {
+            "firstBatchSeconds": 0.004552656,
+            "firstPerFrameSeconds": 0.013796407,
+            "frames": 64,
+            "inputWidth": 1024,
+            "outputWidth": 1024,
+            "pairs": [
+              {
+                "batchSeconds": 0.0022275,
+                "perFrameSeconds": 0.014872813,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 1
+              },
+              {
+                "batchSeconds": 0.001801563,
+                "perFrameSeconds": 0.008964531,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 2
+              },
+              {
+                "batchSeconds": 0.001532187,
+                "perFrameSeconds": 0.007599688,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 3
+              },
+              {
+                "batchSeconds": 0.001372813,
+                "perFrameSeconds": 0.007658125,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 4
+              },
+              {
+                "batchSeconds": 0.001432187,
+                "perFrameSeconds": 0.007140156,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 5
+              }
+            ],
+            "medianPerFrameSeconds": 0.007658125,
+            "medianBatchSeconds": 0.001532187,
+            "medianTimeRatio": 4.9981660202051055
+          },
+          {
+            "firstBatchSeconds": 0.006553594,
+            "firstPerFrameSeconds": 0.028259375,
+            "frames": 256,
+            "inputWidth": 1024,
+            "outputWidth": 1024,
+            "pairs": [
+              {
+                "batchSeconds": 0.004105,
+                "perFrameSeconds": 0.026483906,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 1
+              },
+              {
+                "batchSeconds": 0.006437344,
+                "perFrameSeconds": 0.026904844,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 2
+              },
+              {
+                "batchSeconds": 0.00423875,
+                "perFrameSeconds": 0.027703125,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 3
+              },
+              {
+                "batchSeconds": 0.0048575,
+                "perFrameSeconds": 0.02666625,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 4
+              },
+              {
+                "batchSeconds": 0.005449219,
+                "perFrameSeconds": 0.026462656,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 5
+              }
+            ],
+            "medianPerFrameSeconds": 0.02666625,
+            "medianBatchSeconds": 0.0048575,
+            "medianTimeRatio": 5.4897066392177045
+          }
+        ],
+        "sampledPeakRssKiB": 31452,
+        "scope": "Isolated MNN CPU FP32 affine fixture; real student hidden, synthetic projector weights; not music or full-chain RTF",
+        "success": true,
+        "syntheticWeightSeed": 2307,
+        "totalSeconds": 0.295432968,
+        "weightBits": 32
+      },
+      {
+        "minimumSystemAvailableKiB": 4832256,
+        "precision": "high",
+        "requestedThreads": 6,
+        "rows": [
+          {
+            "firstBatchSeconds": 0.003958281,
+            "firstPerFrameSeconds": 0.014045782,
+            "frames": 64,
+            "inputWidth": 1024,
+            "outputWidth": 1024,
+            "pairs": [
+              {
+                "batchSeconds": 0.001765313,
+                "perFrameSeconds": 0.010622188,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 1
+              },
+              {
+                "batchSeconds": 0.00165125,
+                "perFrameSeconds": 0.009625,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 2
+              },
+              {
+                "batchSeconds": 0.001732344,
+                "perFrameSeconds": 0.00883125,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 3
+              },
+              {
+                "batchSeconds": 0.001677657,
+                "perFrameSeconds": 0.008893906,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 4
+              },
+              {
+                "batchSeconds": 0.001799531,
+                "perFrameSeconds": 0.008857344,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 5
+              }
+            ],
+            "medianPerFrameSeconds": 0.008893906,
+            "medianBatchSeconds": 0.001732344,
+            "medianTimeRatio": 5.13402996171661
+          },
+          {
+            "firstBatchSeconds": 0.006858125,
+            "firstPerFrameSeconds": 0.034115,
+            "frames": 256,
+            "inputWidth": 1024,
+            "outputWidth": 1024,
+            "pairs": [
+              {
+                "batchSeconds": 0.004989375,
+                "perFrameSeconds": 0.033506875,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 1
+              },
+              {
+                "batchSeconds": 0.004685937,
+                "perFrameSeconds": 0.029843907,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 2
+              },
+              {
+                "batchSeconds": 0.005613594,
+                "perFrameSeconds": 0.031259688,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 3
+              },
+              {
+                "batchSeconds": 0.005239062,
+                "perFrameSeconds": 0.033323906,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 4
+              },
+              {
+                "batchSeconds": 0.005648282,
+                "perFrameSeconds": 0.031659687,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 5
+              }
+            ],
+            "medianPerFrameSeconds": 0.031659687,
+            "medianBatchSeconds": 0.005239062,
+            "medianTimeRatio": 6.043006744337059
+          }
+        ],
+        "sampledPeakRssKiB": 31408,
+        "scope": "Isolated MNN CPU FP32 affine fixture; real student hidden, synthetic projector weights; not music or full-chain RTF",
+        "success": true,
+        "syntheticWeightSeed": 2307,
+        "totalSeconds": 0.329735312,
+        "weightBits": 32
+      },
+      {
+        "minimumSystemAvailableKiB": 4833280,
+        "precision": "high",
+        "requestedThreads": 4,
+        "rows": [
+          {
+            "firstBatchSeconds": 0.004550625,
+            "firstPerFrameSeconds": 0.013439688,
+            "frames": 64,
+            "inputWidth": 1024,
+            "outputWidth": 1024,
+            "pairs": [
+              {
+                "batchSeconds": 0.001801875,
+                "perFrameSeconds": 0.013676406,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 1
+              },
+              {
+                "batchSeconds": 0.001959063,
+                "perFrameSeconds": 0.009772344,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 2
+              },
+              {
+                "batchSeconds": 0.0017225,
+                "perFrameSeconds": 0.008887344,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 3
+              },
+              {
+                "batchSeconds": 0.001572813,
+                "perFrameSeconds": 0.0082125,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 4
+              },
+              {
+                "batchSeconds": 0.001807188,
+                "perFrameSeconds": 0.007318281,
+                "relativeL2": 7.218909557253524e-07,
+                "repeat": 5
+              }
+            ],
+            "medianPerFrameSeconds": 0.008887344,
+            "medianBatchSeconds": 0.001801875,
+            "medianTimeRatio": 4.932275546305931
+          },
+          {
+            "firstBatchSeconds": 0.0054425,
+            "firstPerFrameSeconds": 0.029016562,
+            "frames": 256,
+            "inputWidth": 1024,
+            "outputWidth": 1024,
+            "pairs": [
+              {
+                "batchSeconds": 0.00430625,
+                "perFrameSeconds": 0.028420157,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 1
+              },
+              {
+                "batchSeconds": 0.004204219,
+                "perFrameSeconds": 0.026112031,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 2
+              },
+              {
+                "batchSeconds": 0.0059475,
+                "perFrameSeconds": 0.026235938,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 3
+              },
+              {
+                "batchSeconds": 0.004122031,
+                "perFrameSeconds": 0.026635625,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 4
+              },
+              {
+                "batchSeconds": 0.004646562,
+                "perFrameSeconds": 0.027366563,
+                "relativeL2": 7.075363310291147e-07,
+                "repeat": 5
+              }
+            ],
+            "medianPerFrameSeconds": 0.026635625,
+            "medianBatchSeconds": 0.00430625,
+            "medianTimeRatio": 6.185341074020319
+          }
+        ],
+        "sampledPeakRssKiB": 31364,
+        "scope": "Isolated MNN CPU FP32 affine fixture; real student hidden, synthetic projector weights; not music or full-chain RTF",
+        "success": true,
+        "syntheticWeightSeed": 2307,
+        "totalSeconds": 0.297625937,
+        "weightBits": 32
+      }
+    ],
+    "threadComparison": {
+      "scope": "Median warm prefill+255 decode forward time, excludes sampling and all downstream modules",
+      "threeThreadSeconds": [
+        5.431004366999998,
+        5.821837503999998
+      ],
+      "fourThreadSeconds": [
+        5.915825637999998,
+        6.600817029000002
+      ],
+      "medianReductionFraction": 0.10096963136384818
+    },
+    "privateHiddenModelDeployed": false,
+    "wholeChainRtfMeasured": false,
+    "limits": [
+      "No clock/affinity control; temperatures drift, use repeated adjacent cases",
+      "Hidden-enabled versus logits-only LM overhead is not isolated from observed timing drift",
+      "Projection weights are synthetic FP32 affine fixtures, not a trained private conditioner",
+      "CLI RSS includes numerical-reference buffers and is not App memory or dedicated VRAM",
+      "Fresh-process thread optimum may change with shared thread-pool initialization and other modules"
+    ],
+    "sources": {
+      "runJsonSha256": [
+        "bfd23fa573e58a58b6be5e50cf8d90594c19aaa88f7310328a9f46cc2a5f1fa9",
+        "70e3c4db75b542b56b25ef48bd58b642499984f7a66f60c8dce3b78be4e86415",
+        "d6ffe8b80d595264aab7735b6df1e896713e5e024bd8b60a21111f1d679045b8"
+      ],
+      "projectionJsonSha256": [
+        "d3e7e27dc17d9664416a9b0dec87ccc9bb1eaeeb0833730b5341ef4727173818",
+        "5eaf2889ec9ffef4a74cc51ce631a83b5e08a8a77c173b0b449f55b052547609",
+        "bf998deac209409bca95b278d9e6d599a9e622498aa96675284193aebca280c4"
+      ]
+    },
+    "date": "2026-11-03",
+    "device": {
+      "reportedModel": "HUAWEI Mate 90 Pro Max",
+      "modelCode": "CMM-AL00",
+      "execution": "ARM64 CPU CLI; no GPU/NPU; no App E2E inference",
+      "screenScope": "All completed suite cases AWAKE with unchanged screen-off marker; no forced wake or settings change"
+    },
+    "provenance": {
+      "mnnVersion": "3.6.1",
+      "mnnStaticLibrarySha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+      "phoneGraphAndWeightMatchedLocalSha256": true,
+      "graphSha256": "86424c58e9ce871078212307e356dd98227b2065829d83973b718d6bed645d37",
+      "weightSha256": "33e5fe41b0cad117d421dce561fd1010f93555724075fd71e181c2b5f82be51d",
+      "finalProbeBinarySha256": "fdf54c3c36fc8ad0a3b30395a66c07034e281557ad379cbb9a4f4e95b4866c32",
+      "finalProjectionBinarySha256": "e52441b70071b486d67db1d941e18e558d5bdac66c9c4474f2754fc2042c02dc"
+    },
+    "validation": {
+      "pythonTestsPassed": 48,
+      "newPythonTests": 2,
+      "nativeTargetsBuiltAndLinked": true,
+      "finalNativeSmokePassed": true,
+      "finalProjectionSmokePassed": true,
+      "priorReportSentinelPreservedByBothClis": true,
+      "sentinelSha256": "f5f7a0fda91ce1e259958c55297dd0a972eafd789d43696adc5a531c206a5d25",
+      "firstHiddenNativeShape": [
+        1,
+        1024,
+        1,
+        1
+      ],
+      "firstHiddenElements": 1024,
+      "hiddenGraphDtype": "float32",
+      "layoutAdapter": "Explicit Channels1x1 opt-in, single position only; canonical BTH remains the default"
+    },
+    "retainedFailures": [
+      {
+        "run": "hidden-speed-20261103-r1",
+        "outcome": "Logits baseline passed; first hidden case refused non-BTH native shape before any downstream processing"
+      },
+      {
+        "run": "hidden shape diagnostic r2",
+        "outcome": "Observed [1,1024,1,1], 1024 float32 elements; canonical-only helper intentionally rejected it"
+      },
+      {
+        "outcome": "A local HDC send used a Windows path with forward slashes and failed before model execution; retried with absolute native Windows path"
+      },
+      {
+        "outcome": "A report-preservation edit briefly failed native compilation; corrected and both final targets linked, ran smoke checks, and preserved existing report sentinel"
+      }
+    ],
+    "deployment": {
+      "appsChanged": false,
+      "defaultThreadCountChanged": false,
+      "defaultWeightsChanged": false,
+      "candidate": "LM three threads, caller-owned hidden chunk, matching trained framewise conditioner batching when applicable",
+      "sharedThreadPoolAndFullChainValidationRequired": true,
+      "privateTrainingWeightsAvailable": false
+    },
+    "guide": "docs/HIDDEN_CONDITIONING_SPEED.md"
   }
 }

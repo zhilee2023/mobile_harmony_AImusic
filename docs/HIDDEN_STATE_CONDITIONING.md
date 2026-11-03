@@ -4,6 +4,8 @@
 
 **可以适配，MNN已有hidden输出接口；还需要配套训练过的conditioner与DiT输入适配。当前App仍走已验证的token/codebook路线，本轮没有接入私有权重或测出新的RTF。**
 
+后续已做[首轮真机速度优化](HIDDEN_CONDITIONING_SPEED.md)：直接写入连续缓冲、显式适配转换图的单位置1×1布局、MNN批量affine投影及2／3／4／6线程探针。0.6B骨干三线程为候选，尚未改变App默认值或验证私有整链RTF。
+
 ## 两条链路的区别
 
 ```mermaid
@@ -70,7 +72,7 @@ auto h0 = LevoHiddenResearch::copySingleStep(model, trainedHiddenWidth);
 // 下次forward({z0}, false)后复制h1，用于下一token；不再prefill。
 ```
 
-helper只接受canonical `[1,1,H]` FP32图输出并检查有限值；全位置／带padding／分块prefill输出须另写有效位置选择器。它不改变内部计算精度，不采样、不管理KV，也不自动完成conditioner。已过鸿蒙ARM64头文件语法检查，尚未在App中链接运行。图输出名不构成私有权重数值兼容证明。
+helper默认接受canonical `[1,1,H]` FP32输出，现另有显式opt-in的`Channels1x1`适配`[1,H,1,1]`；后者已在独立真机CLI验证。多位置／带padding／分块prefill须另写有效位置选择器。它不改变内部计算精度，不采样、不管理KV，也不自动完成conditioner，未接入App。图输出名不构成私有权重数值兼容证明。
 
 PyTorch参考可直接读取骨干`last_hidden_state`并核对该模型是否已final norm，不必保留所有层的hidden。参考[Transformers Qwen3接口](https://huggingface.co/docs/transformers/en/model_doc/qwen3)。
 
