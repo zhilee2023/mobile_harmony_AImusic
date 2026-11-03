@@ -28,7 +28,7 @@ flowchart LR
 
 Mixed-only是一条音乐token流，直接合成人声＋伴奏混合音频；不表示只有单声道，也不表示只生成人声。当前省略官方track LM，公开主Mixed LM本身是约3.106B，不应称为完整官方双LM约4B路线。
 
-| 模块 | 公开主Mixed | 0.6B原型 |
+| 模块 | LeVo 4B（Mixed-only） | 0.6B原型 |
 |---|---|---|
 | LM结构 | Llama接口，36层、hidden2048、FFN11008 | Qwen3学生，26层、hidden1024、FFN3072 |
 | LM参数 | 3,106,035,712 | 598,178,304 |

@@ -94717,5 +94717,72 @@
       "RSS/PSS are shared system memory, not dedicated GPU VRAM",
       "No player/listening quality acceptance from WAV validation alone"
     ]
+  },
+  "model_names_and_quantization_2026_11_03": {
+    "scope": "Display names and requested storage recipes; no model conversion or new speed test",
+    "public": {
+      "displayName": "LeVo 4B (Mixed-only)",
+      "llmParameters": 3106035712,
+      "ditParameters": 751534224,
+      "vaeParameters": 84414082,
+      "threeModuleParametersExcludingSeparateConditionTables": 3941984018,
+      "trackLmExecuted": false,
+      "nameMeaning": "Approximate deployed LM+DiT+VAE size, not an exactly 4B standalone LM"
+    },
+    "small": {
+      "displayName": "0.6B research prototype",
+      "llmParameters": 598178304,
+      "ditParameters": 195416128,
+      "vaeParameters": 84414082,
+      "musicAdaptersAndDitTrained": false
+    },
+    "recipes": {
+      "llmBody": {
+        "weightBits": 4,
+        "groupSize": 64
+      },
+      "musicOutputHead": {
+        "weightBits": 8,
+        "classes": 16385
+      },
+      "inputAndConditionTables": {
+        "storage": "BF16"
+      },
+      "dit": {
+        "weightBits": 8,
+        "groupSize": 64,
+        "steps": 2,
+        "guidance": 1.5
+      },
+      "vae": {
+        "weightBits": 8,
+        "artifact": "Shared legacy W8 in the 60-second comparison",
+        "legacyGroupingReauditedThisTurn": false
+      },
+      "codecAuxiliaryTables": {
+        "storage": "FP32"
+      },
+      "activations": {
+        "staticA4Requested": false,
+        "kernelPrecision": "Backend/precision-policy dependent"
+      },
+      "kvCache": {
+        "kv4Requested": false,
+        "allBufferStorageBitsAudited": false
+      }
+    },
+    "execution": {
+      "backend": "CPU",
+      "publicLm": "High / 4 requested threads",
+      "smallLm": "Low / 4 requested threads",
+      "dit": "High / 6 requested threads",
+      "vae": "Low / 6 requested threads, NEON sine"
+    },
+    "limits": [
+      "Weight bitwidth does not imply all operators compute in INT4/INT8",
+      "CPU High/Low is a calculation precision preference",
+      "Existing timing/memory records unchanged",
+      "Current product re-exported VAE differs from the shared legacy 60-second test VAE"
+    ]
   }
 }

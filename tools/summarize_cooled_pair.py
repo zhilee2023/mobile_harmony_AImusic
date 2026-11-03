@@ -109,7 +109,7 @@ def plot(pair, stem):
     fig, axes = plt.subplots(3, 3, figsize=(15, 8), sharex='col')
     fields = [('batteryC', '电池温度 °C', '#287050'), ('socNodeC', '内部温度节点 °C', '#b33b30'),
               ('batteryExchangeMagnitudeW', '电池端 |V×I| W', '#6943a0')]
-    series = [(pair['large']['telemetry']['samples'], '公开模型 · 60秒'),
+    series = [(pair['large']['telemetry']['samples'], 'LeVo 4B · Mixed-only · 60秒'),
               (cooling_telemetry(pair)['samples'], '停止推理 · 15分钟冷却'),
               (pair['small']['telemetry']['samples'], '0.6B原型 · 60秒')]
     for column, (samples, title) in enumerate(series):
@@ -120,7 +120,7 @@ def plot(pair, stem):
             axes[row,column].grid(alpha=.2)
             if row == 0: axes[row,column].set_title(title, fontproperties=font)
             if row == 2: axes[row,column].set_xlabel('本轮采样起点后的秒数', fontproperties=font)
-    fig.suptitle('同一HAP · 公开模型 → 15分钟冷却 → 小模型', fontproperties=font, fontsize=15)
+    fig.suptitle('同一HAP · LeVo 4B → 15分钟冷却 → 0.6B原型', fontproperties=font, fontsize=15)
     fig.text(.5,.02,'不同时间轴和起始温度；USB电池端交换功率不是整机/App功耗，内部节点不是机壳温度。',ha='center',fontproperties=font,fontsize=10)
     fig.tight_layout(rect=(0,.06,1,.95))
     for suffix in ('png','svg','pdf'):

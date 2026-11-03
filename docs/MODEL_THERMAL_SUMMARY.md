@@ -6,7 +6,7 @@
 
 ## 模型表
 
-| 项目 | 0.6B研究原型 | 公开主Mixed模型 |
+| 项目 | 0.6B研究原型 | LeVo 4B（Mixed-only） |
 |---|---|---|
 | LM参数 | 598,178,304（0.598B） | 3,106,035,712（3.106B） |
 | LM结构 | Qwen3，26层，hidden1024，FFN3072 | Llama接口，36层，hidden2048，FFN11008 |
@@ -22,6 +22,8 @@
 | 当前模型包 | student-onnx-test-v1 | public-pt-vae-test-v1 |
 
 参数合计不含另列的文本、风格条件表；外部weight不含图、embedding、tokenizer、条件表和运行配置。完整包ROM包含这些资产，仍不等于推理RAM。旧大小模型VAE外部weight相同；当前公开替换包重新量化，文件和SHA已不同。这里是主Mixed LM，省略官方track LM，不是完整双LM约4B方案。小模型数值流程通过不代表会唱歌。
+
+“LeVo 4B”作为本次汇总名称，指LM＋DiT＋VAE合计约3.942B的Mixed-only部署链路，不能写成单独LM精确4B。2026-11-03实际60秒配方与逐模块量化见[量化方案表](COOLED_60S_COMPARISON.md#配方)，其中旧基线VAE是W8；本页81.88MiB为另一次PT重新导出的产品VAE，不能混作60秒测试权重。
 
 ## 执行配方与分块
 

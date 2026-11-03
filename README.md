@@ -1,5 +1,7 @@
 # mobile_harmony_AImusic · levo-harmony
 
+> 汇总名称：**LeVo 4B（Mixed-only）**，实测部署为3.106B LM＋751.534M DiT＋84.414M VAE，约3.942B，不含官方track LM。LM主体W4/g64、音乐头W8、输入／条件表BF16；DiT W8/g64；VAE W8；Codec辅助表FP32。未启用静态A4或KV4。详见[各部分量化和60秒测试](docs/COOLED_60S_COMPARISON.md#配方)。
+
 > **2026-11-03：两边60秒输出已完成，间隔冷却900.304秒。** LeVo Harmony v0.1.14同包：公开主Mixed 351.818秒／RTF5.864／RSS4.645GiB；0.6B原型95.060秒／RTF1.584／RSS1.157GiB。两份60秒WAV已取回并核验，小模型音乐适配层仍未训练。电池温度公开28–37°C、小模型31–35°C；USB电池端交换功率不是整机功耗。见[阶段表、冷却协议与温度曲线](docs/COOLED_60S_COMPARISON.md)。原模型、产品LeVo音乐和旧实验保留。
 
 > **最终模型／温度总结**：小模型0.598B LM＋195.416M DiT＋84.414M VAE，当前包约0.844GiB；公开主Mixed 3.106B LM＋751.534M DiT＋84.414M VAE，当前包约3.642GiB。小模型90秒重测RTF1.566–1.608、RSS约1.10GiB，音乐适配层未训练。电脑观察两款App测试时现默认约5秒采样，并附到同一测试JSON；37项测试通过。电池端交换功率不是整机功耗。见[完整表格／温度图／公开90秒归属更正](docs/MODEL_THERMAL_SUMMARY.md)。
