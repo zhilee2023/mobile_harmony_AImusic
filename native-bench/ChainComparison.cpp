@@ -93,10 +93,12 @@ static Json comparisonStudent(const std::string& root,int frames){
         model.reset();report["lmStageSeconds"]=seconds(trace.start);trace.mark("student-lm-destroyed-before-codec");
         Json source={{"source","untrained 0.6B diagnostic student"},{"diagnosticOnly",true},{"lmDevice","Harmony phone CPU"},{"codes",codes},{"lmGuidance",1},
             {"progressPath",trace.sink},{"captureVaeLatents",frames==2250}};writePublicJson(root+"/comparison-codes.json",source);
-        std::string codePath=root+"/comparison-codes.json",steps="2",output="/dev/null",name="small";char* args[]={name.data(),const_cast<char*>(root.c_str()),codePath.data(),steps.data(),output.data()};Json codec;
+        std::string codePath=root+"/comparison-codes.json",steps="2",output="/dev/null",name="small";
+        if(frames==1500){std::filesystem::create_directories(root+"/songs");output=root+"/songs/diagnostic-60-"+std::to_string(std::chrono::system_clock::now().time_since_epoch().count())+".wav";report["wave"]=output;}
+        char* args[]={name.data(),const_cast<char*>(root.c_str()),codePath.data(),steps.data(),output.data()};Json codec;
         const int code=LevoPublicCodecMain(5,args,&codec);report["codec"]=codec;require(code==0,codec.value("error",std::string("Small codec failed")));
         report["validPcmSeconds"]=frames/25.;report["durationSeconds"]=frames/25.;report["pipelineSecondsThroughPcm"]=seconds(trace.start);report["pipelineRtfThroughPcm"]=seconds(trace.start)/(frames/25.);
-        report["success"]=true;report["audioFileGenerated"]=false;
+        report["success"]=true;report["audioFileGenerated"]=false;report["diagnosticWaveSaved"]=frames==1500;
     }catch(const std::exception& e){report["error"]=e.what();}
     trace.sample();report["sampledPeakRssKiB"]=trace.maxRss.load();report["minimumSystemAvailableKiB"]=trace.minAvailable.load();return report;
 }
@@ -104,8 +106,9 @@ static Json comparisonStudent(const std::string& root,int frames){
 std::string LevoRunComparableChain(const std::string& root,const std::string& variant){
     ComparisonMemory memory;Json result;const bool lowPublic=variant=="large-2-120-low";
     const bool ninety=variant=="large-2-90"||variant=="small-2-90";
-    const bool longer=variant=="large-2-120"||variant=="small-2-120"||lowPublic||ninety;
-    const bool small=variant=="small-2"||variant=="small-2-120"||variant=="small-2-90";const int frames=ninety?2250:(longer?3000:750);
+    const bool sixty=variant=="large-2-60"||variant=="small-2-60";
+    const bool longer=variant=="large-2-120"||variant=="small-2-120"||lowPublic||ninety||sixty;
+    const bool small=variant=="small-2"||variant=="small-2-120"||variant=="small-2-90"||variant=="small-2-60";const int frames=sixty?1500:(ninety?2250:(longer?3000:750));
     try{
         require(variant=="large-2"||variant=="small-2"||longer,"Invalid comparison variant");
         if(small)result=comparisonStudent(LevoBundle::comparisonRoot(root,"small"),frames);

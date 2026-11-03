@@ -1,5 +1,5 @@
 param(
-  [Parameter(Mandatory=$true)][ValidateSet('large-2','small-2','large-2-120','small-2-120','large-2-120-low','large-codec-120','large-codec-90','large-2-90','small-2-90','small-vae-90')][string]$Variant,
+  [Parameter(Mandatory=$true)][ValidateSet('large-2','small-2','large-2-60','small-2-60','large-2-120','small-2-120','large-2-120-low','large-codec-120','large-codec-90','large-2-90','small-2-90','small-vae-90')][string]$Variant,
   [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9-]+$')][string]$RunId,
   [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9]+$')][string]$Device,
   [switch]$RecordSensors=$true,
@@ -14,7 +14,7 @@ $cmpHapSha=(Get-FileHash -LiteralPath (Join-Path $cmpRoot 'app\entry\build\defau
 $cmpReport=Join-Path $cmpRoot "reports\comparison-app-$RunId.json"
 if(Test-Path -LiteralPath $cmpReport){throw 'Preserve existing report; choose a new RunId'}
 $cmpRemote='/data/app/el2/100/base/com.zhilee.levoharmony/haps/entry/files'
-$cmpKey=switch($Variant){'small-vae-90'{'comparisonSmallVae90'} 'small-2'{'comparisonSmall2'} 'large-2'{'comparisonLarge2'} 'small-2-120'{'comparisonSmall120'} 'large-2-120'{'comparisonLarge120'} 'large-2-120-low'{'comparisonLarge120'} 'large-codec-120'{'comparisonLargeCodec120'} 'large-codec-90'{'comparisonLargeCodec90'} 'small-2-90'{'comparisonSmall90'} 'large-2-90'{'comparisonLarge90'}}
+$cmpKey=switch($Variant){'small-vae-90'{'comparisonSmallVae90'} 'small-2'{'comparisonSmall2'} 'large-2'{'comparisonLarge2'} 'small-2-60'{'comparisonSmall60'} 'large-2-60'{'comparisonLarge60'} 'small-2-120'{'comparisonSmall120'} 'large-2-120'{'comparisonLarge120'} 'large-2-120-low'{'comparisonLarge120'} 'large-codec-120'{'comparisonLargeCodec120'} 'large-codec-90'{'comparisonLargeCodec90'} 'small-2-90'{'comparisonSmall90'} 'large-2-90'{'comparisonLarge90'}}
 $cmpModel=if($Variant.StartsWith('small')){'small'}else{'public'}
 if($ModelBundle.Contains('..')){throw 'Invalid model bundle ID'}
 $cmpProgress=if($ModelBundle){"$cmpRemote/model-bundles/$ModelBundle/progress.jsonl"}else{"$cmpRemote/chain-comparison/$cmpModel/progress.jsonl"}
