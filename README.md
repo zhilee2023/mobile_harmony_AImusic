@@ -1,6 +1,6 @@
 # mobile_harmony_AImusic · levo-harmony
 
-> [hidden条件速度优化真机记录](docs/HIDDEN_CONDITIONING_SPEED.md)：0.6B骨干三线程候选，预热prefill＋255 decode相邻对照少约8%–12%；hidden直接缓冲约0.7ms/256项，合成affine整块约5–6倍。均为独立CLI模块结果，App默认值及私有整链RTF未改变。
+> [hidden条件速度优化真机记录与可复用经验](docs/HIDDEN_CONDITIONING_SPEED.md)：0.6B骨干三线程候选，预热prefill＋255 decode相邻对照少约8%–12%；hidden直接缓冲约0.7ms/256项，合成affine整块约5–6倍。附后续Agent执行清单；均为独立CLI模块结果，App默认值及私有整链RTF未改变。
 
 > [LLM逐token最后层hidden → Diffusion适配指南](docs/HIDDEN_STATE_CONDITIONING.md)：prefill最后hidden是第一个生成token的预测条件；含MNN双输出读取、训练接口／时间对齐、分块内存工具。46项CPU测试通过，尚未接入私有hidden-conditioned模型。
 

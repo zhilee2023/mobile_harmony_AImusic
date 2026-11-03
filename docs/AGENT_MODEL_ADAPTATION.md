@@ -1,5 +1,7 @@
 # LeVo Harmony：给接手Agent的模型适配指南
 
+> 2026-11-03优化经验已整理为[可复用执行清单](HIDDEN_CONDITIONING_SPEED.md#可复用经验后续模型与agent按此执行)：prefill h₀对齐、真实输出布局、连续缓冲、批量投影、线程池／共驻、同轨迹数值检查和整链验收。三线程只是本轮0.6B候选，不能直接覆盖其他模型或App默认值。
+
 > 2026-11-03新增[逐token最后层hidden → Diffusion适配](HIDDEN_STATE_CONDITIONING.md)：用户定义包含prefill最后hidden作为第一项，须匹配训练时norm、token对齐、conditioner与DiT；现有App仍为token/codebook条件。研究检查工具与C++读取helper不等于私有模型已部署。
 
 > 2026-11-02最终模型／温度审计见[模型与温度总结](MODEL_THERMAL_SUMMARY.md)。公开90秒日志有12块Codec事件，与父观察器退出记录的归属未消解；旧“LM后、Codec前退出”判断撤回，原任务退出阶段未确认，6.225仍只计分阶段恢复。不要把旧温度图中间整列当纯LM或尾段当空闲。两款App的电脑测试脚本默认每5秒采样，同一JSON保存telemetry；37项测试通过，本轮仅做待机采样接入检查。
