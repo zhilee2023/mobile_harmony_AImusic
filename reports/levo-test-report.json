@@ -94784,5 +94784,77 @@
       "Existing timing/memory records unchanged",
       "Current product re-exported VAE differs from the shared legacy 60-second test VAE"
     ]
+  },
+  "consolidated_model_summary_2026_11_03": {
+    "scope": "Single table combining existing 60-second results with baseline ROM inventories and reported device facts; no new inference",
+    "device": {
+      "reportedName": "HUAWEI Mate 90 Pro Max",
+      "reportedModel": "CMM-AL00",
+      "reportedSoc": "Kirin9050",
+      "reportedOs": "OpenHarmony-7.0.0.125",
+      "logicalCpuCount": 14,
+      "visibleMemTotalKiB": 11670328,
+      "source": "device_cpu_speed_2026_10_31 and same connected-phone experiment series"
+    },
+    "execution": {
+      "backend": "MNN 3.6.1 CPU",
+      "gpuRequested": false,
+      "npuRequested": false,
+      "llmRequestedThreads": 4,
+      "ditRequestedThreads": 6,
+      "vaeRequestedThreads": 6,
+      "fixedCoreBindingVerifiedThisRun": false,
+      "perThreadCoreTraceCapturedThisRun": false,
+      "historicalAllowedCpuList": "2-13, earlier same-phone thread snapshot only"
+    },
+    "rom": {
+      "public": {
+        "inventoryModelId": "public-base-v1",
+        "assetCount": 20,
+        "assetBytes": 3909445028,
+        "externalWeights": {
+          "llm": {
+            "bytes": 1650155246,
+            "sha256": "c126ce53532b14ccb5c51298c45bea3e4c82db6db007224d5d6da445fcd4aa79"
+          },
+          "dit": {
+            "bytes": 722214236,
+            "sha256": "4f460ea3435866b0ebd57bdd0722227d590304d024188ddf4a68d5d1fc440358"
+          },
+          "vae": {
+            "bytes": 84569334,
+            "sha256": "c07840873f10ecd6949b4a2e8f3ea4a481c37aabf5e33417a59933989862925f"
+          }
+        }
+      },
+      "small": {
+        "inventoryModelId": "student-bundle-v1",
+        "assetCount": 18,
+        "assetBytes": 906656016,
+        "externalWeights": {
+          "llm": {
+            "bytes": 248296682,
+            "sha256": "33e5fe41b0cad117d421dce561fd1010f93555724075fd71e181c2b5f82be51d"
+          },
+          "dit": {
+            "bytes": 221684024,
+            "sha256": "a14ee082f58acfd588807ad804c49eb19121933f962544b8d0de68599fa4db58"
+          },
+          "vae": {
+            "bytes": 84569334,
+            "sha256": "c07840873f10ecd6949b4a2e8f3ea4a481c37aabf5e33417a59933989862925f"
+          }
+        }
+      }
+    },
+    "performanceSourceKey": "cooled_60s_comparison_2026_11_03",
+    "recipeSourceKey": "model_names_and_quantization_2026_11_03",
+    "singleTable": "docs/CONSOLIDATED_MODEL_COMPARISON.md",
+    "limits": [
+      "ROM counts baseline assets rather than a fresh phone disk scan; excludes HAP, generated audio, logs, runtime tensors and other retained versions",
+      "60-second comparison used the old shared W8 VAE, not the re-exported public product VAE",
+      "Requested threads do not establish fixed core IDs or actual thread-pool size",
+      "Historical affinity is not a fresh measurement of this run"
+    ]
   }
 }
