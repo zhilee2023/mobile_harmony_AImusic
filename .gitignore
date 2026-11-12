@@ -1,6 +1,7 @@
 .deps/
 .codec-deps/
 .plot-deps/
+.muq-deps/
 incoming/
 .venv/
 __pycache__/
@@ -43,3 +44,15 @@ music-app/entry/oh_modules/
 music-app/entry/.cxx/
 music-app/entry/build/
 music-app/entry/src/main/cpp/music-local.cmake
+stream-app/build-profile.json5
+stream-app/.hvigor/
+stream-app/.idea/
+stream-app/.appanalyzer/
+stream-app/.clangd
+stream-app/.clang-tidy
+stream-app/local.properties
+stream-app/oh_modules/
+stream-app/entry/oh_modules/
+stream-app/entry/.cxx/
+stream-app/entry/build/
+stream-app/entry/src/main/cpp/stream-local.cmake

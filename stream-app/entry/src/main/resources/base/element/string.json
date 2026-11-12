@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "LeVo 流式实验"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "LeVo 流式实验"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "独立数值与播放链路实验"
+    }
+  ]
+}

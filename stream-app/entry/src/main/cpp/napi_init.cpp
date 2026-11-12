@@ -1,0 +1,28 @@
+#include <napi/native_api.h>
+#include "../../../../../runtime/include/levo/experimental/StreamLab.hpp"
+using namespace LevoStreamLab;
+static napi_value jsonValue(napi_env env,const Json& j){napi_value v;auto s=j.dump();napi_create_string_utf8(env,s.c_str(),s.size(),&v);return v;}
+static std::string textValue(napi_env env,napi_value v){size_t n=0;napi_get_value_string_utf8(env,v,nullptr,0,&n);require(n<4096,"Invalid path");std::string s(n+1,0);napi_get_value_string_utf8(env,v,s.data(),s.size(),&n);s.resize(n);return s;}
+struct Task{napi_async_work work{};napi_deferred promise{};std::string root,lyrics,npy;int choice=0,frames=375;bool transport=false;Json result,options=Json::object();};
+static void execute(napi_env,void* p){auto& t=*static_cast<Task*>(p);try{t.result=run(t.root,t.choice,t.frames,t.transport,t.lyrics,t.npy,t.options);}catch(const std::exception& e){patch({{"busy",false},{"status","error"},{"error",e.what()}});t.result=snapshot();}}
+static void complete(napi_env env,napi_status status,void* p){std::unique_ptr<Task> t(static_cast<Task*>(p));if(status!=napi_ok)patch({{"busy",false},{"status","error"},{"error","Background task failed"}});busy=false;napi_resolve_deferred(env,t->promise,jsonValue(env,snapshot()));napi_delete_async_work(env,t->work);}
+static napi_value Start(napi_env env,napi_callback_info info){bool owned=false;try{size_t n=7;napi_value args[7];napi_get_cb_info(env,info,&n,args,nullptr,nullptr);require(n==7,"Expected root/model/frames/transport/lyrics/npy/options");auto t=std::make_unique<Task>();t->root=textValue(env,args[0]);napi_get_value_int32(env,args[1],&t->choice);napi_get_value_int32(env,args[2],&t->frames);napi_get_value_bool(env,args[3],&t->transport);t->lyrics=textValue(env,args[4]);t->npy=textValue(env,args[5]);t->options=Json::parse(textValue(env,args[6]));require(t->transport||!t->lyrics.empty(),"请先输入歌词");
+    require(t->frames>=25&&t->frames<=1500,"Bounded experiment1–60 seconds");modelId(t->choice);bool expected=false;require(busy.compare_exchange_strong(expected,true),"Generation still active");owned=true;cancelled=false;
+    {std::lock_guard<std::mutex> lock(stateMutex);state={{"busy",true},{"status","starting"},{"chunks",Json::array()},{"generatedSamples",0},{"requestedFrames",t->frames}};}
+    napi_value promise,name;napi_create_promise(env,&t->promise,&promise);napi_create_string_utf8(env,"LevoStreamLab",NAPI_AUTO_LENGTH,&name);
+    require(napi_create_async_work(env,nullptr,name,execute,complete,t.get(),&t->work)==napi_ok,"Cannot create task");
+    if(napi_queue_async_work(env,t->work)!=napi_ok){napi_delete_async_work(env,t->work);throw std::runtime_error("Cannot queue task");}t.release();return promise;
+}catch(const std::exception& e){if(owned)busy=false;napi_throw_error(env,nullptr,e.what());return nullptr;}}
+static napi_value Poll(napi_env env,napi_callback_info){auto s=snapshot();s["busy"]=busy.load();return jsonValue(env,s);}
+static napi_value Cancel(napi_env env,napi_callback_info){cancelled=true;return jsonValue(env,{{"cancelRequested",true}});}
+static napi_value Inspect(napi_env env,napi_callback_info info){size_t n=2;napi_value args[2];napi_get_cb_info(env,info,&n,args,nullptr,nullptr);try{require(n==2,"Expected root/model");int choice=0;napi_get_value_int32(env,args[1],&choice);return jsonValue(env,inspect(textValue(env,args[0]),choice));}catch(const std::exception& e){return jsonValue(env,{{"ready",false},{"error",e.what()}});}}
+static napi_value Styles(napi_env env,napi_callback_info info){size_t n=1;napi_value a;napi_get_cb_info(env,info,&n,&a,nullptr,nullptr);Json result=Json::array({{{"name","模型默认"},{"path",""}}});try{auto dir=textValue(env,a)+"/clap-styles";if(std::filesystem::is_directory(dir))for(const auto& p:std::filesystem::directory_iterator(dir))if(p.is_regular_file()&&p.path().extension()==".npy")result.push_back({{"name",p.path().stem().string()},{"path",p.path().string()}});}catch(...){}return jsonValue(env,result);}
+static napi_value Restore(napi_env env,napi_callback_info info){try{if(busy.load())return jsonValue(env,snapshot());size_t n=1;napi_value a;napi_get_cb_info(env,info,&n,&a,nullptr,nullptr);require(n==1,"Expected root");auto dir=textValue(env,a)+"/stream-runs";
+    std::vector<std::filesystem::path> paths;if(std::filesystem::is_directory(dir))for(const auto& p:std::filesystem::directory_iterator(dir))if(p.is_directory())paths.push_back(p.path());
+    std::sort(paths.rbegin(),paths.rend());for(const auto& p:paths){try{auto r=readJson((p/"result.json").string());if(r.value("generatedSamples",0)<=0||r["chunks"].empty())continue;
+        bool files=true;for(const auto& c:r["chunks"])files=files&&std::filesystem::is_regular_file(c["path"].get<std::string>());if(!files)continue;
+        r["busy"]=false;{std::lock_guard<std::mutex> lock(stateMutex);state=r;}break;}catch(...){} }
+}catch(...){}return jsonValue(env,snapshot());}
+static napi_value Init(napi_env env,napi_value exports){napi_property_descriptor p[]={{"start",nullptr,Start,nullptr,nullptr,nullptr,napi_default,nullptr},{"poll",nullptr,Poll,nullptr,nullptr,nullptr,napi_default,nullptr},{"cancel",nullptr,Cancel,nullptr,nullptr,nullptr,napi_default,nullptr},{"inspect",nullptr,Inspect,nullptr,nullptr,nullptr,napi_default,nullptr},{"styles",nullptr,Styles,nullptr,nullptr,nullptr,napi_default,nullptr},{"restore",nullptr,Restore,nullptr,nullptr,nullptr,napi_default,nullptr}};napi_define_properties(env,exports,6,p);return exports;}
+static napi_module module={1,0,nullptr,Init,"entry",nullptr,{0}};
+extern "C" __attribute__((constructor)) void RegisterStreamLab(){napi_module_register(&module);}
