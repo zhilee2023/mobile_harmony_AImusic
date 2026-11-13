@@ -97591,7 +97591,12 @@
     },
     "listening": {
       "userConfirmedSmallAndLargeRealMusic": true,
-      "newMuqDefaultSubjectiveQuality": "Pending listening; no objective quality claim"
+      "newMuqDefaultSubjectiveQuality": "User confirmed normal music",
+      "userConfirmedNewMuqDefault": true,
+      "confirmationDate": "2026-11-13",
+      "userFeedback": "正常，有音乐",
+      "objectiveQualityEvaluated": false,
+      "styleMatchEvaluated": false
     },
     "experimentsNotEnabled": {
       "singleBranch": {
