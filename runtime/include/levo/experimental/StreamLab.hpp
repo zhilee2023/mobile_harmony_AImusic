@@ -146,7 +146,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     require(requested>=25&&requested<=1500,"Experiment duration is1–60 seconds");
     const std::string smallCondition=options.value("smallCondition",std::string("token"));
     require(smallCondition=="token"||(choice==0&&smallCondition=="hidden-consume"),"Unknown condition experiment");
-    const bool resident=options.value("resident",choice==0),cfg=options.value("cfg",choice!=0);
+    const bool resident=options.value("resident",choice==0),cfg=options.value("cfg",true);
     const bool prefetch=options.value("prefetch",false);require(!prefetch||(resident&&choice==0),"Token prefetch requires resident small-model sessions");
     const std::string croppedLm=options.value("croppedLm",std::string());
     const int lmThreads=options.value("lmThreads",4),ditThreads=options.value("ditThreads",6),vaeThreads=options.value("vaeThreads",6);
@@ -157,7 +157,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     const std::string work=appRoot+"/stream-runs/"+id,root=appRoot+"/model-bundles/"+modelId(choice);std::filesystem::create_directories(work);
     {std::lock_guard<std::mutex> lock(stateMutex);state={{"runId",id},{"busy",true},{"status","generating"},{"phase","loading"},{"chunks",Json::array()},
        {"generatedSamples",0},{"requestedFrames",requested},{"conditionFrames",0},{"model",choice},{"conditionMode",choice==0?smallCondition:"hidden-projector"},{"transportOnly",transport},{"diagnosticOnly",lyrics.empty()||transport||smallCondition!="token"},{"musicQualityClaimed",false},
-       {"resident",resident},{"tokenPrefetch",prefetch},{"threads",{{"lm",lmThreads},{"dit",ditThreads},{"vae",vaeThreads}}},{"croppedLm",croppedLm},{"ditSteps",steps},{"cfgEnabled",cfg},{"ditBatch",batch},{"unconditionalComputeRemoved",batch==1},{"chunkTimings",Json::array()}};}
+       {"resident",resident},{"tokenPrefetch",prefetch},{"threads",{{"lm",lmThreads},{"dit",ditThreads},{"vae",vaeThreads}}},{"croppedLm",croppedLm},{"ditSteps",steps},{"cfgEnabled",cfg},{"cfgScale",cfg?1.5:0.},{"ditBatch",batch},{"unconditionalComputeRemoved",batch==1},{"chunkTimings",Json::array()}};}
     Trace trace;double lmTime=0,muTime=0,ditTime=0,vaeTime=0,ditSetup=0,vaeSetup=0;std::vector<float> conditions;std::unique_ptr<Prior> prior;
     std::unique_ptr<Graph> keptDit,keptVae;
     struct Fetched {std::vector<float> values;int count=0;bool eos=false;double elapsed=0;};std::future<Fetched> pending;

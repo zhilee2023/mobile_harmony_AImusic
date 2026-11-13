@@ -7,9 +7,18 @@
 #include <vector>
 using Json=nlohmann::json;
 int main(int argc,char** argv){
-    if(argc!=2)return 2;std::ifstream file(argv[1],std::ios::binary|std::ios::ate);if(!file)return 2;
+    if(argc!=2&&!(argc==3&&std::string(argv[2])=="--summary"))return 2;std::ifstream file(argv[1],std::ios::binary|std::ios::ate);if(!file)return 2;
     std::vector<char> bytes(size_t(file.tellg()));file.seekg(0);file.read(bytes.data(),bytes.size());
     std::unique_ptr<MNN::NetT> net(MNN::GetNet(bytes.data())->UnPack());Json rows=Json::array();
+    if(argc==3){
+        std::map<std::string,int> counts,unary;Json nodes=Json::array();
+        for(const auto& op:net->oplists){std::string type=MNN::EnumNameOpType(op->type);++counts[type];Json row={{"name",op->name},{"type",type}};
+            if(auto p=op->main.AsUnaryOp()){row["operation"]=MNN::EnumNameUnaryOpOperation(p->opType);++unary[MNN::EnumNameUnaryOpOperation(p->opType)];}
+            if(auto p=op->main.AsConvolution2D())row["conv"]={{"input",p->common->inputCount},{"output",p->common->outputCount},{"kernel",{p->common->kernelY,p->common->kernelX}},{"quantized",bool(p->quanParameter)}};
+            nodes.push_back(row);
+        }
+        std::cout<<Json({{"counts",counts},{"unary",unary},{"nodes",nodes}}).dump(2)<<std::endl;return 0;
+    }
     std::map<int,std::vector<std::string>> consumers;
     for(const auto& op:net->oplists)for(int id:op->inputIndexes)consumers[id].push_back(op->name+":"+MNN::EnumNameOpType(op->type));
     for(const auto& op:net->oplists){Json r={{"name",op->name},{"type",MNN::EnumNameOpType(op->type)}};

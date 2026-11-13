@@ -98734,5 +98734,1476 @@
       "wholeChainSpeedupMeasured": false,
       "failureResultsPreserved": true
     }
+  },
+  "stream_lab_cfg_restored_2026_11_13": {
+    "date": "2026-11-13",
+    "scope": "Actual independent Stream Lab App short generation and playback; all generation remains MNN CPU",
+    "app": {
+      "bundleName": "com.zhilee.levostreamlab",
+      "version": "0.1.7",
+      "versionCode": 100007,
+      "signedHapSha256": "da6f93998393dc7fded1297e67bb9c75261e7450e038c81b76db640c46df996f",
+      "builtInstalledAndLaunched": true
+    },
+    "modelId": "larkstudio-small-0.6b-v1",
+    "model": {
+      "lmLayers": 28,
+      "lmHidden": 1024,
+      "lmFfn": 3072,
+      "lmParametersOriginal": 784969728,
+      "lmParametersAfterHeadCrop": 629562368,
+      "ditLayers": 22,
+      "ditHidden": 1200,
+      "ditParameters": 394012768,
+      "vaeParameters": 84414082,
+      "condition": "cond-token lookup1024, no4B mu projector",
+      "recipe": "LM bodyW4/g64,headW8,BF16input;DiT W8/g64 High6;VAE W8 Low6 +NEON;LM High4; no requested A4/KV4"
+    },
+    "hashes": {
+      "lmGraph": "25f67110669e9358b2dd224023795a2a29011ba348df3ba76672cab939c2085c",
+      "lmWeight": "0a828f2cd9c8734c389b3d32f875f197f6da901c2b6eea7339d39ced59533f09",
+      "ditGraph": "35886dc768304ef2f43e9186811bfe609c3b3bbe552a5e368093725648c0bebc",
+      "ditWeight": "3cae1ed224d5070d25bd814df9e6207ea4344e7fa68bbfd6e452570f4d21db15",
+      "vaeGraph": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "vaeWeight": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc"
+    },
+    "configuration": {
+      "cfgEnabled": true,
+      "cfgScale": 1.5,
+      "ditSteps": 2,
+      "ditBatch": 2,
+      "resident": true,
+      "tokenPrefetch": false,
+      "conditionMode": "token",
+      "threads": {
+        "dit": 6,
+        "lm": 4,
+        "vae": 6
+      },
+      "samplingMode": "temperature0.95-topK250"
+    },
+    "cfgFormula": "uncond + 1.5 * (cond - uncond); uncond zeros mu only, retaining latent/context/mask",
+    "lifecycle": "One LM/KV, one DiT and one VAE live within the request; compute serial; destroy at request end",
+    "generation": {
+      "runId": "1794537026366950",
+      "actualFrames": 375,
+      "generatedSamples": 720000,
+      "lmSeconds": 11.138953588000001,
+      "muSeconds": 0.0,
+      "ditSeconds": 7.420408281,
+      "vaeSeconds": 10.836894530999999,
+      "ditSetupSeconds": 0.62944875,
+      "vaeSetupSeconds": 0.740532656,
+      "elapsedSeconds": 29.721303907,
+      "firstChunkSeconds": 17.840229688,
+      "rssPeakMiB": 2061.13671875,
+      "minimumAvailableMiB": 3331.0,
+      "kvPositions": 887,
+      "chunkTimings": [
+        {
+          "ditSeconds": 3.819855938,
+          "ditSetupSeconds": 0.62944875,
+          "index": 0,
+          "lmSeconds": 5.3746351589999986,
+          "rssMiB": 1865.1796875,
+          "vaeSeconds": 5.8113775,
+          "vaeSetupSeconds": 0.740532656,
+          "wallSeconds": 15.099994375
+        },
+        {
+          "ditSeconds": 3.6005523430000004,
+          "ditSetupSeconds": 0.0,
+          "index": 1,
+          "lmSeconds": 3.0260640540000026,
+          "rssMiB": 1907.59375,
+          "vaeSeconds": 5.025517030999999,
+          "vaeSetupSeconds": 0.0,
+          "wallSeconds": 11.7059725
+        }
+      ]
+    },
+    "effectiveAudioSeconds": 15.0,
+    "wholeRtf": 1.9814202604666666,
+    "rssPeakGiB": 2.012828826904297,
+    "memoryScope": "Sampled process RSS and system available RAM; not dedicated GPU VRAM or NPU workspace",
+    "screenScope": "App generation and playback observed foreground/awake; not a temperature-controlled benchmark",
+    "playback": {
+      "maximumHardwareReportedPositionMs": 15000,
+      "generatedMs": 15000,
+      "recordedErrors": 0
+    },
+    "musicQualityClaimed": false,
+    "limitations": [
+      "No listening acceptance for this CFG round",
+      "15-second case is not a new 60-second result",
+      "Different-run timing changes do not establish a CFG speed benefit",
+      "Original App and model bundles preserved"
+    ]
+  },
+  "dit_onnx_layout_cann_2026_11_13": {
+    "date": "2026-11-13",
+    "scope": "First real FFN of current 22-layer 0.6B-associated DiT; isolated research, not full DiT or App NPU deployment",
+    "architecture": {
+      "layers": 22,
+      "hidden": 1200,
+      "ffn": 4800,
+      "heads": 30,
+      "headWidth": 40,
+      "batch": 2,
+      "frames": 256,
+      "weightRecipe": "Original MNN W8/g64; FP32 expansion for isolated ONNX; CANN FP16 weight request",
+      "ffnActivation": "tanh-approximate GELU",
+      "timeModulationActivation": "SiLU",
+      "reluSubstituted": false
+    },
+    "sourceDiTHashes": {
+      "ditGraph": "35886dc768304ef2f43e9186811bfe609c3b3bbe552a5e368093725648c0bebc",
+      "ditWeight": "3cae1ed224d5070d25bd814df9e6207ea4344e7fa68bbfd6e452570f4d21db15"
+    },
+    "capture": {
+      "backend": "MNN CPU High / Memory Low / 6threads",
+      "cfgBranches": "unconditional+conditional",
+      "success": true,
+      "staticOperatorCounts": {
+        "BinaryOp": 1068,
+        "Concat": 137,
+        "Const": 62,
+        "ConvertTensor": 184,
+        "Convolution": 92,
+        "GatherV2": 88,
+        "Input": 3,
+        "LayerNorm": 45,
+        "MatMul": 44,
+        "Permute": 88,
+        "Rank": 136,
+        "Reshape": 427,
+        "Shape": 136,
+        "Slice": 22,
+        "SliceTf": 184,
+        "Softmax": 22,
+        "Squeeze": 88,
+        "StridedSlice": 223,
+        "UnaryOp": 26,
+        "Unsqueeze": 358
+      },
+      "runtimeNodeCount": 1506,
+      "runtimeOperatorCounts": {
+        "While": 399,
+        "LayerNorm": 45,
+        "Raster": 565,
+        "BinaryOp": 357,
+        "UnaryOp": 26,
+        "Convolution": 92,
+        "Softmax": 22
+      },
+      "ffnUpInput": [
+        512,
+        1200,
+        1,
+        1
+      ],
+      "ffnUpOutput": [
+        512,
+        4800,
+        1,
+        1
+      ],
+      "format": "NC4HW4",
+      "timingScope": "Callback and file capture overhead; not used as a performance benchmark"
+    },
+    "onnxValidation": {
+      "scope": "Isolated real FFN ONNX mathematical/layout validation on PC CPU; no NPU speed claim",
+      "batch": 2,
+      "frames": 256,
+      "hidden": 1200,
+      "intermediate": 4800,
+      "opset": 13,
+      "graphIrVersion": 8,
+      "weightsSha256": "2bdf3ce5791d9eee58781eddd3af867fe7d8f07bf6a0db2a495f2ebbf0eaddc6",
+      "cases": [
+        {
+          "id": "gemm-flat-pow",
+          "model": "gemm-flat-pow.onnx",
+          "inputShape": [
+            512,
+            1200
+          ],
+          "outputShape": [
+            512,
+            1200
+          ],
+          "relativeL2": 8.713955037326606e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 0,
+          "internalFfnTransposes": 0,
+          "nodeCount": 10,
+          "onnxSha256": "17604af7102440da764f47a093c9500b5015cc650fd1f7f547722634c396b37d",
+          "weights": "weights.f32",
+          "input": "gemm-flat-pow-input.f32",
+          "reference": "gemm-flat-pow-reference.f32"
+        },
+        {
+          "id": "gemm-flat-mul",
+          "model": "gemm-flat-mul.onnx",
+          "inputShape": [
+            512,
+            1200
+          ],
+          "outputShape": [
+            512,
+            1200
+          ],
+          "relativeL2": 8.708921504013243e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 0,
+          "internalFfnTransposes": 0,
+          "nodeCount": 11,
+          "onnxSha256": "ed1e77a8739c051bed562eec14eafa6d98c0a9bf4c0ef9e31175a9845ad9b061",
+          "weights": "weights.f32",
+          "input": "gemm-flat-mul-input.f32",
+          "reference": "gemm-flat-mul-reference.f32"
+        },
+        {
+          "id": "gemm-flat-fuser",
+          "model": "gemm-flat-fuser.onnx",
+          "inputShape": [
+            512,
+            1200
+          ],
+          "outputShape": [
+            512,
+            1200
+          ],
+          "relativeL2": 8.708921504013243e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 0,
+          "internalFfnTransposes": 0,
+          "nodeCount": 10,
+          "onnxSha256": "f43aa902cdbbd4f67043152b9b76ce2edf065efa93455720b64a1c99565da34c",
+          "weights": "weights.f32",
+          "input": "gemm-flat-fuser-input.f32",
+          "reference": "gemm-flat-fuser-reference.f32"
+        },
+        {
+          "id": "conv-flat-pow",
+          "model": "conv-flat-pow.onnx",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "relativeL2": 9.191093934556474e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 0,
+          "internalFfnTransposes": 0,
+          "nodeCount": 10,
+          "onnxSha256": "1ff5058ad51bc277055905c9a317a2377ec4ccd9243e7b0fc1620c7bed308347",
+          "weights": "weights.f32",
+          "input": "conv-flat-pow-input.f32",
+          "reference": "conv-flat-pow-reference.f32"
+        },
+        {
+          "id": "conv-flat-mul",
+          "model": "conv-flat-mul.onnx",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "relativeL2": 9.182586217793986e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 0,
+          "internalFfnTransposes": 0,
+          "nodeCount": 11,
+          "onnxSha256": "deb977b32065c85907d3f5d76da3902ae509531207d1f324d1a6dda0954c9e8e",
+          "weights": "weights.f32",
+          "input": "conv-flat-mul-input.f32",
+          "reference": "conv-flat-mul-reference.f32"
+        },
+        {
+          "id": "conv-flat-fuser",
+          "model": "conv-flat-fuser.onnx",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "relativeL2": 9.187648513880484e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 0,
+          "internalFfnTransposes": 0,
+          "nodeCount": 10,
+          "onnxSha256": "7df2ed716894a30726f064a170d2b6b598337f79eb2841491df04f095ae4cae5",
+          "weights": "weights.f32",
+          "input": "conv-flat-fuser-input.f32",
+          "reference": "conv-flat-fuser-reference.f32"
+        },
+        {
+          "id": "conv-spatial-pow",
+          "model": "conv-spatial-pow.onnx",
+          "inputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "outputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "relativeL2": 9.191093934556472e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 0,
+          "internalFfnTransposes": 0,
+          "nodeCount": 10,
+          "onnxSha256": "dabae3c0c9c010aca9727db3cb0098929cf184b573468cb8fff42919c50bacf2",
+          "weights": "weights.f32",
+          "input": "conv-spatial-pow-input.f32",
+          "reference": "conv-spatial-pow-reference.f32"
+        },
+        {
+          "id": "conv-spatial-mul",
+          "model": "conv-spatial-mul.onnx",
+          "inputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "outputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "relativeL2": 9.182586217793985e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 0,
+          "internalFfnTransposes": 0,
+          "nodeCount": 11,
+          "onnxSha256": "fde4ed536fb4f1aead2ff2533e309a8a9f7e55515d5dca9236b1d633732df514",
+          "weights": "weights.f32",
+          "input": "conv-spatial-mul-input.f32",
+          "reference": "conv-spatial-mul-reference.f32"
+        },
+        {
+          "id": "conv-spatial-fuser",
+          "model": "conv-spatial-fuser.onnx",
+          "inputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "outputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "relativeL2": 9.182586217793985e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 0,
+          "internalFfnTransposes": 0,
+          "nodeCount": 10,
+          "onnxSha256": "3b10f69290c93a016656aad5117911beab84e36822c0a9337d3e99be38c55e27",
+          "weights": "weights.f32",
+          "input": "conv-spatial-fuser-input.f32",
+          "reference": "conv-spatial-fuser-reference.f32"
+        },
+        {
+          "id": "conv-bridge-pow",
+          "model": "conv-bridge-pow.onnx",
+          "inputShape": [
+            2,
+            256,
+            1200
+          ],
+          "outputShape": [
+            2,
+            256,
+            1200
+          ],
+          "relativeL2": 9.191093934556474e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 2,
+          "internalFfnTransposes": 0,
+          "nodeCount": 14,
+          "onnxSha256": "224d7f6a0b320e9f68e75daa97639a96ad34277d7a3d8d91213c3a41c77223c0",
+          "weights": "weights.f32",
+          "input": "conv-bridge-pow-input.f32",
+          "reference": "conv-bridge-pow-reference.f32"
+        },
+        {
+          "id": "conv-bridge-mul",
+          "model": "conv-bridge-mul.onnx",
+          "inputShape": [
+            2,
+            256,
+            1200
+          ],
+          "outputShape": [
+            2,
+            256,
+            1200
+          ],
+          "relativeL2": 9.182586217793986e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 2,
+          "internalFfnTransposes": 0,
+          "nodeCount": 15,
+          "onnxSha256": "7eb906747bac061baac25a616907108f16bdef7b91ead0913833a3682fa3da6c",
+          "weights": "weights.f32",
+          "input": "conv-bridge-mul-input.f32",
+          "reference": "conv-bridge-mul-reference.f32"
+        },
+        {
+          "id": "conv-bridge-fuser",
+          "model": "conv-bridge-fuser.onnx",
+          "inputShape": [
+            2,
+            256,
+            1200
+          ],
+          "outputShape": [
+            2,
+            256,
+            1200
+          ],
+          "relativeL2": 9.182586217793986e-07,
+          "numericalBudget": 1e-05,
+          "transposeNodes": 2,
+          "internalFfnTransposes": 0,
+          "nodeCount": 14,
+          "onnxSha256": "f4c2d61cc7807d8f85ecdccd4e8cff2a2a19aa6a63ac36a31a66974704c892f4",
+          "weights": "weights.f32",
+          "input": "conv-bridge-fuser-input.f32",
+          "reference": "conv-bridge-fuser-reference.f32"
+        }
+      ],
+      "provenance": {
+        "parameters": "Original MNN W8/g64 decoded with pinned ConvolutionCommon::load; not unquantized training weights",
+        "inputs": "First real sampled-code DiT window, first timestep, first FFN, batch2",
+        "cfgBranches": "unconditional+conditional",
+        "tanhGeluVsCapturedActivationL2": 9.045661438454685e-07,
+        "fp32FfnVsCapturedMnnW8L2": 0.26740778469839355,
+        "runtimeCaptureUsedRandomWeights": false
+      }
+    },
+    "numericalLimitations": {
+      "historicalBothConditionalVsMnnLowMemoryL2": 0.1828336845639856,
+      "currentCfgVsMnnLowMemoryL2": 0.26740778469839355,
+      "memoryNormalCaptureOnItsOwnInput": {
+        "upProjectionL2": 7.650072840801626e-07,
+        "ffnL2": 8.532280360346054e-06,
+        "activationL2": 8.878622474576993e-07
+      },
+      "interpretation": "Layout variants match decoded FP32 math, which differs from current low-memory quantized execution; no equivalence to original training weights or whole velocity/audio claimed",
+      "appReplacementEnabled": false,
+      "toleranceSilentlyRelaxed": false
+    },
+    "mnnFusion": {
+      "ordinaryExpression": {
+        "counts": {
+          "BinaryOp": 9,
+          "Concat": 2,
+          "Const": 12,
+          "ConvertTensor": 4,
+          "Convolution": 2,
+          "Input": 1,
+          "Rank": 2,
+          "Reshape": 4,
+          "Shape": 2,
+          "SliceTf": 4,
+          "UnaryOp": 1,
+          "Unsqueeze": 2
+        },
+        "unary": {
+          "TANH": 1
+        }
+      },
+      "reassociatedExpression": {
+        "counts": {
+          "BinaryOp": 2,
+          "Concat": 2,
+          "Const": 7,
+          "ConvertTensor": 4,
+          "Convolution": 2,
+          "Input": 1,
+          "Rank": 2,
+          "Reshape": 4,
+          "Shape": 2,
+          "SliceTf": 4,
+          "UnaryOp": 1,
+          "Unsqueeze": 2
+        },
+        "unary": {
+          "GELU": 1
+        }
+      },
+      "activationPreserved": true,
+      "convertTensorCountRemains": 4,
+      "source": "Pinned MNN tools/converter/source/optimizer/merge/FuseGeLu.cpp"
+    },
+    "officialConversion": {
+      "toolkit": "DDK-tools-next-6.1.1.0",
+      "toolkitSha256": "87d7e3f186ad5c527a9385cea555559ea53c63b87dc483820523bcf7bf6f87e5",
+      "target": "hardware-independent portable OM, not chip-specific OMC",
+      "inputOutputRequested": "FP32",
+      "weightsRequested": "FP16",
+      "models": [
+        {
+          "id": "conv_flat_fuser",
+          "bytes": 23054767,
+          "sha256": "b1d35860cd791ef522d4be73199f5724523dd7b1bccb99f845a1d0af0f4fc5b5",
+          "geluFusionLogged": true
+        },
+        {
+          "id": "conv_spatial_fuser",
+          "bytes": 23054767,
+          "sha256": "9a04f1cd22f1e788394d1ff5f02dbfc90c87bc78c6fb95675c39ec34ba62670c",
+          "geluFusionLogged": true
+        },
+        {
+          "id": "gemm_flat_fuser",
+          "bytes": 23054571,
+          "sha256": "cec63bb675d8d15c7a661409a9623a4ad5f67bc6028610b0acbd5dfd6d865375",
+          "geluFusionLogged": true
+        }
+      ],
+      "sourceCompiledGraphHashesMatchCurrentCfgOnnx": true
+    },
+    "phone": {
+      "deviceDescription": "Device reports Mate90ProMax / CMM-AL00 / Kirin9050",
+      "backendRequested": "NNRT HIAI_F; model or two projection node NPU order; fallback disabled; performance High",
+      "bridgeBinarySha256": "1e9d75386af491a6712ae27d1453cfbc3f888534160e4361bba6f249d4091d13",
+      "allSixOrdinaryCasesPass": true,
+      "bridgeSelfTests": [
+        {
+          "cols": 1200,
+          "exact": true,
+          "rows": 256
+        },
+        {
+          "cols": 256,
+          "exact": true,
+          "rows": 1200
+        }
+      ],
+      "cases": [
+        {
+          "buildCode": 0,
+          "cpuBtcNchwBridgeTimed": false,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "conv_flat_fuser_model",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "loadBuildSeconds": 0.351371875,
+          "numericalBudget": 0.01,
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "model",
+          "placementCode": 0,
+          "relativeL2": 0.0019238949834351122,
+          "runs": [
+            {
+              "inputSeconds": 0.000116407,
+              "mode": "first",
+              "outputSeconds": 0.000128594,
+              "runSyncSeconds": 0.321757656,
+              "totalSeconds": 0.32200265699999997
+            },
+            {
+              "inputSeconds": 0.000129063,
+              "mode": "warm",
+              "outputSeconds": 0.000461719,
+              "runSyncSeconds": 0.30509125,
+              "totalSeconds": 0.305682032
+            },
+            {
+              "inputSeconds": 0.000342343,
+              "mode": "warm",
+              "outputSeconds": 0.000176719,
+              "runSyncSeconds": 0.319725625,
+              "totalSeconds": 0.32024468700000003
+            },
+            {
+              "inputSeconds": 0.00017625,
+              "mode": "warm",
+              "outputSeconds": 0.001397188,
+              "runSyncSeconds": 0.319377812,
+              "totalSeconds": 0.32095124999999997
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 320.24468700000006,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.17625,
+            "runSyncSeconds": 319.377812,
+            "outputSeconds": 0.461719
+          }
+        },
+        {
+          "buildCode": 0,
+          "cpuBtcNchwBridgeTimed": false,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "conv_flat_fuser_operators",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "loadBuildSeconds": 0.039652344,
+          "numericalBudget": 0.01,
+          "operatorPlacementCodes": [
+            0,
+            0
+          ],
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "operators",
+          "relativeL2": 0.0019238949834351122,
+          "runs": [
+            {
+              "inputSeconds": 0.000118906,
+              "mode": "first",
+              "outputSeconds": 0.00035625,
+              "runSyncSeconds": 0.30924625,
+              "totalSeconds": 0.309721406
+            },
+            {
+              "inputSeconds": 0.000338906,
+              "mode": "warm",
+              "outputSeconds": 0.000475156,
+              "runSyncSeconds": 0.312764062,
+              "totalSeconds": 0.313578124
+            },
+            {
+              "inputSeconds": 0.000339063,
+              "mode": "warm",
+              "outputSeconds": 0.000879531,
+              "runSyncSeconds": 0.312013907,
+              "totalSeconds": 0.31323250099999994
+            },
+            {
+              "inputSeconds": 0.0013425,
+              "mode": "warm",
+              "outputSeconds": 0.002038906,
+              "runSyncSeconds": 0.319154688,
+              "totalSeconds": 0.32253609400000005
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 313.578124,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.339063,
+            "runSyncSeconds": 312.764062,
+            "outputSeconds": 0.8795310000000001
+          }
+        },
+        {
+          "buildCode": 0,
+          "cpuBtcNchwBridgeTimed": true,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "conv_spatial_fuser_model",
+          "inputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "loadBuildSeconds": 0.039785,
+          "numericalBudget": 0.01,
+          "outputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "model",
+          "placementCode": 0,
+          "relativeL2": 0.0019238949834351122,
+          "runs": [
+            {
+              "inputSeconds": 0.000647188,
+              "mode": "first",
+              "outputSeconds": 0.000335312,
+              "runSyncSeconds": 0.003357187,
+              "totalSeconds": 0.004339687
+            },
+            {
+              "inputSeconds": 0.000553906,
+              "mode": "warm",
+              "outputSeconds": 0.000282031,
+              "runSyncSeconds": 0.003592657,
+              "totalSeconds": 0.004428594
+            },
+            {
+              "inputSeconds": 0.000520156,
+              "mode": "warm",
+              "outputSeconds": 0.000314063,
+              "runSyncSeconds": 0.002708594,
+              "totalSeconds": 0.0035428129999999997
+            },
+            {
+              "inputSeconds": 0.000600937,
+              "mode": "warm",
+              "outputSeconds": 0.00031125,
+              "runSyncSeconds": 0.002797188,
+              "totalSeconds": 0.003709375
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 3.709375,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.5539059999999999,
+            "runSyncSeconds": 2.797188,
+            "outputSeconds": 0.31125
+          }
+        },
+        {
+          "buildCode": 0,
+          "cpuBtcNchwBridgeTimed": true,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "conv_spatial_fuser_operators",
+          "inputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "loadBuildSeconds": 0.032841875,
+          "numericalBudget": 0.01,
+          "operatorPlacementCodes": [
+            0,
+            0
+          ],
+          "outputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "operators",
+          "relativeL2": 0.0019238949834351122,
+          "runs": [
+            {
+              "inputSeconds": 0.000619843,
+              "mode": "first",
+              "outputSeconds": 0.000308125,
+              "runSyncSeconds": 0.003741875,
+              "totalSeconds": 0.004669843
+            },
+            {
+              "inputSeconds": 0.000510781,
+              "mode": "warm",
+              "outputSeconds": 0.000279531,
+              "runSyncSeconds": 0.003071719,
+              "totalSeconds": 0.003862031
+            },
+            {
+              "inputSeconds": 0.000499688,
+              "mode": "warm",
+              "outputSeconds": 0.000295938,
+              "runSyncSeconds": 0.002770937,
+              "totalSeconds": 0.0035665629999999996
+            },
+            {
+              "inputSeconds": 0.000528906,
+              "mode": "warm",
+              "outputSeconds": 0.000327968,
+              "runSyncSeconds": 0.002714844,
+              "totalSeconds": 0.003571718
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 3.571718,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.5107809999999999,
+            "runSyncSeconds": 2.770937,
+            "outputSeconds": 0.295938
+          }
+        },
+        {
+          "buildCode": 0,
+          "cpuBtcNchwBridgeTimed": false,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "gemm_flat_fuser_model",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "loadBuildSeconds": 0.270198907,
+          "numericalBudget": 0.01,
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "model",
+          "placementCode": 0,
+          "relativeL2": 0.0014895914120691728,
+          "runs": [
+            {
+              "inputSeconds": 0.000115625,
+              "mode": "first",
+              "outputSeconds": 8.4531e-05,
+              "runSyncSeconds": 0.006836875,
+              "totalSeconds": 0.007037031
+            },
+            {
+              "inputSeconds": 0.000107344,
+              "mode": "warm",
+              "outputSeconds": 9.0312e-05,
+              "runSyncSeconds": 0.005813125,
+              "totalSeconds": 0.006010781
+            },
+            {
+              "inputSeconds": 9.8281e-05,
+              "mode": "warm",
+              "outputSeconds": 9.6562e-05,
+              "runSyncSeconds": 0.005866875,
+              "totalSeconds": 0.006061718
+            },
+            {
+              "inputSeconds": 9.4062e-05,
+              "mode": "warm",
+              "outputSeconds": 9.8438e-05,
+              "runSyncSeconds": 0.006073438,
+              "totalSeconds": 0.0062659379999999995
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 6.061718,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.09828100000000001,
+            "runSyncSeconds": 5.866874999999999,
+            "outputSeconds": 0.096562
+          }
+        },
+        {
+          "buildCode": 0,
+          "cpuBtcNchwBridgeTimed": false,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "gemm_flat_fuser_operators",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "loadBuildSeconds": 0.270956719,
+          "numericalBudget": 0.01,
+          "operatorPlacementCodes": [
+            0,
+            0
+          ],
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "operators",
+          "relativeL2": 0.0014895914120691728,
+          "runs": [
+            {
+              "inputSeconds": 0.000110468,
+              "mode": "first",
+              "outputSeconds": 7.6875e-05,
+              "runSyncSeconds": 0.006789218,
+              "totalSeconds": 0.006976560999999999
+            },
+            {
+              "inputSeconds": 0.000101563,
+              "mode": "warm",
+              "outputSeconds": 8.7969e-05,
+              "runSyncSeconds": 0.006089687,
+              "totalSeconds": 0.006279219
+            },
+            {
+              "inputSeconds": 0.000103125,
+              "mode": "warm",
+              "outputSeconds": 8.9532e-05,
+              "runSyncSeconds": 0.005768906,
+              "totalSeconds": 0.005961563
+            },
+            {
+              "inputSeconds": 8.9063e-05,
+              "mode": "warm",
+              "outputSeconds": 8.6718e-05,
+              "runSyncSeconds": 0.005759843,
+              "totalSeconds": 0.0059356240000000005
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 5.961563,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.101563,
+            "runSyncSeconds": 5.768905999999999,
+            "outputSeconds": 0.08796899999999999
+          }
+        }
+      ],
+      "firstUnbridgedCases": [
+        {
+          "buildCode": 0,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "conv_flat_fuser_model",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "loadBuildSeconds": 0.66061625,
+          "numericalBudget": 0.01,
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "model",
+          "placementCode": 0,
+          "relativeL2": 0.0019238949834351122,
+          "runs": [
+            {
+              "inputSeconds": 0.000113907,
+              "mode": "first",
+              "outputSeconds": 0.000609219,
+              "runSyncSeconds": 0.307155937,
+              "totalSeconds": 0.307879063
+            },
+            {
+              "inputSeconds": 0.001327344,
+              "mode": "warm",
+              "outputSeconds": 0.000753125,
+              "runSyncSeconds": 0.304579687,
+              "totalSeconds": 0.306660156
+            },
+            {
+              "inputSeconds": 0.001275,
+              "mode": "warm",
+              "outputSeconds": 0.000831406,
+              "runSyncSeconds": 0.307562187,
+              "totalSeconds": 0.309668593
+            },
+            {
+              "inputSeconds": 0.000783907,
+              "mode": "warm",
+              "outputSeconds": 0.001978125,
+              "runSyncSeconds": 0.296282187,
+              "totalSeconds": 0.29904421899999994
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 306.66015600000003,
+          "warmMedianPartsMs": {
+            "inputSeconds": 1.2750000000000001,
+            "runSyncSeconds": 304.579687,
+            "outputSeconds": 0.831406
+          }
+        },
+        {
+          "buildCode": 0,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "conv_flat_fuser_operators",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "loadBuildSeconds": 0.030873281,
+          "numericalBudget": 0.01,
+          "operatorPlacementCodes": [
+            0,
+            0
+          ],
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "operators",
+          "relativeL2": 0.0019238949834351122,
+          "runs": [
+            {
+              "inputSeconds": 0.00015125,
+              "mode": "first",
+              "outputSeconds": 0.00035375,
+              "runSyncSeconds": 0.315247656,
+              "totalSeconds": 0.31575265599999996
+            },
+            {
+              "inputSeconds": 0.00034,
+              "mode": "warm",
+              "outputSeconds": 0.000562031,
+              "runSyncSeconds": 0.313414219,
+              "totalSeconds": 0.31431625
+            },
+            {
+              "inputSeconds": 0.000340469,
+              "mode": "warm",
+              "outputSeconds": 0.000995937,
+              "runSyncSeconds": 0.314418282,
+              "totalSeconds": 0.315754688
+            },
+            {
+              "inputSeconds": 0.001255,
+              "mode": "warm",
+              "outputSeconds": 0.001401093,
+              "runSyncSeconds": 0.3200825,
+              "totalSeconds": 0.322738593
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 315.754688,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.34046899999999997,
+            "runSyncSeconds": 314.418282,
+            "outputSeconds": 0.995937
+          }
+        },
+        {
+          "buildCode": 0,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "conv_spatial_fuser_model",
+          "inputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "loadBuildSeconds": 0.041117344,
+          "numericalBudget": 0.01,
+          "outputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "model",
+          "placementCode": 0,
+          "relativeL2": 0.0019238949834349825,
+          "runs": [
+            {
+              "inputSeconds": 0.000140312,
+              "mode": "first",
+              "outputSeconds": 7.9218e-05,
+              "runSyncSeconds": 0.00339625,
+              "totalSeconds": 0.00361578
+            },
+            {
+              "inputSeconds": 0.000100782,
+              "mode": "warm",
+              "outputSeconds": 8.1093e-05,
+              "runSyncSeconds": 0.002857343,
+              "totalSeconds": 0.0030392179999999998
+            },
+            {
+              "inputSeconds": 8.4843e-05,
+              "mode": "warm",
+              "outputSeconds": 8.0781e-05,
+              "runSyncSeconds": 0.002715313,
+              "totalSeconds": 0.0028809369999999996
+            },
+            {
+              "inputSeconds": 8.6094e-05,
+              "mode": "warm",
+              "outputSeconds": 8.9375e-05,
+              "runSyncSeconds": 0.00266875,
+              "totalSeconds": 0.0028442190000000003
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 2.880937,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.086094,
+            "runSyncSeconds": 2.715313,
+            "outputSeconds": 0.081093
+          }
+        },
+        {
+          "buildCode": 0,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "conv_spatial_fuser_operators",
+          "inputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "loadBuildSeconds": 0.031368125,
+          "numericalBudget": 0.01,
+          "operatorPlacementCodes": [
+            0,
+            0
+          ],
+          "outputShape": [
+            2,
+            1200,
+            1,
+            256
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "operators",
+          "relativeL2": 0.0019238949834349825,
+          "runs": [
+            {
+              "inputSeconds": 0.000139531,
+              "mode": "first",
+              "outputSeconds": 8.1094e-05,
+              "runSyncSeconds": 0.003583907,
+              "totalSeconds": 0.003804532
+            },
+            {
+              "inputSeconds": 9.0312e-05,
+              "mode": "warm",
+              "outputSeconds": 8.0157e-05,
+              "runSyncSeconds": 0.002673594,
+              "totalSeconds": 0.002844063
+            },
+            {
+              "inputSeconds": 7.9844e-05,
+              "mode": "warm",
+              "outputSeconds": 8.375e-05,
+              "runSyncSeconds": 0.002895938,
+              "totalSeconds": 0.003059532
+            },
+            {
+              "inputSeconds": 8.1563e-05,
+              "mode": "warm",
+              "outputSeconds": 8.375e-05,
+              "runSyncSeconds": 0.002644219,
+              "totalSeconds": 0.0028095320000000004
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 2.844063,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.08156300000000001,
+            "runSyncSeconds": 2.673594,
+            "outputSeconds": 0.08375
+          }
+        },
+        {
+          "buildCode": 0,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "gemm_flat_fuser_model",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "loadBuildSeconds": 0.2830225,
+          "numericalBudget": 0.01,
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "model",
+          "placementCode": 0,
+          "relativeL2": 0.0014895914120691728,
+          "runs": [
+            {
+              "inputSeconds": 0.000164218,
+              "mode": "first",
+              "outputSeconds": 8.9063e-05,
+              "runSyncSeconds": 0.006182187,
+              "totalSeconds": 0.006435468
+            },
+            {
+              "inputSeconds": 9.8438e-05,
+              "mode": "warm",
+              "outputSeconds": 0.000116875,
+              "runSyncSeconds": 0.005739219,
+              "totalSeconds": 0.005954532
+            },
+            {
+              "inputSeconds": 9.3594e-05,
+              "mode": "warm",
+              "outputSeconds": 9.4375e-05,
+              "runSyncSeconds": 0.005857187,
+              "totalSeconds": 0.0060451559999999994
+            },
+            {
+              "inputSeconds": 0.000104375,
+              "mode": "warm",
+              "outputSeconds": 0.000105938,
+              "runSyncSeconds": 0.00619125,
+              "totalSeconds": 0.006401563
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 6.0451559999999995,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.098438,
+            "runSyncSeconds": 5.857187,
+            "outputSeconds": 0.105938
+          }
+        },
+        {
+          "buildCode": 0,
+          "deviceOptionCode": 0,
+          "fallbackOptionCode": 0,
+          "id": "gemm_flat_fuser_operators",
+          "inputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "loadBuildSeconds": 0.219008437,
+          "numericalBudget": 0.01,
+          "operatorPlacementCodes": [
+            0,
+            0
+          ],
+          "outputShape": [
+            512,
+            1200,
+            1,
+            1
+          ],
+          "performanceModeCode": 0,
+          "phase": "done",
+          "placement": "operators",
+          "relativeL2": 0.0014895914120691728,
+          "runs": [
+            {
+              "inputSeconds": 0.000116563,
+              "mode": "first",
+              "outputSeconds": 7.9688e-05,
+              "runSyncSeconds": 0.006343906,
+              "totalSeconds": 0.006540157
+            },
+            {
+              "inputSeconds": 9.7813e-05,
+              "mode": "warm",
+              "outputSeconds": 8.4063e-05,
+              "runSyncSeconds": 0.006062812,
+              "totalSeconds": 0.006244688
+            },
+            {
+              "inputSeconds": 9.7344e-05,
+              "mode": "warm",
+              "outputSeconds": 8.4375e-05,
+              "runSyncSeconds": 0.005716562,
+              "totalSeconds": 0.005898281
+            },
+            {
+              "inputSeconds": 8.4219e-05,
+              "mode": "warm",
+              "outputSeconds": 0.000264688,
+              "runSyncSeconds": 0.006006875,
+              "totalSeconds": 0.006355782
+            }
+          ],
+          "success": true,
+          "warmMedianTotalMs": 6.244688,
+          "warmMedianPartsMs": {
+            "inputSeconds": 0.097344,
+            "runSyncSeconds": 6.006875,
+            "outputSeconds": 0.084375
+          }
+        }
+      ],
+      "sampledPeakRssMiB": 165.51171875,
+      "memoryScope": "Process RSS,20ms plus stage checkpoints; NPU private workspace not measured",
+      "hardwareKernelTraceCollected": false,
+      "exclusiveEveryOperatorNpuProved": false,
+      "screenScope": "Awake CLI before/after confirmations, unchanged last screen-off; not an App foreground or thermal-controlled benchmark",
+      "mnnIntegrationSchedulingCostIncluded": false
+    },
+    "profilingAttempts": [
+      {
+        "attempt": "dit-cann-layout-profile-r2",
+        "cases": [
+          {
+            "id": "conv_flat_fuser_model",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          },
+          {
+            "id": "conv_flat_fuser_operators",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          },
+          {
+            "id": "conv_spatial_fuser_model",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          },
+          {
+            "id": "conv_spatial_fuser_operators",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          },
+          {
+            "id": "gemm_flat_fuser_model",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          },
+          {
+            "id": "gemm_flat_fuser_operators",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          }
+        ]
+      },
+      {
+        "attempt": "dit-cann-layout-profile-writable-r4",
+        "cases": [
+          {
+            "id": "conv_flat_fuser_model",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          },
+          {
+            "id": "conv_flat_fuser_operators",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          },
+          {
+            "id": "conv_spatial_fuser_model",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          },
+          {
+            "id": "conv_spatial_fuser_operators",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          },
+          {
+            "id": "gemm_flat_fuser_model",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          },
+          {
+            "id": "gemm_flat_fuser_operators",
+            "buildCode": 0,
+            "profilingOptionCode": 0,
+            "error": "No executor",
+            "success": false
+          }
+        ]
+      }
+    ],
+    "nextWork": [
+      "Preserve CFG batch2 semantics and original GELU/SiLU",
+      "Prefer Conv spatial within continuous FFN/multilayer subgraphs",
+      "Validate entire velocity field before App replacement; then audio listening and full-chain memory/RTF",
+      "Keep Attention dynamic MatMul and token-hidden normalization semantics; use separate calibration for future CANN W8A8"
+    ],
+    "validation": {
+      "pythonTestsPassed": 53,
+      "nativeTargetsBuilt": [
+        "levo_stream_dit_layout",
+        "levo_stream_graph_audit",
+        "levo_stream_npu_probe"
+      ],
+      "appGenerationReportedSeparately": "stream_lab_cfg_restored_2026_11_13",
+      "weightsOrAudioPublished": false
+    },
+    "documentation": "docs/DIT_ONNX_LAYOUT.md"
   }
 }

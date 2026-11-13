@@ -173,7 +173,7 @@ struct Index {
     this.startedAt = Date.now(); this.playbackError = '';
     this.firstChunk = 0; this.stage = '准备实验'; await this.keepAwake(true);
     if (this.player) await this.player.close(); await this.releaseSystem(); this.player = this.createPlayer();
-    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: this.model !== 0, croppedLm: this.model === 0 ? this.croppedLm() : '' })); }
+    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, croppedLm: this.model === 0 ? this.croppedLm() : '' })); }
     catch (error) { this.stage = String(error); this.playbackError = String(error); this.record('start-error', String(error)); }
     finally { this.busy = false; this.stopping = false; this.poll(); await this.keepAwake(false); }
   }
