@@ -97627,5 +97627,1112 @@
       "MuQ runs offline on PC; only512float32 features are deployed.",
       "Early fixed-code tests were synthetic numeric fixtures, not model-generated music."
     ]
+  },
+  "stream_lab_vae_windows_2026_11_13": {
+    "date": "2026-11-13",
+    "scope": "Independent current 0.6B bundle VAE CPU CLI diagnostics; no new App installed; no integrated whole-chain RTF or listening claim",
+    "modelId": "larkstudio-small-0.6b-v1",
+    "vaeRecipe": {
+      "weightBits": 8,
+      "groupSize": 64,
+      "precisionRequested": "Low",
+      "backend": "CPU",
+      "threadsRequested": 6,
+      "vectorSin": true,
+      "fixedCoreAffinity": false
+    },
+    "modelHashes": {
+      "graphSha256": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "weightSha256": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc",
+      "graphBytes": 190720,
+      "weightBytes": 85861638
+    },
+    "benchmarkBinariesSha256": {
+      "r1": "97213ee9a2e6c47f027acd974bd7e6e22f773c9a830e9181450af1beec0627f2",
+      "r2": "632f76a32f68cba20f2dad6780a8cc51eac5a4d3fa8653ed6055846ff5323eda",
+      "r3": "f7271ec138df59d37863d16d82afe9ffb4a94874de10e06a5d3ec8ce2c0b4bb3",
+      "r4": "bf57203e1dfcd0173995656b0644a5dbf584588df976fac65bc40dcf2f8988ea"
+    },
+    "fixtureProvenance": {
+      "sourceRunId": "1794532617364890",
+      "realSampledCodes": 1500,
+      "codesSha256": "391d94489ad9a39f4b234568fe491d6090195c6e6e304561564bf7c1b5a2dbfa",
+      "ditLayers": 22,
+      "ditSteps": 2,
+      "ditBatch": 2,
+      "cfgMixing": false,
+      "seed": 2307,
+      "llmExecutedInDiagnostic": false,
+      "randomWeightsUsed": false,
+      "firstReconstructedPublishedPcm16MatchesActualAppWav": true,
+      "comparedStereoFrames": 368640
+    },
+    "screenScope": {
+      "confirmationBefore": "AWAKE",
+      "confirmationAfter": "AWAKE",
+      "lastScreenOffUnchanged": true,
+      "lastSuspendUnchanged": true,
+      "initialExplorationScreenIntervalsNotFullyControlled": true,
+      "appForegroundClaimed": false,
+      "temperatureControlled": false,
+      "batteryTemperatureBeforeAllProbesC": 27,
+      "batteryTemperatureAfterConfirmationC": 34,
+      "cpuJunctionTemperatureMeasured": false,
+      "powerWattsMeasured": false
+    },
+    "firstWindowExploration": {
+      "backend": "CPU Low",
+      "cases": [
+        {
+          "case": "baseline",
+          "frames": 256,
+          "meanSeconds": 5.137107578,
+          "offset": 0,
+          "runs": [
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 983040
+              },
+              "forwardSeconds": 5.035834375,
+              "inputSeconds": 3.7969e-05,
+              "outputSeconds": 0.003820938,
+              "peak": 0.54443359375,
+              "rssMiB": 746.47265625,
+              "totalSeconds": 5.039697969
+            },
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 983040
+              },
+              "forwardSeconds": 5.2304375,
+              "inputSeconds": 3.7187e-05,
+              "outputSeconds": 0.004037813,
+              "peak": 0.54443359375,
+              "rssMiB": 750.2265625,
+              "totalSeconds": 5.234517187
+            }
+          ],
+          "setup": {
+            "originalInputShape": [
+              1,
+              64,
+              256
+            ],
+            "outputShape": [
+              1,
+              2,
+              491520,
+              1
+            ],
+            "rssAfterSetupMiB": 138.6640625,
+            "setupSeconds": 0.757120312
+          },
+          "success": true,
+          "warm": {
+            "forwardSeconds": 5.06037,
+            "inputSeconds": 0.000164844,
+            "outputSeconds": 0.003815313,
+            "peak": 0.54443359375,
+            "rssMiB": 746.47265625,
+            "totalSeconds": 5.064357188
+          }
+        },
+        {
+          "case": "tail-no-halo",
+          "frames": 156,
+          "meanSeconds": 3.8396498435,
+          "offset": 0,
+          "runs": [
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 156,
+                "maxAbsoluteDiff": 0.142608642578125,
+                "passes1eMinus3": false,
+                "relativeL2": 0.05457817337395505,
+                "samples": 599040
+              },
+              "forwardSeconds": 3.947854531,
+              "inputSeconds": 2.7969e-05,
+              "outputSeconds": 0.003190938,
+              "peak": 0.5126953125,
+              "rssMiB": 512.90234375,
+              "totalSeconds": 3.951078125
+            },
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 156,
+                "maxAbsoluteDiff": 0.142608642578125,
+                "passes1eMinus3": false,
+                "relativeL2": 0.05457817337395505,
+                "samples": 599040
+              },
+              "forwardSeconds": 3.7252925,
+              "inputSeconds": 3.4687e-05,
+              "outputSeconds": 0.002887812,
+              "peak": 0.5126953125,
+              "rssMiB": 512.90625,
+              "totalSeconds": 3.728221562
+            }
+          ],
+          "setup": {
+            "originalInputShape": [
+              1,
+              64,
+              256
+            ],
+            "outputShape": [
+              1,
+              2,
+              299520,
+              1
+            ],
+            "rssAfterSetupMiB": 142.55859375,
+            "setupSeconds": 0.419664844
+          },
+          "success": true,
+          "warm": {
+            "forwardSeconds": 3.109579844,
+            "inputSeconds": 2.4218e-05,
+            "outputSeconds": 0.002742969,
+            "peak": 0.5126953125,
+            "rssMiB": 512.90625,
+            "totalSeconds": 3.112351562
+          }
+        },
+        {
+          "case": "tail-right8",
+          "frames": 164,
+          "meanSeconds": 3.8371449995,
+          "offset": 0,
+          "runs": [
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 156,
+                "maxAbsoluteDiff": 0.00244140625,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0004416792577907101,
+                "samples": 599040
+              },
+              "forwardSeconds": 3.803957813,
+              "inputSeconds": 4.6563e-05,
+              "outputSeconds": 0.003385156,
+              "peak": 0.5126953125,
+              "rssMiB": 531.90625,
+              "totalSeconds": 3.807395156
+            },
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 156,
+                "maxAbsoluteDiff": 0.00244140625,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0004416792577907101,
+                "samples": 599040
+              },
+              "forwardSeconds": 3.863044687,
+              "inputSeconds": 3.0781e-05,
+              "outputSeconds": 0.00381375,
+              "peak": 0.5126953125,
+              "rssMiB": 531.90234375,
+              "totalSeconds": 3.866894843
+            }
+          ],
+          "setup": {
+            "originalInputShape": [
+              1,
+              64,
+              256
+            ],
+            "outputShape": [
+              1,
+              2,
+              314880,
+              1
+            ],
+            "rssAfterSetupMiB": 142.5703125,
+            "setupSeconds": 0.532459219
+          },
+          "success": true,
+          "warm": {
+            "forwardSeconds": 4.180484375,
+            "inputSeconds": 4.0312e-05,
+            "outputSeconds": 0.004577188,
+            "peak": 0.5126953125,
+            "rssMiB": 531.90625,
+            "totalSeconds": 4.185109218
+          }
+        },
+        {
+          "case": "tail-right16",
+          "frames": 172,
+          "meanSeconds": 4.074360078,
+          "offset": 0,
+          "runs": [
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 156,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 599040
+              },
+              "forwardSeconds": 3.901376719,
+              "inputSeconds": 2.7812e-05,
+              "outputSeconds": 0.002484687,
+              "peak": 0.5126953125,
+              "rssMiB": 550.8984375,
+              "totalSeconds": 3.903893437
+            },
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 156,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 599040
+              },
+              "forwardSeconds": 4.241984687,
+              "inputSeconds": 2.9219e-05,
+              "outputSeconds": 0.002806093,
+              "peak": 0.5126953125,
+              "rssMiB": 550.90234375,
+              "totalSeconds": 4.244826719
+            }
+          ],
+          "setup": {
+            "originalInputShape": [
+              1,
+              64,
+              256
+            ],
+            "outputShape": [
+              1,
+              2,
+              330240,
+              1
+            ],
+            "rssAfterSetupMiB": 142.57421875,
+            "setupSeconds": 0.531219062
+          },
+          "success": true,
+          "warm": {
+            "forwardSeconds": 4.248846562,
+            "inputSeconds": 4.1563e-05,
+            "outputSeconds": 0.002979531,
+            "peak": 0.5126953125,
+            "rssMiB": 550.89453125,
+            "totalSeconds": 4.251876407
+          }
+        },
+        {
+          "case": "new-region-left16",
+          "frames": 208,
+          "meanSeconds": 4.3390328910000004,
+          "offset": 48,
+          "runs": [
+            {
+              "comparison": {
+                "beginFrame": 64,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 737280
+              },
+              "forwardSeconds": 4.346835937,
+              "inputSeconds": 3.25e-05,
+              "outputSeconds": 0.003369062,
+              "peak": 0.54443359375,
+              "rssMiB": 636.34765625,
+              "totalSeconds": 4.350243594
+            },
+            {
+              "comparison": {
+                "beginFrame": 64,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 737280
+              },
+              "forwardSeconds": 4.323886407,
+              "inputSeconds": 3.0313e-05,
+              "outputSeconds": 0.003899219,
+              "peak": 0.54443359375,
+              "rssMiB": 636.3515625,
+              "totalSeconds": 4.327822188
+            }
+          ],
+          "setup": {
+            "originalInputShape": [
+              1,
+              64,
+              256
+            ],
+            "outputShape": [
+              1,
+              2,
+              399360,
+              1
+            ],
+            "rssAfterSetupMiB": 142.58203125,
+            "setupSeconds": 0.531942813
+          },
+          "success": true,
+          "warm": {
+            "forwardSeconds": 4.590592031,
+            "inputSeconds": 3.5938e-05,
+            "outputSeconds": 0.003723594,
+            "peak": 0.54443359375,
+            "rssMiB": 636.2890625,
+            "totalSeconds": 4.5943575
+          }
+        },
+        {
+          "case": "baseline-repeat",
+          "frames": 256,
+          "meanSeconds": 5.4792550005,
+          "offset": 0,
+          "runs": [
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 983040
+              },
+              "forwardSeconds": 5.445662031,
+              "inputSeconds": 4e-05,
+              "outputSeconds": 0.004195781,
+              "peak": 0.54443359375,
+              "rssMiB": 750.3046875,
+              "totalSeconds": 5.449903594
+            },
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 983040
+              },
+              "forwardSeconds": 5.504207187,
+              "inputSeconds": 3.5469e-05,
+              "outputSeconds": 0.004358907,
+              "peak": 0.54443359375,
+              "rssMiB": 750.3046875,
+              "totalSeconds": 5.508606407
+            }
+          ],
+          "setup": {
+            "originalInputShape": [
+              1,
+              64,
+              256
+            ],
+            "outputShape": [
+              1,
+              2,
+              491520,
+              1
+            ],
+            "rssAfterSetupMiB": 142.59765625,
+            "setupSeconds": 0.64668125
+          },
+          "success": true,
+          "warm": {
+            "forwardSeconds": 5.530510781,
+            "inputSeconds": 0.000107656,
+            "outputSeconds": 0.004240781,
+            "peak": 0.54443359375,
+            "rssMiB": 750.3046875,
+            "totalSeconds": 5.53486625
+          }
+        }
+      ],
+      "elapsedSeconds": 84.10441125,
+      "fixture": {
+        "frames": 256,
+        "latentPeak": 5.496340274810791,
+        "scope": "First256 real sampled codes reconstructed through current22-layer DiT,2steps,no CFG mixing,batch2; LLM not run in this diagnostic",
+        "seed": 2307
+      },
+      "minimumSystemAvailableMiB": 4051.0,
+      "mode": "windows",
+      "rssPeakMiB": 750.30078125,
+      "sampleIntervalMs": 20,
+      "speakerPlaybackTested": false,
+      "success": true,
+      "threadsRequested": 6,
+      "vectorSin": true,
+      "weightRecipe": "Original immutable bundle W8/g64",
+      "wholeChainTest": false
+    },
+    "realTailConfirmation": {
+      "backend": "CPU Low",
+      "cases": [
+        {
+          "case": "baseline",
+          "frames": 256,
+          "meanSeconds": 5.735184844,
+          "offset": 0,
+          "runs": [
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 983040
+              },
+              "forwardSeconds": 5.691284531,
+              "inputSeconds": 2.9688e-05,
+              "outputSeconds": 0.00391375,
+              "peak": 0.393798828125,
+              "rssMiB": 746.4609375,
+              "totalSeconds": 5.695233594
+            },
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 983040
+              },
+              "forwardSeconds": 5.770694219,
+              "inputSeconds": 4.3125e-05,
+              "outputSeconds": 0.004394531,
+              "peak": 0.393798828125,
+              "rssMiB": 750.21484375,
+              "totalSeconds": 5.775136094
+            }
+          ],
+          "setup": {
+            "originalInputShape": [
+              1,
+              64,
+              256
+            ],
+            "outputShape": [
+              1,
+              2,
+              491520,
+              1
+            ],
+            "rssAfterSetupMiB": 138.65234375,
+            "setupSeconds": 0.677533438
+          },
+          "success": true,
+          "warm": {
+            "forwardSeconds": 5.639702031,
+            "inputSeconds": 0.0001975,
+            "outputSeconds": 0.003362656,
+            "peak": 0.393798828125,
+            "rssMiB": 746.4609375,
+            "totalSeconds": 5.64326875
+          }
+        },
+        {
+          "case": "tail-right16",
+          "frames": 172,
+          "meanSeconds": 4.1511335155,
+          "offset": 0,
+          "runs": [
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 156,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 599040
+              },
+              "forwardSeconds": 4.152660625,
+              "inputSeconds": 2.5937e-05,
+              "outputSeconds": 0.004352343,
+              "peak": 0.393798828125,
+              "rssMiB": 550.86328125,
+              "totalSeconds": 4.157044687
+            },
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 156,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 599040
+              },
+              "forwardSeconds": 4.139908281,
+              "inputSeconds": 4.0469e-05,
+              "outputSeconds": 0.005266562,
+              "peak": 0.393798828125,
+              "rssMiB": 550.87109375,
+              "totalSeconds": 4.145222344
+            }
+          ],
+          "setup": {
+            "originalInputShape": [
+              1,
+              64,
+              256
+            ],
+            "outputShape": [
+              1,
+              2,
+              330240,
+              1
+            ],
+            "rssAfterSetupMiB": 142.54296875,
+            "setupSeconds": 0.42453375
+          },
+          "success": true,
+          "warm": {
+            "forwardSeconds": 3.917013906,
+            "inputSeconds": 2.4375e-05,
+            "outputSeconds": 0.003142032,
+            "peak": 0.393798828125,
+            "rssMiB": 550.8671875,
+            "totalSeconds": 3.920187031
+          }
+        },
+        {
+          "case": "new-region-left16",
+          "frames": 208,
+          "meanSeconds": 4.791416953,
+          "offset": 48,
+          "runs": [
+            {
+              "comparison": {
+                "beginFrame": 64,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 737280
+              },
+              "forwardSeconds": 4.8236125,
+              "inputSeconds": 4.2656e-05,
+              "outputSeconds": 0.00570625,
+              "peak": 0.393798828125,
+              "rssMiB": 636.33984375,
+              "totalSeconds": 4.829368281
+            },
+            {
+              "comparison": {
+                "beginFrame": 64,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 737280
+              },
+              "forwardSeconds": 4.74937875,
+              "inputSeconds": 5.125e-05,
+              "outputSeconds": 0.00403,
+              "peak": 0.393798828125,
+              "rssMiB": 636.34375,
+              "totalSeconds": 4.753465625
+            }
+          ],
+          "setup": {
+            "originalInputShape": [
+              1,
+              64,
+              256
+            ],
+            "outputShape": [
+              1,
+              2,
+              399360,
+              1
+            ],
+            "rssAfterSetupMiB": 142.56640625,
+            "setupSeconds": 0.5288375
+          },
+          "success": true,
+          "warm": {
+            "forwardSeconds": 4.937042812,
+            "inputSeconds": 4.0156e-05,
+            "outputSeconds": 0.004271562,
+            "peak": 0.393798828125,
+            "rssMiB": 636.34765625,
+            "totalSeconds": 4.941359843
+          }
+        },
+        {
+          "case": "baseline-repeat",
+          "frames": 256,
+          "meanSeconds": 6.0546867970000005,
+          "offset": 0,
+          "runs": [
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 983040
+              },
+              "forwardSeconds": 5.9918325,
+              "inputSeconds": 3.9844e-05,
+              "outputSeconds": 0.004277813,
+              "peak": 0.393798828125,
+              "rssMiB": 750.2578125,
+              "totalSeconds": 5.996156094
+            },
+            {
+              "comparison": {
+                "beginFrame": 0,
+                "endFrame": 256,
+                "maxAbsoluteDiff": 0.0,
+                "passes1eMinus3": true,
+                "relativeL2": 0.0,
+                "samples": 983040
+              },
+              "forwardSeconds": 6.108572032,
+              "inputSeconds": 4.4219e-05,
+              "outputSeconds": 0.004594532,
+              "peak": 0.393798828125,
+              "rssMiB": 750.2578125,
+              "totalSeconds": 6.1132175
+            }
+          ],
+          "setup": {
+            "originalInputShape": [
+              1,
+              64,
+              256
+            ],
+            "outputShape": [
+              1,
+              2,
+              491520,
+              1
+            ],
+            "rssAfterSetupMiB": 142.5546875,
+            "setupSeconds": 0.532350781
+          },
+          "success": true,
+          "warm": {
+            "forwardSeconds": 5.887762187,
+            "inputSeconds": 4.3594e-05,
+            "outputSeconds": 0.00412875,
+            "peak": 0.393798828125,
+            "rssMiB": 750.25,
+            "totalSeconds": 5.891943282
+          }
+        }
+      ],
+      "elapsedSeconds": 64.436146093,
+      "fixture": {
+        "frames": 256,
+        "latentPeak": 5.132924556732178,
+        "scope": "Real sampled codes reconstructed through current22-layer DiT,2steps,no CFG mixing,batch2; LLM not run in this diagnostic",
+        "seed": 2307,
+        "startFrame": 1344,
+        "validFrames": 156
+      },
+      "minimumSystemAvailableMiB": 4327.0,
+      "mode": "confirm",
+      "rssPeakMiB": 750.26171875,
+      "sampleIntervalMs": 20,
+      "speakerPlaybackTested": false,
+      "success": true,
+      "threadsRequested": 6,
+      "vectorSin": true,
+      "weightRecipe": "Original immutable bundle W8/g64",
+      "wholeChainTest": false
+    },
+    "sameSessionResizeAfterReleaseModelFailed": {
+      "backend": "CPU Low",
+      "elapsedSeconds": 5.839222812,
+      "error": "Reused session output mismatch",
+      "fixture": {
+        "frames": 256,
+        "latentPeak": 5.132924556732178,
+        "scope": "Real sampled codes reconstructed through current22-layer DiT,2steps,no CFG mixing,batch2; LLM not run in this diagnostic",
+        "seed": 2307,
+        "startFrame": 1344,
+        "validFrames": 156
+      },
+      "initial": {
+        "forwardSeconds": 5.073894688,
+        "inputSeconds": 0.000141718,
+        "outputSeconds": 0.004038906,
+        "peak": 0.393798828125,
+        "rssMiB": 746.375,
+        "totalSeconds": 5.078083281
+      },
+      "minimumSystemAvailableMiB": 4339.0,
+      "mode": "reuse",
+      "rssPeakMiB": 738.8671875,
+      "sampleIntervalMs": 20,
+      "speakerPlaybackTested": false,
+      "success": false,
+      "threadsRequested": 6,
+      "vectorSin": true,
+      "weightRecipe": "Original immutable bundle W8/g64",
+      "wholeChainTest": false
+    },
+    "sameSessionResizeWithGraphRetained": {
+      "backend": "CPU Low",
+      "elapsedSeconds": 22.912169219,
+      "fixture": {
+        "frames": 256,
+        "latentPeak": 5.132924556732178,
+        "scope": "Real sampled codes reconstructed through current22-layer DiT,2steps,no CFG mixing,batch2; LLM not run in this diagnostic",
+        "seed": 2307,
+        "startFrame": 1344,
+        "validFrames": 156
+      },
+      "graphBufferRetained": true,
+      "initial": {
+        "forwardSeconds": 5.292566407,
+        "inputSeconds": 0.000177969,
+        "outputSeconds": 0.003873438,
+        "peak": 0.393798828125,
+        "rssMiB": 746.69921875,
+        "totalSeconds": 5.296624375
+      },
+      "minimumSystemAvailableMiB": 4298.0,
+      "mode": "reuse-kept",
+      "oneVaeSessionOnly": true,
+      "resizeTo172": {
+        "outputShape": [
+          1,
+          2,
+          330240,
+          1
+        ],
+        "rssMiB": 742.87109375,
+        "seconds": 0.003209844
+      },
+      "restore256": {
+        "outputShape": [
+          1,
+          2,
+          491520,
+          1
+        ],
+        "rssMiB": 742.91796875,
+        "seconds": 0.002524531
+      },
+      "restored": {
+        "comparison": {
+          "beginFrame": 0,
+          "endFrame": 256,
+          "maxAbsoluteDiff": 0.0,
+          "passes1eMinus3": true,
+          "relativeL2": 0.0,
+          "samples": 983040
+        },
+        "forwardSeconds": 5.852539688,
+        "inputSeconds": 3.7656e-05,
+        "outputSeconds": 0.00434125,
+        "peak": 0.393798828125,
+        "rssMiB": 750.4921875,
+        "totalSeconds": 5.856923906
+      },
+      "rssPeakMiB": 746.67578125,
+      "sampleIntervalMs": 20,
+      "shortRuns": [
+        {
+          "comparison": {
+            "beginFrame": 0,
+            "endFrame": 156,
+            "maxAbsoluteDiff": 0.0,
+            "passes1eMinus3": true,
+            "relativeL2": 0.0,
+            "samples": 599040
+          },
+          "forwardSeconds": 3.569600313,
+          "inputSeconds": 2.2657e-05,
+          "outputSeconds": 0.002742343,
+          "peak": 0.393798828125,
+          "rssMiB": 748.0,
+          "totalSeconds": 3.572372188
+        },
+        {
+          "comparison": {
+            "beginFrame": 0,
+            "endFrame": 156,
+            "maxAbsoluteDiff": 0.0,
+            "passes1eMinus3": true,
+            "relativeL2": 0.0,
+            "samples": 599040
+          },
+          "forwardSeconds": 3.710997656,
+          "inputSeconds": 2.6094e-05,
+          "outputSeconds": 0.002943438,
+          "peak": 0.393798828125,
+          "rssMiB": 748.0078125,
+          "totalSeconds": 3.713972656
+        },
+        {
+          "comparison": {
+            "beginFrame": 0,
+            "endFrame": 156,
+            "maxAbsoluteDiff": 0.0,
+            "passes1eMinus3": true,
+            "relativeL2": 0.0,
+            "samples": 599040
+          },
+          "forwardSeconds": 3.744643594,
+          "inputSeconds": 2.625e-05,
+          "outputSeconds": 0.003083594,
+          "peak": 0.393798828125,
+          "rssMiB": 748.0078125,
+          "totalSeconds": 3.747759532
+        }
+      ],
+      "speakerPlaybackTested": false,
+      "success": true,
+      "threadsRequested": 6,
+      "vectorSin": true,
+      "weightRecipe": "Original immutable bundle W8/g64",
+      "wholeChainTest": false
+    },
+    "profile": {
+      "warm": {
+        "forwardSeconds": 5.412165312,
+        "inputSeconds": 0.000122813,
+        "outputSeconds": 0.004077656,
+        "peak": 0.54443359375,
+        "rssMiB": 746.34765625,
+        "totalSeconds": 5.4163725
+      },
+      "setup": {
+        "originalInputShape": [
+          1,
+          64,
+          256
+        ],
+        "outputShape": [
+          1,
+          2,
+          491520,
+          1
+        ],
+        "rssAfterSetupMiB": 138.6015625,
+        "setupSeconds": 0.678969843
+      },
+      "forwardSeconds": 5.59595125,
+      "inputSeconds": 3.5937e-05,
+      "outputSeconds": 0.004358437,
+      "byType": [
+        {
+          "type": "Convolution",
+          "seconds": 2.903635939,
+          "percent": 51.99107701991168
+        },
+        {
+          "type": "Deconvolution",
+          "seconds": 0.908319375,
+          "percent": 16.26391998735453
+        },
+        {
+          "type": "Raster",
+          "seconds": 0.6940843769999999,
+          "percent": 12.427933480997051
+        },
+        {
+          "type": "UnaryOp",
+          "seconds": 0.63396938,
+          "percent": 11.351543911251216
+        },
+        {
+          "type": "BinaryOp",
+          "seconds": 0.44486453699999995,
+          "percent": 7.965525600485532
+        }
+      ],
+      "topOperators": [
+        {
+          "calls": 1,
+          "name": "/layers/layers.5/layers/layers.2/layers/layers.1/Conv_output_0",
+          "outputShapes": [
+            [
+              1,
+              128,
+              491520,
+              1
+            ]
+          ],
+          "seconds": 0.321072187,
+          "type": "Convolution"
+        },
+        {
+          "calls": 1,
+          "name": "/layers/layers.5/layers/layers.3/layers/layers.1/Conv_output_0",
+          "outputShapes": [
+            [
+              1,
+              128,
+              491520,
+              1
+            ]
+          ],
+          "seconds": 0.2919325,
+          "type": "Convolution"
+        },
+        {
+          "calls": 1,
+          "name": "/layers/layers.5/layers/layers.4/layers/layers.1/Conv_output_0",
+          "outputShapes": [
+            [
+              1,
+              128,
+              491520,
+              1
+            ]
+          ],
+          "seconds": 0.260313906,
+          "type": "Convolution"
+        },
+        {
+          "calls": 1,
+          "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+          "outputShapes": [
+            [
+              1,
+              128,
+              491520,
+              1
+            ]
+          ],
+          "seconds": 0.246403906,
+          "type": "Deconvolution"
+        },
+        {
+          "calls": 1,
+          "name": "/layers/layers.2/layers/layers.1/ConvTranspose_output_0",
+          "outputShapes": [
+            [
+              1,
+              512,
+              15360,
+              1
+            ]
+          ],
+          "seconds": 0.197688438,
+          "type": "Deconvolution"
+        },
+        {
+          "calls": 1,
+          "name": "/layers/layers.4/layers/layers.1/ConvTranspose_output_0",
+          "outputShapes": [
+            [
+              1,
+              128,
+              245760,
+              1
+            ]
+          ],
+          "seconds": 0.190518906,
+          "type": "Deconvolution"
+        },
+        {
+          "calls": 1,
+          "name": "/layers/layers.3/layers/layers.1/ConvTranspose_output_0",
+          "outputShapes": [
+            [
+              1,
+              256,
+              61440,
+              1
+            ]
+          ],
+          "seconds": 0.18728,
+          "type": "Deconvolution"
+        },
+        {
+          "calls": 1,
+          "name": "pcm",
+          "outputShapes": [
+            [
+              1,
+              2,
+              491520,
+              1
+            ]
+          ],
+          "seconds": 0.152877969,
+          "type": "Convolution"
+        },
+        {
+          "calls": 1,
+          "name": "/layers/layers.4/layers/layers.4/layers/layers.1/Conv_output_0",
+          "outputShapes": [
+            [
+              1,
+              128,
+              245760,
+              1
+            ]
+          ],
+          "seconds": 0.144135469,
+          "type": "Convolution"
+        },
+        {
+          "calls": 1,
+          "name": "/layers/layers.4/layers/layers.2/layers/layers.1/Conv_output_0",
+          "outputShapes": [
+            [
+              1,
+              128,
+              245760,
+              1
+            ]
+          ],
+          "seconds": 0.12567125,
+          "type": "Convolution"
+        }
+      ],
+      "dramBandwidthMeasured": false
+    },
+    "llmLifecycle": {
+      "prefillRows": 513,
+      "firstMusicCodes": 256,
+      "subsequentNewCodes": 192,
+      "kvRetainedAcrossWindows": true,
+      "llmPausedDuringDitAndVae": true,
+      "parallelPrefetchDefault": false,
+      "smallModelSessionsRetainedWithinRound": true,
+      "allSessionsDestroyedAtRoundEnd": true
+    },
+    "recommendation": {
+      "ditOverlapFramesUnchanged": 64,
+      "candidateVaeHaloFrames": 16,
+      "haloSeconds": 0.64,
+      "defaultAppChanged": false,
+      "snakeGraphFusionImplementedThisRound": false,
+      "shortTailNeedsRetainedGraphBuffer": true,
+      "streamJoinAndCacheIntegrationPending": true,
+      "wholeChainSpeedupMeasured": false,
+      "failureResultsPreserved": true
+    }
   }
 }
