@@ -1,5 +1,7 @@
 # mobile_harmony_AImusic · levo-harmony
 
+外部Agent交接与整链热点测试入口见[操作指南](docs/AGENT_STREAM_PROFILING.md)；真实服务器访问参数仅保存在本机忽略目录。
+
 > 独立[LeVo流式实验App v0.1.7](docs/STREAM_LAB.md)：28层0.6B与36层4B规格、真实歌词+MuQ文本NPY、分块发布/播放、仅拖动已生成范围与停止。0.6B当前2步、CFG1.5、三网复用；恢复CFG后15秒实际29.721秒／RTF1.981／RSS2.013GiB，播放到末尾无错误。此前无CFG的60秒记录为124.577秒／RTF2.076／RSS2.514GiB。音乐头裁剪后375码/两段WAV曾与完整头完全一致。旧项目和原权重保留；不同于以下历史随机学生原型。用户已确认此前v0.1.6新默认风格“正常，有音乐”；新CFG轮未作主观或客观音质验收。
 
 > [hidden条件速度优化真机记录与可复用经验](docs/HIDDEN_CONDITIONING_SPEED.md)：0.6B骨干三线程候选，预热prefill＋255 decode相邻对照少约8%–12%；hidden直接缓冲约0.7ms/256项，合成affine整块约5–6倍。附后续Agent执行清单；均为独立CLI模块结果，App默认值及私有整链RTF未改变。

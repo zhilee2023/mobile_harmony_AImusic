@@ -2,6 +2,11 @@
 // Independent numerical streaming experiment. Never included by either old App.
 #include "../RuntimeSupport.hpp"
 #include "HiddenStateTap.hpp"
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+#include "StreamLabProfile.hpp"
+#else
+#define LEVO_STREAM_SPAN(name)
+#endif
 #include <MNN/expr/ExprCreator.hpp>
 #include <mutex>
 #include <sys/mman.h>
@@ -42,9 +47,19 @@ public:
 };
 class Graph {
     std::unique_ptr<MNN::Interpreter> net_;MNN::Session* session_=nullptr;
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+    std::string profileName_;
+#endif
 public:
     Graph(const std::string& path,bool low,int threads,bool vae=false,int ditBatch=0){
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+        profileName_=vae?"vae":(ditBatch?"dit":"projector");
+        LEVO_STREAM_SPAN(profileName_+".setup");
+#endif
         net_.reset(MNN::Interpreter::createFromFile(path.c_str()));require(bool(net_),"Cannot load "+path);auto external=path+".weight";net_->setExternalFile(external.c_str());
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+        if(LevoStreamProfile::active&&LevoStreamProfile::active->operators)net_->setSessionMode(MNN::Interpreter::Session_Debug);
+#endif
         net_->setSessionMode(MNN::Interpreter::Session_Resize_Defer);net_->setSessionHint(MNN::Interpreter::CPU_ENABLE_KLEIDIAI,0);
         MNN::BackendConfig b;b.precision=low?MNN::BackendConfig::Precision_Low:MNN::BackendConfig::Precision_High;b.memory=MNN::BackendConfig::Memory_Low;b.power=MNN::BackendConfig::Power_High;
         MNN::ScheduleConfig cfg;cfg.type=MNN_FORWARD_CPU;cfg.numThread=threads;cfg.backendConfig=&b;session_=net_->createSession(cfg);require(session_,"Cannot create model session");
@@ -57,9 +72,26 @@ public:
     }
     ~Graph(){if(session_)net_->releaseSession(session_);}
     std::vector<float> run(const std::map<std::string,std::vector<float>>& inputs,size_t expected){
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+        LEVO_STREAM_SPAN(profileName_+".total");
+#endif
+        {
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+        LEVO_STREAM_SPAN(profileName_+".input");
+#endif
         for(const auto& p:inputs){auto tensor=p.first.empty()?net_->getSessionInput(session_,nullptr):net_->getSessionInput(session_,p.first.c_str());require(tensor,"Input name mismatch: "+p.first);
             MNN::Tensor host(tensor,MNN::Tensor::CAFFE,true);require(size_t(host.elementSize())==p.second.size(),"Input size mismatch");std::memcpy(host.host<float>(),p.second.data(),p.second.size()*4);require(tensor->copyFromHostTensor(&host),"Input transfer failed");}
-        check();require(net_->runSession(session_)==MNN::NO_ERROR,"Model forward failed");auto tensor=net_->getSessionOutput(session_,nullptr);require(tensor,"Missing graph output");
+        }
+        check();{
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+        LEVO_STREAM_SPAN(profileName_+".forward");
+        if(LevoStreamProfile::active&&LevoStreamProfile::active->operators){auto p=LevoStreamProfile::active;require(net_->runSessionWithCallBackInfo(session_,p->before(),p->after(),true)==MNN::NO_ERROR,"Profiled model forward failed");}else
+#endif
+        require(net_->runSession(session_)==MNN::NO_ERROR,"Model forward failed");}
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+        LEVO_STREAM_SPAN(profileName_+".output");
+#endif
+        auto tensor=net_->getSessionOutput(session_,nullptr);require(tensor,"Missing graph output");
         MNN::Tensor host(tensor,MNN::Tensor::CAFFE,true);require(size_t(host.elementSize())==expected&&tensor->copyToHostTensor(&host),"Output contract mismatch");
         std::vector<float> value(host.host<float>(),host.host<float>()+expected);peak(value);return value;
     }
@@ -100,6 +132,7 @@ class Prior {
     MNN::Express::VARP logits_;std::unique_ptr<MappedFloats> table_;bool small_,sampling_,smallHidden_,cropped_;int width_,previous_=0;std::mt19937 random_{2307};std::vector<int> codes_;
 public:
     Prior(const std::string& root,const std::string& work,bool small,const std::string& lyrics="",const std::string& npy="",bool smallHidden=false,const std::string& croppedLm="",int threads=4):small_(small),sampling_(!lyrics.empty()),smallHidden_(smallHidden),cropped_(!croppedLm.empty()),width_(small?1024:2560){
+        LEVO_STREAM_SPAN("llm.initialize");
         require(!cropped_||small,"Music-head crop is for the small model only");
         if(cropped_){auto range=readJson(croppedLm+"/head-range.json");require(range["success"]==true&&range["firstRetainedClass"]==151765&&range["classes"]==16449,"Invalid head-range contract");
             require(std::filesystem::file_size(croppedLm+"/embeddings_bf16.bin")==344502272,"Cropped LM requires the complete input embedding file");}
@@ -107,17 +140,31 @@ public:
           {"tokenizer_file","tokenizer.mtok"},{"embedding_file","embeddings_bf16.bin"},{"backend_type","cpu"},{"precision","high"},{"memory","low"},{"power","high"},
           {"thread_num",threads},{"reuse_kv",false},{"attention_mode",8},{"hidden_states",!small||smallHidden},{"all_logits",false},{"cosyvoice_kleidiai",false},{"tmp_path",work+"/"}};
         {std::ofstream out(work+"/lm-config.json");out<<cfg.dump(2);}
-        model_.reset(Llm::createLLM(work+"/lm-config.json"));require(model_&&model_->load(),"D1 load failed");check();model_->reset();model_->generate_init();
-        patch({{"phase","prefill"}});auto p=prefix(root,width_,small_,lyrics,npy);
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+        cfg["enable_debug"]=LevoStreamProfile::active&&LevoStreamProfile::active->operators;
+        {std::ofstream out(work+"/lm-config.json");out<<cfg.dump(2);}
+#endif
+        {LEVO_STREAM_SPAN("llm.load");model_.reset(Llm::createLLM(work+"/lm-config.json"));require(model_&&model_->load(),"D1 load failed");}
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+        if(LevoStreamProfile::active&&LevoStreamProfile::active->operators){auto p=LevoStreamProfile::active;model_->setDebugCallback(p->before(),p->after());}
+#endif
+        check();model_->reset();model_->generate_init();
+        patch({{"phase","prefill"}});std::vector<float> p;{LEVO_STREAM_SPAN("conditioner.prefix");p=prefix(root,width_,small_,lyrics,npy);}
         {std::ofstream out(work+"/prefix.f32",std::ios::binary);out.write(reinterpret_cast<const char*>(p.data()),p.size()*4);}
-        logits_=model_->forward(MNN::Express::_Const(p.data(),{513,1,width_},MNN::Express::NCHW,halide_type_of<float>()));
-        require(logits_.get()&&logits_->readMap<float>(),"Prefill failed");
+        {LEVO_STREAM_SPAN("llm.prefill");logits_=model_->forward(MNN::Express::_Const(p.data(),{513,1,width_},MNN::Express::NCHW,halide_type_of<float>()));
+        require(logits_.get()&&logits_->readMap<float>(),"Prefill failed");}
         if(small_&&!smallHidden_)table_=std::make_unique<MappedFloats>(root+"/conditioner/cond-token.f16");
     }
     std::vector<float> next(int index){
-        if(small_&&!smallHidden_&&index)logits_=model_->forward({151830+previous_},false);
+        LEVO_STREAM_SPAN("llm.next");
+        if(small_&&!smallHidden_&&index){LEVO_STREAM_SPAN("llm.decode");logits_=model_->forward({151830+previous_},false);
+#ifdef LEVO_STREAM_CHAIN_PROFILE
+            require(logits_.get()&&logits_->readMap<float>(),"Profiled decode failed");
+#endif
+        }
         int code=(index*997+2307)%16384;
         if(sampling_){
+            LEVO_STREAM_SPAN("llm.sampling");
             const int classes=small_?(cropped_?16449:168214):16385,audioBase=small_?(cropped_?65:151830):1,eos=small_&&!cropped_?151765:0;require(logits_.get()&&logits_->getInfo()->size==classes,"D1输出词表不匹配");const float* p=logits_->readMap<float>();require(p,"Cannot read sampling logits");
             std::vector<std::pair<float,int>> candidates;candidates.reserve(16385);
             for(int k=0;k<16384;++k){float value=p[audioBase+k];require(std::isfinite(value),"Nonfinite sampling logits");candidates.emplace_back(value,k);}
@@ -127,8 +174,8 @@ public:
             std::discrete_distribution<int> sample(weights.begin(),weights.end());code=candidates[sample(random_)].second;if(code<0)return {};
         }
         previous_=code;codes_.push_back(code);std::vector<float> condition(small_?1024:2560);
-        if(small_&&!smallHidden_){table_->row(code,1024,condition.data());}
-        else{logits_=model_->forward({code+(small_?151830:1)},false); // consume-aligned hidden, as in supplied 4B specification
+        if(small_&&!smallHidden_){LEVO_STREAM_SPAN("conditioner.lookup");table_->row(code,1024,condition.data());}
+        else{LEVO_STREAM_SPAN("llm.decode");logits_=model_->forward({code+(small_?151830:1)},false); // consume-aligned hidden, as in supplied 4B specification
             LevoHiddenResearch::copySingleStepInto(*model_,condition.data(),width_,LevoHiddenResearch::SingleStepLayout::Channels1x1);}
         require(logits_.get()&&logits_->readMap<float>(),"D1 decode failed");return condition;
     }
@@ -138,6 +185,7 @@ public:
 inline void little(std::ofstream& out,uint32_t value,int bytes){for(int i=0;i<bytes;++i)out.put(char((value>>(8*i))&255));}
 inline void header(std::ofstream& out,uint32_t samples){out.seekp(0);out.write("RIFF",4);little(out,36+samples*4,4);out.write("WAVEfmt ",8);little(out,16,4);little(out,1,2);little(out,2,2);little(out,48000,4);little(out,192000,4);little(out,4,2);little(out,16,2);out.write("data",4);little(out,samples*4,4);}
 inline void writeChunk(const std::string& path,const std::vector<float>& pcm,int count){
+    LEVO_STREAM_SPAN("pcm.write");
     std::string temp=path+".pending";std::ofstream out(temp,std::ios::binary);header(out,count);
     for(int t=0;t<count;++t)for(int c=0;c<2;++c){auto v=pcm[size_t(c)*491520+t];require(std::isfinite(v),"Invalid PCM");int16_t q=int16_t(std::clamp(v,-1.f,1.f)*32767);little(out,uint16_t(q),2);}
     out.close();require(out.good(),"Chunk file write failed");std::filesystem::rename(temp,path);
@@ -236,3 +284,4 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     auto result=snapshot();std::ofstream(work+"/result.json")<<result.dump(2);return result;
 }
 }
+#undef LEVO_STREAM_SPAN

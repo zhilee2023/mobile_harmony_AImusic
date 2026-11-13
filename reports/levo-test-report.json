@@ -100205,5 +100205,1064 @@
       "weightsOrAudioPublished": false
     },
     "documentation": "docs/DIT_ONNX_LAYOUT.md"
+  },
+  "stream_chain_profiling_2026_11_13": {
+    "date": "2026-11-13",
+    "runId": "chain-profile-20261113-r1",
+    "modelId": "larkstudio-small-0.6b-v1",
+    "scope": "Actual 15-second CPU CLI chain twice, fresh process each; baseline then instrumented. Not App playback or NPU deployment.",
+    "runtimeEntry": "Current StreamLab.hpp under opt-in LEVO_STREAM_CHAIN_PROFILE; no App default profiler enabled",
+    "modelHashes": {
+      "lmGraph": "25f67110669e9358b2dd224023795a2a29011ba348df3ba76672cab939c2085c",
+      "lmWeight": "0a828f2cd9c8734c389b3d32f875f197f6da901c2b6eea7339d39ced59533f09",
+      "ditGraph": "35886dc768304ef2f43e9186811bfe609c3b3bbe552a5e368093725648c0bebc",
+      "ditWeight": "3cae1ed224d5070d25bd814df9e6207ea4344e7fa68bbfd6e452570f4d21db15",
+      "vaeGraph": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "vaeWeight": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc"
+    },
+    "binarySha256": "a8a74e501f746538443d58540898ddb0ade9dbde81152614be4c91718ad20962",
+    "sourceSha256": {
+      "native-bench/StreamLabChainProfile.cpp": "c35d1b33fda1eb9da42d3c3656514f43122fdf0af4f31129a47038b5c9fc05d5",
+      "runtime/include/levo/experimental/StreamLab.hpp": "614b0cadcd4663fd97f5ad6733841d4d7d69fd0c731139548bdc7d07ab90c233",
+      "runtime/include/levo/experimental/StreamLabProfile.hpp": "4febf6b558230302fe09deb43ba5f4d37d3aa6305dd12e096b77f0d04c7de0ba"
+    },
+    "cases": {
+      "baseline": {
+        "actualFrames": 375,
+        "generatedSamples": 720000,
+        "elapsedSeconds": 30.640600938,
+        "firstChunkSeconds": 18.014165782,
+        "lmSeconds": 11.367258602000003,
+        "muSeconds": 0.0,
+        "ditSeconds": 7.751396719,
+        "vaeSeconds": 11.112488281000001,
+        "ditSetupSeconds": 0.853467344,
+        "vaeSetupSeconds": 0.898146094,
+        "rssPeakMiB": 1914.96875,
+        "minimumAvailableMiB": 3602.0,
+        "kvPositions": 887,
+        "chunkTimings": [
+          {
+            "ditSeconds": 4.06329375,
+            "ditSetupSeconds": 0.853467344,
+            "index": 0,
+            "lmSeconds": 5.534217660000001,
+            "rssMiB": 1721.9140625,
+            "vaeSeconds": 5.769027031,
+            "vaeSetupSeconds": 0.898146094,
+            "wallSeconds": 15.462620157
+          },
+          {
+            "ditSeconds": 3.688102969,
+            "ditSetupSeconds": 0.0,
+            "index": 1,
+            "lmSeconds": 3.2844395360000025,
+            "rssMiB": 1751.75,
+            "vaeSeconds": 5.343461250000001,
+            "vaeSetupSeconds": 0.0,
+            "wallSeconds": 12.377358906
+          }
+        ],
+        "ditSteps": 2,
+        "ditBatch": 2,
+        "cfgScale": 1.5,
+        "cfgEnabled": true,
+        "resident": true,
+        "threads": {
+          "dit": 6,
+          "lm": 4,
+          "vae": 6
+        },
+        "tokenPrefetch": false,
+        "durationSeconds": 15.0,
+        "wholeRtf": 2.0427067292,
+        "profileSpans": {
+          "conditioner.lookup": {
+            "calls": 375,
+            "maximumSeconds": 0.001120781,
+            "seconds": 0.008776871000000004
+          },
+          "conditioner.prefix": {
+            "calls": 1,
+            "maximumSeconds": 0.016271094,
+            "seconds": 0.016271094
+          },
+          "dit.forward": {
+            "calls": 4,
+            "maximumSeconds": 1.852551094,
+            "seconds": 6.869399842999999
+          },
+          "dit.input": {
+            "calls": 4,
+            "maximumSeconds": 0.003469375,
+            "seconds": 0.009549688
+          },
+          "dit.output": {
+            "calls": 4,
+            "maximumSeconds": 0.000315157,
+            "seconds": 0.00112375
+          },
+          "dit.setup": {
+            "calls": 1,
+            "maximumSeconds": 0.853465312,
+            "seconds": 0.853465312
+          },
+          "dit.total": {
+            "calls": 4,
+            "maximumSeconds": 1.854666875,
+            "seconds": 6.880937187000001
+          },
+          "llm.decode": {
+            "calls": 374,
+            "maximumSeconds": 0.172261406,
+            "seconds": 7.9837390529999945
+          },
+          "llm.initialize": {
+            "calls": 1,
+            "maximumSeconds": 2.548591719,
+            "seconds": 2.548591719
+          },
+          "llm.load": {
+            "calls": 1,
+            "maximumSeconds": 0.658707813,
+            "seconds": 0.658707813
+          },
+          "llm.next": {
+            "calls": 375,
+            "maximumSeconds": 0.174448125,
+            "seconds": 8.818503748000001
+          },
+          "llm.prefill": {
+            "calls": 1,
+            "maximumSeconds": 1.8697775,
+            "seconds": 1.8697775
+          },
+          "llm.sampling": {
+            "calls": 375,
+            "maximumSeconds": 0.0047125,
+            "seconds": 0.8236357689999995
+          },
+          "pcm.write": {
+            "calls": 2,
+            "maximumSeconds": 0.015386875,
+            "seconds": 0.027344374999999997
+          },
+          "vae.forward": {
+            "calls": 2,
+            "maximumSeconds": 5.33688625,
+            "seconds": 10.201336719
+          },
+          "vae.input": {
+            "calls": 2,
+            "maximumSeconds": 0.000103437,
+            "seconds": 0.000155312
+          },
+          "vae.output": {
+            "calls": 2,
+            "maximumSeconds": 0.005688125,
+            "seconds": 0.011092656999999999
+          },
+          "vae.setup": {
+            "calls": 1,
+            "maximumSeconds": 0.898129532,
+            "seconds": 0.898129532
+          },
+          "vae.total": {
+            "calls": 2,
+            "maximumSeconds": 5.342767969,
+            "seconds": 10.213078281
+          }
+        },
+        "hardwareKernelCountersCollected": false,
+        "stageRtf": {
+          "lmSeconds": 0.7578172401333335,
+          "ditSeconds": 0.5167597812666667,
+          "vaeSeconds": 0.7408325520666668
+        },
+        "otherWallSeconds": 0.40945733599999556,
+        "prefillPositionsPerSecond": 274.36419573986745,
+        "decodeForwardCalls": 374,
+        "decodeForwardsPerSecond": 46.84521845180606,
+        "tokenLoopTokensPerSecond": 42.52422074266832,
+        "operatorSummary": {},
+        "wavSha256": [
+          "ca63c90bc8bc66b9ea0dd0bd810d50f3fb28baa3a6c1a1da78349a969fb39cc8",
+          "4e07363a1989ed41222caab2fa9b7a48bb16c695668f8e39de0386886cac78d1"
+        ],
+        "codesSha256": "434696908b7c4ccdd013b5d1dd9e96707f7a614460978203575c253533c8afd3"
+      },
+      "operators": {
+        "actualFrames": 375,
+        "generatedSamples": 720000,
+        "elapsedSeconds": 32.475692344,
+        "firstChunkSeconds": 19.314609219,
+        "lmSeconds": 11.976868735000004,
+        "muSeconds": 0.0,
+        "ditSeconds": 7.890593905999999,
+        "vaeSeconds": 12.203598750000001,
+        "ditSetupSeconds": 0.830634375,
+        "vaeSetupSeconds": 0.85987125,
+        "rssPeakMiB": 1919.9296875,
+        "minimumAvailableMiB": 3489.0,
+        "kvPositions": 887,
+        "chunkTimings": [
+          {
+            "ditSeconds": 4.195978125,
+            "ditSetupSeconds": 0.830634375,
+            "index": 0,
+            "lmSeconds": 6.127851704000005,
+            "rssMiB": 1722.98828125,
+            "vaeSeconds": 6.312200469,
+            "vaeSetupSeconds": 0.85987125,
+            "wallSeconds": 16.737252969
+          },
+          {
+            "ditSeconds": 3.6946157809999995,
+            "ditSetupSeconds": 0.0,
+            "index": 1,
+            "lmSeconds": 3.2739517189999994,
+            "rssMiB": 1753.02734375,
+            "vaeSeconds": 5.891398281000001,
+            "vaeSetupSeconds": 0.0,
+            "wallSeconds": 12.918489688
+          }
+        ],
+        "ditSteps": 2,
+        "ditBatch": 2,
+        "cfgScale": 1.5,
+        "cfgEnabled": true,
+        "resident": true,
+        "threads": {
+          "dit": 6,
+          "lm": 4,
+          "vae": 6
+        },
+        "tokenPrefetch": false,
+        "durationSeconds": 15.0,
+        "wholeRtf": 2.165046156266667,
+        "profileSpans": {
+          "conditioner.lookup": {
+            "calls": 375,
+            "maximumSeconds": 7.6406e-05,
+            "seconds": 0.004484208000000002
+          },
+          "conditioner.prefix": {
+            "calls": 1,
+            "maximumSeconds": 0.021531719,
+            "seconds": 0.021531719
+          },
+          "dit.forward": {
+            "calls": 4,
+            "maximumSeconds": 1.864508593,
+            "seconds": 7.0323093740000004
+          },
+          "dit.input": {
+            "calls": 4,
+            "maximumSeconds": 0.003220625,
+            "seconds": 0.008586094
+          },
+          "dit.output": {
+            "calls": 4,
+            "maximumSeconds": 0.000312812,
+            "seconds": 0.0011045310000000002
+          },
+          "dit.setup": {
+            "calls": 1,
+            "maximumSeconds": 0.830632656,
+            "seconds": 0.830632656
+          },
+          "dit.total": {
+            "calls": 4,
+            "maximumSeconds": 1.866504062,
+            "seconds": 7.042840624999999
+          },
+          "llm.decode": {
+            "calls": 374,
+            "maximumSeconds": 0.150711719,
+            "seconds": 8.503252022000002
+          },
+          "llm.initialize": {
+            "calls": 1,
+            "maximumSeconds": 2.575057187,
+            "seconds": 2.575057187
+          },
+          "llm.load": {
+            "calls": 1,
+            "maximumSeconds": 0.633190781,
+            "seconds": 0.633190781
+          },
+          "llm.next": {
+            "calls": 375,
+            "maximumSeconds": 0.15295125,
+            "seconds": 9.401638438
+          },
+          "llm.prefill": {
+            "calls": 1,
+            "maximumSeconds": 1.916661563,
+            "seconds": 1.916661563
+          },
+          "llm.sampling": {
+            "calls": 375,
+            "maximumSeconds": 0.00487875,
+            "seconds": 0.8916776769999992
+          },
+          "pcm.write": {
+            "calls": 2,
+            "maximumSeconds": 0.015377969,
+            "seconds": 0.027547344
+          },
+          "vae.forward": {
+            "calls": 2,
+            "maximumSeconds": 5.884817344,
+            "seconds": 11.330657188
+          },
+          "vae.input": {
+            "calls": 2,
+            "maximumSeconds": 0.000172969,
+            "seconds": 0.000234531
+          },
+          "vae.output": {
+            "calls": 2,
+            "maximumSeconds": 0.005798125,
+            "seconds": 0.010886719
+          },
+          "vae.setup": {
+            "calls": 1,
+            "maximumSeconds": 0.859855469,
+            "seconds": 0.859855469
+          },
+          "vae.total": {
+            "calls": 2,
+            "maximumSeconds": 5.890805,
+            "seconds": 11.342364375
+          }
+        },
+        "hardwareKernelCountersCollected": false,
+        "stageRtf": {
+          "lmSeconds": 0.7984579156666669,
+          "ditSeconds": 0.5260395937333333,
+          "vaeSeconds": 0.81357325
+        },
+        "otherWallSeconds": 0.4046309530000016,
+        "prefillPositionsPerSecond": 267.6528866144951,
+        "decodeForwardCalls": 374,
+        "decodeForwardsPerSecond": 43.983172441834036,
+        "tokenLoopTokensPerSecond": 39.8866646992408,
+        "operatorSummary": {
+          "dit.forward": {
+            "byTypeSeconds": {
+              "Convolution": 3.2354648379999995,
+              "BinaryOp": 1.324943726,
+              "Raster": 1.2263282770000001,
+              "While": 0.8525344970000006,
+              "Softmax": 0.230380627,
+              "UnaryOp": 0.122287501,
+              "LayerNorm": 0.024804689000000005
+            },
+            "topNodes": [
+              {
+                "calls": 4,
+                "maximumSeconds": 0.032056563,
+                "name": "/cfm/estimator/h.4/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "outputShapes": [
+                  [
+                    512,
+                    1200,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "dit.forward",
+                "seconds": 0.086797968,
+                "type": "Convolution"
+              },
+              {
+                "calls": 4,
+                "maximumSeconds": 0.037160312,
+                "name": "/cfm/estimator/h.20/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "outputShapes": [
+                  [
+                    512,
+                    1200,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "dit.forward",
+                "seconds": 0.085292811,
+                "type": "Convolution"
+              },
+              {
+                "calls": 4,
+                "maximumSeconds": 0.025062187,
+                "name": "/cfm/estimator/h.5/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "outputShapes": [
+                  [
+                    512,
+                    1200,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "dit.forward",
+                "seconds": 0.08286640599999999,
+                "type": "Convolution"
+              },
+              {
+                "calls": 4,
+                "maximumSeconds": 0.025474375,
+                "name": "/cfm/estimator/h.1/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "outputShapes": [
+                  [
+                    512,
+                    1200,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "dit.forward",
+                "seconds": 0.08003843699999999,
+                "type": "Convolution"
+              },
+              {
+                "calls": 4,
+                "maximumSeconds": 0.025848593,
+                "name": "/cfm/estimator/h.21/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "outputShapes": [
+                  [
+                    512,
+                    1200,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "dit.forward",
+                "seconds": 0.079800782,
+                "type": "Convolution"
+              },
+              {
+                "calls": 4,
+                "maximumSeconds": 0.024958125,
+                "name": "/cfm/estimator/h.7/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "outputShapes": [
+                  [
+                    512,
+                    1200,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "dit.forward",
+                "seconds": 0.075282344,
+                "type": "Convolution"
+              },
+              {
+                "calls": 4,
+                "maximumSeconds": 0.021089688,
+                "name": "/cfm/estimator/h.19/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "outputShapes": [
+                  [
+                    512,
+                    1200,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "dit.forward",
+                "seconds": 0.074222813,
+                "type": "Convolution"
+              },
+              {
+                "calls": 4,
+                "maximumSeconds": 0.022789063,
+                "name": "/cfm/estimator/h.17/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "outputShapes": [
+                  [
+                    512,
+                    1200,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "dit.forward",
+                "seconds": 0.074186719,
+                "type": "Convolution"
+              },
+              {
+                "calls": 4,
+                "maximumSeconds": 0.021234687,
+                "name": "/cfm/estimator/h.10/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "outputShapes": [
+                  [
+                    512,
+                    1200,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "dit.forward",
+                "seconds": 0.073783906,
+                "type": "Convolution"
+              },
+              {
+                "calls": 4,
+                "maximumSeconds": 0.025479531,
+                "name": "/cfm/estimator/h.2/mlp/c_proj/Gemm_output_0__matmul_converted",
+                "outputShapes": [
+                  [
+                    512,
+                    1200,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "dit.forward",
+                "seconds": 0.07369500000000001,
+                "type": "Convolution"
+              }
+            ]
+          },
+          "llm.decode": {
+            "byTypeSeconds": {
+              "Convolution": 4.3448586480000015,
+              "Attention": 3.634056761999999,
+              "RoPE": 0.10637002799999999,
+              "BinaryOp": 0.06285879799999998,
+              "LayerNorm": 0.03501362100000001,
+              "Raster": 0.022620452000000003,
+              "UnaryOp": 0.009567809,
+              "Cast": 0.00020484200000000054
+            },
+            "topNodes": [
+              {
+                "calls": 374,
+                "maximumSeconds": 0.001040625,
+                "name": "/lm/lm_head/Linear",
+                "outputShapes": [
+                  [
+                    1,
+                    16449,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.decode",
+                "seconds": 0.21794735700000015,
+                "type": "Convolution"
+              },
+              {
+                "calls": 374,
+                "maximumSeconds": 0.00413125,
+                "name": "/layers.0/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    1,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.decode",
+                "seconds": 0.13882094600000003,
+                "type": "Attention"
+              },
+              {
+                "calls": 374,
+                "maximumSeconds": 0.00395875,
+                "name": "/layers.1/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    1,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.decode",
+                "seconds": 0.13340750899999992,
+                "type": "Attention"
+              },
+              {
+                "calls": 374,
+                "maximumSeconds": 0.003978438,
+                "name": "/layers.3/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    1,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.decode",
+                "seconds": 0.13266827699999997,
+                "type": "Attention"
+              },
+              {
+                "calls": 374,
+                "maximumSeconds": 0.004054219,
+                "name": "/layers.4/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    1,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.decode",
+                "seconds": 0.13138562300000003,
+                "type": "Attention"
+              },
+              {
+                "calls": 374,
+                "maximumSeconds": 0.003950625,
+                "name": "/layers.2/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    1,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.decode",
+                "seconds": 0.13125952400000002,
+                "type": "Attention"
+              },
+              {
+                "calls": 374,
+                "maximumSeconds": 0.004809375,
+                "name": "/layers.27/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    1,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.decode",
+                "seconds": 0.13026281099999992,
+                "type": "Attention"
+              },
+              {
+                "calls": 374,
+                "maximumSeconds": 0.004623438,
+                "name": "/layers.18/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    1,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.decode",
+                "seconds": 0.12969187399999998,
+                "type": "Attention"
+              },
+              {
+                "calls": 374,
+                "maximumSeconds": 0.004991562,
+                "name": "/layers.17/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    1,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.decode",
+                "seconds": 0.12946701600000002,
+                "type": "Attention"
+              },
+              {
+                "calls": 374,
+                "maximumSeconds": 0.004535,
+                "name": "/layers.26/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    1,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.decode",
+                "seconds": 0.12945173599999987,
+                "type": "Attention"
+              }
+            ]
+          },
+          "llm.prefill": {
+            "byTypeSeconds": {
+              "Convolution": 1.2328146890000002,
+              "Attention": 0.5752090679999999,
+              "LayerNorm": 0.045166561999999986,
+              "BinaryOp": 0.028141878,
+              "RoPE": 0.026936251,
+              "Raster": 0.0008282809999999999,
+              "UnaryOp": 0.000187499,
+              "Cast": 7.82e-07
+            },
+            "topNodes": [
+              {
+                "calls": 1,
+                "maximumSeconds": 0.024166406,
+                "name": "/layers.0/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    513,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.prefill",
+                "seconds": 0.024166406,
+                "type": "Attention"
+              },
+              {
+                "calls": 1,
+                "maximumSeconds": 0.022746407,
+                "name": "/layers.21/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    513,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.prefill",
+                "seconds": 0.022746407,
+                "type": "Attention"
+              },
+              {
+                "calls": 1,
+                "maximumSeconds": 0.022084063,
+                "name": "/layers.18/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    513,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.prefill",
+                "seconds": 0.022084063,
+                "type": "Attention"
+              },
+              {
+                "calls": 1,
+                "maximumSeconds": 0.022040782,
+                "name": "/layers.1/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    513,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.prefill",
+                "seconds": 0.022040782,
+                "type": "Attention"
+              },
+              {
+                "calls": 1,
+                "maximumSeconds": 0.021537188,
+                "name": "/layers.20/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    513,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.prefill",
+                "seconds": 0.021537188,
+                "type": "Attention"
+              },
+              {
+                "calls": 1,
+                "maximumSeconds": 0.021291719,
+                "name": "/layers.23/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    513,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.prefill",
+                "seconds": 0.021291719,
+                "type": "Attention"
+              },
+              {
+                "calls": 1,
+                "maximumSeconds": 0.021051875,
+                "name": "/layers.19/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    513,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.prefill",
+                "seconds": 0.021051875,
+                "type": "Attention"
+              },
+              {
+                "calls": 1,
+                "maximumSeconds": 0.020956719,
+                "name": "/layers.9/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    513,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.prefill",
+                "seconds": 0.020956719,
+                "type": "Attention"
+              },
+              {
+                "calls": 1,
+                "maximumSeconds": 0.020919532,
+                "name": "/layers.8/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    513,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.prefill",
+                "seconds": 0.020919532,
+                "type": "Attention"
+              },
+              {
+                "calls": 1,
+                "maximumSeconds": 0.020365938,
+                "name": "/layers.7/self_attn/FusedAttention",
+                "outputShapes": [
+                  [
+                    513,
+                    2048,
+                    1,
+                    1
+                  ]
+                ],
+                "phase": "llm.prefill",
+                "seconds": 0.020365938,
+                "type": "Attention"
+              }
+            ]
+          },
+          "vae.forward": {
+            "byTypeSeconds": {
+              "Convolution": 5.890389065999999,
+              "Deconvolution": 1.691404219,
+              "UnaryOp": 1.5080510910000005,
+              "Raster": 1.3352345210000014,
+              "BinaryOp": 0.8994092220000003
+            },
+            "topNodes": [
+              {
+                "calls": 2,
+                "maximumSeconds": 0.352040469,
+                "name": "/layers/layers.5/layers/layers.3/layers/layers.1/Conv_output_0",
+                "outputShapes": [
+                  [
+                    1,
+                    128,
+                    491520,
+                    1
+                  ]
+                ],
+                "phase": "vae.forward",
+                "seconds": 0.652204844,
+                "type": "Convolution"
+              },
+              {
+                "calls": 2,
+                "maximumSeconds": 0.319596562,
+                "name": "/layers/layers.5/layers/layers.4/layers/layers.1/Conv_output_0",
+                "outputShapes": [
+                  [
+                    1,
+                    128,
+                    491520,
+                    1
+                  ]
+                ],
+                "phase": "vae.forward",
+                "seconds": 0.635555155,
+                "type": "Convolution"
+              },
+              {
+                "calls": 2,
+                "maximumSeconds": 0.310029063,
+                "name": "/layers/layers.5/layers/layers.2/layers/layers.1/Conv_output_0",
+                "outputShapes": [
+                  [
+                    1,
+                    128,
+                    491520,
+                    1
+                  ]
+                ],
+                "phase": "vae.forward",
+                "seconds": 0.6001579690000001,
+                "type": "Convolution"
+              },
+              {
+                "calls": 2,
+                "maximumSeconds": 0.259099218,
+                "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+                "outputShapes": [
+                  [
+                    1,
+                    128,
+                    491520,
+                    1
+                  ]
+                ],
+                "phase": "vae.forward",
+                "seconds": 0.515612968,
+                "type": "Deconvolution"
+              },
+              {
+                "calls": 2,
+                "maximumSeconds": 0.195961719,
+                "name": "/layers/layers.4/layers/layers.1/ConvTranspose_output_0",
+                "outputShapes": [
+                  [
+                    1,
+                    128,
+                    245760,
+                    1
+                  ]
+                ],
+                "phase": "vae.forward",
+                "seconds": 0.377443126,
+                "type": "Deconvolution"
+              },
+              {
+                "calls": 2,
+                "maximumSeconds": 0.196440156,
+                "name": "pcm",
+                "outputShapes": [
+                  [
+                    1,
+                    2,
+                    491520,
+                    1
+                  ]
+                ],
+                "phase": "vae.forward",
+                "seconds": 0.35881125,
+                "type": "Convolution"
+              },
+              {
+                "calls": 2,
+                "maximumSeconds": 0.178259844,
+                "name": "/layers/layers.4/layers/layers.2/layers/layers.1/Conv_output_0",
+                "outputShapes": [
+                  [
+                    1,
+                    128,
+                    245760,
+                    1
+                  ]
+                ],
+                "phase": "vae.forward",
+                "seconds": 0.3334475,
+                "type": "Convolution"
+              },
+              {
+                "calls": 2,
+                "maximumSeconds": 0.162579844,
+                "name": "/layers/layers.4/layers/layers.3/layers/layers.1/Conv_output_0",
+                "outputShapes": [
+                  [
+                    1,
+                    128,
+                    245760,
+                    1
+                  ]
+                ],
+                "phase": "vae.forward",
+                "seconds": 0.322532969,
+                "type": "Convolution"
+              },
+              {
+                "calls": 2,
+                "maximumSeconds": 0.166931407,
+                "name": "/layers/layers.4/layers/layers.4/layers/layers.1/Conv_output_0",
+                "outputShapes": [
+                  [
+                    1,
+                    128,
+                    245760,
+                    1
+                  ]
+                ],
+                "phase": "vae.forward",
+                "seconds": 0.32173234500000003,
+                "type": "Convolution"
+              },
+              {
+                "calls": 2,
+                "maximumSeconds": 0.165427656,
+                "name": "/layers/layers.3/layers/layers.1/ConvTranspose_output_0",
+                "outputShapes": [
+                  [
+                    1,
+                    256,
+                    61440,
+                    1
+                  ]
+                ],
+                "phase": "vae.forward",
+                "seconds": 0.315460469,
+                "type": "Deconvolution"
+              }
+            ]
+          }
+        },
+        "wavSha256": [
+          "ca63c90bc8bc66b9ea0dd0bd810d50f3fb28baa3a6c1a1da78349a969fb39cc8",
+          "4e07363a1989ed41222caab2fa9b7a48bb16c695668f8e39de0386886cac78d1"
+        ],
+        "codesSha256": "434696908b7c4ccdd013b5d1dd9e96707f7a614460978203575c253533c8afd3"
+      }
+    },
+    "outputsBitIdentical": true,
+    "screenAwakeBeforeAfter": true,
+    "lastScreenOffUnchanged": true,
+    "memoryScope": "20ms process RSS; system MemAvailable separate; not VRAM/NPU workspace",
+    "normalAppCompilePassed": true,
+    "newAppInstalledThisRound": false,
+    "sourceHeadBeforeProfiling": "b946c09f464476f7e50c60b296689031e4b55cd5",
+    "limitations": [
+      "Baseline has lightweight stage clocks, no operator callbacks; OS file cache uncontrolled",
+      "Operator/debug timings include profiling overhead; inclusive node sums and nested spans are not additive",
+      "No subjective listening, new App playback, thermal controlled ablation or energy measurement",
+      "Graph setup includes resize; output includes copies and finite checks; PCM write includes quantization/interleaving",
+      "Prefill positions include padding/style/start; decode forward timing includes output synchronization"
+    ],
+    "documentation": "docs/AGENT_STREAM_PROFILING.md"
   }
 }
