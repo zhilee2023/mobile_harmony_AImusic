@@ -24,8 +24,8 @@ Json decode(const MNN::Op* source,const std::string& weightPath,const std::strin
 }
 }
 int main(int argc,char** argv){
-    if(argc<4||argc>6)return 2;bool cfg=true,normalMemory=false;
-    for(int i=4;i<argc;++i){std::string flag=argv[i];if(flag=="--no-cfg")cfg=false;else if(flag=="--memory-normal")normalMemory=true;else return 2;}
+    if(argc<4||argc>7)return 2;bool cfg=true,normalMemory=false,block=false;
+    for(int i=4;i<argc;++i){std::string flag=argv[i];if(flag=="--no-cfg")cfg=false;else if(flag=="--memory-normal")normalMemory=true;else if(flag=="--block")block=true;else return 2;}
     const std::string root=argv[1],output=argv[3],model=root+"/dit/dit.mnn";std::filesystem::create_directories(output);
     Json report={{"success",false},{"scope","Current22-layer W8 DiT layout and captured first FFN; callback/capture overhead, not performance benchmark"},{"batch",2},{"frames",256},{"hidden",1200},{"ffn",4800},{"cfgBranches",cfg?"unconditional+conditional":"conditional+conditional"},{"backend",normalMemory?"MNN CPU High / Memory Normal / 6threads":"MNN CPU High / Memory Low / 6threads"}};
     try{
@@ -44,6 +44,19 @@ int main(int argc,char** argv){
         }
         require(up&&down,"Could not identify the current first1200/4800 FFN pair");report["staticOperatorCounts"]=counts;report["staticGraph"]=staticOps;
         const std::string upName=up->name()->str(),downName=down->name()->str();report["up"]=decode(up,model+".weight",output,"up");report["down"]=decode(down,model+".weight",output,"down");
+        if(block){
+            for(auto op:*netGraph->oplists()){
+                const auto name=op->name()->str();
+                if(name=="/cfm/estimator/h.0/attn/c_attn/Gemm_output_0__matmul_converted")report["qkv"]=decode(op,model+".weight",output,"qkv");
+                if(name=="/cfm/estimator/h.0/attn/c_proj/Gemm_output_0__matmul_converted")report["attnProj"]=decode(op,model+".weight",output,"attn-proj");
+                if(name=="/cfm/estimator/h.0/ln_1/LayerNormalization_output_0"||name=="/cfm/estimator/h.0/ln_2/LayerNormalization_output_0"){
+                    const std::string key=name.find("ln_1")!=std::string::npos?"ln1":"ln2";std::unique_ptr<MNN::OpT> unpack(op->UnPack());auto p=unpack->main.AsLayerNorm();require(p,"LayerNorm parameter missing");
+                    auto gamma=p->gamma,beta=p->beta;if(gamma.empty()){require(p->external.size()==3&&p->external[1]==1200*4&&p->external[2]==1200*4,"LayerNorm external contract changed");gamma.resize(1200);beta.resize(1200);std::ifstream file(model+".weight",std::ios::binary);file.seekg(p->external[0]);file.read(reinterpret_cast<char*>(gamma.data()),4800);file.read(reinterpret_cast<char*>(beta.data()),4800);require(file.good(),"LayerNorm external read failed");}
+                    require(gamma.size()==1200&&beta.size()==1200,"LayerNorm affine shape changed");save(output+"/"+key+"-gamma.f32",gamma);save(output+"/"+key+"-beta.f32",beta);report[key]={{"epsilon",p->epsilon},{"axis",p->axis}};
+                }
+            }
+            require(report.contains("qkv")&&report.contains("attnProj")&&report.contains("ln1")&&report.contains("ln2"),"Block parameters incomplete");
+        }
         auto codes=readJson(argv[2]).get<std::vector<int>>();require(codes.size()>=256,"Need first256 actual music codes");MappedFloats table(root+"/conditioner/cond-token.f16");
         std::vector<float> mu(256*1024);for(int i=0;i<256;++i){require(codes[i]>=0&&codes[i]<16384,"Invalid music code");table.row(codes[i],1024,mu.data()+i*1024);}
         auto masks=read(root+"/aux/mask.f32",144);std::mt19937 rng(2307);std::normal_distribution<float> normal;std::vector<float> x(256*64);for(auto& v:x)v=normal(rng);
@@ -54,8 +67,13 @@ int main(int argc,char** argv){
         auto put=[&]{for(auto& pair:std::map<std::string,std::vector<float>>{{"inputs",inputs},{"timestep",{0,0}},{"attention_mask",attention}}){auto tensor=net->getSessionInput(session,pair.first.c_str());require(tensor,"Missing audit input");MNN::Tensor host(tensor,MNN::Tensor::CAFFE,true);require(host.elementSize()==pair.second.size(),"Audit input count mismatch");std::memcpy(host.host<float>(),pair.second.data(),pair.second.size()*4);require(tensor->copyFromHostTensor(&host),"Audit input copy failed");}};
         put();require(net->runSession(session)==0,"Audit warm run failed");put();Json nodes=Json::array();Clock::time_point tick;Json current;
         auto before=[&](const std::vector<MNN::Tensor*>& ts,const MNN::OperatorInfo* info){current={{"name",info->name()},{"type",info->type()},{"inputs",tensors(ts)}};
+            if(block&&info->name()=="/cfm/estimator/h.0/ln_1/LayerNormalization_output_0")report["blockInput"]=capture(output,"block-input.f32",ts[0]);
+            if(block&&info->name()=="/cfm/estimator/h.0/attn/Mul_output_0")report["ropeCos"]=capture(output,"rope-cos.f32",ts[1]);
+            if(block&&info->name()=="/cfm/estimator/h.0/attn/Mul_1_output_0")report["ropeSin"]=capture(output,"rope-sin.f32",ts[1]);
             if(info->name()==upName)report["upInput"]=capture(output,"up-input.f32",ts[0]);if(info->name()==downName)report["downInput"]=capture(output,"down-input.f32",ts[0]);tick=Clock::now();return true;};
         auto after=[&](const std::vector<MNN::Tensor*>& ts,const MNN::OperatorInfo* info){current["seconds"]=seconds(tick);current["outputs"]=tensors(ts);
+            if(block&&info->name()=="/cfm/estimator/h.0/Add_output_0")report["blockModulation"]=capture(output,"block-modulation.f32",ts[0]);
+            if(block&&info->name()=="/cfm/estimator/h.0/Add_7_output_0")report["blockOutput"]=capture(output,"block-output.f32",ts[0]);
             if(info->name()==upName)report["upOutput"]=capture(output,"up-output.f32",ts[0]);if(info->name()==downName)report["downOutput"]=capture(output,"down-output.f32",ts[0]);nodes.push_back(current);return true;};
         require(net->runSessionWithCallBackInfo(session,before,after,true)==0,"Audit callback run failed");report["runtimeNodes"]=nodes;
         auto tensor=net->getSessionOutput(session,nullptr);MNN::Tensor host(tensor,MNN::Tensor::CAFFE,true);require(tensor->copyToHostTensor(&host),"Audit velocity copy failed");report["velocityPeak"]=peak(std::vector<float>(host.host<float>(),host.host<float>()+host.elementSize()));

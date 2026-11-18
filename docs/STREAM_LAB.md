@@ -1,8 +1,12 @@
 # 独立流式实验 App
 
-`stream-app/`，包名 `com.zhilee.levostreamlab`，名称 **LeVo 流式实验 v0.1.7**。
+`stream-app/`，包名 `com.zhilee.levostreamlab`，名称 **LeVo 流式实验 v0.1.9**。
 与 `music-app/`、研究 App 和手机原有 LarkStudio App 独立；没有覆盖旧代码、包名或模型。
 当前仅支持下面两个明确的模型契约，不是任意同名 Qwen 权重的通用播放器。
+
+2026-11-18新增分组动态A8、仅音频＋EOS输出头及显式VAE图级融合开关。
+融合模块实测快约16%，128位置新词表／EOS logits完全一致；App整链和长时成绩以已完成项目为准。
+见[本次配方、对照与测速协议](STREAM_RUNTIME_OPTIMIZATIONS.md)。下文速度表保留原版本和条件。
 
 ## 两个模型契约
 

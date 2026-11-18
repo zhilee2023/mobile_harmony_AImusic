@@ -2,6 +2,9 @@
 // Independent numerical streaming experiment. Never included by either old App.
 #include "../RuntimeSupport.hpp"
 #include "HiddenStateTap.hpp"
+#ifdef LEVO_SNAKE_FUSION
+#include "../kernels/SnakeFusionGraph.hpp"
+#endif
 #ifdef LEVO_STREAM_CHAIN_PROFILE
 #include "StreamLabProfile.hpp"
 #else
@@ -23,6 +26,10 @@ inline Json snapshot(){std::lock_guard<std::mutex> lock(stateMutex);return state
 inline void patch(const Json& value){std::lock_guard<std::mutex> lock(stateMutex);for(auto it=value.begin();it!=value.end();++it)state[it.key()]=it.value();}
 inline void check(){require(!cancelled.load(),"Generation cancelled");require(::resident()<6L*1024*1024,"Process RSS reached6GiB; published prefix is retained");require(available()>650*1024,"System available memory below650MiB; published prefix is retained");}
 inline std::string modelId(int choice){require(choice==0||choice==1,"Unknown model");return choice==0?"larkstudio-small-0.6b-v1":"larkstudio-base-v2";}
+inline void validateDuration(int choice,int requested,bool longRun){
+    modelId(choice);require(!longRun||choice==0,"Long duration benchmark is currently bounded to the0.6B bundle");
+    require(requested>=25&&requested<=(longRun?7500:1500),"Duration exceeds selected experiment bound (60s; explicit small-model longRun max300s)");
+}
 inline Json inspect(const std::string& root,int choice){
     Json r={{"ready",false},{"modelId",modelId(choice)},{"count",0},{"total",0}};
     try{auto m=readJson(root+"/model-bundles/"+modelId(choice)+"/model-bundle.json");
@@ -33,6 +40,23 @@ inline Json inspect(const std::string& root,int choice){
             if(std::filesystem::is_regular_file(p)&&std::filesystem::file_size(p)==a["bytes"].get<uint64_t>())++count;}
         r["count"]=count;r["total"]=total;r["ready"]=count==total;r["integrityScope"]="Architecture declaration and file sizes; deployment verifies SHA256";
     }catch(const std::exception& e){r["error"]=e.what();}return r;
+}
+struct MusicVocabulary {int classes,audioBase,eos,inputAudioBase;};
+inline MusicVocabulary musicVocabulary(bool small,const std::string& crop=""){
+    if(crop.empty())return small?MusicVocabulary{168214,151830,151765,151830}:MusicVocabulary{16385,1,0,1};
+    require(small,"Music-head crop is for the small model only");auto r=readJson(crop+"/head-range.json");
+    const int classes=r.value("classes",0),base=r.value("audioOutputBase",-1);
+    require(r.value("success",false)&&r.value("firstRetainedClass",0)==151765&&r.value("eosOutput",-1)==0&&r.value("inputAudioBase",0)==151830&&
+        ((classes==16449&&base==65)||(classes==16385&&base==1)),"Invalid music output/EOS mapping");
+    return {classes,base,0,151830};
+}
+inline int sampleMusicCode(const float* p,const MusicVocabulary& vocabulary,bool suppressEos,std::mt19937& random){
+    std::vector<std::pair<float,int>> candidates;candidates.reserve(16385);
+    for(int k=0;k<16384;++k){float value=p[vocabulary.audioBase+k];require(std::isfinite(value),"Nonfinite sampling logits");candidates.emplace_back(value,k);}
+    require(std::isfinite(p[vocabulary.eos]),"Nonfinite EOS logit");if(!suppressEos)candidates.emplace_back(p[vocabulary.eos],-1);
+    std::partial_sort(candidates.begin(),candidates.begin()+250,candidates.end(),[](const auto& a,const auto& b){return a.first>b.first||(a.first==b.first&&a.second<b.second);});
+    std::vector<double> weights(250);for(int k=0;k<250;++k)weights[k]=std::exp((double(candidates[k].first)-candidates[0].first)/.95);
+    std::discrete_distribution<int> sample(weights.begin(),weights.end());return candidates[sample(random)].second;
 }
 class MappedFloats {
     int fd_=-1;size_t bytes_=0;void* ptr_=MAP_FAILED;
@@ -47,16 +71,26 @@ public:
 };
 class Graph {
     std::unique_ptr<MNN::Interpreter> net_;MNN::Session* session_=nullptr;
+    bool snakeFused_=false;
 #ifdef LEVO_STREAM_CHAIN_PROFILE
     std::string profileName_;
 #endif
 public:
-    Graph(const std::string& path,bool low,int threads,bool vae=false,int ditBatch=0){
+    Graph(const std::string& path,bool low,int threads,bool vae=false,int ditBatch=0,bool snakeFused=false):snakeFused_(snakeFused){
 #ifdef LEVO_STREAM_CHAIN_PROFILE
         profileName_=vae?"vae":(ditBatch?"dit":"projector");
         LEVO_STREAM_SPAN(profileName_+".setup");
 #endif
-        net_.reset(MNN::Interpreter::createFromFile(path.c_str()));require(bool(net_),"Cannot load "+path);auto external=path+".weight";net_->setExternalFile(external.c_str());
+        if(snakeFused_){
+#ifdef LEVO_SNAKE_FUSION
+            require(vae&&low,"Snake fusion requires the FP16 VAE");LevoSnakeFused::ensureRegistered();Json rewriteReport;
+            auto graph=LevoSnakeFused::rewrite(path,rewriteReport);net_.reset(MNN::Interpreter::createFromBuffer(graph.data(),graph.size()));
+            patch({{"vaeFusionRewrite",rewriteReport}});
+#else
+            throw std::runtime_error("This target was built without Snake fusion support");
+#endif
+        }else net_.reset(MNN::Interpreter::createFromFile(path.c_str()));
+        require(bool(net_),"Cannot load "+path);auto external=path+".weight";net_->setExternalFile(external.c_str());
 #ifdef LEVO_STREAM_CHAIN_PROFILE
         if(LevoStreamProfile::active&&LevoStreamProfile::active->operators)net_->setSessionMode(MNN::Interpreter::Session_Debug);
 #endif
@@ -83,11 +117,18 @@ public:
             MNN::Tensor host(tensor,MNN::Tensor::CAFFE,true);require(size_t(host.elementSize())==p.second.size(),"Input size mismatch");std::memcpy(host.host<float>(),p.second.data(),p.second.size()*4);require(tensor->copyFromHostTensor(&host),"Input transfer failed");}
         }
         check();{
+#ifdef LEVO_SNAKE_FUSION
+        const auto fusedBefore=LevoSnakeFused::calls.load();
+#endif
 #ifdef LEVO_STREAM_CHAIN_PROFILE
         LEVO_STREAM_SPAN(profileName_+".forward");
         if(LevoStreamProfile::active&&LevoStreamProfile::active->operators){auto p=LevoStreamProfile::active;require(net_->runSessionWithCallBackInfo(session_,p->before(),p->after(),true)==MNN::NO_ERROR,"Profiled model forward failed");}else
 #endif
-        require(net_->runSession(session_)==MNN::NO_ERROR,"Model forward failed");}
+        require(net_->runSession(session_)==MNN::NO_ERROR,"Model forward failed");
+#ifdef LEVO_SNAKE_FUSION
+        if(snakeFused_){require(LevoSnakeFused::calls.load()-fusedBefore==36,"Expected36 fused Snake calls per VAE window");patch({{"vaeFusedCalls",LevoSnakeFused::calls.load()}});}
+#endif
+        }
 #ifdef LEVO_STREAM_CHAIN_PROFILE
         LEVO_STREAM_SPAN(profileName_+".output");
 #endif
@@ -129,16 +170,17 @@ inline std::vector<float> prefix(const std::string& root,int width,bool small,co
 }
 class Prior {
     std::unique_ptr<Llm,decltype(&Llm::destroy)> model_{nullptr,&Llm::destroy};
-    MNN::Express::VARP logits_;std::unique_ptr<MappedFloats> table_;bool small_,sampling_,smallHidden_,cropped_;int width_,previous_=0;std::mt19937 random_{2307};std::vector<int> codes_;
+    MNN::Express::VARP logits_;std::unique_ptr<MappedFloats> table_;bool small_,sampling_,smallHidden_,cropped_,suppressEos_;int width_,previous_=0;MusicVocabulary vocab_;std::mt19937 random_{2307};std::vector<int> codes_;
 public:
-    Prior(const std::string& root,const std::string& work,bool small,const std::string& lyrics="",const std::string& npy="",bool smallHidden=false,const std::string& croppedLm="",int threads=4):small_(small),sampling_(!lyrics.empty()),smallHidden_(smallHidden),cropped_(!croppedLm.empty()),width_(small?1024:2560){
+    Prior(const std::string& root,const std::string& work,bool small,const std::string& lyrics="",const std::string& npy="",bool smallHidden=false,const std::string& croppedLm="",int threads=4,int dynamicOption=0,bool suppressEos=false):small_(small),sampling_(!lyrics.empty()),smallHidden_(smallHidden),cropped_(!croppedLm.empty()),suppressEos_(suppressEos),width_(small?1024:2560),vocab_(musicVocabulary(small,croppedLm)){
         LEVO_STREAM_SPAN("llm.initialize");
         require(!cropped_||small,"Music-head crop is for the small model only");
-        if(cropped_){auto range=readJson(croppedLm+"/head-range.json");require(range["success"]==true&&range["firstRetainedClass"]==151765&&range["classes"]==16449,"Invalid head-range contract");
-            require(std::filesystem::file_size(croppedLm+"/embeddings_bf16.bin")==344502272,"Cropped LM requires the complete input embedding file");}
+        if(cropped_)require(std::filesystem::file_size(croppedLm+"/embeddings_bf16.bin")==344502272,"Cropped LM requires the complete input embedding file");
+        patch({{"musicVocabulary",{{"classes",vocab_.classes},{"audioOutputBase",vocab_.audioBase},{"eosOutput",vocab_.eos},{"inputAudioBase",vocab_.inputAudioBase}}}});
         Json cfg={{"base_dir",cropped_?croppedLm+"/":root+"/lm/"},{"llm_model","llm.mnn"},{"llm_weight","llm.mnn.weight"},{"llm_config","llm_config.json"},
           {"tokenizer_file","tokenizer.mtok"},{"embedding_file","embeddings_bf16.bin"},{"backend_type","cpu"},{"precision","high"},{"memory","low"},{"power","high"},
           {"thread_num",threads},{"reuse_kv",false},{"attention_mode",8},{"hidden_states",!small||smallHidden},{"all_logits",false},{"cosyvoice_kleidiai",false},{"tmp_path",work+"/"}};
+        require(dynamicOption==0||dynamicOption==2,"Unsupported dynamic A8 option");cfg["dynamic_option"]=dynamicOption;
         {std::ofstream out(work+"/lm-config.json");out<<cfg.dump(2);}
 #ifdef LEVO_STREAM_CHAIN_PROFILE
         cfg["enable_debug"]=LevoStreamProfile::active&&LevoStreamProfile::active->operators;
@@ -157,7 +199,7 @@ public:
     }
     std::vector<float> next(int index){
         LEVO_STREAM_SPAN("llm.next");
-        if(small_&&!smallHidden_&&index){LEVO_STREAM_SPAN("llm.decode");logits_=model_->forward({151830+previous_},false);
+        if(small_&&!smallHidden_&&index){LEVO_STREAM_SPAN("llm.decode");logits_=model_->forward({vocab_.inputAudioBase+previous_},false);
 #ifdef LEVO_STREAM_CHAIN_PROFILE
             require(logits_.get()&&logits_->readMap<float>(),"Profiled decode failed");
 #endif
@@ -165,17 +207,12 @@ public:
         int code=(index*997+2307)%16384;
         if(sampling_){
             LEVO_STREAM_SPAN("llm.sampling");
-            const int classes=small_?(cropped_?16449:168214):16385,audioBase=small_?(cropped_?65:151830):1,eos=small_&&!cropped_?151765:0;require(logits_.get()&&logits_->getInfo()->size==classes,"D1输出词表不匹配");const float* p=logits_->readMap<float>();require(p,"Cannot read sampling logits");
-            std::vector<std::pair<float,int>> candidates;candidates.reserve(16385);
-            for(int k=0;k<16384;++k){float value=p[audioBase+k];require(std::isfinite(value),"Nonfinite sampling logits");candidates.emplace_back(value,k);}
-            require(std::isfinite(p[eos]),"Nonfinite EOS logit");candidates.emplace_back(p[eos],-1);
-            std::partial_sort(candidates.begin(),candidates.begin()+250,candidates.end(),[](const auto& a,const auto& b){return a.first>b.first||(a.first==b.first&&a.second<b.second);});
-            std::vector<double> weights(250);for(int k=0;k<250;++k)weights[k]=std::exp((double(candidates[k].first)-candidates[0].first)/.95);
-            std::discrete_distribution<int> sample(weights.begin(),weights.end());code=candidates[sample(random_)].second;if(code<0)return {};
+            const int classes=vocab_.classes,audioBase=vocab_.audioBase,eos=vocab_.eos;require(logits_.get()&&logits_->getInfo()->size==classes,"D1输出词表不匹配");const float* p=logits_->readMap<float>();require(p,"Cannot read sampling logits");
+            code=sampleMusicCode(p,vocab_,suppressEos_,random_);if(code<0)return {};
         }
         previous_=code;codes_.push_back(code);std::vector<float> condition(small_?1024:2560);
         if(small_&&!smallHidden_){LEVO_STREAM_SPAN("conditioner.lookup");table_->row(code,1024,condition.data());}
-        else{LEVO_STREAM_SPAN("llm.decode");logits_=model_->forward({code+(small_?151830:1)},false); // consume-aligned hidden, as in supplied 4B specification
+        else{LEVO_STREAM_SPAN("llm.decode");logits_=model_->forward({code+vocab_.inputAudioBase},false); // consume-aligned hidden, as in supplied 4B specification
             LevoHiddenResearch::copySingleStepInto(*model_,condition.data(),width_,LevoHiddenResearch::SingleStepLayout::Channels1x1);}
         require(logits_.get()&&logits_->readMap<float>(),"D1 decode failed");return condition;
     }
@@ -191,10 +228,13 @@ inline void writeChunk(const std::string& path,const std::vector<float>& pcm,int
     out.close();require(out.good(),"Chunk file write failed");std::filesystem::rename(temp,path);
 }
 inline Json run(const std::string& appRoot,int choice,int requested,bool transport=false,const std::string& lyrics="",const std::string& npy="",const Json& options=Json::object()){
-    require(requested>=25&&requested<=1500,"Experiment duration is1–60 seconds");
+    const bool longRun=options.value("longRun",false),suppressEos=options.value("suppressEos",false);
+    validateDuration(choice,requested,longRun);
+    const int dynamicOption=options.value("lmDynamicOption",0);require(dynamicOption==0||dynamicOption==2,"Unsupported dynamic A8 option");
     const std::string smallCondition=options.value("smallCondition",std::string("token"));
     require(smallCondition=="token"||(choice==0&&smallCondition=="hidden-consume"),"Unknown condition experiment");
-    const bool resident=options.value("resident",choice==0),cfg=options.value("cfg",true);
+    const bool resident=options.value("resident",choice==0),cfg=options.value("cfg",true),vaeFusion=options.value("vaeFusion",false);
+    require(!vaeFusion||choice==0,"App Snake fusion is currently validated for the0.6B bundle only");
     const bool prefetch=options.value("prefetch",false);require(!prefetch||(resident&&choice==0),"Token prefetch requires resident small-model sessions");
     const std::string croppedLm=options.value("croppedLm",std::string());
     const int lmThreads=options.value("lmThreads",4),ditThreads=options.value("ditThreads",6),vaeThreads=options.value("vaeThreads",6);
@@ -205,14 +245,15 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     const std::string work=appRoot+"/stream-runs/"+id,root=appRoot+"/model-bundles/"+modelId(choice);std::filesystem::create_directories(work);
     {std::lock_guard<std::mutex> lock(stateMutex);state={{"runId",id},{"busy",true},{"status","generating"},{"phase","loading"},{"chunks",Json::array()},
        {"generatedSamples",0},{"requestedFrames",requested},{"conditionFrames",0},{"model",choice},{"conditionMode",choice==0?smallCondition:"hidden-projector"},{"transportOnly",transport},{"diagnosticOnly",lyrics.empty()||transport||smallCondition!="token"},{"musicQualityClaimed",false},
-       {"resident",resident},{"tokenPrefetch",prefetch},{"threads",{{"lm",lmThreads},{"dit",ditThreads},{"vae",vaeThreads}}},{"croppedLm",croppedLm},{"ditSteps",steps},{"cfgEnabled",cfg},{"cfgScale",cfg?1.5:0.},{"ditBatch",batch},{"unconditionalComputeRemoved",batch==1},{"chunkTimings",Json::array()}};}
+       {"resident",resident},{"tokenPrefetch",prefetch},{"threads",{{"lm",lmThreads},{"dit",ditThreads},{"vae",vaeThreads}}},{"croppedLm",croppedLm},{"ditSteps",steps},{"cfgEnabled",cfg},{"cfgScale",cfg?1.5:0.},{"ditBatch",batch},{"unconditionalComputeRemoved",batch==1},{"chunkTimings",Json::array()},{"vaeFusion",vaeFusion},
+       {"lmDynamicOption",dynamicOption},{"suppressEos",suppressEos},{"longRun",longRun},{"runTag",options.value("runTag",std::string())}};}
     Trace trace;double lmTime=0,muTime=0,ditTime=0,vaeTime=0,ditSetup=0,vaeSetup=0;std::vector<float> conditions;std::unique_ptr<Prior> prior;
     std::unique_ptr<Graph> keptDit,keptVae;
     struct Fetched {std::vector<float> values;int count=0;bool eos=false;double elapsed=0;};std::future<Fetched> pending;
     size_t observedKv=0;
     std::vector<float> last,tail;std::mt19937 rng(2307);std::normal_distribution<float> normal;
     try{
-        if(!transport){require(inspect(appRoot,choice)["ready"],"Import matching model bundle first");check();auto tick=Clock::now();prior=std::make_unique<Prior>(root,work,choice==0,lyrics,npy,smallCondition=="hidden-consume",croppedLm,lmThreads);lmTime+=seconds(tick);}
+        if(!transport){require(inspect(appRoot,choice)["ready"],"Import matching model bundle first");if(longRun)require(requested<=readJson(root+"/model-bundle.json")["runtime"].value("maxFrames",1500),"Bundle-declared duration bound exceeded");check();auto tick=Clock::now();prior=std::make_unique<Prior>(root,work,choice==0,lyrics,npy,smallCondition=="hidden-consume",croppedLm,lmThreads,dynamicOption,suppressEos);lmTime+=seconds(tick);}
         const int hidden=choice==0?1024:2560;int produced=0,index=0;size_t emitted=0;
         std::vector<float> masks,mean,stddev;if(!transport){masks=read(root+"/aux/mask.f32",144);mean=read(root+"/aux/mean.f32",64);stddev=read(root+"/aux/std.f32",64);}
         int actual=requested;bool eos=false;
@@ -263,7 +304,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
                     if(!resident)keptDit.reset();ditTime+=seconds(tick);}
                 if(index)std::copy_n(context.data(),64*64,x.data());last=x;check();
                 std::vector<float> latent(64*256);for(int c=0;c<64;++c)for(int t=0;t<256;++t)latent[c*256+t]=x[t*64+c]*stddev[c]+mean[c];
-                {patch({{"phase","vae"}});auto tick=Clock::now();if(!keptVae){auto setup=Clock::now();keptVae=std::make_unique<Graph>(root+"/vae/vae.mnn",true,vaeThreads,true);vaeSetup+=seconds(setup);}
+                {patch({{"phase","vae"}});auto tick=Clock::now();if(!keptVae){auto setup=Clock::now();keptVae=std::make_unique<Graph>(root+"/vae/vae.mnn",true,vaeThreads,true,0,vaeFusion);vaeSetup+=seconds(setup);}
                     pcm=keptVae->run({{"",std::move(latent)}},2*491520);if(!resident)keptVae.reset();vaeTime+=seconds(tick);}
             }
             check();if(index)for(int c=0;c<2;++c)for(int i=0;i<64*1920;++i){float r=float(i)/(64*1920-1);pcm[size_t(c)*491520+i]=tail[size_t(c)*64*1920+i]*(1-r)+pcm[size_t(c)*491520+i]*r;}

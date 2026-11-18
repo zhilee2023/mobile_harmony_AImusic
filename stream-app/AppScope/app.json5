@@ -2,8 +2,8 @@
   "app": {
     "bundleName": "com.zhilee.levostreamlab",
     "vendor": "zhilee2023",
-    "versionCode": 100007,
-    "versionName": "0.1.7",
+    "versionCode": 100009,
+    "versionName": "0.1.9",
     "icon": "$media:app_icon",
     "label": "$string:app_name"
   }

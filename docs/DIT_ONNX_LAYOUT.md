@@ -116,3 +116,15 @@ HMS Profiling选项和Build返回0，但executor创建失败；临时输出目�
 
 统一报告：`reports/levo-test-report.json`的`dit_onnx_layout_cann_2026_11_13`；
 App恢复CFG记录单列`stream_lab_cfg_restored_2026_11_13`。模型、激活、音频、登录信息和原始日志不上传。
+
+## 2026-11-18完整首block探针（已暂停）
+
+`StreamLabDitLayout.cpp --block --memory-normal`新增真实首block的LayerNorm、调制、QKV、RoPE、Attention、残差及FFN捕获。
+`tools/prepare_dit_block_probe.py`导出93节点ONNX，投影保持NCHW，输入`[2,1200,1,264]`携带256位置＋6组已计算调制＋2补齐，
+输出`[2,1200,1,256]`。这里只验证首个全有效窗口，未覆盖尾窗mask、调制生成或22层完整DiT。
+展开当前W8参数的浮点数学参考相对MNN Memory Normal捕获L2约`2.20e-6`，通过预设`1e-4`。
+
+初版portable OM手机Build返回1，未执行前向；同一探针的旧首FFN控制仍成功。
+GELU常量保留0维scalar后，第二版OMG转换成功（34,805,365字节），但按用户要求暂停OM路线，未做第二版手机执行。
+保留失败及转换结果，不把它宣称为整DiT加速或硬件不支持的定论。
+统一报告新区块`dit_complete_block_npu_2026_11_18`；当前主线为LM、CPU VAE融合与整链长时验证。

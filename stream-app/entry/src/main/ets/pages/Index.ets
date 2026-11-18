@@ -42,15 +42,28 @@ struct Index {
   private seekDone: boolean = false;
   private runId: string = '';
   private lastLog: number = 0;
+  private checkpointAt: number = 0;
+  private checkpointRun: string = '';
+  private checkpointStatus: string = '';
+  private checkpointBusy: boolean = false;
+  private awakeRelease: number = -1;
+  private durationBenchmark: boolean = false;
+  private lmDynamicOption: number = 2;
+  private vaeFusion: boolean = true;
+  private benchmarkRunTag: string = '';
   private startedAt: number = 0;
   @State dragging: boolean = false;
   @State previewMs: number = 0;
   private root(): string { return (getContext(this) as common.UIAbilityContext).filesDir; }
   private croppedLm(): string {
-    const folder = `${this.root()}/experimental/music-head-r1`;
-    try { return fs.accessSync(`${folder}/head-range.json`) ? folder : ''; } catch (_) { return ''; }
+    for (const name of ['music-head-audio-r2', 'music-head-r1']) {
+      const folder = `${this.root()}/experimental/${name}`;
+      try { if (fs.accessSync(`${folder}/head-range.json`)) return folder; } catch (_) {}
+    }
+    return '';
   }
   private time(ms: number): string { return `${Math.floor(ms / 60000)}:${Math.floor(ms / 1000 % 60).toString().padStart(2, '0')}`; }
+  private durations(): number[] { return this.model === 0 ? [10.2, 15, 30, 60, 90, 120, 300] : [10.2, 15, 30, 60]; }
   private phaseName(phase: string): string {
     switch (phase) {
       case 'loading': return '加载模型'; case 'prefill': return '前缀计算'; case 'decode': return '生成条件帧';
@@ -99,12 +112,19 @@ struct Index {
     else if (autoRun) {
       AppStorage.delete('streamLabAutoRun');
       this.model = AppStorage.get<number>('streamLabModel') ?? 0;
-      this.seconds = autoRun === 'mnn60-check' ? 60 : autoRun === 'music-check' ? 10.2 : 15; this.testStop = autoRun === 'stop-check'; this.refresh();
-      setTimeout(() => { this.start(autoRun !== 'mnn-check' && autoRun !== 'mnn60-check' && autoRun !== 'music-check'); }, 800);
+      this.durationBenchmark = autoRun === 'duration-benchmark';
+      this.seconds = this.durationBenchmark ? (AppStorage.get<number>('streamLabSeconds') ?? 30) : autoRun === 'mnn60-check' ? 60 : autoRun === 'music-check' ? 10.2 : 15;
+      if (this.durationBenchmark && [30, 60, 90, 120, 300].indexOf(this.seconds) < 0) { this.stage = '不支持的测速时长'; return; }
+      this.lmDynamicOption = AppStorage.get<number>('streamLabDynamicOption') ?? 2;
+      this.vaeFusion = AppStorage.get<boolean>('streamLabVaeFusion') ?? true;
+      this.benchmarkRunTag = this.durationBenchmark ? (AppStorage.get<string>('streamLabRunTag') ?? '') : '';
+      this.testStop = autoRun === 'stop-check'; this.refresh();
+      setTimeout(() => { this.start(!this.durationBenchmark && autoRun !== 'mnn-check' && autoRun !== 'mnn60-check' && autoRun !== 'music-check'); }, 800);
     }
   }
   aboutToDisappear(): void {
     if (this.timer >= 0) clearInterval(this.timer);
+    if (this.awakeRelease >= 0) clearTimeout(this.awakeRelease);
     native.cancel(); const old = this.player; this.player = undefined; old?.close(); this.releaseSystem();
   }
   private poll(): void {
@@ -120,6 +140,15 @@ struct Index {
       this.stage = state.busy ? (this.stopping ? '正在停止，保留已生成片段…' : this.phaseName(state.phase ?? '')) :
         state.status === 'completed' ? '本轮完成' : state.status === 'stopped' ? '已停止，可回放现有片段' : `实验停止：${state.error ?? ''}`;
       this.player?.update(state);
+      if (Date.now() - this.checkpointAt > 1000 && (state.busy || this.checkpointRun !== state.runId || this.checkpointStatus !== state.status || this.checkpointBusy !== state.busy)) {
+        try {
+          const pending = `${this.root()}/last-state.json.pending`;
+          const file = fs.openSync(pending, fs.OpenMode.CREATE | fs.OpenMode.WRITE_ONLY | fs.OpenMode.TRUNC);
+          try { fs.writeSync(file.fd, JSON.stringify(state)); } finally { fs.closeSync(file); }
+          fs.renameSync(pending, `${this.root()}/last-state.json`);
+          this.checkpointAt = Date.now(); this.checkpointRun = state.runId; this.checkpointStatus = state.status; this.checkpointBusy = state.busy;
+        } catch (_) {}
+      }
       if (this.testStop && state.generatedSamples > 0 && state.busy) { this.testStop = false; this.stop(); }
       if (!this.seekDone && AppStorage.get<boolean>('streamLabSeekCheck') && state.generatedSamples > 48000) {
         this.seekDone = true;
@@ -169,13 +198,15 @@ struct Index {
   }
   private async start(transport: boolean): Promise<void> {
     if (this.busy || (!transport && !this.modelReady)) return;
+    const fixedBenchmark = this.durationBenchmark;
+    if (this.awakeRelease >= 0) { clearTimeout(this.awakeRelease); this.awakeRelease = -1; }
     this.busy = true; this.stopping = false; this.generatedMs = 0; this.playedMs = 0; this.seekDone = false;
     this.startedAt = Date.now(); this.playbackError = '';
     this.firstChunk = 0; this.stage = '准备实验'; await this.keepAwake(true);
     if (this.player) await this.player.close(); await this.releaseSystem(); this.player = this.createPlayer();
-    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, croppedLm: this.model === 0 ? this.croppedLm() : '' })); }
+    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, croppedLm: this.model === 0 ? this.croppedLm() : '', lmDynamicOption: this.model === 0 ? this.lmDynamicOption : 0, vaeFusion: this.model === 0 && this.vaeFusion, longRun: this.model === 0 && this.seconds > 60, suppressEos: fixedBenchmark, runTag: fixedBenchmark ? this.benchmarkRunTag : '' })); }
     catch (error) { this.stage = String(error); this.playbackError = String(error); this.record('start-error', String(error)); }
-    finally { this.busy = false; this.stopping = false; this.poll(); await this.keepAwake(false); }
+    finally { this.busy = false; this.stopping = false; this.durationBenchmark = false; this.poll(); if (fixedBenchmark) this.awakeRelease = setTimeout(() => { this.awakeRelease = -1; this.keepAwake(false); }, 15000); else await this.keepAwake(false); }
   }
   private stop(): void { this.stopping = true; native.cancel(); this.record('stop-request'); }
   build() {
@@ -187,9 +218,9 @@ struct Index {
         }.width('100%').alignItems(HorizontalAlign.Start)
         Row({ space: 12 }) {
           Select([{ value: '0.6B · 28层 + 22层 DiT' }, { value: '4B · 36层 + 39层 DiT' }])
-            .selected(this.model).value(this.model === 0 ? '0.6B · 28/22层' : '4B · 36/39层').layoutWeight(1).enabled(!this.busy).onSelect((index: number) => { this.model = index; this.styleIndex = 0; this.refresh(); })
-          Select([{ value: '10.2秒' }, { value: '15秒' }, { value: '30秒' }, { value: '60秒' }]).selected(this.seconds === 10.2 ? 0 : this.seconds === 15 ? 1 : this.seconds === 30 ? 2 : 3)
-            .width(82).enabled(!this.busy).onSelect((index: number) => { this.seconds = [10.2, 15, 30, 60][index]; })
+            .selected(this.model).value(this.model === 0 ? '0.6B · 28/22层' : '4B · 36/39层').layoutWeight(1).enabled(!this.busy).onSelect((index: number) => { this.model = index; if (this.model !== 0 && this.seconds > 60) this.seconds = 60; this.styleIndex = 0; this.refresh(); })
+          Select(this.durations().map((seconds: number): SelectOption => { return { value: `${seconds}秒` }; })).selected(this.durations().indexOf(this.seconds))
+            .width(82).enabled(!this.busy).onSelect((index: number) => { this.seconds = this.durations()[index]; })
         }.width('100%')
         Text(this.modelNote + ' · 点此刷新').fontSize(13).fontColor('#667D80').width('100%').onClick(() => { this.refresh(); })
         Column({ space: 10 }) {

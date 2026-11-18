@@ -66,12 +66,12 @@ struct Resources {
 int main(int argc,char** argv){
     if(argc<3||argc>5)return 2;bool profiling=false,withBridge=false;
     for(int i=3;i<argc;++i){std::string flag=argv[i];if(flag=="--profile")profiling=true;else if(flag=="--bridge")withBridge=true;else return 2;}
-    std::string dir=argv[1],sink=argv[2];Json report={{"success",false},{"scope","Portable OM isolated FFN compatibility; not full DiT or whole-chain RTF"},{"processId",getpid()},{"profilingRequested",profiling},
+    std::string dir=argv[1],sink=argv[2];Json report={{"success",false},{"scope","Portable OM captured DiT subgraph; manifest defines boundary, not full DiT or whole-chain RTF"},{"processId",getpid()},{"profilingRequested",profiling},
         {"format","portable OM IR"},{"cases",Json::array()},{"hardwareKernelTraceCollected",false},{"cpuSequenceLayoutBridgeTimed",withBridge}};
     Samples samples;auto save=[&]{samples.sample();report["sampledPeakRssMiB"]=samples.peak.load()/1024.;report["memoryScope"]="Process RSS,20ms plus stage checkpoints; NPU private workspace not measured";std::ofstream(sink)<<report.dump(2);};
     try{
         if(withBridge){
-            for(auto shape:std::vector<std::pair<int,int>>{{256,1200},{1200,256}}){
+            for(auto shape:std::vector<std::pair<int,int>>{{256,1200},{1200,256},{264,1200}}){
                 const auto rows=shape.first,cols=shape.second;std::vector<float> source(rows*cols),actual(rows*cols);
                 for(size_t i=0;i<source.size();++i)source[i]=float(int(i%8191)-4000);
                 transpose4(source.data(),actual.data(),rows,cols);
@@ -89,9 +89,11 @@ int main(int argc,char** argv){
             try{
                 auto buffer=read<unsigned char>(dir+"/"+item["model"].get<std::string>(),100*1024*1024);
                 auto x=read<float>(dir+"/"+item["input"].get<std::string>(),16*1024*1024),expected=read<float>(dir+"/"+item["reference"].get<std::string>(),16*1024*1024);
-                const bool bridge=withBridge&&item["inputShape"].get<std::vector<int>>()==std::vector<int>({2,1200,1,256});
+                const int inputFrames=item.value("sequenceInputFrames",256),outputFrames=item.value("sequenceOutputFrames",256);
+                require(inputFrames>0&&inputFrames<=512&&inputFrames%4==0&&outputFrames>0&&outputFrames<=512&&outputFrames%4==0,"Unsupported sequence bridge sizes");
+                const bool bridge=withBridge&&item["inputShape"].get<std::vector<int>>()==std::vector<int>({2,1200,1,inputFrames});
                 row["cpuBtcNchwBridgeTimed"]=bridge;std::vector<float> sequenceInput,sequenceReference;
-                if(bridge){sequenceInput.resize(x.size());sequenceReference.resize(expected.size());for(int b=0;b<2;++b){transpose4(x.data()+b*1200*256,sequenceInput.data()+b*1200*256,1200,256);transpose4(expected.data()+b*1200*256,sequenceReference.data()+b*1200*256,1200,256);}}
+                if(bridge){require(x.size()==size_t(2*1200*inputFrames)&&expected.size()==size_t(2*1200*outputFrames),"Bridge element count mismatch");sequenceInput.resize(x.size());sequenceReference.resize(expected.size());for(int b=0;b<2;++b){transpose4(x.data()+b*1200*inputFrames,sequenceInput.data()+b*1200*inputFrames,1200,inputFrames);transpose4(expected.data()+b*1200*outputFrames,sequenceReference.data()+b*1200*outputFrames,1200,outputFrames);}}
                 const auto operatorNames=item.value("operators",std::vector<std::string>{});
                 const std::string profileDir=dir+"/profile-"+item["id"].get<std::string>();
                 Resources owned(api);auto tick=Clock::now();owned.compilation=api.OH_NNCompilation_ConstructWithOfflineModelBuffer(buffer.data(),buffer.size());require(owned.compilation,"Offline constructor failed");
@@ -116,7 +118,7 @@ int main(int argc,char** argv){
                     require(type==OH_NN_FLOAT32&&bytes==(output?expected.size():x.size())*4&&nonUnit(actual)==nonUnit(wanted),"FP32 shape/size/order contract mismatch");row[output?"outputShape":"inputShape"]=actual;
                     auto tensor=api.OH_NNTensor_Create(device,d);require(tensor,"Device tensor allocation failed");owned.tensors.push_back(tensor);return tensor;};
                 auto in=make(false),out=make(true);auto ip=api.OH_NNTensor_GetDataBuffer(in),op=api.OH_NNTensor_GetDataBuffer(out);require(ip&&op,"Tensor mapping failed");std::vector<float> result(expected.size());
-                for(int repeat=0;repeat<4;++repeat){row["phase"]="running";checkpoint();tick=Clock::now();if(bridge){for(int b=0;b<2;++b)transpose4(sequenceInput.data()+b*1200*256,static_cast<float*>(ip)+b*1200*256,256,1200);}else std::memcpy(ip,x.data(),x.size()*4);double upload=seconds(tick);tick=Clock::now();int code=api.OH_NNExecutor_RunSync(owned.executor,&in,1,&out,1);double run=seconds(tick);require(code==0,"RunSync failed");tick=Clock::now();if(bridge){for(int b=0;b<2;++b)transpose4(static_cast<const float*>(op)+b*1200*256,result.data()+b*1200*256,1200,256);}else std::memcpy(result.data(),op,result.size()*4);double download=seconds(tick);
+                for(int repeat=0;repeat<4;++repeat){row["phase"]="running";checkpoint();tick=Clock::now();if(bridge){for(int b=0;b<2;++b)transpose4(sequenceInput.data()+b*1200*inputFrames,static_cast<float*>(ip)+b*1200*inputFrames,inputFrames,1200);}else std::memcpy(ip,x.data(),x.size()*4);double upload=seconds(tick);tick=Clock::now();int code=api.OH_NNExecutor_RunSync(owned.executor,&in,1,&out,1);double run=seconds(tick);require(code==0,"RunSync failed");tick=Clock::now();if(bridge){for(int b=0;b<2;++b)transpose4(static_cast<const float*>(op)+b*1200*outputFrames,result.data()+b*1200*outputFrames,1200,outputFrames);}else std::memcpy(result.data(),op,result.size()*4);double download=seconds(tick);
                     row["runs"].push_back({{"mode",repeat?"warm":"first"},{"inputSeconds",upload},{"runSyncSeconds",run},{"outputSeconds",download},{"totalSeconds",upload+run+download}});}
                 const auto& reference=bridge?sequenceReference:expected;double error=0,energy=0;for(size_t i=0;i<result.size();++i){require(std::isfinite(result[i]),"Non-finite output");error+=std::pow(double(result[i])-reference[i],2);energy+=double(reference[i])*reference[i];}
                 row["relativeL2"]=std::sqrt(error/std::max(energy,1e-30));row["numericalBudget"]=.01;row["success"]=row["relativeL2"].get<double>()<=.01;row["rssAtEndMiB"]=rss()/1024.;samples.sample();row["phase"]="done";
