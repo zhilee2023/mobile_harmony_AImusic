@@ -67,10 +67,12 @@ flowchart LR
 
 1. 在DevEco打开`stream-app/`，复制`build-profile.template.json5`为本地`build-profile.json5`，
    为独立包名生成调试签名。证书和本地配置均忽略，不上传。
-2. `tools/build_stream_app.ps1`构建。当前复用已验证的本机MNN静态库；迁移机器需修改脚本中的依赖路径。
+2. `tools/build_stream_app.ps1`构建；首次创建未签名本地配置，已有签名保留。
+   迁移电脑时用`-MnnRoot`／`-MnnLibrary`指定兼容静态库，可先用`-PrepareOnly`准备工程。
 3. `tools/deploy_stream_app.ps1 -Device <hdc-target>`安装独立App，从用户手机原App的数据目录
    复制两个完整模型包，按各自manifest逐资产核验SHA256，再设置新App文件所有者。
    这是已连接调试设备上的迁移工具，不是普通App绕过沙箱读取其他App。
+   新手机尚无原模型时用`-InstallOnly`仅安装App，权重另行迁移。完整步骤见[换手机安装指南](INSTALL_ON_ANOTHER_PHONE.md)。
 4. `clap-styles/`只复制NPY，保留原模型默认风格。也可在新App内用文件选择器导入512维NPY。
    权重、NPY、歌词生成物和音频都不在Git中。
 

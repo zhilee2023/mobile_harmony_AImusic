@@ -10,9 +10,11 @@ param(
 )
 $ErrorActionPreference='Stop'
 $musicProject=Split-Path -Parent $PSScriptRoot
+$musicBundleName=(Get-Content -LiteralPath (Join-Path $musicProject 'stream-app/AppScope/app.json5') -Raw -Encoding UTF8 | ConvertFrom-Json).app.bundleName
+if($musicBundleName -notmatch '^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$'){throw 'Invalid App bundleName'}
 $musicHdc=Join-Path $DevEcoRoot 'sdk/default/openharmony/toolchains/hdc.exe'
 $musicDir=Join-Path $musicProject "reports/local/$RunId"
-$musicFiles='/data/app/el2/100/base/com.zhilee.levostreamlab/haps/entry/files'
+$musicFiles="/data/app/el2/100/base/$musicBundleName/haps/entry/files"
 if(Test-Path -LiteralPath $musicDir){if(!$ResumePrepared){throw 'Preserve previous measurements; choose a new RunId'}}
 elseif($ResumePrepared){throw 'No prepared run to resume'}
 else{$null=New-Item -ItemType Directory -Path $musicDir}
@@ -32,7 +34,7 @@ function Music-Sample {
  $musicValues=@($musicRaw -split "`n" | ForEach-Object {$_.Trim()})
  return @{utc=[DateTimeOffset]::UtcNow.ToString('o');batteryC=if($musicValues[0] -match '^\d+$'){[double]$musicValues[0]/10}else{$null};socNodeC=if($musicValues.Count -gt 1 -and $musicValues[1] -match '^\d+$'){[double]$musicValues[1]/1000}else{$null}}
 }
-$musicRecord=@{runTag=$RunId;requestedDurationSeconds=$DurationSeconds;dynamicOption=$DynamicOption;vaeFusion=[bool]$VaeFusion;status='preparing';coolingSecondsRequested=$CoolingSeconds;
+$musicRecord=@{runTag=$RunId;bundleName=$musicBundleName;requestedDurationSeconds=$DurationSeconds;dynamicOption=$DynamicOption;vaeFusion=[bool]$VaeFusion;status='preparing';coolingSecondsRequested=$CoolingSeconds;
  scope='App0.6B real fixed-length generation with playback; W4 body/W8 head/dynamic A8, DiT CPU2steps CFG1.5, CPU Low VAE with explicit fusion flag; EOS suppressed only for timing';
  samples=@();createdUtc=[DateTimeOffset]::UtcNow.ToString('o')}
 if($ResumePrepared){
@@ -44,7 +46,7 @@ if($ResumePrepared){
 function Music-Save {[IO.File]::WriteAllText((Join-Path $musicDir 'run.json'),($musicRecord | ConvertTo-Json -Depth 100),[Text.UTF8Encoding]::new($false))}
 Music-Save
 $musicExisting=Music-ReadState
-$musicPidBefore=Music-Hdc @('shell','pidof com.zhilee.levostreamlab || true')
+$musicPidBefore=Music-Hdc @('shell',"pidof $musicBundleName || true")
  if($musicExisting -and $musicExisting.busy -and $musicPidBefore.Trim()){
  $musicPreviousDone=$false
  if($musicExisting.status -in @('completed','stopped','error') -and $musicExisting.runId -match '^\d+$'){
@@ -69,16 +71,16 @@ $musicPower=Music-Hdc @('shell','hidumper -s PowerManagerService -a -a')
 [IO.File]::WriteAllText((Join-Path $musicDir 'power-before.txt'),$musicPower,[Text.UTF8Encoding]::new($false))
 if($musicPower -notmatch 'Current State: AWAKE'){$musicRecord.status='awaiting-unlock';Music-Save;throw 'Manually unlock the phone; no inference started'}
 $musicOffBefore=[regex]::Match($musicPower,'Last Screen Off:\s*(\d+)').Groups[1].Value
-$null=Music-Hdc @('shell','aa force-stop com.zhilee.levostreamlab') # Confirmed idle above, one fresh process per duration.
+$null=Music-Hdc @('shell',"aa force-stop $musicBundleName") # Confirmed idle above, one fresh process per duration.
 $musicRecord.samples+=@(Music-Sample);$musicRecord.status='starting';Music-Save
-$null=Music-Hdc @('shell',"aa start -a EntryAbility -b com.zhilee.levostreamlab --ps streamLabTest duration-benchmark --pi streamLabModel 0 --pi streamLabSeconds $DurationSeconds --pi streamLabDynamicOption $DynamicOption --pi streamLabVaeFusion $VaeFusion --ps streamLabRunTag $RunId")
+$null=Music-Hdc @('shell',"aa start -a EntryAbility -b $musicBundleName --ps streamLabTest duration-benchmark --pi streamLabModel 0 --pi streamLabSeconds $DurationSeconds --pi streamLabDynamicOption $DynamicOption --pi streamLabVaeFusion $VaeFusion --ps streamLabRunTag $RunId")
 $musicClock=[DateTimeOffset]::UtcNow;$musicLastAnnounce=0
 while(([DateTimeOffset]::UtcNow-$musicClock).TotalSeconds -lt 3600){
  Start-Sleep -Seconds 5
  $musicState=Music-ReadState
  $musicRecord.samples+=@(Music-Sample)
  $musicMissions=Music-Hdc @('shell','aa dump -l')
- $musicForeground=[regex]::Match($musicMissions,'(?s)app name \[com\.zhilee\.levostreamlab\].*?state #([A-Z]+)')
+ $musicForeground=[regex]::Match($musicMissions,('(?s)app name \['+[regex]::Escape($musicBundleName)+'\].*?state #([A-Z]+)'))
  $musicRecord.foregroundObserved=($musicForeground.Success -and $musicForeground.Groups[1].Value -eq 'FOREGROUND')
  if(!$musicRecord.foregroundObserved){$musicRecord.foregroundGapObserved=$true}
  if($musicState -and $musicState.runTag -eq $RunId){
@@ -95,7 +97,7 @@ while(([DateTimeOffset]::UtcNow-$musicClock).TotalSeconds -lt 3600){
    }
   }
  }
- $musicPid=Music-Hdc @('shell','pidof com.zhilee.levostreamlab || true')
+ $musicPid=Music-Hdc @('shell',"pidof $musicBundleName || true")
  if(!$musicPid.Trim()){$musicRecord.status='process-exited';Music-Save;throw 'App process exited; last progress retained, not classified as OOM without evidence'}
  $musicWall=([DateTimeOffset]::UtcNow-$musicClock).TotalSeconds
  if($musicWall-$musicLastAnnounce -ge 30){$musicLastAnnounce=$musicWall;Write-Output "${DurationSeconds}s target: $([Math]::Round($musicWall))s elapsed, phase $($musicState.phase), frames $($musicState.conditionFrames)"}

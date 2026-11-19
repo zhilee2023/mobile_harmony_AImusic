@@ -242,7 +242,7 @@ struct Index {
       Column({ space: 20 }) {
         Row() {
           Column({ space: 5 }) {
-            Text('LeVo 音乐').fontSize(29).fontWeight(FontWeight.Bold).fontColor('#17232E')
+            Text($r('app.string.app_name')).fontSize(29).fontWeight(FontWeight.Bold).fontColor('#17232E')
             Text('把文字，唱成一首歌').fontSize(14).fontColor('#73808E')
           }.alignItems(HorizontalAlign.Start)
           Blank()

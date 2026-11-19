@@ -213,7 +213,7 @@ struct Index {
     Scroll() {
       Column({ space: 20 }) {
         Column({ space: 8 }) {
-          Text('LeVo 流式实验').fontSize(29).fontWeight(FontWeight.Bold).fontColor('#172C30')
+          Text($r('app.string.app_name')).fontSize(29).fontWeight(FontWeight.Bold).fontColor('#172C30')
           Text('歌词与风格驱动 · 分段生成与回放').fontSize(14).fontColor('#667D80')
         }.width('100%').alignItems(HorizontalAlign.Start)
         Row({ space: 12 }) {

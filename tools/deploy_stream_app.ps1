@@ -1,7 +1,10 @@
-param([Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9]+$')][string]$Device)
+param([Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9]+$')][string]$Device,
+      [switch]$InstallOnly,[string]$DevEcoRoot='C:\Program Files\Huawei\DevEco Studio')
 $ErrorActionPreference='Stop'
 $labRoot=Split-Path -Parent $PSScriptRoot
-$labHdc='C:\Program Files\Huawei\DevEco Studio\sdk\default\openharmony\toolchains\hdc.exe'
+$labBundleName=(Get-Content -LiteralPath (Join-Path $labRoot 'stream-app/AppScope/app.json5') -Raw -Encoding UTF8 | ConvertFrom-Json).app.bundleName
+if($labBundleName -notmatch '^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$'){throw 'Invalid App bundleName'}
+$labHdc=Join-Path $DevEcoRoot 'sdk/default/openharmony/toolchains/hdc.exe'
 $labHap=Join-Path $labRoot 'stream-app/entry/build/default/outputs/default/entry-default-signed.hap'
 if(!(Test-Path -LiteralPath $labHap)){throw 'Complete DevEco automatic signing and build the independent stream-app'}
 & $labHdc -t $Device file send $labHap /data/local/tmp/levo-stream-lab.hap
@@ -9,8 +12,10 @@ if($LASTEXITCODE -ne 0){throw 'HAP transfer failed'}
 $labInstall=(& $labHdc -t $Device shell 'bm install -p /data/local/tmp/levo-stream-lab.hap -r') -join "`n"
 Write-Output $labInstall
 if($labInstall -notmatch 'successfully'){throw 'Independent App install failed'}
-& $labHdc -t $Device shell 'aa start -a EntryAbility -b com.zhilee.levostreamlab'
-$labFiles='/data/app/el2/100/base/com.zhilee.levostreamlab/haps/entry/files'
+& $labHdc -t $Device shell "aa start -a EntryAbility -b $labBundleName"
+if($LASTEXITCODE -ne 0){throw 'App installed but launch failed'}
+if($InstallOnly){Write-Output 'App installed. Model weights and style files must be migrated separately on a new phone.';return}
+$labFiles="/data/app/el2/100/base/$labBundleName/haps/entry/files"
 $labOwner=''
 for($labAttempt=0;$labAttempt -lt 15;$labAttempt++){
  $labOwner=((& $labHdc -t $Device shell "stat -c %u:%g $labFiles") -join '').Trim()

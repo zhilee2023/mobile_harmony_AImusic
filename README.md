@@ -1,5 +1,17 @@
 # mobile_harmony_AImusic · levo-harmony
 
+| 要打开的App | GitHub源码目录 | 包名 |
+|---|---|---|
+| LeVo音乐1.0.6 | [music-app](music-app/) | `com.zhilee.levomusic` |
+| LeVo流式实验，本轮优化 | [stream-app](stream-app/) | `com.zhilee.levostreamlab` |
+| LeVo Harmony，历史研究App | [app](app/) | 见该工程AppScope |
+
+在DevEco中打开对应子目录。首次拉取／换手机需重新配置本地调试签名，见[换手机安装指南](docs/INSTALL_ON_ANOTHER_PHONE.md)。仓库提供源码和未签名配置模板；证书、HAP及模型权重单独准备。
+
+首次打开前，在仓库根运行`powershell -NoProfile -File tools/init_harmony_app.ps1 -App stream-app`；LeVo音乐则改为`-App music-app`。该步骤生成DevEco识别工程需要的本地`build-profile.json5`，保留已有配置。
+
+独立改名安装：在**新克隆目录**中加`-BundleName com.yourname.mystreammusic -DisplayName "我的音乐实验"`，然后在DevEco为新包名自动签名。新App可与原版并存，见[完整步骤](docs/INSTALL_ON_ANOTHER_PHONE.md#拉取后改成可与原版并存的新app)。
+
 外部Agent交接与整链热点测试入口见[操作指南](docs/AGENT_STREAM_PROFILING.md)；真实服务器访问参数仅保存在本机忽略目录。
 
 > **2026-11-18，流式实验App v0.1.9**：音频专用头保留16384个code＋EOS，750码／四段WAV与旧头完全一致。36处VAE Snake图级融合后，同HAP30秒对照总耗时59.979→55.691秒、RTF1.999→1.856，PCM完全相同。分组动态A8降低音乐LM额外logits误差；VAE A8/A4旋转QDQ首轮7次前向均未通过1%PCM误差线，未替换App。长时测试及范围见[优化记录](docs/STREAM_RUNTIME_OPTIMIZATIONS.md)和[统一报告](reports/levo-test-report.json)，旧项目保留。
