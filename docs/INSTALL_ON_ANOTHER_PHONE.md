@@ -105,6 +105,7 @@ GitHub不含模型权重、原手机App数据、MuQ风格NPY或生成歌曲。
 | 打开stream提示“不包含App／不是有效工程” | 运行初始化脚本后打开`stream-app`；检查`build-profile.json5`、`AppScope/app.json5`、`entry`、`oh-package.json5`及`hvigorfile.ts`都在同一工程层级 |
 | 缺少`build-profile.json5` | 从所选App的模板创建本地文件 |
 | 证书／Profile路径不存在、过期或包名不符 | 在本机、正确子工程重新生成签名；不要复制其他工程的配置 |
+| `11013002 Certificate format is incorrect`，详细日志又有`The certificate has expired` | 查看`NotAfter`有效期，在DevEco更新调试签名；外层报错不一定只是证书格式问题 |
 | `INSTALL_FAILED_APP_SOURCE_NOT_TRUSTED` | 调试Profile是否包含新手机UDID；重新签名并重建HAP |
 | 提示与已安装应用签名不一致 | 保持原证书更新，或先导出歌曲／模型后选择卸载重装；卸载会清除该App数据 |
 | 缺少MNN头文件／静态库或CMake失败 | 配置兼容MNN路径，与签名分开排查 |
