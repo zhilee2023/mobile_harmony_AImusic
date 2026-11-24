@@ -27,8 +27,8 @@ inline void patch(const Json& value){std::lock_guard<std::mutex> lock(stateMutex
 inline void check(){require(!cancelled.load(),"Generation cancelled");require(::resident()<6L*1024*1024,"Process RSS reached6GiB; published prefix is retained");require(available()>650*1024,"System available memory below650MiB; published prefix is retained");}
 inline std::string modelId(int choice){require(choice==0||choice==1,"Unknown model");return choice==0?"larkstudio-small-0.6b-v1":"larkstudio-base-v2";}
 inline void validateDuration(int choice,int requested,bool longRun){
-    modelId(choice);require(!longRun||choice==0,"Long duration benchmark is currently bounded to the0.6B bundle");
-    require(requested>=25&&requested<=(longRun?7500:1500),"Duration exceeds selected experiment bound (60s; explicit small-model longRun max300s)");
+    modelId(choice);const int limit=longRun?(choice==0?7500:3000):1500;
+    require(requested>=25&&requested<=limit,"Duration exceeds selected experiment bound (small max300s; large max120s with explicit longRun)");
 }
 inline Json inspect(const std::string& root,int choice){
     Json r={{"ready",false},{"modelId",modelId(choice)},{"count",0},{"total",0}};
@@ -256,7 +256,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     size_t observedKv=0;
     std::vector<float> last,tail;std::mt19937 rng(2307);std::normal_distribution<float> normal;
     try{
-        if(!transport){require(inspect(appRoot,choice)["ready"],"Import matching model bundle first");if(longRun)require(requested<=readJson(root+"/model-bundle.json")["runtime"].value("maxFrames",1500),"Bundle-declared duration bound exceeded");check();auto tick=Clock::now();prior=std::make_unique<Prior>(root,work,choice==0,lyrics,npy,smallCondition=="hidden-consume",croppedLm,lmThreads,dynamicOption,suppressEos);lmTime+=seconds(tick);}
+        if(!transport){require(inspect(appRoot,choice)["ready"],"Import matching model bundle first");if(longRun)require(requested<=readJson(root+"/model-bundle.json")["runtime"].value("maxFrames",choice==0?7500:3000),"Bundle-declared duration bound exceeded");check();auto tick=Clock::now();prior=std::make_unique<Prior>(root,work,choice==0,lyrics,npy,smallCondition=="hidden-consume",croppedLm,lmThreads,dynamicOption,suppressEos);lmTime+=seconds(tick);}
         const int hidden=choice==0?1024:2560;int produced=0,index=0;size_t emitted=0;
         std::vector<float> masks,mean,stddev;if(!transport){masks=read(root+"/aux/mask.f32",144);mean=read(root+"/aux/mean.f32",64);stddev=read(root+"/aux/std.f32",64);}
         int actual=requested;bool eos=false;
@@ -277,7 +277,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
             else {
                 std::vector<float> mu(256*1024);
                 if(choice==0){for(int row=0;row<256;++row)std::copy_n(conditions.data()+size_t((start+row)%produced)*1024,1024,mu.data()+row*1024);}
-                else {patch({{"phase","projection"}});auto tick=Clock::now();Graph projector(root+"/mu/mu.mnn",false,4);std::vector<float> input(2048*2560);
+                else {trace.phase(0);patch({{"phase","projection"}});auto tick=Clock::now();Graph projector(root+"/mu/mu.mnn",false,4);std::vector<float> input(2048*2560);
                     for(int row=0;row<256;++row)std::copy_n(conditions.data()+size_t((start+row)%produced)*2560,2560,input.data()+row*2560);
                     auto output=projector.run({{"",std::move(input)}},2048*1024);std::copy_n(output.data(),256*1024,mu.data());muTime+=seconds(tick);}
                 std::vector<float> context(256*64,0),noise(256*64),x;

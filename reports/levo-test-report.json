@@ -102280,6 +102280,808 @@
       "sameRunClaimed": false,
       "reason": "User requested retaining previous RTF2.5 table with this run timing supplement."
     }
+  },
+  "stream_lab_cooled_long240_2026_11_24": {
+    "date": "2026-11-24",
+    "scope": "One real 240s App request after requested 6-minute cooling. Full music chain; no extrapolation.",
+    "device": {
+      "modelCode": "CMM-AL00",
+      "appVersion": "0.1.12",
+      "backend": "MNN ARM CPU",
+      "threads": {
+        "dit": 6,
+        "lm": 4,
+        "vae": 6
+      }
+    },
+    "recipe": {
+      "llm": "28L music Qwen, W4/group64 body, W8 audio-only head, per-block dynamic A8, BF16 input embedding",
+      "dit": "W8/group64, two Euler steps, CFG1.5, batch2",
+      "vae": "W8/group64, CPU Low FP16, 36 Snake graph fusions/window",
+      "resident": true,
+      "tokenPrefetch": false,
+      "suppressEosForFixedDuration": true
+    },
+    "audioSeconds": 240,
+    "conditionFrames": 6000,
+    "windows": 31,
+    "requestedCoolingSeconds": 360,
+    "preparationIdleWallSeconds": 488.7296566,
+    "preparationScope": "Initial cooling observer stopped before inference to add requested long lyrics; at least6min elapsed before revised App install and generation.",
+    "lyricTokens": 318,
+    "lyricPreset": "48-line original long test song",
+    "elapsedSeconds": 966.081999062,
+    "observedWholeRtf": 4.025341662758334,
+    "controlledTimingAccepted": true,
+    "foregroundGapObserved": false,
+    "foregroundStateSampleCounts": {
+      "FOREGROUND": 174
+    },
+    "lastScreenOffUnchanged": true,
+    "screenAwakeAtEnd": true,
+    "stages": {
+      "llm": {
+        "seconds": 593.2633641879997,
+        "rtf": 2.4719306841166655,
+        "romBytes": 600645003,
+        "processRssPeakMiB": 4543.02734375
+      },
+      "dit": {
+        "seconds": 166.676341253,
+        "rtf": 0.6944847552208333,
+        "romBytes": 413839536,
+        "processRssPeakMiB": 3101.375
+      },
+      "vae": {
+        "seconds": 202.10716297000002,
+        "rtf": 0.8421131790416667,
+        "romBytes": 86052358,
+        "processRssPeakMiB": 3153.57421875
+      }
+    },
+    "otherSeconds": 4.035130651000259,
+    "otherRtf": 0.016813044379167745,
+    "llmTiming": {
+      "decodeForwards": 5999,
+      "decodeMs": 581910.1593680013,
+      "decodeMsPerToken": 97.00119342690469,
+      "decodeTokensPerSecond": 10.30915151320845,
+      "loadMs": 498.851719,
+      "lookupMs": 182.3654680000014,
+      "prefillMs": 2744.0187499999997,
+      "prefillPositions": 513,
+      "prefixMs": 48.624531999999995,
+      "samplingMs": 7860.709629999998,
+      "scope": "forward plus output synchronization; excludes sampling, condition lookup and downstream waits"
+    },
+    "rom": {
+      "bytes": {
+        "llm": 600645003,
+        "dit": 413839536,
+        "vae": 86052358,
+        "conditioner_aux": 40839847,
+        "prefix_embedding_copy": 344502272
+      },
+      "mib": {
+        "llm": 572.819712638855,
+        "dit": 394.6681365966797,
+        "vae": 82.0659236907959,
+        "conditioner_aux": 38.94791316986084,
+        "prefix_embedding_copy": 328.54296875
+      },
+      "activeDeploymentBytes": 1485879016,
+      "originalBundleAssetBytes": 1301724838,
+      "scope": "Logical file bytes. Excludes songs/logs/old full-head graph and weights; includes the separate prefix embedding still read by current runtime."
+    },
+    "rssPeakMiB": 4543.02734375,
+    "stageRamScope": "20ms sampled process RSS during each stage; includes all resident models",
+    "minimumAvailableMiB": 1615,
+    "firstChunkSeconds": 19.429312968,
+    "kvPositions": 6512,
+    "ditSetupSecondsIncluded": 0.848558906,
+    "vaeSetupSecondsIncluded": 1.129522969,
+    "installedHapSha256": "9239334a46cf66947e0e095534d72eea634017238be8c5c1f2e67c3d8cee728e",
+    "modelFileSha256": {
+      "audio-head/llm.mnn": "7a7c1541d4a2503e9c4ff432140a13a03951b208b6a32467b2320b14b7da3e3a",
+      "audio-head/llm.mnn.weight": "7368ba40ba062dff320b83394d900b3b8787030a544ad9e0891210619f117417",
+      "dit/dit.mnn": "35886dc768304ef2f43e9186811bfe609c3b3bbe552a5e368093725648c0bebc",
+      "dit/dit.mnn.weight": "3cae1ed224d5070d25bd814df9e6207ea4344e7fa68bbfd6e452570f4d21db15",
+      "vae/vae.mnn": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "vae/vae.mnn.weight": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc"
+    },
+    "mnnArchiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+    "temperatureBatteryC": {
+      "beforeCooling": 34.0,
+      "atStart": 32.0,
+      "end": 41.0,
+      "peak": 41.0
+    },
+    "validation": {
+      "wavFrames": 11520000,
+      "sampleRate": 48000,
+      "channels": 2,
+      "chunkHashes": [
+        "73a25af67b98a3b75a9e446746ee03ee5dc0d76eef9ba1f5e81c54c6a9f2ea3d",
+        "a763ca0d672d4be69d2019cf0c6c49e9327ac2e12222c0d4f7f169f54adadbde",
+        "c018b6b5e17ff96870a02b8c50950006d257607f78d3fc0835989441744bc492",
+        "e5a03f5748d39c7b8f8f6e0df07f0abd653ef7584e40190a48090ed13935a5df",
+        "6c9bcd5af78351b2dbc38a7d6255b4c789b6a04b8d5bb7d2ed0f75b112ba36cd",
+        "7065543d1df2b8ac74e7bfbb29647eee34e74ee3e57b0d6dee3a8b4524dae38c",
+        "a939d4b96b470635719cbcb74dc433d0721361bb0c50294de0aa1a56426260b1",
+        "51520276dc144e719a8ea897daebb694c207e3cd3fcc079a1711db3cc8a6022c",
+        "94377989a0510c5265d0ccb83437f7e168026797f7aae1480c7f067b0f7d08e6",
+        "930bbebfafd8590003ea62fd57881f44bef1c28be2565d78eee56257d2fece00",
+        "0a47bef718e788dc7e53c3482bc7a9b1f193fd4d63f5a22fb82ad80cd182ad10",
+        "dc0ecc5bf82f6b95db7cbfd3065050fce5f4efee33daca39200059f07cbe8e8b",
+        "137f40d27f62f8a26da18d9bc0710e55e7cc00184cffc14c3fbb631915d9c5b9",
+        "78e6d0255bf7732c7a79ac02f807b8d3ed8503dcd35a5e89347425ad4c8d14a1",
+        "238ff50c60ad09a620e6fd28f943fa6887a37fd33497b1ed013418a30e04913f",
+        "772dd6fe03ad62e29ff279ba63398c06f51fdc4f286870b6c71012133d8b15fb",
+        "1b42570fd028c56a9ebcbacd9744fc29d8ec4e50df0300932a5fdd980412b5fc",
+        "fdb50ca757c990f4da3d92df0000278a4cac9978546b56005f9b95c319e836b4",
+        "d4ec724a445587fddac7c47dace7686b07254142a8887bd5ddc078e7c4d6b036",
+        "4554b2bb94201b06fa628e1a583b483b6fb4ddf9c0955bec8305ae64fbb87429",
+        "b15642202cbd6118ab2605a86ac1a97fc6a56ebe52d6d5958c18ed5cde825842",
+        "cae344ba9f3ef231d143f4a118244ed08404e2603251ae7622abb13c2e3d6607",
+        "79de994298775e389a146966ae08d6db579cba0217f87f0c699706a7dbd2b35b",
+        "0ce7673c18f7b2c0c3fd7907bbbe3b9a5f6687ee0e5993b9f743d337750a85a1",
+        "52bfd9f6a30507372e91b33b71d2657263364043241203c0b732c720ac4f5114",
+        "81ee1a2fe7181e555496bee96ae3c8dbafb943e40212f2163d31ee692204928e",
+        "7fe9c2c3fce5614118c90f26971163e0bc32a19c076d9468159831c735d5faf5",
+        "64097b912faa85de4b0663c77f099d823be75992532a5e9f7ef94e6888d499da",
+        "26fd9a9537aecf24534010531520fdc1a9aedf32d064e602f44fba43368fd3a4",
+        "7f79aa77285e8c8b73ec6346d4bec15b82c59a47067a66ca1793a91083d9162b",
+        "7cd79ff4217a5cf05993ccbe7e761589a606a77be4fab3b5e0f2419fdc3a2392"
+      ],
+      "first3000CodesEqualPreviousShortLyrics120": false,
+      "first15WavsEqualPreviousShortLyrics120": false,
+      "comparisonScope": "Different long lyrics; no parity requirement against short-lyrics120s output",
+      "endedWithEos": false,
+      "eosSuppressed": true
+    },
+    "playback": {
+      "maxPlayedMsAtCapture": 240000,
+      "errorEvents": 0
+    },
+    "chunkTimings": [
+      {
+        "ditSeconds": 4.700939688,
+        "ditSetupSeconds": 0.848558906,
+        "index": 0,
+        "lmSeconds": 6.216575943000004,
+        "rssMiB": 1854.9765625,
+        "vaeSeconds": 5.112102968,
+        "vaeSetupSeconds": 1.129522969,
+        "wallSeconds": 16.129720469
+      },
+      {
+        "ditSeconds": 3.496707656,
+        "ditSetupSeconds": 0,
+        "index": 1,
+        "lmSeconds": 5.036755784999999,
+        "rssMiB": 1912.1640625,
+        "vaeSeconds": 4.362615936999999,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 12.976448281
+      },
+      {
+        "ditSeconds": 3.634751563,
+        "ditSetupSeconds": 0,
+        "index": 2,
+        "lmSeconds": 5.762405313000009,
+        "rssMiB": 1964.828125,
+        "vaeSeconds": 4.174342969,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 13.646667813
+      },
+      {
+        "ditSeconds": 3.7221264069999993,
+        "ditSetupSeconds": 0,
+        "index": 3,
+        "lmSeconds": 6.417635929999975,
+        "rssMiB": 2016.89453125,
+        "vaeSeconds": 4.635801094,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 14.860879687
+      },
+      {
+        "ditSeconds": 3.7643610930000015,
+        "ditSetupSeconds": 0,
+        "index": 4,
+        "lmSeconds": 7.289745620999987,
+        "rssMiB": 2099.859375,
+        "vaeSeconds": 4.641644843999998,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 15.77769625
+      },
+      {
+        "ditSeconds": 3.7715400000000017,
+        "ditSetupSeconds": 0,
+        "index": 5,
+        "lmSeconds": 7.793516394999976,
+        "rssMiB": 2123.44921875,
+        "vaeSeconds": 4.656378907000001,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 16.308965
+      },
+      {
+        "ditSeconds": 3.7080964059999992,
+        "ditSetupSeconds": 0,
+        "index": 6,
+        "lmSeconds": 8.471722811999996,
+        "rssMiB": 2159.1484375,
+        "vaeSeconds": 4.539660000000001,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 16.812145313
+      },
+      {
+        "ditSeconds": 3.4182254689999994,
+        "ditSetupSeconds": 0,
+        "index": 7,
+        "lmSeconds": 8.812035775000005,
+        "rssMiB": 2209.6875,
+        "vaeSeconds": 4.487145781000002,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 16.808855468
+      },
+      {
+        "ditSeconds": 3.5856625000000015,
+        "ditSetupSeconds": 0,
+        "index": 8,
+        "lmSeconds": 7.983290782999994,
+        "rssMiB": 2252.1875,
+        "vaeSeconds": 4.4165256249999985,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 16.070742812
+      },
+      {
+        "ditSeconds": 3.3988912499999984,
+        "ditSetupSeconds": 0,
+        "index": 9,
+        "lmSeconds": 8.605910314000084,
+        "rssMiB": 2303.96875,
+        "vaeSeconds": 4.32361375,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 16.413038906
+      },
+      {
+        "ditSeconds": 6.128147188,
+        "ditSetupSeconds": 0,
+        "index": 10,
+        "lmSeconds": 13.43256093799998,
+        "rssMiB": 2353.984375,
+        "vaeSeconds": 7.305326874999999,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 26.979585
+      },
+      {
+        "ditSeconds": 6.139668125,
+        "ditSetupSeconds": 0,
+        "index": 11,
+        "lmSeconds": 16.708333746000008,
+        "rssMiB": 2405.37890625,
+        "vaeSeconds": 7.190035000000002,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 30.153395157
+      },
+      {
+        "ditSeconds": 6.1953931250000025,
+        "ditSetupSeconds": 0,
+        "index": 12,
+        "lmSeconds": 17.645043278000017,
+        "rssMiB": 2446.08984375,
+        "vaeSeconds": 7.7762592190000035,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 31.730208437
+      },
+      {
+        "ditSeconds": 6.25430875,
+        "ditSetupSeconds": 0,
+        "index": 13,
+        "lmSeconds": 18.25878124699996,
+        "rssMiB": 2492.24609375,
+        "vaeSeconds": 7.203523438000005,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 31.828619687
+      },
+      {
+        "ditSeconds": 6.003064374999994,
+        "ditSetupSeconds": 0,
+        "index": 14,
+        "lmSeconds": 19.25020734900002,
+        "rssMiB": 2534.50390625,
+        "vaeSeconds": 7.655779999999993,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 33.025127344
+      },
+      {
+        "ditSeconds": 6.108769062999997,
+        "ditSetupSeconds": 0,
+        "index": 15,
+        "lmSeconds": 20.0745040580002,
+        "rssMiB": 2575.37109375,
+        "vaeSeconds": 7.577525624999993,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 33.875435937
+      },
+      {
+        "ditSeconds": 6.407980468000005,
+        "ditSetupSeconds": 0,
+        "index": 16,
+        "lmSeconds": 21.253026884999713,
+        "rssMiB": 2624.51953125,
+        "vaeSeconds": 7.621776718999996,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 35.392644687
+      },
+      {
+        "ditSeconds": 5.9994023440000035,
+        "ditSetupSeconds": 0,
+        "index": 17,
+        "lmSeconds": 21.819462817000186,
+        "rssMiB": 2668.9375,
+        "vaeSeconds": 7.135647500000005,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 35.066607813
+      },
+      {
+        "ditSeconds": 6.031700780999998,
+        "ditSetupSeconds": 0,
+        "index": 18,
+        "lmSeconds": 22.735450936999996,
+        "rssMiB": 2709.7109375,
+        "vaeSeconds": 6.990243125000006,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 35.871084063
+      },
+      {
+        "ditSeconds": 6.098986874999994,
+        "ditSetupSeconds": 0,
+        "index": 19,
+        "lmSeconds": 23.71940890300013,
+        "rssMiB": 2750.32421875,
+        "vaeSeconds": 7.654211562,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 37.587441875
+      },
+      {
+        "ditSeconds": 6.339309999999998,
+        "ditSetupSeconds": 0,
+        "index": 20,
+        "lmSeconds": 24.663505469999905,
+        "rssMiB": 2799.52734375,
+        "vaeSeconds": 7.426661718999995,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 38.541211875
+      },
+      {
+        "ditSeconds": 6.016989531999997,
+        "ditSetupSeconds": 0,
+        "index": 21,
+        "lmSeconds": 24.422815312999603,
+        "rssMiB": 2835.00390625,
+        "vaeSeconds": 7.6918137500000086,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 38.259237188
+      },
+      {
+        "ditSeconds": 6.3952921869999955,
+        "ditSetupSeconds": 0,
+        "index": 22,
+        "lmSeconds": 26.282796406000102,
+        "rssMiB": 2844.03515625,
+        "vaeSeconds": 7.732881719000005,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 40.523311875
+      },
+      {
+        "ditSeconds": 6.028673593999997,
+        "ditSetupSeconds": 0,
+        "index": 23,
+        "lmSeconds": 27.186270472999865,
+        "rssMiB": 2859.38671875,
+        "vaeSeconds": 7.705262656999992,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 41.033191719
+      },
+      {
+        "ditSeconds": 6.3403282820000015,
+        "ditSetupSeconds": 0,
+        "index": 24,
+        "lmSeconds": 28.11210484499975,
+        "rssMiB": 2861.33984375,
+        "vaeSeconds": 7.3133209370000145,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 41.877291719
+      },
+      {
+        "ditSeconds": 6.185617344000008,
+        "ditSetupSeconds": 0,
+        "index": 25,
+        "lmSeconds": 28.98552499799996,
+        "rssMiB": 2895.80859375,
+        "vaeSeconds": 7.730604843999998,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 43.017260938
+      },
+      {
+        "ditSeconds": 5.9569414059999986,
+        "ditSetupSeconds": 0,
+        "index": 26,
+        "lmSeconds": 30.08205217700049,
+        "rssMiB": 2918.68359375,
+        "vaeSeconds": 7.510437969000009,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 43.670622656
+      },
+      {
+        "ditSeconds": 5.977469063000001,
+        "ditSetupSeconds": 0,
+        "index": 27,
+        "lmSeconds": 31.445798749999767,
+        "rssMiB": 2987.62109375,
+        "vaeSeconds": 7.329279686999996,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 44.865384844
+      },
+      {
+        "ditSeconds": 6.316521561999991,
+        "ditSetupSeconds": 0,
+        "index": 28,
+        "lmSeconds": 33.80703312099973,
+        "rssMiB": 3044.2265625,
+        "vaeSeconds": 7.716657655999995,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 47.952870156
+      },
+      {
+        "ditSeconds": 6.242351094000014,
+        "ditSetupSeconds": 0,
+        "index": 29,
+        "lmSeconds": 34.6367587449995,
+        "rssMiB": 3095.68359375,
+        "vaeSeconds": 7.186541250000005,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 48.173706406
+      },
+      {
+        "ditSeconds": 6.308124063000008,
+        "ditSetupSeconds": 0,
+        "index": 30,
+        "lmSeconds": 33.05543374900083,
+        "rssMiB": 3154.53125,
+        "vaeSeconds": 7.3035398439999994,
+        "vaeSetupSeconds": 0,
+        "wallSeconds": 46.782644375
+      }
+    ],
+    "lyricPresetSha256": "b5b2ec96cc11ceaf58521740abe48d9590b19283defc686a49853982c43c38c5",
+    "styleFileName": "muq-text-warm-pop.npy"
+  },
+  "stream_lab_large120_long_2026_11_24": {
+    "date": "2026-11-24",
+    "scope": "One actual120s run of the phone existing larger bundle, after420s cooling. Interface labels it4B; no separate5B weights supplied.",
+    "device": {
+      "modelCode": "CMM-AL00",
+      "appVersion": "0.1.13",
+      "backend": "MNN ARM CPU",
+      "threads": {
+        "dit": 6,
+        "lm": 4,
+        "vae": 6
+      }
+    },
+    "modelId": "larkstudio-base-v2",
+    "recipe": {
+      "llm": "36L H2560, W4/group64 body, W8 head, default dynamic activation path0, hidden-consume condition",
+      "dit": "39L H1200, W8/group64,2 Euler steps,CFG1.5,batch2",
+      "vae": "W8/group64,CPU Low FP16,vector sine; no small-model graph fusion",
+      "llmLifetime": "Kept for whole request; DiT,projector,VAE created and destroyed per stage",
+      "resident": false,
+      "tokenPrefetch": false,
+      "suppressEosForTiming": true
+    },
+    "audioSeconds": 120,
+    "conditionFrames": 3000,
+    "lyricTokens": 318,
+    "lyricPreset": "48-line original long test song",
+    "windows": 16,
+    "coolingSecondsObserved": 420.22548,
+    "elapsedSeconds": 1090.617944531,
+    "observedWholeRtf": 9.088482871091665,
+    "controlledTimingAccepted": true,
+    "foregroundGapObserved": false,
+    "foregroundStateSampleCounts": {
+      "FOREGROUND": 196
+    },
+    "lastScreenOffUnchanged": true,
+    "screenAwakeAtEnd": true,
+    "stages": {
+      "llm": {
+        "seconds": 703.2561919909981,
+        "rtf": 5.860468266591651,
+        "romBytes": 2178201339,
+        "processRssPeakMiB": 4424.53515625
+      },
+      "dit": {
+        "seconds": 194.76631922,
+        "rtf": 1.6230526601666668,
+        "romBytes": 722929404,
+        "processRssPeakMiB": 4240.9765625
+      },
+      "vae": {
+        "seconds": 174.74162843800002,
+        "rtf": 1.4561802369833334,
+        "romBytes": 86052358,
+        "processRssPeakMiB": 4192.984375
+      },
+      "projection": {
+        "seconds": 14.310953750000001,
+        "rtf": 0.11925794791666668,
+        "romBytes": 20089968
+      }
+    },
+    "otherSeconds": 3.542851132001715,
+    "otherRtf": 0.029523759433347625,
+    "llmTiming": {
+      "decodeForwards": 3000,
+      "decodeMs": 673651.1601120004,
+      "decodeMsPerToken": 224.55038670400015,
+      "decodeTokensPerSecond": 4.453343477507296,
+      "loadMs": 4719.0140630000005,
+      "lookupMs": 22.614541000000067,
+      "prefillMs": 14032.679375000002,
+      "prefillPositions": 513,
+      "prefixMs": 55.391875,
+      "samplingMs": 10756.581416000026,
+      "scope": "forward plus output synchronization; excludes sampling, condition lookup and downstream waits"
+    },
+    "rom": {
+      "bytes": {
+        "aux": 5184,
+        "clap": 2176,
+        "conditioner": 789372386,
+        "dit": 722929404,
+        "lm": 2178201339,
+        "mu": 20089968,
+        "vae": 86052358
+      },
+      "totalBytes": 3796652815,
+      "scope": "Phone verified logical asset sizes, excluding HAP,audio,logs; no extra copy added outside this bundle"
+    },
+    "rssPeakMiB": 4424.53515625,
+    "stageRamScope": "20ms sampled process RSS during each stage; includes all resident models",
+    "minimumAvailableMiB": 1647,
+    "firstChunkSeconds": 64.046807031,
+    "kvPositions": 3513,
+    "ditSetupSecondsIncluded": 29.778975158,
+    "vaeSetupSecondsIncluded": 30.708625471000005,
+    "installedHapSha256": "f4c6131aa9feed5cb27625c0193c8ac504fdf9ca96fd493bf23b7271b74ad755",
+    "modelAssetSha256": {
+      "aux/mask.f32": "fcba089778a84bbea7d9e4a0a08a52a52aadfe051fe931afa7c8da883cd7a20b",
+      "aux/mean.f32": "deb9b0bda8348a3d480bce0b2dc6235479f5a4a0e8d341038ffef4c36bbab2d1",
+      "aux/std.f32": "49a307581ddf10d44981a1188d19db9261b3d461b0354f5b2e6733bdad152f66",
+      "aux/zero.f32": "632e160cfc15b9c5a3718cd64f36cc92cef4fffbb6d9620f3606c8cfbb6aa0c5",
+      "clap/default.npy": "4e9b1e2eaa0d6adf3ba09cfa342b4ae892ba4d567d9add3cc00329c71b5dc1a1",
+      "conditioner/artist.f32": "5c7d2505f37ba733d76524afaee62657836ba2a619312bd515034623384ee316",
+      "conditioner/bow_genre.f32": "122eea1f5e5b1d50b7c9e546c2e44cfd7f0ef22b4d8eabea806236459bdf8faf",
+      "conditioner/genre2start.f32": "172fe0e4bb05a92acbbf4e9ce4c8e1239c8e7afce2bedac42d1721059f0623d3",
+      "conditioner/start.f32": "727e9c868b12154ec041400600271ef5653686e7ca7cad4804988f7000c6da69",
+      "conditioner/tokenizer.mtok": "ba0b8db1fc65350682e401f3ffcc574dfb4a352c59c32c398692afc717c2ea3e",
+      "conditioner/x_emb.f16": "2a5e986b9d7662c0de5dc7449a15720d1a2d4b9384760df28caeaae571d7fa0f",
+      "dit/dit.mnn": "57cc07a877c01b3e49e6538edba7a1629b5d8072e1dfa8d43ce4279aa9207f27",
+      "dit/dit.mnn.weight": "3c4c19462e376e32172e82213440874f603217dd14c77c2985a095ce3513fa10",
+      "lm/embeddings_bf16.bin": "738c956722bce8057faae0782ba5ca6597aee4ce91a5f1589d84bd71a74946fc",
+      "lm/llm.mnn": "5505a31d0f4c16bc6cb9d04cd1e3ba5fbca38e6a97a356b2f76368d791ff78bb",
+      "lm/llm.mnn.weight": "d1191c69cf589dfc575014d3fccddcf78a5e5d430796e0a1ed366f62b024c1de",
+      "lm/llm_config.json": "6bb5fbf98e10f435f2a2004ab3f2f4a1b4c0570e236b41b98fec28eaac09d51a",
+      "lm/tokenizer.mtok": "8c4051ca922c4240ea14550cb3a38f276b9630c8aba314b0977ce9c0b7b22dbf",
+      "mu/mu.mnn": "13cd21745c89041bc5cba16eafab592c33af06a3ab287de401b4fcb686713506",
+      "mu/mu.mnn.weight": "58d5727033b6ec83a5a8580da7da1869af9319b5d46b9dc389eb21ef5e2e115b",
+      "vae/vae.mnn": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "vae/vae.mnn.weight": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc"
+    },
+    "temperatureBatteryC": {
+      "beforeCooling": 40.0,
+      "atStart": 35.0,
+      "end": 41.0,
+      "peak": 41.0
+    },
+    "validation": {
+      "wavFrames": 5760000,
+      "sampleRate": 48000,
+      "channels": 2,
+      "chunkHashes": [
+        "baa0692de95ed405d2e0a6accc09266a35bbdfb51185ca4481adb5a29517f50a",
+        "f85d8efda04ac4e38d727e8a50ffecf8af165f7002402acf63d0c1fb2d99ab07",
+        "cfa226d201f8dbe5f806418d5ff3e0d39197132588c06322593b170ce80fcb6b",
+        "3c0268dd4834577ecb357d6b48508d65b743d2d4aa53d9fc2fadf29075a3e782",
+        "c78d3325ec2cfa5a21e31f530dd0d9d576d172a08cc53f0454f024f43666c2d1",
+        "d58afdefbacca10a833f4d44a19bcf0b2501710d53cd82fc3da87bb0052bc8a1",
+        "53f4b2cf0c7adf96f9ae06795e139e5a99f237be64b58d9bf6d61ce0f2e71d92",
+        "9b2f82e0403fbee222f60f531e8a218026a47bd781f8ffdf1c829bd89be0897a",
+        "4b31d73183c1d46f4ee2e892809d2bab3e9a0fac2bf23f102452fc3fc30384f9",
+        "ce3c44210fef11e843c6775770ad5ea7c183854d715178423c3d6ec82a07bc9d",
+        "4c6d1b40b8362ca3257fa2d56274f4a526fbd4c72b5687af8727f144856f8676",
+        "bf6bf83b44b2459f5843bcad6e1b0facc980e9f8037d894c8a7226bba9ce1c40",
+        "709b8aee2e1125cc5e150ba98bf30e95a3b0269c1502b00a9f9f8752da4434c1",
+        "7e21099566d5d01f3396cec65dfece01d0516b00d4571b1597dbfcae4c6cf342",
+        "17cbc56705a5c9904058bba0900c5b1e4036f6a090c86d0e41dba06dd4f53ea5",
+        "b8351048f91ff2cfbf909c05a3df2a71459a48f3329fd7b5ccc861b8ac342788"
+      ],
+      "endedWithEos": false,
+      "eosSuppressed": true
+    },
+    "playback": {
+      "maxPlayedMsAtCapture": 120000,
+      "errorEvents": 0
+    },
+    "chunkTimings": [
+      {
+        "ditSeconds": 8.508091563,
+        "ditSetupSeconds": 1.950210938,
+        "index": 0,
+        "lmSeconds": 24.998054838999995,
+        "rssMiB": 2216.40234375,
+        "vaeSeconds": 10.871012344,
+        "vaeSetupSeconds": 1.973701094,
+        "wallSeconds": 45.221489687
+      },
+      {
+        "ditSeconds": 12.403009218999998,
+        "ditSetupSeconds": 1.722003906,
+        "index": 1,
+        "lmSeconds": 34.14723437499999,
+        "rssMiB": 2649.0234375,
+        "vaeSeconds": 9.725742969000002,
+        "vaeSetupSeconds": 0.8326604689999999,
+        "wallSeconds": 57.283827657
+      },
+      {
+        "ditSeconds": 12.342849844,
+        "ditSetupSeconds": 1.694823125,
+        "index": 2,
+        "lmSeconds": 35.56921093599996,
+        "rssMiB": 2753.90625,
+        "vaeSeconds": 10.797072968000002,
+        "vaeSetupSeconds": 1.8811823440000004,
+        "wallSeconds": 59.790354375
+      },
+      {
+        "ditSeconds": 12.249114218999999,
+        "ditSetupSeconds": 1.5867706249999998,
+        "index": 3,
+        "lmSeconds": 37.25425889999997,
+        "rssMiB": 2827.45703125,
+        "vaeSeconds": 10.620530469000002,
+        "vaeSetupSeconds": 1.7798682809999997,
+        "wallSeconds": 61.220920781
+      },
+      {
+        "ditSeconds": 12.152562344000003,
+        "ditSetupSeconds": 1.5449931249999995,
+        "index": 4,
+        "lmSeconds": 38.97097343499996,
+        "rssMiB": 2810.9609375,
+        "vaeSeconds": 11.793604686999998,
+        "vaeSetupSeconds": 2.544832188,
+        "wallSeconds": 63.984847343
+      },
+      {
+        "ditSeconds": 12.209524219000002,
+        "ditSetupSeconds": 1.792413281,
+        "index": 5,
+        "lmSeconds": 41.74889592999992,
+        "rssMiB": 3017.36328125,
+        "vaeSeconds": 10.878143594,
+        "vaeSetupSeconds": 1.7428581249999997,
+        "wallSeconds": 65.903353125
+      },
+      {
+        "ditSeconds": 12.34815125,
+        "ditSetupSeconds": 1.7220607809999997,
+        "index": 6,
+        "lmSeconds": 44.194352029999806,
+        "rssMiB": 3042.109375,
+        "vaeSeconds": 11.178931250000005,
+        "vaeSetupSeconds": 1.973958907,
+        "wallSeconds": 68.831177187
+      },
+      {
+        "ditSeconds": 12.691572344000008,
+        "ditSetupSeconds": 2.064618438,
+        "index": 7,
+        "lmSeconds": 46.075510622999786,
+        "rssMiB": 3089.72265625,
+        "vaeSeconds": 11.282883749999996,
+        "vaeSetupSeconds": 2.2126664060000003,
+        "wallSeconds": 71.169096563
+      },
+      {
+        "ditSeconds": 12.683082968999997,
+        "ditSetupSeconds": 1.9637596880000014,
+        "index": 8,
+        "lmSeconds": 47.50117000000006,
+        "rssMiB": 3140.73046875,
+        "vaeSeconds": 11.165222030999999,
+        "vaeSetupSeconds": 2.137293906,
+        "wallSeconds": 72.502546094
+      },
+      {
+        "ditSeconds": 12.692789687000001,
+        "ditSetupSeconds": 2.015083280999999,
+        "index": 9,
+        "lmSeconds": 49.81132359300017,
+        "rssMiB": 3144.515625,
+        "vaeSeconds": 11.378337344000002,
+        "vaeSetupSeconds": 2.2230564060000013,
+        "wallSeconds": 74.942064688
+      },
+      {
+        "ditSeconds": 12.591740781000013,
+        "ditSetupSeconds": 1.9229309380000004,
+        "index": 10,
+        "lmSeconds": 51.31013827800001,
+        "rssMiB": 3222.5,
+        "vaeSeconds": 11.150098125,
+        "vaeSetupSeconds": 2.243759688000001,
+        "wallSeconds": 76.164379375
+      },
+      {
+        "ditSeconds": 12.485820311999987,
+        "ditSetupSeconds": 1.9521935940000006,
+        "index": 11,
+        "lmSeconds": 53.557542501999535,
+        "rssMiB": 3280.96875,
+        "vaeSeconds": 10.98917203100001,
+        "vaeSetupSeconds": 2.1594060940000013,
+        "wallSeconds": 78.11457
+      },
+      {
+        "ditSeconds": 12.27020250000001,
+        "ditSetupSeconds": 1.9599298440000013,
+        "index": 12,
+        "lmSeconds": 55.282741092999345,
+        "rssMiB": 3356.28515625,
+        "vaeSeconds": 10.69644593800001,
+        "vaeSetupSeconds": 2.3557312500000016,
+        "wallSeconds": 79.364346719
+      },
+      {
+        "ditSeconds": 12.297921561999999,
+        "ditSetupSeconds": 1.9489548439999993,
+        "index": 13,
+        "lmSeconds": 46.0445929619998,
+        "rssMiB": 3405.09765625,
+        "vaeSeconds": 11.05431234400001,
+        "vaeSetupSeconds": 1.7399840630000014,
+        "wallSeconds": 70.475250937
+      },
+      {
+        "ditSeconds": 12.428293437999997,
+        "ditSetupSeconds": 1.8478075000000018,
+        "index": 14,
+        "lmSeconds": 59.74215062099995,
+        "rssMiB": 3472.80078125,
+        "vaeSeconds": 11.052036093999988,
+        "vaeSetupSeconds": 2.0293428129999995,
+        "wallSeconds": 84.401894062
+      },
+      {
+        "ditSeconds": 12.411592968999997,
+        "ditSetupSeconds": 2.0904212499999986,
+        "index": 15,
+        "lmSeconds": 18.230292966999855,
+        "rssMiB": 3479.6953125,
+        "vaeSeconds": 10.108082499999995,
+        "vaeSetupSeconds": 0.8783234369999988,
+        "wallSeconds": 41.704791094
+      }
+    ],
+    "all22AssetHashesVerifiedOnPhoneAfterInference": true,
+    "mnnArchiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+    "lyricPresetSha256": "b5b2ec96cc11ceaf58521740abe48d9590b19283defc686a49853982c43c38c5",
+    "styleFileName": "muq-text-warm-pop.npy"
   }
 
 }

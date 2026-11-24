@@ -147,7 +147,7 @@ pwsh -File tools/run_music_duration.ps1 -Device YOUR_DEVICE_ID -RunId my-audio30
 pwsh -File tools/run_music_duration.ps1 -Device YOUR_DEVICE_ID -RunId my-audio30-fused -DurationSeconds 30 -VaeFusion 1
 ```
 
-同一入口支持60、90、120、300秒。若冷却后息屏，记录为`awaiting-unlock`，没有开始推理；
+同一入口支持60、90、120、240、300秒。若冷却后息屏，记录为`awaiting-unlock`，没有开始推理；
 手动解锁后可用相同参数加`-ResumePrepared`继续该准备记录。该参数拒绝重启已经开始或完成的请求。
 系统终止、后台／息屏与最后有效输出须如实记录；不能仅凭退出就认定OOM。
 
@@ -165,3 +165,23 @@ LLM阶段总时间仍包含加载、前缀、采样和查表，因此不能直�
 `stageProcessRssPeakMiB` 在串行各阶段按20ms采样进程RSS峰值，并在阶段边界补采样。
 它包含其他共驻模型，不能解释为该模块独占RAM，也不是GPU显存；并行预取实验的重叠阶段不能据此分摊模块RAM。
 ROM另按当前实际部署文件字节统计，排除音频、日志与未使用的旧头文件。
+
+v0.1.11仅新增240秒选项，沿用上述原生计时和权重；测试脚本逐样本记录前台状态，
+在未确认前台时保留本地任务快照，区分真实后台、过渡状态和UNKNOWN。保留严格验收标记，不将异常样本悄悄删除。
+4分钟固定长度请求为6000个code、5999次decode，预计31个重叠窗口；完整性以实际输出240秒PCM为准。
+
+```powershell
+pwsh -File tools/run_music_duration.ps1 -Device YOUR_DEVICE_ID -RunId my-audio240 -DurationSeconds 240 -VaeFusion 1 -DynamicOption 2 -CoolingSeconds 360
+```
+
+v0.1.12补充长歌词预设和“忽略提前EOS”开关。240／300秒自动测速改用长歌词，
+不能将其与短歌词120秒成绩当作只改变时长的严格配对；原生报告记录实际`lyricTokens`、`suppressEos`和请求长度。
+
+v0.1.13为现有较大模型增加独立120秒探针，脚本新增`-ModelChoice 1`，须显式配合`-DynamicOption 0 -VaeFusion 0`。
+它仍使用实际36层／H2560 LLM与39层DiT，不因口头称为“5B”就更改模型标识。
+120秒consume对齐路径应有3000次decode，区别于小模型token查表路径的2999次。
+脚本启动前读取手机已安装HAP的SHA256，避免本地同时准备另一版本时，把本地新包误当作正在运行的包。
+
+```powershell
+pwsh -File tools/run_music_duration.ps1 -Device YOUR_DEVICE_ID -RunId my-large120 -ModelChoice 1 -DurationSeconds 120 -DynamicOption 0 -VaeFusion 0 -CoolingSeconds 420
+```

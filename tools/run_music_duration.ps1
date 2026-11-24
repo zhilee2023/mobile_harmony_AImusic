@@ -1,7 +1,8 @@
 param(
  [Parameter(Mandatory=$true)][ValidatePattern('^[A-Za-z0-9]+$')][string]$Device,
  [Parameter(Mandatory=$true)][ValidatePattern('^[A-Za-z0-9][A-Za-z0-9_-]{0,65}$')][string]$RunId,
- [Parameter(Mandatory=$true)][ValidateSet(30,60,90,120,300)][int]$DurationSeconds,
+ [Parameter(Mandatory=$true)][ValidateSet(30,60,90,120,240,300)][int]$DurationSeconds,
+ [ValidateSet(0,1)][int]$ModelChoice=0,
  [ValidateSet(0,2)][int]$DynamicOption=2,
  [ValidateSet(0,1)][int]$VaeFusion=1,
  [ValidateRange(0,600)][int]$CoolingSeconds=180,
@@ -9,6 +10,7 @@ param(
  [string]$DevEcoRoot='C:\Program Files\Huawei\DevEco Studio'
 )
 $ErrorActionPreference='Stop'
+if($ModelChoice -eq 1 -and ($DurationSeconds -gt 120 -or $VaeFusion -ne 0 -or $DynamicOption -ne 0)){throw 'Large-model probe max120s; explicitly use -VaeFusion0 -DynamicOption0 for its existing recipe'}
 $musicProject=Split-Path -Parent $PSScriptRoot
 $musicBundleName=(Get-Content -LiteralPath (Join-Path $musicProject 'stream-app/AppScope/app.json5') -Raw -Encoding UTF8 | ConvertFrom-Json).app.bundleName
 if($musicBundleName -notmatch '^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$'){throw 'Invalid App bundleName'}
@@ -34,12 +36,12 @@ function Music-Sample {
  $musicValues=@($musicRaw -split "`n" | ForEach-Object {$_.Trim()})
  return @{utc=[DateTimeOffset]::UtcNow.ToString('o');batteryC=if($musicValues[0] -match '^\d+$'){[double]$musicValues[0]/10}else{$null};socNodeC=if($musicValues.Count -gt 1 -and $musicValues[1] -match '^\d+$'){[double]$musicValues[1]/1000}else{$null}}
 }
-$musicRecord=@{runTag=$RunId;bundleName=$musicBundleName;requestedDurationSeconds=$DurationSeconds;dynamicOption=$DynamicOption;vaeFusion=[bool]$VaeFusion;status='preparing';coolingSecondsRequested=$CoolingSeconds;
- scope='App0.6B real fixed-length generation with playback; W4 body/W8 head/dynamic A8, DiT CPU2steps CFG1.5, CPU Low VAE with explicit fusion flag; EOS suppressed only for timing';
+$musicRecord=@{runTag=$RunId;bundleName=$musicBundleName;modelChoice=$ModelChoice;requestedDurationSeconds=$DurationSeconds;dynamicOption=$DynamicOption;vaeFusion=[bool]$VaeFusion;status='preparing';coolingSecondsRequested=$CoolingSeconds;
+ scope='Actual selected-model App fixed-length generation with playback; W4 body/W8 head, DiT CPU2steps CFG1.5, CPU Low VAE; dynamic option and fusion recorded explicitly; EOS suppressed for timing';
  samples=@();createdUtc=[DateTimeOffset]::UtcNow.ToString('o')}
 if($ResumePrepared){
  $musicPrepared=Get-Content -LiteralPath (Join-Path $musicDir 'run.json') -Raw -Encoding UTF8 | ConvertFrom-Json
- if($musicPrepared.status -ne 'awaiting-unlock' -or $musicPrepared.requestedDurationSeconds -ne $DurationSeconds -or $musicPrepared.dynamicOption -ne $DynamicOption -or [bool]$musicPrepared.vaeFusion -ne [bool]$VaeFusion){throw 'Only the same prepared, not-yet-started measurement may resume'}
+ if($musicPrepared.status -ne 'awaiting-unlock' -or [int]$musicPrepared.modelChoice -ne $ModelChoice -or $musicPrepared.requestedDurationSeconds -ne $DurationSeconds -or $musicPrepared.dynamicOption -ne $DynamicOption -or [bool]$musicPrepared.vaeFusion -ne [bool]$VaeFusion){throw 'Only the same prepared, not-yet-started measurement may resume'}
  $musicRecord=@{};foreach($musicProperty in $musicPrepared.psobject.Properties){$musicRecord[$musicProperty.Name]=$musicProperty.Value}
  $musicRecord.resumedUtc=[DateTimeOffset]::UtcNow.ToString('o')
 }
@@ -71,18 +73,27 @@ $musicPower=Music-Hdc @('shell','hidumper -s PowerManagerService -a -a')
 [IO.File]::WriteAllText((Join-Path $musicDir 'power-before.txt'),$musicPower,[Text.UTF8Encoding]::new($false))
 if($musicPower -notmatch 'Current State: AWAKE'){$musicRecord.status='awaiting-unlock';Music-Save;throw 'Manually unlock the phone; no inference started'}
 $musicOffBefore=[regex]::Match($musicPower,'Last Screen Off:\s*(\d+)').Groups[1].Value
+$musicInstalledHashText=Music-Hdc @('shell',"sha256sum /data/app/el1/bundle/public/$musicBundleName/entry.hap")
+$musicRecord.installedHapSha256=[regex]::Match($musicInstalledHashText,'^[a-fA-F0-9]{64}').Value.ToLowerInvariant()
+if(!$musicRecord.installedHapSha256){throw 'Cannot verify installed HAP hash; no inference started'}
 $null=Music-Hdc @('shell',"aa force-stop $musicBundleName") # Confirmed idle above, one fresh process per duration.
 $musicRecord.samples+=@(Music-Sample);$musicRecord.status='starting';Music-Save
-$null=Music-Hdc @('shell',"aa start -a EntryAbility -b $musicBundleName --ps streamLabTest duration-benchmark --pi streamLabModel 0 --pi streamLabSeconds $DurationSeconds --pi streamLabDynamicOption $DynamicOption --pi streamLabVaeFusion $VaeFusion --ps streamLabRunTag $RunId")
+$null=Music-Hdc @('shell',"aa start -a EntryAbility -b $musicBundleName --ps streamLabTest duration-benchmark --pi streamLabModel $ModelChoice --pi streamLabSeconds $DurationSeconds --pi streamLabDynamicOption $DynamicOption --pi streamLabVaeFusion $VaeFusion --ps streamLabRunTag $RunId")
 $musicClock=[DateTimeOffset]::UtcNow;$musicLastAnnounce=0
 while(([DateTimeOffset]::UtcNow-$musicClock).TotalSeconds -lt 3600){
  Start-Sleep -Seconds 5
  $musicState=Music-ReadState
- $musicRecord.samples+=@(Music-Sample)
+ $musicObservation=Music-Sample
  $musicMissions=Music-Hdc @('shell','aa dump -l')
  $musicForeground=[regex]::Match($musicMissions,('(?s)app name \['+[regex]::Escape($musicBundleName)+'\].*?state #([A-Z]+)'))
  $musicRecord.foregroundObserved=($musicForeground.Success -and $musicForeground.Groups[1].Value -eq 'FOREGROUND')
- if(!$musicRecord.foregroundObserved){$musicRecord.foregroundGapObserved=$true}
+ $musicObservation.foregroundState=if($musicForeground.Success){$musicForeground.Groups[1].Value}else{'UNKNOWN'}
+ $musicRecord.samples+=@($musicObservation)
+ if(!$musicRecord.foregroundObserved){
+  $musicRecord.foregroundGapObserved=$true
+  $musicDiagnosticName='foreground-'+[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()+'.txt'
+  [IO.File]::WriteAllText((Join-Path $musicDir $musicDiagnosticName),$musicMissions,[Text.UTF8Encoding]::new($false))
+ }
  if($musicState -and $musicState.runTag -eq $RunId){
   $musicRecord.status='running';$musicRecord.lastProgress=@{runId=$musicState.runId;phase=$musicState.phase;conditionFrames=$musicState.conditionFrames;generatedSamples=$musicState.generatedSamples;rssPeakMiB=$musicState.rssPeakMiB};Music-Save
   if(!$musicState.busy){$musicRecord.generation=$musicState;$musicRecord.status=$musicState.status;$musicRecord.completionSource='App checkpoint';break}
@@ -120,7 +131,8 @@ $null=Music-Hdc @('file','recv',"$musicFiles/stream-runs/$($musicRecord.generati
 Start-Sleep -Seconds 12
 $null=Music-Hdc @('file','recv',"$musicFiles/stream-events.jsonl",(Join-Path $musicDir 'events.jsonl'))
 $musicHap=Join-Path $musicProject 'stream-app/entry/build/default/outputs/default/entry-default-signed.hap'
-$musicRecord.hapSha256=(Get-FileHash -LiteralPath $musicHap -Algorithm SHA256).Hash.ToLowerInvariant()
+$musicRecord.hapSha256=$musicRecord.installedHapSha256
+if(Test-Path -LiteralPath $musicHap){$musicRecord.localBuildHapSha256=(Get-FileHash -LiteralPath $musicHap -Algorithm SHA256).Hash.ToLowerInvariant()}
 $musicRecord.finishedUtc=[DateTimeOffset]::UtcNow.ToString('o');Music-Save
 if($musicRecord.status -ne 'completed' -or $musicActual -ne $DurationSeconds){throw 'Incomplete or wrong-duration generation; not an accepted full-length RTF'}
 if(!$musicRecord.controlledTimingAccepted){throw 'Audio completed with background/screen interruption; timing quarantined, do not accept as controlled RTF'}

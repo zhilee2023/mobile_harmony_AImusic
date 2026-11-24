@@ -1,6 +1,6 @@
 # 独立流式实验 App
 
-`stream-app/`，包名 `com.zhilee.levostreamlab`，名称 **LeVo 流式实验 v0.1.10**。
+`stream-app/`，包名 `com.zhilee.levostreamlab`，名称 **LeVo 流式实验 v0.1.13**。
 与 `music-app/`、研究 App 和手机原有 LarkStudio App 独立；没有覆盖旧代码、包名或模型。
 当前仅支持下面两个明确的模型契约，不是任意同名 Qwen 权重的通用播放器。
 
@@ -9,6 +9,16 @@
 见[本次配方、对照与测速协议](STREAM_RUNTIME_OPTIMIZATIONS.md)。下文速度表保留原版本和条件。
 
 120秒RTF约2.5主表及v0.1.10独立prefill／decode补测见[120秒性能与LLM补测](STREAM_120S_TIMING.md)。
+
+v0.1.12新增短／长／自定义歌词选择。长样例含48行、318个歌词token，仍受原有511-token契约约束。
+“生成到所选时长，忽略提前EOS”默认开启，可在空闲时切换；固定时长测速入口始终屏蔽EOS。
+240／300秒测速自动使用长样例，停止按钮和内存门槛保持有效，不保证歌词逐字唱完或自然结束。
+
+v0.1.13增加较大36层LLM／39层DiT模型的90／120秒实验入口；显式`longRun`上限为3000个code，
+继续尊重bundle中存在的`runtime.maxFrames`，不改写权重清单或已有模型。较大模型使用原VAE，关闭小模型专用图融合。
+
+已完成0.6B长歌词240秒、冷却7分钟后较大模型120秒；实测总RTF分别4.025与9.088，
+详见[长歌词实机报告](STREAM_LONG_DURATION_20261124.md)。两轮都保持前台并完成播放器验收。
 
 ## 两个模型契约
 

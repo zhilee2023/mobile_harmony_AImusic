@@ -4,6 +4,7 @@ import { window } from '@kit.ArkUI';
 import { media } from '@kit.MediaKit';
 import { fileIo as fs, picker } from '@kit.CoreFileKit';
 import { StreamPlayer, StreamStatus, PlaybackStatus } from './StreamPlayer';
+import { SHORT_LYRICS, LONG_LYRICS } from './LyricPresets';
 
 interface ModelStatus { ready: boolean; count: number; total: number; error?: string; }
 interface StyleChoice { name: string; path: string; }
@@ -13,7 +14,9 @@ interface StreamEvent { kind: string; timeMs: number; runId: string; busy: boole
 struct Index {
   @State model: number = 0;
   @State seconds: number = 10.2;
-  @State lyrics: string = '[intro-short]\n[verse]\n晚风轻轻吹过窗台\n星光落在你的肩膀\n沿着灯火走向远方\n把心愿唱给月亮\n[chorus]\n让我们迎着风歌唱\n让明天开出新的光\n就算路途还有漫长\n你在身旁就是方向\n[outro-short]';
+  @State lyrics: string = SHORT_LYRICS;
+  @State lyricPreset: number = 0;
+  @State fillDuration: boolean = true;
   @State styles: StyleChoice[] = [];
   @State styleIndex: number = 0;
   @State modelReady: boolean = false;
@@ -63,7 +66,7 @@ struct Index {
     return '';
   }
   private time(ms: number): string { return `${Math.floor(ms / 60000)}:${Math.floor(ms / 1000 % 60).toString().padStart(2, '0')}`; }
-  private durations(): number[] { return this.model === 0 ? [10.2, 15, 30, 60, 90, 120, 300] : [10.2, 15, 30, 60]; }
+  private durations(): number[] { return this.model === 0 ? [10.2, 15, 30, 60, 90, 120, 240, 300] : [10.2, 15, 30, 60, 90, 120]; }
   private phaseName(phase: string): string {
     switch (phase) {
       case 'loading': return '加载模型'; case 'prefill': return '前缀计算'; case 'decode': return '生成条件帧';
@@ -114,7 +117,8 @@ struct Index {
       this.model = AppStorage.get<number>('streamLabModel') ?? 0;
       this.durationBenchmark = autoRun === 'duration-benchmark';
       this.seconds = this.durationBenchmark ? (AppStorage.get<number>('streamLabSeconds') ?? 30) : autoRun === 'mnn60-check' ? 60 : autoRun === 'music-check' ? 10.2 : 15;
-      if (this.durationBenchmark && [30, 60, 90, 120, 300].indexOf(this.seconds) < 0) { this.stage = '不支持的测速时长'; return; }
+      if (this.durationBenchmark && [30, 60, 90, 120, 240, 300].indexOf(this.seconds) < 0) { this.stage = '不支持的测速时长'; return; }
+      if (this.durationBenchmark && (this.seconds >= 240 || (this.model === 1 && this.seconds >= 120))) { this.lyrics = LONG_LYRICS; this.lyricPreset = 1; }
       this.lmDynamicOption = AppStorage.get<number>('streamLabDynamicOption') ?? 2;
       this.vaeFusion = AppStorage.get<boolean>('streamLabVaeFusion') ?? true;
       this.benchmarkRunTag = this.durationBenchmark ? (AppStorage.get<string>('streamLabRunTag') ?? '') : '';
@@ -204,7 +208,7 @@ struct Index {
     this.startedAt = Date.now(); this.playbackError = '';
     this.firstChunk = 0; this.stage = '准备实验'; await this.keepAwake(true);
     if (this.player) await this.player.close(); await this.releaseSystem(); this.player = this.createPlayer();
-    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, croppedLm: this.model === 0 ? this.croppedLm() : '', lmDynamicOption: this.model === 0 ? this.lmDynamicOption : 0, vaeFusion: this.model === 0 && this.vaeFusion, longRun: this.model === 0 && this.seconds > 60, suppressEos: fixedBenchmark, runTag: fixedBenchmark ? this.benchmarkRunTag : '' })); }
+    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, croppedLm: this.model === 0 ? this.croppedLm() : '', lmDynamicOption: this.model === 0 ? this.lmDynamicOption : 0, vaeFusion: this.model === 0 && this.vaeFusion, longRun: this.seconds > 60, suppressEos: fixedBenchmark || this.fillDuration, runTag: fixedBenchmark ? this.benchmarkRunTag : '' })); }
     catch (error) { this.stage = String(error); this.playbackError = String(error); this.record('start-error', String(error)); }
     finally { this.busy = false; this.stopping = false; this.durationBenchmark = false; this.poll(); if (fixedBenchmark) this.awakeRelease = setTimeout(() => { this.awakeRelease = -1; this.keepAwake(false); }, 15000); else await this.keepAwake(false); }
   }
@@ -218,20 +222,26 @@ struct Index {
         }.width('100%').alignItems(HorizontalAlign.Start)
         Row({ space: 12 }) {
           Select([{ value: '0.6B · 28层 + 22层 DiT' }, { value: '4B · 36层 + 39层 DiT' }])
-            .selected(this.model).value(this.model === 0 ? '0.6B · 28/22层' : '4B · 36/39层').layoutWeight(1).enabled(!this.busy).onSelect((index: number) => { this.model = index; if (this.model !== 0 && this.seconds > 60) this.seconds = 60; this.styleIndex = 0; this.refresh(); })
+            .selected(this.model).value(this.model === 0 ? '0.6B · 28/22层' : '4B · 36/39层').layoutWeight(1).enabled(!this.busy).onSelect((index: number) => { this.model = index; if (this.model !== 0 && this.seconds > 120) this.seconds = 120; this.styleIndex = 0; this.refresh(); })
           Select(this.durations().map((seconds: number): SelectOption => { return { value: `${seconds}秒` }; })).selected(this.durations().indexOf(this.seconds))
             .width(82).enabled(!this.busy).onSelect((index: number) => { this.seconds = this.durations()[index]; })
         }.width('100%')
         Text(this.modelNote + ' · 点此刷新').fontSize(13).fontColor('#667D80').width('100%').onClick(() => { this.refresh(); })
         Column({ space: 10 }) {
           Text('歌词').fontSize(17).width('100%')
-          TextArea({ text: this.lyrics, placeholder: '输入歌词，支持[verse]、[chorus]等段落标签' }).height(180).maxLength(1800).enabled(!this.busy).onChange((value: string) => { this.lyrics = value; })
+          Select([{ value: '短歌词 · 原对照' }, { value: '长歌词 · 完整段落' }, { value: '自定义歌词' }]).selected(this.lyricPreset).width('100%').enabled(!this.busy)
+            .onSelect((index: number) => { this.lyricPreset = index; if (index < 2) this.lyrics = index === 0 ? SHORT_LYRICS : LONG_LYRICS; })
+          TextArea({ text: this.lyrics, placeholder: '输入歌词，支持[verse]、[chorus]等段落标签' }).height(180).maxLength(1800).enabled(!this.busy).onChange((value: string) => { if (value !== this.lyrics) this.lyricPreset = 2; this.lyrics = value; })
           Row({ space: 10 }) {
             Select(this.styles.map((item: StyleChoice): SelectOption => { return { value: item.name === 'muq-text-warm-pop' ? 'MuQ文本·温暖流行' : item.name }; })).selected(this.styleIndex).value(this.styles[this.styleIndex]?.name === 'muq-text-warm-pop' ? 'MuQ文本·温暖流行' : this.styles[this.styleIndex]?.name ?? '模型默认')
               .layoutWeight(1).enabled(!this.busy).onSelect((index: number) => { this.styleIndex = index; })
             Button('导入NPY').enabled(!this.busy).onClick(() => { this.importStyle(); })
           }.width('100%')
           Text('已带入原LarkStudio测试歌词和风格文件；可修改后再生成。').fontSize(12).fontColor('#667D80')
+          Row({ space: 10 }) {
+            Toggle({ type: ToggleType.Switch, isOn: this.fillDuration }).enabled(!this.busy).onChange((value: boolean) => { this.fillDuration = value; })
+            Text('生成到所选时长，忽略提前EOS').fontSize(13)
+          }.width('100%')
         }.padding(16).backgroundColor(Color.White).borderRadius(20)
         Column({ space: 14 }) {
           Text(this.stage).fontSize(21).fontWeight(FontWeight.Medium).width('100%')
@@ -263,7 +273,7 @@ struct Index {
           Text(`播放队列 ${(this.queueMs / 1000).toFixed(2)}s / 0.12s`).fontSize(12).fontColor('#667D80')
         }.width('100%')
         Button('播放链路自检（合成测试音）').enabled(!this.busy).onClick(() => { this.start(true); }).backgroundColor('#E7EFEE').fontColor('#244841')
-        Text('歌词与NPY驱动真实采样。DiT固定2步；0.6B共驻、不做CFG引导（当前图仍为双分支计算）；4B保留CFG。RSS上限6GiB。').fontSize(12).fontColor('#667D80')
+        Text('歌词与NPY驱动真实采样。DiT固定2步、CFG1.5；0.6B共驻。RSS上限6GiB。').fontSize(12).fontColor('#667D80')
       }.padding(24).width('100%')
     }.backgroundColor('#F2F6F5').width('100%').height('100%')
   }
