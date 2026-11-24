@@ -177,11 +177,19 @@ pwsh -File tools/run_music_duration.ps1 -Device YOUR_DEVICE_ID -RunId my-audio24
 v0.1.12补充长歌词预设和“忽略提前EOS”开关。240／300秒自动测速改用长歌词，
 不能将其与短歌词120秒成绩当作只改变时长的严格配对；原生报告记录实际`lyricTokens`、`suppressEos`和请求长度。
 
-v0.1.13为现有较大模型增加独立120秒探针，脚本新增`-ModelChoice 1`，须显式配合`-DynamicOption 0 -VaeFusion 0`。
+v0.1.13为现有较大模型增加独立120秒探针，脚本新增`-ModelChoice 1`，当时须显式配合`-DynamicOption 0 -VaeFusion 0`。
 它仍使用实际36层／H2560 LLM与39层DiT，不因口头称为“5B”就更改模型标识。
 120秒consume对齐路径应有3000次decode，区别于小模型token查表路径的2999次。
 脚本启动前读取手机已安装HAP的SHA256，避免本地同时准备另一版本时，把本地新包误当作正在运行的包。
 
 ```powershell
 pwsh -File tools/run_music_duration.ps1 -Device YOUR_DEVICE_ID -RunId my-large120 -ModelChoice 1 -DurationSeconds 120 -DynamicOption 0 -VaeFusion 0 -CoolingSeconds 420
+```
+
+v0.1.15较大模型也可用`-VaeFusion 1`；默认开启，与原版共享同一W8图／权重，运行时进行36处拓扑校验后重写。
+新增15秒短链入口；benchmark显式捕获首窗`first-vae-input.f32`（64KiB，写入耗时归入整链其他开销）。
+普通手动生成不捕获。脚本在冷却结束后再次确认App空闲，避免覆盖等待期间用户启动的新任务。
+
+```powershell
+pwsh -File tools/run_music_duration.ps1 -Device YOUR_DEVICE_ID -RunId my-large15-fused -ModelChoice 1 -DurationSeconds 15 -DynamicOption 0 -VaeFusion 1 -CoolingSeconds 540
 ```

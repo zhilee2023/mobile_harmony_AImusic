@@ -1,7 +1,7 @@
 param(
  [Parameter(Mandatory=$true)][ValidatePattern('^[A-Za-z0-9]+$')][string]$Device,
  [Parameter(Mandatory=$true)][ValidatePattern('^[A-Za-z0-9][A-Za-z0-9_-]{0,65}$')][string]$RunId,
- [Parameter(Mandatory=$true)][ValidateSet(30,60,90,120,240,300)][int]$DurationSeconds,
+ [Parameter(Mandatory=$true)][ValidateSet(15,30,60,90,120,240,300)][int]$DurationSeconds,
  [ValidateSet(0,1)][int]$ModelChoice=0,
  [ValidateSet(0,2)][int]$DynamicOption=2,
  [ValidateSet(0,1)][int]$VaeFusion=1,
@@ -10,7 +10,7 @@ param(
  [string]$DevEcoRoot='C:\Program Files\Huawei\DevEco Studio'
 )
 $ErrorActionPreference='Stop'
-if($ModelChoice -eq 1 -and ($DurationSeconds -gt 120 -or $VaeFusion -ne 0 -or $DynamicOption -ne 0)){throw 'Large-model probe max120s; explicitly use -VaeFusion0 -DynamicOption0 for its existing recipe'}
+if($ModelChoice -eq 1 -and ($DurationSeconds -gt 120 -or $DynamicOption -ne 0)){throw 'Large-model probe max120s; explicitly use -DynamicOption0 for its existing LM recipe'}
 $musicProject=Split-Path -Parent $PSScriptRoot
 $musicBundleName=(Get-Content -LiteralPath (Join-Path $musicProject 'stream-app/AppScope/app.json5') -Raw -Encoding UTF8 | ConvertFrom-Json).app.bundleName
 if($musicBundleName -notmatch '^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+$'){throw 'Invalid App bundleName'}
@@ -76,6 +76,8 @@ $musicOffBefore=[regex]::Match($musicPower,'Last Screen Off:\s*(\d+)').Groups[1]
 $musicInstalledHashText=Music-Hdc @('shell',"sha256sum /data/app/el1/bundle/public/$musicBundleName/entry.hap")
 $musicRecord.installedHapSha256=[regex]::Match($musicInstalledHashText,'^[a-fA-F0-9]{64}').Value.ToLowerInvariant()
 if(!$musicRecord.installedHapSha256){throw 'Cannot verify installed HAP hash; no inference started'}
+$musicBeforeStart=Music-ReadState
+if($musicBeforeStart -and $musicBeforeStart.busy){$musicRecord.status='blocked-active-task-after-cooling';Music-Save;throw 'Another generation became active during cooling; App left untouched'}
 $null=Music-Hdc @('shell',"aa force-stop $musicBundleName") # Confirmed idle above, one fresh process per duration.
 $musicRecord.samples+=@(Music-Sample);$musicRecord.status='starting';Music-Save
 $null=Music-Hdc @('shell',"aa start -a EntryAbility -b $musicBundleName --ps streamLabTest duration-benchmark --pi streamLabModel $ModelChoice --pi streamLabSeconds $DurationSeconds --pi streamLabDynamicOption $DynamicOption --pi streamLabVaeFusion $VaeFusion --ps streamLabRunTag $RunId")

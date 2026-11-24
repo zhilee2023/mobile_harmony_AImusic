@@ -103082,6 +103082,206 @@
     "mnnArchiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
     "lyricPresetSha256": "b5b2ec96cc11ceaf58521740abe48d9590b19283defc686a49853982c43c38c5",
     "styleFileName": "muq-text-warm-pop.npy"
+  },
+  "stream_lab_large_vae_module_2026_11_24": {
+    "date": "2026-11-24",
+    "scope": "Same real larger-model latent independent VAE A/B; original15s App completed. Fused App15s awaiting manual unlock after full9min cooling.",
+    "device": {
+      "modelCode": "CMM-AL00",
+      "backend": "MNN ARM CPU",
+      "appVersion": "0.1.15"
+    },
+    "modelId": "larkstudio-base-v2",
+    "vaeGraphSha256": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+    "vaeWeightSha256": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc",
+    "identityMatchesSmallVae": true,
+    "sourceWeightsChanged": false,
+    "oldReasonUnfused": "Prior Runtime gated fusion to choice0; larger-model UI forced false. Both restrictions removed after identity and real-input parity checks.",
+    "recipe": "Original W8/group64 VAE, CPU Low FP16,6 threads, NEON sine;36 checked Snake fusion groups",
+    "latentSha256": "ae9a92c042e8aac1892bdbfc12b3987d1b01ba7a276310f30be86d2e0ac4834d",
+    "latentBytes": 65536,
+    "probeBinarySha256": "8de1ab8d3f6bbefba585c7252cf5e74e424be11d943608c8bcb15fa1c4122059",
+    "mnnArchiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+    "moduleSummary": {
+      "scope": "Same real first latent from larger LM/DiT15s App generation; independent VAE sessions, CPU Low6, original W8 weights",
+      "baselineWarmSeconds": 5.522031875000001,
+      "fusedWarmSeconds": 4.951982395,
+      "speedup": 1.1151154092501576,
+      "timeReduction": 0.10323183438704808,
+      "pcmRelativeL2": 0.0,
+      "pcmMaxAbs": 0.0,
+      "pcmBytesEqual": true,
+      "customCalls": [
+        36,
+        36,
+        36,
+        36
+      ],
+      "baselinePeakRssMiB": 747.0,
+      "fusedPeakRssMiB": 716.36328125
+    },
+    "moduleVariants": {
+      "baseline": {
+        "setup": {
+          "mnnSessionMemoryMiB": 729.0187377929688,
+          "rssMiB": 139.32421875,
+          "seconds": 0.467827031
+        },
+        "runs": [
+          {
+            "customCalls": 0,
+            "forwardSeconds": 5.079775468,
+            "inputSeconds": 0.000283125,
+            "mode": "first",
+            "outputSeconds": 0.004492657,
+            "peak": 0.83251953125,
+            "rssMiB": 747.078125,
+            "sameSessionRepeatL2": 0.0,
+            "totalSeconds": 5.0845512500000005
+          },
+          {
+            "customCalls": 0,
+            "forwardSeconds": 5.512172188,
+            "inputSeconds": 3.8594e-05,
+            "mode": "warm",
+            "outputSeconds": 0.004713437,
+            "peak": 0.83251953125,
+            "rssMiB": 750.8125,
+            "sameSessionRepeatL2": 0.0,
+            "totalSeconds": 5.516924219000001
+          },
+          {
+            "customCalls": 0,
+            "forwardSeconds": 5.498867812,
+            "inputSeconds": 4e-05,
+            "mode": "warm",
+            "outputSeconds": 0.00446875,
+            "peak": 0.83251953125,
+            "rssMiB": 750.8125,
+            "sameSessionRepeatL2": 0.0,
+            "totalSeconds": 5.503376562000001
+          },
+          {
+            "customCalls": 0,
+            "forwardSeconds": 5.541291719,
+            "inputSeconds": 3.6875e-05,
+            "mode": "warm",
+            "outputSeconds": 0.00446625,
+            "peak": 0.83251953125,
+            "rssMiB": 750.8125,
+            "sameSessionRepeatL2": 0.0,
+            "totalSeconds": 5.5457948440000004
+          }
+        ],
+        "sampledRssPeakMiB": 747.0,
+        "observedMaxRssMiB": 750.8125,
+        "pcmSha256": "73464ade6e12fd2a2c6df90abfa7427cd0ecf6375aee5ebf1804986b32a6cdcd"
+      },
+      "fused": {
+        "setup": {
+          "mnnSessionMemoryMiB": 719.6749877929688,
+          "rssMiB": 138.66796875,
+          "seconds": 0.459415938
+        },
+        "runs": [
+          {
+            "customCalls": 36,
+            "forwardSeconds": 4.639697344,
+            "inputSeconds": 0.009897812,
+            "mode": "first",
+            "outputSeconds": 0.004479062,
+            "peak": 0.83251953125,
+            "rssMiB": 716.43359375,
+            "sameSessionRepeatL2": 0.0,
+            "totalSeconds": 4.654074218
+          },
+          {
+            "customCalls": 36,
+            "forwardSeconds": 4.886714531,
+            "inputSeconds": 4.5156e-05,
+            "mode": "warm",
+            "outputSeconds": 0.008254843,
+            "peak": 0.83251953125,
+            "rssMiB": 720.1796875,
+            "sameSessionRepeatL2": 0.0,
+            "totalSeconds": 4.895014529999999
+          },
+          {
+            "customCalls": 36,
+            "forwardSeconds": 4.993840312,
+            "inputSeconds": 5.125e-05,
+            "mode": "warm",
+            "outputSeconds": 0.004767188,
+            "peak": 0.83251953125,
+            "rssMiB": 720.1796875,
+            "sameSessionRepeatL2": 0.0,
+            "totalSeconds": 4.99865875
+          },
+          {
+            "customCalls": 36,
+            "forwardSeconds": 4.957761562,
+            "inputSeconds": 3.8906e-05,
+            "mode": "warm",
+            "outputSeconds": 0.004473437,
+            "peak": 0.83251953125,
+            "rssMiB": 720.1796875,
+            "sameSessionRepeatL2": 0.0,
+            "totalSeconds": 4.962273905
+          }
+        ],
+        "sampledRssPeakMiB": 716.36328125,
+        "observedMaxRssMiB": 720.1796875,
+        "pcmSha256": "73464ade6e12fd2a2c6df90abfa7427cd0ecf6375aee5ebf1804986b32a6cdcd"
+      }
+    },
+    "orderScope": "Four baseline then four fused forwards; warm means exclude first. Awake with no screen-off event; not randomized thermally matched cross-over.",
+    "originalApp15": {
+      "elapsedSeconds": 87.919491562,
+      "rtf": 5.861299437466667,
+      "llmSeconds": 58.337293111999976,
+      "ditSeconds": 14.955231406,
+      "vaeSeconds": 12.874397343,
+      "muSeconds": 1.142837187,
+      "rssPeakMiB": 3482.859375,
+      "llmTiming": {
+        "decodeForwards": 375,
+        "decodeMs": 40825.710954000024,
+        "decodeMsPerToken": 108.86856254400006,
+        "decodeTokensPerSecond": 9.185388110510253,
+        "loadMs": 3904.5164059999997,
+        "lookupMs": 2.0168799999999973,
+        "prefillMs": 13263.923281,
+        "prefillPositions": 513,
+        "prefixMs": 59.164375,
+        "samplingMs": 272.7670399999999,
+        "scope": "forward plus output synchronization; excludes sampling, condition lookup and downstream waits"
+      },
+      "coolingSecondsObserved": 540.0785072,
+      "lyricTokens": 318,
+      "codeCount": 375,
+      "vaeFusion": false,
+      "controlledTimingAccepted": true,
+      "installedHapSha256": "e582b6e55c08400ee058455920d228c989ad970ac21620406864c8e575e9581f"
+    },
+    "fusedApp15": {
+      "status": "awaiting-unlock",
+      "inferenceStarted": false,
+      "requestedCoolingSeconds": 540,
+      "preparedRunTag": "music-large15-vae-fused-20261124-r1",
+      "reason": "Phone entered SLEEP before cooling ended; no foreground timing fabricated."
+    },
+    "full120sFusedRemeasured": false,
+    "original120sRtfRetained": 9.088482871091665,
+    "runtimeAudit": {
+      "cosyvoice_kleidiai": false,
+      "sourceMeaning": "Pinned local Llm::setRuntimeHint sets CPU_ENABLE_KLEIDIAI to0 for this config.",
+      "precision": "high",
+      "memory": "low",
+      "dynamicOption": 0,
+      "bodyWeightBits": 4,
+      "headWeightBits": 8,
+      "scope": "Configuration/source selection only, not per-operator runtime kernel dispatch audit."
+    }
   }
 
 }

@@ -117,8 +117,8 @@ struct Index {
       this.model = AppStorage.get<number>('streamLabModel') ?? 0;
       this.durationBenchmark = autoRun === 'duration-benchmark';
       this.seconds = this.durationBenchmark ? (AppStorage.get<number>('streamLabSeconds') ?? 30) : autoRun === 'mnn60-check' ? 60 : autoRun === 'music-check' ? 10.2 : 15;
-      if (this.durationBenchmark && [30, 60, 90, 120, 240, 300].indexOf(this.seconds) < 0) { this.stage = '不支持的测速时长'; return; }
-      if (this.durationBenchmark && (this.seconds >= 240 || (this.model === 1 && this.seconds >= 120))) { this.lyrics = LONG_LYRICS; this.lyricPreset = 1; }
+      if (this.durationBenchmark && [15, 30, 60, 90, 120, 240, 300].indexOf(this.seconds) < 0) { this.stage = '不支持的测速时长'; return; }
+      if (this.durationBenchmark && (this.seconds >= 240 || this.model === 1)) { this.lyrics = LONG_LYRICS; this.lyricPreset = 1; }
       this.lmDynamicOption = AppStorage.get<number>('streamLabDynamicOption') ?? 2;
       this.vaeFusion = AppStorage.get<boolean>('streamLabVaeFusion') ?? true;
       this.benchmarkRunTag = this.durationBenchmark ? (AppStorage.get<string>('streamLabRunTag') ?? '') : '';
@@ -208,7 +208,7 @@ struct Index {
     this.startedAt = Date.now(); this.playbackError = '';
     this.firstChunk = 0; this.stage = '准备实验'; await this.keepAwake(true);
     if (this.player) await this.player.close(); await this.releaseSystem(); this.player = this.createPlayer();
-    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, croppedLm: this.model === 0 ? this.croppedLm() : '', lmDynamicOption: this.model === 0 ? this.lmDynamicOption : 0, vaeFusion: this.model === 0 && this.vaeFusion, longRun: this.seconds > 60, suppressEos: fixedBenchmark || this.fillDuration, runTag: fixedBenchmark ? this.benchmarkRunTag : '' })); }
+    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, croppedLm: this.model === 0 ? this.croppedLm() : '', lmDynamicOption: this.model === 0 ? this.lmDynamicOption : 0, vaeFusion: this.vaeFusion, captureVaeInput: fixedBenchmark, longRun: this.seconds > 60, suppressEos: fixedBenchmark || this.fillDuration, runTag: fixedBenchmark ? this.benchmarkRunTag : '' })); }
     catch (error) { this.stage = String(error); this.playbackError = String(error); this.record('start-error', String(error)); }
     finally { this.busy = false; this.stopping = false; this.durationBenchmark = false; this.poll(); if (fixedBenchmark) this.awakeRelease = setTimeout(() => { this.awakeRelease = -1; this.keepAwake(false); }, 15000); else await this.keepAwake(false); }
   }

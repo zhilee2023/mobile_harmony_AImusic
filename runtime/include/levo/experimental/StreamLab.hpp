@@ -237,11 +237,12 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     const std::string smallCondition=options.value("smallCondition",std::string("token"));
     require(smallCondition=="token"||(choice==0&&smallCondition=="hidden-consume"),"Unknown condition experiment");
     const bool resident=options.value("resident",choice==0),cfg=options.value("cfg",true),vaeFusion=options.value("vaeFusion",false);
-    require(!vaeFusion||choice==0,"App Snake fusion is currently validated for the0.6B bundle only");
+    const bool captureVaeInput=options.value("captureVaeInput",false);
     const bool prefetch=options.value("prefetch",false);require(!prefetch||(resident&&choice==0),"Token prefetch requires resident small-model sessions");
     const std::string croppedLm=options.value("croppedLm",std::string());
     const int lmThreads=options.value("lmThreads",4),ditThreads=options.value("ditThreads",6),vaeThreads=options.value("vaeThreads",6);
     for(int n:{lmThreads,ditThreads,vaeThreads})require(n>=2&&n<=8,"Threads outside2–8 experiment range");
+    require(!vaeFusion||vaeThreads==6,"Validated Snake fusion uses CPU Low /6 threads");
     const int steps=options.value("ditSteps",2),batch=!cfg&&options.value("singleBranch",false)?1:2;
     require(steps==2||steps==4||steps==7,"Unsupported step experiment");
     std::string id=std::to_string(std::chrono::system_clock::now().time_since_epoch().count());
@@ -249,7 +250,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     {std::lock_guard<std::mutex> lock(stateMutex);state={{"runId",id},{"busy",true},{"status","generating"},{"phase","loading"},{"chunks",Json::array()},
        {"generatedSamples",0},{"requestedFrames",requested},{"conditionFrames",0},{"model",choice},{"conditionMode",choice==0?smallCondition:"hidden-projector"},{"transportOnly",transport},{"diagnosticOnly",lyrics.empty()||transport||smallCondition!="token"},{"musicQualityClaimed",false},
        {"resident",resident},{"tokenPrefetch",prefetch},{"threads",{{"lm",lmThreads},{"dit",ditThreads},{"vae",vaeThreads}}},{"croppedLm",croppedLm},{"ditSteps",steps},{"cfgEnabled",cfg},{"cfgScale",cfg?1.5:0.},{"ditBatch",batch},{"unconditionalComputeRemoved",batch==1},{"chunkTimings",Json::array()},{"vaeFusion",vaeFusion},
-       {"lmDynamicOption",dynamicOption},{"suppressEos",suppressEos},{"longRun",longRun},{"runTag",options.value("runTag",std::string())}};}
+       {"lmDynamicOption",dynamicOption},{"suppressEos",suppressEos},{"longRun",longRun},{"captureVaeInput",captureVaeInput},{"runTag",options.value("runTag",std::string())}};}
     Trace trace;trace.phase(1);double lmTime=0,muTime=0,ditTime=0,vaeTime=0,ditSetup=0,vaeSetup=0;std::vector<float> conditions;std::unique_ptr<Prior> prior;
     std::unique_ptr<Graph> keptDit,keptVae;
     struct Fetched {std::vector<float> values;int count=0;bool eos=false;double elapsed=0;};std::future<Fetched> pending;
@@ -307,6 +308,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
                     if(!resident)keptDit.reset();ditTime+=seconds(tick);}
                 if(index)std::copy_n(context.data(),64*64,x.data());last=x;check();
                 std::vector<float> latent(64*256);for(int c=0;c<64;++c)for(int t=0;t<256;++t)latent[c*256+t]=x[t*64+c]*stddev[c]+mean[c];
+                if(captureVaeInput&&index==0){trace.phase(0);std::ofstream out(work+"/first-vae-input.f32",std::ios::binary);out.write(reinterpret_cast<const char*>(latent.data()),latent.size()*sizeof(float));require(out.good(),"Cannot capture diagnostic VAE input");}
                 {trace.phase(3);patch({{"phase","vae"}});auto tick=Clock::now();if(!keptVae){auto setup=Clock::now();keptVae=std::make_unique<Graph>(root+"/vae/vae.mnn",true,vaeThreads,true,0,vaeFusion);vaeSetup+=seconds(setup);}
                     pcm=keptVae->run({{"",std::move(latent)}},2*491520);if(!resident)keptVae.reset();vaeTime+=seconds(tick);}
             }
