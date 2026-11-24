@@ -102074,6 +102074,69 @@
       },
       "meaning": "Different audio lengths; full120s has a foreground-gap marker. No controlled causal slowdown claim."
     }
+  },
+  "stream_lab_manual120_2026_11_24": {
+    "date": "2026-11-24",
+    "scope": "User-triggered completed120s App run, read after completion; no full-run foreground/temperature/frequency monitoring. Observed performance only.",
+    "audioSeconds": 120.0,
+    "elapsedSeconds": 370.267475781,
+    "observedWholeRtf": 3.0855622981749997,
+    "conditionFrames": 3000,
+    "windows": 16,
+    "kvPositions": 3512,
+    "rssPeakMiB": 3292.0234375,
+    "firstChunkSeconds": 17.72738875,
+    "minimumAvailableMiB": 2374.0,
+    "vaeFusion": true,
+    "musicVocabulary": {
+      "audioOutputBase": 1,
+      "classes": 16385,
+      "eosOutput": 0,
+      "inputAudioBase": 151830
+    },
+    "ditSteps": 2,
+    "cfgScale": 1.5,
+    "threads": {
+      "dit": 6,
+      "lm": 4,
+      "vae": 6
+    },
+    "eosSuppressed": false,
+    "endedWithEos": false,
+    "vaeFusedCounterScope": "1152 is cumulative in the App process; this request has16 windows,36 fusions each",
+    "fullForegroundObservationAvailable": false,
+    "stages": {
+      "lm": {
+        "seconds": 184.64316937699988,
+        "rtf": 1.5386930781416657
+      },
+      "dit": {
+        "seconds": 82.26658828299999,
+        "rtf": 0.6855549023583333
+      },
+      "vae": {
+        "seconds": 101.349269689,
+        "rtf": 0.8445772474083333
+      }
+    },
+    "otherSeconds": 2.0084484320000797,
+    "comparisonPrevious120": {
+      "codesIdentical": true,
+      "previousElapsedSeconds": 300.232574375,
+      "latencyIncrease": 0.2332688301787138,
+      "previousWholeRtf": 2.501938119791667
+    },
+    "fixedShapeSlowdown": {
+      "dit": {
+        "earlyWarmMedianSeconds": 3.475141406999999,
+        "lateMedianSeconds": 6.0719968750000035
+      },
+      "vae": {
+        "earlyWarmMedianSeconds": 4.646133282000001,
+        "lateMedianSeconds": 7.153719843999994
+      }
+    },
+    "interpretation": "All stages slow from window7, including fixed-shape DiT/VAE. Thermal/scheduling/load changes are hypotheses; no causal diagnosis without concurrent telemetry."
   }
 
 }
