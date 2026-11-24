@@ -101953,6 +101953,127 @@
     ],
     "hardwareKernelTraceCollected": false,
     "conclusion": "Initial complete block portable OM failed phone build with code1; revised scalar OM compiled but was not run. Prior first-FFN control passed. Not proof that every DiT/NPU configuration is unsupported."
+  },
+  "stream_lab_small120_2026_11_24": {
+    "date": "2026-11-24",
+    "scope": "Actual single120s Stream-App request; foreground-gap flag observed, not accepted controlled timing. No screen-off recorded.",
+    "device": {
+      "modelCode": "CMM-AL00",
+      "appVersion": "0.1.9",
+      "backend": "MNN CPU",
+      "threads": {
+        "dit": 6,
+        "lm": 4,
+        "vae": 6
+      }
+    },
+    "recipe": {
+      "llm": "28L music Qwen, W4/group64 body, W8 head, dynamic per-block A8, BF16 input embedding",
+      "outputVocabulary": {
+        "audioOutputBase": 1,
+        "classes": 16385,
+        "eosOutput": 0,
+        "inputAudioBase": 151830
+      },
+      "dit": "W8/group64,2 Euler steps,CFG1.5,batch2",
+      "vae": "W8/group64,FP16 CPU,36 graph-level Snake fusions per window",
+      "eosSuppressed": true
+    },
+    "audioSeconds": 120,
+    "conditionFrames": 3000,
+    "windows": 16,
+    "elapsedSeconds": 300.232574375,
+    "observedWholeRtf": 2.501938119791667,
+    "controlledTimingAccepted": false,
+    "foregroundGapObserved": true,
+    "lastScreenOffUnchanged": true,
+    "stages": {
+      "llm": {
+        "seconds": 145.00971922299985,
+        "rtf": 1.208414326858332,
+        "romBytes": 600645003
+      },
+      "dit": {
+        "seconds": 74.404535936,
+        "rtf": 0.6200377994666667,
+        "romBytes": 413839536
+      },
+      "vae": {
+        "seconds": 78.96222078299999,
+        "rtf": 0.6580185065249999,
+        "romBytes": 86052358
+      }
+    },
+    "otherSeconds": 1.8560984330001702,
+    "otherRtf": 0.015467486941668085,
+    "rom": {
+      "bytes": {
+        "llm": 600645003,
+        "dit": 413839536,
+        "vae": 86052358,
+        "conditioner_aux": 40839847,
+        "prefix_embedding_copy": 344502272
+      },
+      "mib": {
+        "llm": 572.819712638855,
+        "dit": 394.6681365966797,
+        "vae": 82.0659236907959,
+        "conditioner_aux": 38.94791316986084,
+        "prefix_embedding_copy": 328.54296875
+      },
+      "activeDeploymentBytes": 1485879016,
+      "originalBundleAssetBytes": 1301724838,
+      "scope": "Logical file bytes. Excludes songs/logs/old full-head graph and weights; includes the separate prefix embedding still read by current runtime."
+    },
+    "rssPeakMiB": 3178.16796875,
+    "minimumAvailableMiB": 2456,
+    "firstChunkSeconds": 17.675547969,
+    "kvPositions": 3512,
+    "ditSetupSecondsIncluded": 0.830805469,
+    "vaeSetupSecondsIncluded": 1.02004875,
+    "installedHapSha256": "b428eb3e08efe092cb1fc398f9f44db68f32841492b081058d6444816fc6d1cd",
+    "wavValidation": {
+      "frames": 5760000,
+      "sampleRate": 48000,
+      "channels": 2,
+      "chunkHashes": [
+        "108bc7b23106c0e7b1678a3b7b967733f741cbc6749cbc5c6ed096677f06bcb9",
+        "4f20b9cf3608ad6ee65aeb366034b28e78bba652c8bde9d44c165dd25518d6a1",
+        "5a13d46894f728272f719650305c4559fe1dd5e6432616696344ebfc68ff803c",
+        "aa17aeb1e44987e9d71153f0bb5c2e05d45175fb4cc97e58bd67c3eb3493c6ff",
+        "1d6522c33ad21bca9ab7d9576b62c59d3e087252b6540705b788c8f12d7fe6d2",
+        "ab7a8476a7a0e25c60709e17dee73160b1cc521f9c24ff7608ae3fe5cbdfed9d",
+        "b86196a53d0fafa6c2749e435d80c1966dacc6c50fffbc3a3845308eaf92b40c",
+        "1b709231c5ba548e34bfe54a39ff873dfbf2cf2aa8587fe74ce824e56c86ac89",
+        "9e01ace1a23aa21d517be7b39961d55ee449dbb25f9e0520e576dfa3c816aa8f",
+        "95a49f682887b61748d31459eab4706c3456318c868f2be1584f636670e0b513",
+        "3abe7a950842946cbe3929fdd866c45c8d357731df3f52b5078a02730dfa99da",
+        "23862047e66d1ff6c7d31ed0011410563a232022e107dc306ac0744d584e6a47",
+        "0b624cb30b74395c530cfe903f35db1da1665a2856fae77a16fec93cf487a2a7",
+        "ff5a320da2ca1c42a2f2ff7513d7a7458b7c1b8718222b20008ca50dd4ffc3aa",
+        "6cdbfd16191b76733f68a9491c3f05774cde3922055ee05ab0d1f3ae8f1000b8",
+        "e7b350ef77e7910b12c8319f5135022f56f0d7121ee9ee41e837c4d261a93915"
+      ]
+    },
+    "playback": {
+      "maxPlayedMs": 102460,
+      "errorCount": 0
+    },
+    "temperatureBatteryC": {
+      "start": 28.0,
+      "end": 37.0,
+      "peak": 38.0
+    },
+    "comparison30s": {
+      "wholeRtf": 1.8563813541666667,
+      "kvPositions": 1262,
+      "stageSeconds": {
+        "lmSeconds": 22.895385019999985,
+        "ditSeconds": 14.742969687,
+        "vaeSeconds": 17.525619531
+      },
+      "meaning": "Different audio lengths; full120s has a foreground-gap marker. No controlled causal slowdown claim."
+    }
   }
 
 }
