@@ -56,6 +56,7 @@ struct Index {
   private vaeFusion: boolean = true;
   private benchmarkRunTag: string = '';
   private seed: number = 42;
+  private styleModel: number = -1;
   private startedAt: number = 0;
   @State dragging: boolean = false;
   @State previewMs: number = 0;
@@ -88,12 +89,17 @@ struct Index {
     const result = JSON.parse(native.inspect(this.root(), this.model)) as ModelStatus;
     this.modelReady = result.ready;
     this.modelNote = result.ready ? '同规格模型文件已就绪' : `模型文件 ${result.count ?? 0}/${result.total ?? 0} · 等待部署`;
+    const sameModel = this.styleModel === this.model;
+    const previousPath = sameModel ? this.styles[this.styleIndex]?.path ?? '' : '';
     this.styles = JSON.parse(native.styles(this.root())) as StyleChoice[];
-    if (this.styleIndex >= this.styles.length) this.styleIndex = 0;
-    if (this.styleIndex === 0) {
-      for (let i = 0; i < this.styles.length; i++) if (this.styles[i].name === 'tanhai') this.styleIndex = i;
-      if (this.model === 0) for (let i = 0; i < this.styles.length; i++) if (this.styles[i].name === 'muq-text-warm-pop') this.styleIndex = i;
+    let selected = -1;
+    if (sameModel) for (let i = 0; i < this.styles.length; i++) if (this.styles[i].path === previousPath) selected = i;
+    if (selected < 0) {
+      const defaultName = this.model === 0 ? 'muq-text-warm-pop' : 'tanhai';
+      for (let i = 0; i < this.styles.length; i++) if (this.styles[i].name === defaultName) selected = i;
     }
+    this.styleIndex = selected < 0 ? 0 : selected;
+    this.styleModel = this.model;
   }
   private async importStyle(): Promise<void> {
     try {
@@ -226,7 +232,7 @@ struct Index {
         }.width('100%').alignItems(HorizontalAlign.Start)
         Row({ space: 12 }) {
           Select([{ value: '0.6B · 28层 + 22层 DiT' }, { value: '4B · 36层 + 39层 DiT' }])
-            .selected(this.model).value(this.model === 0 ? '0.6B · 28/22层' : '4B · 36/39层').layoutWeight(1).enabled(!this.busy).onSelect((index: number) => { this.model = index; if (this.model !== 0 && this.seconds > 120) this.seconds = 120; this.styleIndex = 0; this.refresh(); })
+            .selected(this.model).value(this.model === 0 ? '0.6B · 28/22层' : '4B · 36/39层').layoutWeight(1).enabled(!this.busy).onSelect((index: number) => { this.model = index; if (this.model !== 0 && this.seconds > 120) this.seconds = 120; this.refresh(); })
           Select(this.durations().map((seconds: number): SelectOption => { return { value: `${seconds}秒` }; })).selected(this.durations().indexOf(this.seconds))
             .width(82).enabled(!this.busy).onSelect((index: number) => { this.seconds = this.durations()[index]; })
         }.width('100%')
@@ -241,7 +247,7 @@ struct Index {
               .layoutWeight(1).enabled(!this.busy).onSelect((index: number) => { this.styleIndex = index; })
             Button('导入NPY').enabled(!this.busy).onClick(() => { this.importStyle(); })
           }.width('100%')
-          Text('已带入原LarkStudio测试歌词和风格文件；可修改后再生成。').fontSize(12).fontColor('#667D80')
+          Text(this.model === 0 ? '0.6B默认：MuQ-MuLan文本提取风格。' : '4B默认：现有探海NPY参考风格。').fontSize(12).fontColor('#667D80')
           Row({ space: 10 }) {
             Toggle({ type: ToggleType.Switch, isOn: this.fillDuration }).enabled(!this.busy).onChange((value: boolean) => { this.fillDuration = value; })
             Text('生成到所选时长，忽略提前EOS').fontSize(13)

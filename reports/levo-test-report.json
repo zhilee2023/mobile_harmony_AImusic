@@ -103835,6 +103835,16 @@
       "observedWholeTimeReduction": 0.10988774684569969,
       "observedVaeTimeReduction": 0.19980408183266918,
       "scope": "Both complete120s, but different starting thermal states and HAP versions; delta is observational, not exclusively attributable to fusion."
+    },
+    "inputStyleAudit": {
+      "file": "muq-text-warm-pop.npy",
+      "encoder": "MuQ-MuLan",
+      "modality": "text",
+      "selectionWasUnintendedForLargeModel": true,
+      "discovered": "2026-11-24",
+      "fixedInAppVersion": "0.1.19",
+      "correctedDefaultLargeStyle": "tanhai.npy",
+      "historicalInputNotRewritten": true
     }
   },
   "stream_lab_large_lm_precision_2026_11_24": {
@@ -104749,6 +104759,16 @@
       "screenAwakeChecks": 98,
       "batteryStartC": 33.0,
       "batteryEndC": 39.0
+    },
+    "inputStyleAudit": {
+      "file": "muq-text-warm-pop.npy",
+      "encoder": "MuQ-MuLan",
+      "modality": "text",
+      "selectionWasUnintendedForLargeModel": true,
+      "discovered": "2026-11-24",
+      "fixedInAppVersion": "0.1.19",
+      "correctedDefaultLargeStyle": "tanhai.npy",
+      "historicalInputNotRewritten": true
     }
   },
   "stream_lab_seed42_2026_11_24": {
@@ -104784,7 +104804,105 @@
       "appBuildPassed": true
     },
     "installedHapSha256": "3e01ab4ad6c82433d142f051a3930ee5d6995c37c2141eda8e7e538bcdb8facb",
-    "historical120sRecordUnchanged": "stream_lab_large120_all_low_2026_11_24 remains seed2307; no seed42 full120s RTF claimed."
+    "historical120sRecordUnchanged": "stream_lab_large120_all_low_2026_11_24 remains seed2307; no seed42 full120s RTF claimed.",
+    "inputStyleAudit": {
+      "file": "muq-text-warm-pop.npy",
+      "encoder": "MuQ-MuLan",
+      "modality": "text",
+      "selectionWasUnintendedForLargeModel": true,
+      "discovered": "2026-11-24",
+      "fixedInAppVersion": "0.1.19",
+      "correctedDefaultLargeStyle": "tanhai.npy",
+      "historicalInputNotRewritten": true
+    }
+  },
+  "stream_lab_model_style_defaults_2026_11_24": {
+    "date": "2026-11-24",
+    "appVersion": "0.1.19",
+    "scope": "Model-specific default style binding; real selected-bundle15s smoke per model, not new120s performance scores.",
+    "fix": "Preserve selection by path only within the same model. On model change select large tanhai or small MuQ text warm-pop; empty model-default path cannot count as a previous selection on model change.",
+    "styles": {
+      "large": {
+        "file": "tanhai.npy",
+        "shape": [
+          1,
+          512
+        ],
+        "sha256": "4e9b1e2eaa0d6adf3ba09cfa342b4ae892ba4d567d9add3cc00329c71b5dc1a1",
+        "source": "User selected existing reference-style NPY; byte-identical to original LarkStudio artifact. Original source WAV/encoder provenance not independently available.",
+        "reextracted": false,
+        "normalizedOrModified": false
+      },
+      "small": {
+        "file": "muq-text-warm-pop.npy",
+        "shape": [
+          512
+        ],
+        "encoder": "MuQ-MuLan",
+        "modality": "text",
+        "sha256": "83229638309691901de48cecebc5185bc9424b5ca7256508a708cc544954e968"
+      }
+    },
+    "validations": {
+      "large": {
+        "modelId": "larkstudio-base-v2",
+        "styleFile": "tanhai.npy",
+        "seed": 42,
+        "noiseSeed": 42,
+        "audioSeconds": 15,
+        "precisions": {
+          "dit": "low",
+          "llm": "low",
+          "projection": "low",
+          "vae": "low"
+        },
+        "dynamicOption": 0,
+        "observedSeconds": 97.968071875,
+        "observedRtf": 6.531204791666667,
+        "stageSeconds": {
+          "llm": 63.346871082000014,
+          "dit": 17.73803875,
+          "vae": 15.066061093,
+          "projection": 1.095096093
+        },
+        "ramScope": "20ms process RSS, not dedicated VRAM",
+        "rssPeakMiB": 3268.06640625,
+        "minimumAvailableMiB": 2515.0,
+        "foregroundAccepted": true,
+        "installedHapSha256": "c67781816163867c685e80d6f102fb0935dcf298d65ae1ae2ae051965afb09a6",
+        "timingScope": "Functional smoke, no matched-temperature performance comparison."
+      },
+      "small": {
+        "modelId": "larkstudio-small-0.6b-v1",
+        "styleFile": "muq-text-warm-pop.npy",
+        "seed": 42,
+        "noiseSeed": 42,
+        "audioSeconds": 15,
+        "precisions": {
+          "dit": "high",
+          "llm": "high",
+          "projection": "high",
+          "vae": "low"
+        },
+        "dynamicOption": 2,
+        "observedSeconds": 29.709993438,
+        "observedRtf": 1.9806662292000001,
+        "stageSeconds": {
+          "llm": 11.760849996000008,
+          "dit": 7.632479374,
+          "vae": 9.982994062,
+          "projection": 0
+        },
+        "ramScope": "20ms process RSS, not dedicated VRAM",
+        "rssPeakMiB": 2070.68359375,
+        "minimumAvailableMiB": 3493,
+        "foregroundAccepted": true,
+        "installedHapSha256": "c67781816163867c685e80d6f102fb0935dcf298d65ae1ae2ae051965afb09a6",
+        "timingScope": "Functional smoke, no matched-temperature performance comparison."
+      }
+    },
+    "historicalFinding": "Earlier full120s High and Low both used muq-text-warm-pop.npy due to initial model0 refresh then auto model1 retaining the style index. Their prefixes matched; keep performance numbers and annotate the actual text style.",
+    "sampling": "Both now seed42; temperature0.95/topK250 unchanged."
   }
 
 }
