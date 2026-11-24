@@ -103494,6 +103494,622 @@
       "kernelClaim": "Requested quantization recipe and source selection, not a per-operator runtime kernel audit."
     },
     "defaultChange": "Both model choices may now use checked36-node CPU Low6 Snake fusion; CLI -VaeFusion0 retains original baseline."
+  },
+  "stream_lab_large120_fused_2026_11_24": {
+    "date": "2026-11-24",
+    "scope": "Fresh full120s larger-model run with fused VAE after a separately preserved interrupted attempt; not extrapolated from15s.",
+    "device": {
+      "modelCode": "CMM-AL00",
+      "appVersion": "0.1.15",
+      "backend": "MNN ARM CPU",
+      "threads": {
+        "dit": 6,
+        "lm": 4,
+        "vae": 6
+      }
+    },
+    "modelId": "larkstudio-base-v2",
+    "recipe": {
+      "llm": "36L H2560, W4/group64 body, W8 head, default dynamic activation path0, hidden-consume condition",
+      "dit": "39L H1200, W8/group64,2 Euler steps,CFG1.5,batch2",
+      "vae": "W8/group64,CPU Low FP16,vector sine,36 graph-level Snake fusions/window",
+      "llmLifetime": "Kept for whole request; DiT,projector,VAE created and destroyed per stage",
+      "resident": false,
+      "tokenPrefetch": false,
+      "suppressEosForTiming": true
+    },
+    "audioSeconds": 120,
+    "conditionFrames": 3000,
+    "lyricTokens": 318,
+    "windows": 16,
+    "coolingPreparation": {
+      "secondsSincePreviousRecordedTestBeforePreparation": 1506.901527,
+      "additionalCoolingSecondsObserved": 0.0046191,
+      "combinedSecondsSincePreviousRecordedCompletedTest": 1506.9061461,
+      "secondsSincePriorAttemptExitDetection": 621.519134
+    },
+    "priorInterruptedAttempt": {
+      "status": "process-exited",
+      "lastPublishedSeconds": 38.4,
+      "lastObservedRssPeakMiB": 3589.2109375,
+      "foregroundGapObserved": true,
+      "full120sRtfClaimed": false,
+      "exitCause": "Not established; background and process disappearance observed, no native final result"
+    },
+    "elapsedSeconds": 970.772395937,
+    "observedWholeRtf": 8.089769966141667,
+    "controlledTimingAccepted": true,
+    "foregroundGapObserved": false,
+    "foregroundStateSampleCounts": {
+      "FOREGROUND": 177
+    },
+    "lastScreenOffUnchanged": true,
+    "screenAwakeAtEnd": true,
+    "stages": {
+      "llm": {
+        "seconds": 633.9204832950005,
+        "rtf": 5.282670694125004,
+        "romBytes": 2178201339,
+        "processRssPeakMiB": 4401.9921875
+      },
+      "dit": {
+        "seconds": 180.08579609099996,
+        "rtf": 1.5007149674249998,
+        "romBytes": 722929404,
+        "processRssPeakMiB": 4219.890625
+      },
+      "vae": {
+        "seconds": 139.82753781,
+        "rtf": 1.16522948175,
+        "romBytes": 86052358,
+        "processRssPeakMiB": 4133.5546875
+      },
+      "projection": {
+        "seconds": 13.610368437,
+        "rtf": 0.113419736975,
+        "romBytes": 20089968
+      }
+    },
+    "otherSeconds": 3.32821030399964,
+    "otherRtf": 0.027735085866663668,
+    "llmTiming": {
+      "decodeForwards": 3000,
+      "decodeMs": 612707.3288880007,
+      "decodeMsPerToken": 204.23577629600024,
+      "decodeTokensPerSecond": 4.896301804394415,
+      "loadMs": 4619.107969,
+      "lookupMs": 22.676705000000076,
+      "prefillMs": 13522.656406,
+      "prefillPositions": 513,
+      "prefixMs": 52.47375,
+      "samplingMs": 2982.654531000007,
+      "scope": "forward plus output synchronization; excludes sampling, condition lookup and downstream waits"
+    },
+    "rom": {
+      "bytes": {
+        "aux": 5184,
+        "clap": 2176,
+        "conditioner": 789372386,
+        "dit": 722929404,
+        "lm": 2178201339,
+        "mu": 20089968,
+        "vae": 86052358
+      },
+      "totalBytes": 3796652815,
+      "scope": "Phone verified logical asset sizes, excluding HAP,audio,logs; no extra copy added outside this bundle"
+    },
+    "rssPeakMiB": 4401.9921875,
+    "stageRamScope": "20ms sampled process RSS during each stage; includes all resident models",
+    "minimumAvailableMiB": 1615,
+    "firstChunkSeconds": 59.614588594,
+    "kvPositions": 3513,
+    "ditSetupSecondsIncluded": 23.770333748999995,
+    "vaeSetupSecondsIncluded": 28.64747922,
+    "installedHapSha256": "e582b6e55c08400ee058455920d228c989ad970ac21620406864c8e575e9581f",
+    "modelAssetSha256": {
+      "aux/mask.f32": "fcba089778a84bbea7d9e4a0a08a52a52aadfe051fe931afa7c8da883cd7a20b",
+      "aux/mean.f32": "deb9b0bda8348a3d480bce0b2dc6235479f5a4a0e8d341038ffef4c36bbab2d1",
+      "aux/std.f32": "49a307581ddf10d44981a1188d19db9261b3d461b0354f5b2e6733bdad152f66",
+      "aux/zero.f32": "632e160cfc15b9c5a3718cd64f36cc92cef4fffbb6d9620f3606c8cfbb6aa0c5",
+      "clap/default.npy": "4e9b1e2eaa0d6adf3ba09cfa342b4ae892ba4d567d9add3cc00329c71b5dc1a1",
+      "conditioner/artist.f32": "5c7d2505f37ba733d76524afaee62657836ba2a619312bd515034623384ee316",
+      "conditioner/bow_genre.f32": "122eea1f5e5b1d50b7c9e546c2e44cfd7f0ef22b4d8eabea806236459bdf8faf",
+      "conditioner/genre2start.f32": "172fe0e4bb05a92acbbf4e9ce4c8e1239c8e7afce2bedac42d1721059f0623d3",
+      "conditioner/start.f32": "727e9c868b12154ec041400600271ef5653686e7ca7cad4804988f7000c6da69",
+      "conditioner/tokenizer.mtok": "ba0b8db1fc65350682e401f3ffcc574dfb4a352c59c32c398692afc717c2ea3e",
+      "conditioner/x_emb.f16": "2a5e986b9d7662c0de5dc7449a15720d1a2d4b9384760df28caeaae571d7fa0f",
+      "dit/dit.mnn": "57cc07a877c01b3e49e6538edba7a1629b5d8072e1dfa8d43ce4279aa9207f27",
+      "dit/dit.mnn.weight": "3c4c19462e376e32172e82213440874f603217dd14c77c2985a095ce3513fa10",
+      "lm/embeddings_bf16.bin": "738c956722bce8057faae0782ba5ca6597aee4ce91a5f1589d84bd71a74946fc",
+      "lm/llm.mnn": "5505a31d0f4c16bc6cb9d04cd1e3ba5fbca38e6a97a356b2f76368d791ff78bb",
+      "lm/llm.mnn.weight": "d1191c69cf589dfc575014d3fccddcf78a5e5d430796e0a1ed366f62b024c1de",
+      "lm/llm_config.json": "6bb5fbf98e10f435f2a2004ab3f2f4a1b4c0570e236b41b98fec28eaac09d51a",
+      "lm/tokenizer.mtok": "8c4051ca922c4240ea14550cb3a38f276b9630c8aba314b0977ce9c0b7b22dbf",
+      "mu/mu.mnn": "13cd21745c89041bc5cba16eafab592c33af06a3ab287de401b4fcb686713506",
+      "mu/mu.mnn.weight": "58d5727033b6ec83a5a8580da7da1869af9319b5d46b9dc389eb21ef5e2e115b",
+      "vae/vae.mnn": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "vae/vae.mnn.weight": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc"
+    },
+    "temperatureBatteryC": {
+      "start": 32.0,
+      "end": 40.0,
+      "peak": 40.0
+    },
+    "validation": {
+      "wavFrames": 5760000,
+      "sampleRate": 48000,
+      "channels": 2,
+      "chunkHashes": [
+        "baa0692de95ed405d2e0a6accc09266a35bbdfb51185ca4481adb5a29517f50a",
+        "f85d8efda04ac4e38d727e8a50ffecf8af165f7002402acf63d0c1fb2d99ab07",
+        "cfa226d201f8dbe5f806418d5ff3e0d39197132588c06322593b170ce80fcb6b",
+        "3c0268dd4834577ecb357d6b48508d65b743d2d4aa53d9fc2fadf29075a3e782",
+        "c78d3325ec2cfa5a21e31f530dd0d9d576d172a08cc53f0454f024f43666c2d1",
+        "d58afdefbacca10a833f4d44a19bcf0b2501710d53cd82fc3da87bb0052bc8a1",
+        "53f4b2cf0c7adf96f9ae06795e139e5a99f237be64b58d9bf6d61ce0f2e71d92",
+        "9b2f82e0403fbee222f60f531e8a218026a47bd781f8ffdf1c829bd89be0897a",
+        "4b31d73183c1d46f4ee2e892809d2bab3e9a0fac2bf23f102452fc3fc30384f9",
+        "ce3c44210fef11e843c6775770ad5ea7c183854d715178423c3d6ec82a07bc9d",
+        "4c6d1b40b8362ca3257fa2d56274f4a526fbd4c72b5687af8727f144856f8676",
+        "bf6bf83b44b2459f5843bcad6e1b0facc980e9f8037d894c8a7226bba9ce1c40",
+        "709b8aee2e1125cc5e150ba98bf30e95a3b0269c1502b00a9f9f8752da4434c1",
+        "7e21099566d5d01f3396cec65dfece01d0516b00d4571b1597dbfcae4c6cf342",
+        "17cbc56705a5c9904058bba0900c5b1e4036f6a090c86d0e41dba06dd4f53ea5",
+        "b8351048f91ff2cfbf909c05a3df2a71459a48f3329fd7b5ccc861b8ac342788"
+      ],
+      "same3000CodesAsOriginal120": true,
+      "all16WavsByteEqualOriginal120": true,
+      "vaeFusedCalls": 576,
+      "sourceWeightsUnchanged": true
+    },
+    "playback": {
+      "maxPlayedMsAtCapture": 120000,
+      "errorEvents": 0
+    },
+    "chunkTimings": [
+      {
+        "ditSeconds": 7.4299575,
+        "ditSetupSeconds": 1.284419687,
+        "index": 0,
+        "lmSeconds": 27.555923590000013,
+        "rssMiB": 2181.1796875,
+        "vaeSeconds": 5.685759687,
+        "vaeSetupSeconds": 1.241625,
+        "wallSeconds": 41.408765156
+      },
+      {
+        "ditSeconds": 7.928420156,
+        "ditSetupSeconds": 1.328085,
+        "index": 1,
+        "lmSeconds": 22.496401876999975,
+        "rssMiB": 2732.7421875,
+        "vaeSeconds": 5.567244062000001,
+        "vaeSetupSeconds": 0.676461094,
+        "wallSeconds": 36.782459844
+      },
+      {
+        "ditSeconds": 7.810626405999999,
+        "ditSetupSeconds": 1.079370469,
+        "index": 2,
+        "lmSeconds": 22.756377497000045,
+        "rssMiB": 2809.7578125,
+        "vaeSeconds": 6.153920936999999,
+        "vaeSetupSeconds": 1.3088031250000003,
+        "wallSeconds": 37.462133437
+      },
+      {
+        "ditSeconds": 8.554417655999998,
+        "ditSetupSeconds": 1.5878693750000004,
+        "index": 3,
+        "lmSeconds": 23.913951093999913,
+        "rssMiB": 2795.01953125,
+        "vaeSeconds": 5.616036093000002,
+        "vaeSetupSeconds": 0.6918984369999999,
+        "wallSeconds": 38.823265625
+      },
+      {
+        "ditSeconds": 12.895236718999996,
+        "ditSetupSeconds": 1.887367813,
+        "index": 4,
+        "lmSeconds": 34.34624844099993,
+        "rssMiB": 2833.88671875,
+        "vaeSeconds": 9.686112031,
+        "vaeSetupSeconds": 1.7237514059999999,
+        "wallSeconds": 58.018071406
+      },
+      {
+        "ditSeconds": 12.82575,
+        "ditSetupSeconds": 1.8601087499999993,
+        "index": 5,
+        "lmSeconds": 40.89484312399992,
+        "rssMiB": 2900.390625,
+        "vaeSeconds": 9.215217187,
+        "vaeSetupSeconds": 1.7796453130000005,
+        "wallSeconds": 64.099243437
+      },
+      {
+        "ditSeconds": 12.215690155999994,
+        "ditSetupSeconds": 1.5056623429999991,
+        "index": 6,
+        "lmSeconds": 42.34504671800005,
+        "rssMiB": 2959.05078125,
+        "vaeSeconds": 10.236824687999999,
+        "vaeSetupSeconds": 2.5733460939999997,
+        "wallSeconds": 65.836399687
+      },
+      {
+        "ditSeconds": 12.420124999999999,
+        "ditSetupSeconds": 1.5271181249999994,
+        "index": 7,
+        "lmSeconds": 38.23355172200027,
+        "rssMiB": 3017.65234375,
+        "vaeSeconds": 9.835712031,
+        "vaeSetupSeconds": 1.9121154689999997,
+        "wallSeconds": 61.635684531
+      },
+      {
+        "ditSeconds": 12.350345625000003,
+        "ditSetupSeconds": 1.5307207809999994,
+        "index": 8,
+        "lmSeconds": 46.003490943999964,
+        "rssMiB": 3079.390625,
+        "vaeSeconds": 9.909070313,
+        "vaeSetupSeconds": 2.146959219000001,
+        "wallSeconds": 69.334327343
+      },
+      {
+        "ditSeconds": 12.442668280999996,
+        "ditSetupSeconds": 1.5435448429999994,
+        "index": 9,
+        "lmSeconds": 48.03540406900004,
+        "rssMiB": 3125,
+        "vaeSeconds": 10.066620469,
+        "vaeSetupSeconds": 2.4513465630000013,
+        "wallSeconds": 71.616566875
+      },
+      {
+        "ditSeconds": 11.919037969000001,
+        "ditSetupSeconds": 1.3675939060000015,
+        "index": 10,
+        "lmSeconds": 41.47057750300013,
+        "rssMiB": 3208.20703125,
+        "vaeSeconds": 9.849025937999997,
+        "vaeSetupSeconds": 2.046303437999999,
+        "wallSeconds": 64.406458594
+      },
+      {
+        "ditSeconds": 12.007797030999996,
+        "ditSetupSeconds": 1.3209518749999987,
+        "index": 11,
+        "lmSeconds": 51.61453016000024,
+        "rssMiB": 3260.18359375,
+        "vaeSeconds": 9.921074531000002,
+        "vaeSetupSeconds": 2.325722343999999,
+        "wallSeconds": 74.658868437
+      },
+      {
+        "ditSeconds": 12.373707187000008,
+        "ditSetupSeconds": 1.4930017189999987,
+        "index": 12,
+        "lmSeconds": 53.48397843700013,
+        "rssMiB": 3315.2578125,
+        "vaeSeconds": 9.428142187000006,
+        "vaeSetupSeconds": 1.6638268750000016,
+        "wallSeconds": 76.352155782
+      },
+      {
+        "ditSeconds": 12.00386984299999,
+        "ditSetupSeconds": 1.4795460939999998,
+        "index": 13,
+        "lmSeconds": 56.010840455000164,
+        "rssMiB": 3373.72265625,
+        "vaeSeconds": 9.754603281000001,
+        "vaeSetupSeconds": 2.678121562000001,
+        "wallSeconds": 78.913057656
+      },
+      {
+        "ditSeconds": 12.399584530999988,
+        "ditSetupSeconds": 1.4054156249999998,
+        "index": 14,
+        "lmSeconds": 49.25945156599971,
+        "rssMiB": 3428.01171875,
+        "vaeSeconds": 10.048023594,
+        "vaeSetupSeconds": 2.3956167189999995,
+        "wallSeconds": 72.809082031
+      },
+      {
+        "ditSeconds": 12.508562030999997,
+        "ditSetupSeconds": 1.5695573439999997,
+        "index": 15,
+        "lmSeconds": 17.297248286000013,
+        "rssMiB": 3446.31640625,
+        "vaeSeconds": 8.854150780999987,
+        "vaeSetupSeconds": 1.0319365619999985,
+        "wallSeconds": 39.659045781
+      }
+    ],
+    "comparison": {
+      "original120Key": "stream_lab_large120_long_2026_11_24",
+      "originalRtf": 9.088482871091665,
+      "originalSeconds": 1090.617944531,
+      "observedWholeTimeReduction": 0.10988774684569969,
+      "observedVaeTimeReduction": 0.19980408183266918,
+      "scope": "Both complete120s, but different starting thermal states and HAP versions; delta is observational, not exclusively attributable to fusion."
+    }
+  },
+  "stream_lab_large_lm_precision_2026_11_24": {
+    "date": "2026-11-24",
+    "device": "CMM-AL00",
+    "modelId": "larkstudio-base-v2",
+    "scope": "Standalone pinned MNN native CLI, actual36L music LM, production513-position prefix and same first64 code history. No DiT/VAE; not full-chain RTF or prequantized-checkpoint accuracy.",
+    "recipe": {
+      "body": "W4/group64",
+      "outputHead": "W8",
+      "cpuThreads": 4,
+      "memory": "low",
+      "dynamicOption": 0,
+      "attentionMode": 8,
+      "hidden": "consume-aligned last-layer2560",
+      "kvQuantization": "none",
+      "weightsChanged": false,
+      "productionAppConfigChanged": false
+    },
+    "executionOrder": [
+      "high-perf",
+      "low-perf",
+      "low-audit",
+      "high-audit",
+      "low-perf-repeat",
+      "high-perf-repeat"
+    ],
+    "controls": {
+      "perfDecodeCountEach": 64,
+      "prefillPositions": 513,
+      "auditDecodeCountEach": 2,
+      "auditsExcludedFromSpeedAverages": true,
+      "screen": "Observed AWAKE before, between and after; Last Screen Off unchanged",
+      "batteryCObservedRange": [
+        32,
+        36
+      ],
+      "thermalMatching": "Two sequential perf runs per precision, HL then LH with audits between; no matched-temperature randomized trial."
+    },
+    "aggregate": {
+      "high": {
+        "prefillMsMean": 13480.725859,
+        "decodeMsPerTokenMean": 103.29133786718748,
+        "decodeMsPerTokenRange": [
+          101.59515135937501,
+          104.98752437499996
+        ],
+        "rssPeakMiBMax": 2519.76953125,
+        "logitsAndHiddenByteIdenticalAcrossOwnRepeats": true
+      },
+      "low": {
+        "prefillMsMean": 13722.7285935,
+        "decodeMsPerTokenMean": 98.35995608593751,
+        "decodeMsPerTokenRange": [
+          93.79079353125003,
+          102.92911864062498
+        ],
+        "rssPeakMiBMax": 2396.7109375,
+        "logitsAndHiddenByteIdenticalAcrossOwnRepeats": true
+      },
+      "decodeTimeReductionObserved": 0.047742452398000346,
+      "prefillTimeChangeObserved": 0.017951758461020484,
+      "rssPeakMiBReduction": 123.05859375
+    },
+    "variants": {
+      "high-perf": {
+        "attentionMode": 8,
+        "auditEnabled": false,
+        "auditTimingExcludedFromComparison": false,
+        "backendTensorObservations": {},
+        "bodyWeightBits": 4,
+        "decodeForwards": 64,
+        "decodeMs": 6502.089687000001,
+        "decodeMsPerToken": 101.59515135937501,
+        "decodeTokensPerSecond": 9.842989420456451,
+        "dynamicOption": 0,
+        "headWeightBits": 8,
+        "hiddenCopyMs": 0.33968499999999985,
+        "kvPositions": 577,
+        "loadMs": 5223.007187,
+        "minimumAvailableMiB": 3040.0,
+        "precision": "high",
+        "prefillMs": 13351.954062,
+        "prefillPositions": 513,
+        "quantKernelCalls": {},
+        "rssPeakMiB": 2513.609375,
+        "success": true,
+        "threads": 4
+      },
+      "low-perf": {
+        "attentionMode": 8,
+        "auditEnabled": false,
+        "auditTimingExcludedFromComparison": false,
+        "backendTensorObservations": {},
+        "bodyWeightBits": 4,
+        "decodeForwards": 64,
+        "decodeMs": 6002.610786000002,
+        "decodeMsPerToken": 93.79079353125003,
+        "decodeTokensPerSecond": 10.662027288070778,
+        "dynamicOption": 0,
+        "headWeightBits": 8,
+        "hiddenCopyMs": 0.348123,
+        "kvPositions": 577,
+        "loadMs": 5442.162969,
+        "minimumAvailableMiB": 3052.0,
+        "precision": "low",
+        "prefillMs": 15078.270467999999,
+        "prefillPositions": 513,
+        "quantKernelCalls": {},
+        "rssPeakMiB": 2388.94921875,
+        "success": true,
+        "threads": 4
+      },
+      "low-audit": {
+        "attentionMode": 8,
+        "auditEnabled": true,
+        "auditTimingExcludedFromComparison": true,
+        "backendTensorObservations": {
+          "Attention/backend=13/coreBytes=2": 108,
+          "BinaryOp/backend=13/coreBytes=2": 114,
+          "Cast/backend=0/coreBytes=4": 3,
+          "Convolution/backend=13/coreBytes=2": 759,
+          "LayerNorm/backend=13/coreBytes=2": 432,
+          "Raster/backend=13/coreBytes=2": 20,
+          "RoPE/backend=0/coreBytes=4": 216,
+          "UnaryOp/backend=13/coreBytes=2": 6
+        },
+        "bodyWeightBits": 4,
+        "decodeForwards": 2,
+        "decodeMs": 611.367656,
+        "decodeMsPerToken": 305.683828,
+        "decodeTokensPerSecond": 3.2713539559573954,
+        "dynamicOption": 0,
+        "headWeightBits": 8,
+        "hiddenCopyMs": 0.011406000000000001,
+        "kvPositions": 515,
+        "loadMs": 5130.382188,
+        "minimumAvailableMiB": 2678.0,
+        "precision": "low",
+        "prefillMs": 13670.01,
+        "prefillPositions": 513,
+        "quantKernelCalls": {
+          "arm82.int8.MNNGemmInt8AddBiasScale_Unit_FP16": 12,
+          "arm82.int8.MNNGemmInt8AddBiasScale_w4_Unit_FP16": 15120
+        },
+        "rssPeakMiB": 2374.1796875,
+        "success": true,
+        "threads": 4
+      },
+      "high-audit": {
+        "attentionMode": 8,
+        "auditEnabled": true,
+        "auditTimingExcludedFromComparison": true,
+        "backendTensorObservations": {
+          "Attention/backend=0/coreBytes=4": 108,
+          "BinaryOp/backend=0/coreBytes=4": 114,
+          "Cast/backend=0/coreBytes=4": 3,
+          "Convolution/backend=0/coreBytes=4": 759,
+          "LayerNorm/backend=0/coreBytes=4": 432,
+          "Raster/backend=0/coreBytes=4": 20,
+          "RoPE/backend=0/coreBytes=4": 216,
+          "UnaryOp/backend=0/coreBytes=4": 6
+        },
+        "bodyWeightBits": 4,
+        "decodeForwards": 2,
+        "decodeMs": 220.01906100000002,
+        "decodeMsPerToken": 110.00953050000001,
+        "decodeTokensPerSecond": 9.090121514517326,
+        "dynamicOption": 0,
+        "headWeightBits": 8,
+        "hiddenCopyMs": 0.014218000000000001,
+        "kvPositions": 515,
+        "loadMs": 4337.194219,
+        "minimumAvailableMiB": 3087.0,
+        "precision": "high",
+        "prefillMs": 13053.945625,
+        "prefillPositions": 513,
+        "quantKernelCalls": {
+          "cpu.int8.Int8GemmKernel": 12,
+          "cpu.int8.Int8GemmKernel_W4": 15120
+        },
+        "rssPeakMiB": 2504.03125,
+        "success": true,
+        "threads": 4
+      },
+      "low-perf-repeat": {
+        "attentionMode": 8,
+        "auditEnabled": false,
+        "auditTimingExcludedFromComparison": false,
+        "backendTensorObservations": {},
+        "bodyWeightBits": 4,
+        "decodeForwards": 64,
+        "decodeMs": 6587.463592999999,
+        "decodeMsPerToken": 102.92911864062498,
+        "decodeTokensPerSecond": 9.715423713006624,
+        "dynamicOption": 0,
+        "headWeightBits": 8,
+        "hiddenCopyMs": 0.32405799999999996,
+        "kvPositions": 577,
+        "loadMs": 4096.2904690000005,
+        "minimumAvailableMiB": 2894.0,
+        "precision": "low",
+        "prefillMs": 12367.186719,
+        "prefillPositions": 513,
+        "quantKernelCalls": {},
+        "rssPeakMiB": 2396.7109375,
+        "success": true,
+        "threads": 4
+      },
+      "high-perf-repeat": {
+        "attentionMode": 8,
+        "auditEnabled": false,
+        "auditTimingExcludedFromComparison": false,
+        "backendTensorObservations": {},
+        "bodyWeightBits": 4,
+        "decodeForwards": 64,
+        "decodeMs": 6719.201559999998,
+        "decodeMsPerToken": 104.98752437499996,
+        "decodeTokensPerSecond": 9.524941234237959,
+        "dynamicOption": 0,
+        "headWeightBits": 8,
+        "hiddenCopyMs": 0.3498419999999999,
+        "kvPositions": 577,
+        "loadMs": 4146.434687,
+        "minimumAvailableMiB": 2977.0,
+        "precision": "high",
+        "prefillMs": 13609.497656,
+        "prefillPositions": 513,
+        "quantKernelCalls": {},
+        "rssPeakMiB": 2519.76953125,
+        "success": true,
+        "threads": 4
+      }
+    },
+    "sameHistoryComparison": {
+      "logits": {
+        "relativeL2": 0.059738685859407156,
+        "maxAbs": 1.4483428001403809,
+        "rmsReference": 3.4185909330117776,
+        "finite": true,
+        "argmaxAgreement": 0.9076923076923077,
+        "perRowRelativeL2Max": 0.12346231338427005
+      },
+      "hidden": {
+        "relativeL2": 0.06744787978576616,
+        "maxAbs": 2.4406371116638184,
+        "rmsReference": 1.0365683121625326,
+        "finite": true,
+        "perRowRelativeL2Max": 0.12775732598450643,
+        "cosineMean": 0.9976894713796515
+      }
+    },
+    "kernelConclusion": {
+      "high": "Observed CPU0/coreBytes4 for Attention,Convolution,LayerNorm; actual W4 int8 GEMM family calls.",
+      "low": "Observed CPU_EXTENSION13/coreBytes2 for Attention,Convolution,LayerNorm; actual W4_FP16 and W8_FP16 GEMM calls. RoPE/Cast observed CPU0/coreBytes4.",
+      "kv": "Unquantized CPUKVCacheManager gets storage bytes from attention CPU core; source maps these paths to FP32 vs FP16. Cache buffer itself was not separately hooked.",
+      "accumulation": "FP16 output/storage does not imply all accumulators are FP16; integer dot products and floating accumulation remain kernel dependent."
+    },
+    "decision": "FP16 route is real and reduces bounded-test RAM; modest observed decode benefit with overlapping ranges. Preserve production High default pending original-checkpoint/condition-to-audio validation. Neither mode is the prequantized accuracy reference.",
+    "artifacts": {
+      "probeSource": "native-bench/StreamLabLmPrecision.cpp",
+      "probeSha256": "52bb694f59cc6c6de2561c439051bd966d65cf429f9ac6ad0b37816b6bf4d7d6",
+      "prefixSha256": "da02ad590f9824c45dac5be610b65cf0797b51e9b6b00187d495568f1d676665",
+      "teacherCodesSha256": "0f50b61ad7e050026b55d95cc65b41b24d073ecbe1aac2f5c5494715d4e17ca2",
+      "pinnedMnnArchiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+      "publishedBuildSha256": "b19e969ad9704c4ed81010a78c103aea850cb9526d6ae24657e2ffc30470b488",
+      "publishedBuildDifference": "After measured perf/audit runs, added existing-output-directory protection only; rebuilt and verified existing result hash stays unchanged. probeSha256 identifies the measured binary."
+    },
+    "validation": {
+      "nativeTargetBuilt": true,
+      "highAndLowPerfRepeatsPassed": true,
+      "highAndLowKernelAuditsPassed": true,
+      "existingOutputGuardPassed": true,
+      "appDefaultUnchanged": true
+    }
   }
 
 }
