@@ -171,9 +171,9 @@ inline std::vector<float> prefix(const std::string& root,int width,bool small,co
 class Prior {
     double loadSeconds_=0,prefixSeconds_=0,prefillSeconds_=0,decodeSeconds_=0,samplingSeconds_=0,lookupSeconds_=0;size_t decodeCount_=0;
     std::unique_ptr<Llm,decltype(&Llm::destroy)> model_{nullptr,&Llm::destroy};
-    MNN::Express::VARP logits_;std::unique_ptr<MappedFloats> table_;bool small_,sampling_,smallHidden_,cropped_,suppressEos_;int width_,previous_=0;MusicVocabulary vocab_;std::mt19937 random_{2307};std::vector<int> codes_;
+    MNN::Express::VARP logits_;std::unique_ptr<MappedFloats> table_;bool small_,sampling_,smallHidden_,cropped_,suppressEos_;int width_,previous_=0;MusicVocabulary vocab_;uint32_t seed_;std::mt19937 random_;std::vector<int> codes_;
 public:
-    Prior(const std::string& root,const std::string& work,bool small,const std::string& lyrics="",const std::string& npy="",bool smallHidden=false,const std::string& croppedLm="",int threads=4,int dynamicOption=0,bool suppressEos=false,const std::string& precision="high"):small_(small),sampling_(!lyrics.empty()),smallHidden_(smallHidden),cropped_(!croppedLm.empty()),suppressEos_(suppressEos),width_(small?1024:2560),vocab_(musicVocabulary(small,croppedLm)){
+    Prior(const std::string& root,const std::string& work,bool small,const std::string& lyrics="",const std::string& npy="",bool smallHidden=false,const std::string& croppedLm="",int threads=4,int dynamicOption=0,bool suppressEos=false,const std::string& precision="high",uint32_t seed=42):small_(small),sampling_(!lyrics.empty()),smallHidden_(smallHidden),cropped_(!croppedLm.empty()),suppressEos_(suppressEos),width_(small?1024:2560),vocab_(musicVocabulary(small,croppedLm)),seed_(seed),random_(seed){
         LEVO_STREAM_SPAN("llm.initialize");
         require(!cropped_||small,"Music-head crop is for the small model only");
         if(cropped_)require(std::filesystem::file_size(croppedLm+"/embeddings_bf16.bin")==344502272,"Cropped LM requires the complete input embedding file");
@@ -205,7 +205,7 @@ public:
         if(small_&&!smallHidden_&&index){LEVO_STREAM_SPAN("llm.decode");auto tick=Clock::now();logits_=model_->forward({vocab_.inputAudioBase+previous_},false);
             require(logits_.get()&&logits_->readMap<float>(),"Decode failed");decodeSeconds_+=seconds(tick);++decodeCount_;
         }
-        int code=(index*997+2307)%16384;
+        int code=int((uint64_t(index)*997+seed_)%16384);
         if(sampling_){
             LEVO_STREAM_SPAN("llm.sampling");
             auto tick=Clock::now();
@@ -237,6 +237,8 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     const int dynamicOption=options.value("lmDynamicOption",0);require(dynamicOption==0||dynamicOption==2,"Unsupported dynamic A8 option");
     const std::string lmPrecision=options.value("lmPrecision",std::string("high")),ditPrecision=options.value("ditPrecision",std::string("high")),projectionPrecision=options.value("projectionPrecision",std::string("high"));
     for(const auto& precision:{lmPrecision,ditPrecision,projectionPrecision})require(precision=="high"||precision=="low","Unsupported CPU precision experiment");
+    const Json seedOption=options.value("seed",Json(42));require(seedOption.is_number_integer(),"Seed must be an integer");
+    const int64_t seedValue=seedOption.get<int64_t>();require(seedValue>=0&&seedValue<=2147483647,"Seed outside supported range");const uint32_t seed=uint32_t(seedValue);
     const std::string smallCondition=options.value("smallCondition",std::string("token"));
     require(smallCondition=="token"||(choice==0&&smallCondition=="hidden-consume"),"Unknown condition experiment");
     const bool resident=options.value("resident",choice==0),cfg=options.value("cfg",true),vaeFusion=options.value("vaeFusion",false);
@@ -253,14 +255,14 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     {std::lock_guard<std::mutex> lock(stateMutex);state={{"runId",id},{"busy",true},{"status","generating"},{"phase","loading"},{"chunks",Json::array()},
        {"generatedSamples",0},{"requestedFrames",requested},{"conditionFrames",0},{"model",choice},{"conditionMode",choice==0?smallCondition:"hidden-projector"},{"transportOnly",transport},{"diagnosticOnly",lyrics.empty()||transport||smallCondition!="token"},{"musicQualityClaimed",false},
        {"resident",resident},{"tokenPrefetch",prefetch},{"threads",{{"lm",lmThreads},{"dit",ditThreads},{"vae",vaeThreads}}},{"croppedLm",croppedLm},{"ditSteps",steps},{"cfgEnabled",cfg},{"cfgScale",cfg?1.5:0.},{"ditBatch",batch},{"unconditionalComputeRemoved",batch==1},{"chunkTimings",Json::array()},{"vaeFusion",vaeFusion},
-       {"lmDynamicOption",dynamicOption},{"precisions",{{"llm",lmPrecision},{"dit",ditPrecision},{"projection",projectionPrecision},{"vae","low"}}},{"suppressEos",suppressEos},{"longRun",longRun},{"captureVaeInput",captureVaeInput},{"runTag",options.value("runTag",std::string())}};}
+       {"lmDynamicOption",dynamicOption},{"seed",seed},{"noiseSeed",seed},{"precisions",{{"llm",lmPrecision},{"dit",ditPrecision},{"projection",projectionPrecision},{"vae","low"}}},{"suppressEos",suppressEos},{"longRun",longRun},{"captureVaeInput",captureVaeInput},{"runTag",options.value("runTag",std::string())}};}
     Trace trace;trace.phase(1);double lmTime=0,muTime=0,ditTime=0,vaeTime=0,ditSetup=0,vaeSetup=0;std::vector<float> conditions;std::unique_ptr<Prior> prior;
     std::unique_ptr<Graph> keptDit,keptVae;
     struct Fetched {std::vector<float> values;int count=0;bool eos=false;double elapsed=0;};std::future<Fetched> pending;
     size_t observedKv=0;
-    std::vector<float> last,tail;std::mt19937 rng(2307);std::normal_distribution<float> normal;
+    std::vector<float> last,tail;std::mt19937 rng(seed);std::normal_distribution<float> normal;
     try{
-        if(!transport){require(inspect(appRoot,choice)["ready"],"Import matching model bundle first");if(longRun)require(requested<=readJson(root+"/model-bundle.json")["runtime"].value("maxFrames",choice==0?7500:3000),"Bundle-declared duration bound exceeded");check();auto tick=Clock::now();prior=std::make_unique<Prior>(root,work,choice==0,lyrics,npy,smallCondition=="hidden-consume",croppedLm,lmThreads,dynamicOption,suppressEos,lmPrecision);lmTime+=seconds(tick);}
+        if(!transport){require(inspect(appRoot,choice)["ready"],"Import matching model bundle first");if(longRun)require(requested<=readJson(root+"/model-bundle.json")["runtime"].value("maxFrames",choice==0?7500:3000),"Bundle-declared duration bound exceeded");check();auto tick=Clock::now();prior=std::make_unique<Prior>(root,work,choice==0,lyrics,npy,smallCondition=="hidden-consume",croppedLm,lmThreads,dynamicOption,suppressEos,lmPrecision,seed);lmTime+=seconds(tick);}
         const int hidden=choice==0?1024:2560;int produced=0,index=0;size_t emitted=0;
         std::vector<float> masks,mean,stddev;if(!transport){masks=read(root+"/aux/mask.f32",144);mean=read(root+"/aux/mean.f32",64);stddev=read(root+"/aux/std.f32",64);}
         int actual=requested;bool eos=false;

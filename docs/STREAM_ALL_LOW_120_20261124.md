@@ -19,7 +19,7 @@ LLM常驻请求，DiT、投影、VAE按窗创建和销毁；线程仍为4／6／
 ```powershell
 ./tools/run_music_duration.ps1 -Device DEVICE -RunId UNIQUE_ID `
   -DurationSeconds 120 -ModelChoice 1 -DynamicOption 0 -VaeFusion 1 `
-  -FloatingPrecision low -CoolingSeconds 600 -MaximumStartBatteryC 30
+  -FloatingPrecision low -Seed 2307 -CoolingSeconds 600 -MaximumStartBatteryC 30
 ```
 
 原High基线用`-FloatingPrecision high`。手动界面有“全链CPU Low／FP16（实验）”开关，生成中禁用。
@@ -78,6 +78,11 @@ Low本轮HAP SHA256：`4ed7a0c886ef3bb28a15b616d30a9783a0e6279addbdcb6ace13fcc09
 LLM为temperature0.95、top-k250，未启用top-p和重复惩罚，独立随机种子2307。
 本轮固定时长测速屏蔽EOS，生成满3000个音频code。DiT为两步Euler、CFG1.5，正态初始噪声另用种子2307。
 VAE确定性解码，不做随机采样。仅切换CPU精度策略，没有同时调采样配方。
+
+本表记录的是v0.1.16、seed2307。随后v0.1.17按用户要求将默认seed改成42，
+LLM与DiT噪声均接收该参数，并在原生结果里分别记录`seed`、`noiseSeed`。
+`tools/run_music_duration.ps1`新增`-Seed`，默认42；复现旧性能配方时需显式传2307。
+改默认seed不修改本表历史数据，也不能把旧120秒成绩标为seed42测试。
 
 ## 另一次LLM独立长解码
 

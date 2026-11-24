@@ -6,6 +6,7 @@ param(
  [ValidateSet(0,2)][int]$DynamicOption=2,
  [ValidateSet(0,1)][int]$VaeFusion=1,
  [ValidateSet('high','low')][string]$FloatingPrecision='high',
+ [ValidateRange(0,2147483647)][int]$Seed=42,
  [ValidateRange(0,600)][int]$CoolingSeconds=180,
  [ValidateRange(0,50)][int]$MaximumStartBatteryC=0,
  [switch]$ResumePrepared,
@@ -38,13 +39,14 @@ function Music-Sample {
  $musicValues=@($musicRaw -split "`n" | ForEach-Object {$_.Trim()})
  return @{utc=[DateTimeOffset]::UtcNow.ToString('o');batteryC=if($musicValues[0] -match '^\d+$'){[double]$musicValues[0]/10}else{$null};socNodeC=if($musicValues.Count -gt 1 -and $musicValues[1] -match '^\d+$'){[double]$musicValues[1]/1000}else{$null}}
 }
-$musicRecord=@{runTag=$RunId;bundleName=$musicBundleName;modelChoice=$ModelChoice;requestedDurationSeconds=$DurationSeconds;dynamicOption=$DynamicOption;vaeFusion=[bool]$VaeFusion;floatingPrecision=$FloatingPrecision;maximumStartBatteryC=$MaximumStartBatteryC;status='preparing';coolingSecondsRequested=$CoolingSeconds;
+$musicRecord=@{runTag=$RunId;bundleName=$musicBundleName;modelChoice=$ModelChoice;requestedDurationSeconds=$DurationSeconds;dynamicOption=$DynamicOption;vaeFusion=[bool]$VaeFusion;floatingPrecision=$FloatingPrecision;seed=$Seed;maximumStartBatteryC=$MaximumStartBatteryC;status='preparing';coolingSecondsRequested=$CoolingSeconds;
  scope='Actual selected-model App fixed-length generation with playback; W4 body/W8 head, DiT CPU2steps CFG1.5, CPU Low VAE; dynamic option and fusion recorded explicitly; EOS suppressed for timing';
  samples=@();createdUtc=[DateTimeOffset]::UtcNow.ToString('o')}
 if($ResumePrepared){
  $musicPrepared=Get-Content -LiteralPath (Join-Path $musicDir 'run.json') -Raw -Encoding UTF8 | ConvertFrom-Json
  $musicPreparedPrecision=if($musicPrepared.floatingPrecision){[string]$musicPrepared.floatingPrecision}else{'high'}
- if($musicPrepared.status -notin @('awaiting-unlock','awaiting-temperature') -or [int]$musicPrepared.modelChoice -ne $ModelChoice -or $musicPrepared.requestedDurationSeconds -ne $DurationSeconds -or $musicPrepared.dynamicOption -ne $DynamicOption -or [bool]$musicPrepared.vaeFusion -ne [bool]$VaeFusion -or $musicPreparedPrecision -ne $FloatingPrecision -or [int]$musicPrepared.maximumStartBatteryC -ne $MaximumStartBatteryC){throw 'Only the same prepared, not-yet-started measurement may resume'}
+ $musicPreparedSeed=if($null -ne $musicPrepared.seed){[int]$musicPrepared.seed}else{2307}
+ if($musicPrepared.status -notin @('awaiting-unlock','awaiting-temperature') -or [int]$musicPrepared.modelChoice -ne $ModelChoice -or $musicPrepared.requestedDurationSeconds -ne $DurationSeconds -or $musicPrepared.dynamicOption -ne $DynamicOption -or [bool]$musicPrepared.vaeFusion -ne [bool]$VaeFusion -or $musicPreparedPrecision -ne $FloatingPrecision -or [int]$musicPrepared.maximumStartBatteryC -ne $MaximumStartBatteryC -or $musicPreparedSeed -ne $Seed){throw 'Only the same prepared, not-yet-started measurement may resume'}
  $musicRecord=@{};foreach($musicProperty in $musicPrepared.psobject.Properties){$musicRecord[$musicProperty.Name]=$musicProperty.Value}
  $musicRecord.resumedUtc=[DateTimeOffset]::UtcNow.ToString('o')
 }
@@ -97,7 +99,7 @@ $null=Music-Hdc @('shell',"aa force-stop $musicBundleName") # Confirmed idle abo
 $musicLaunchSample=Music-Sample;$musicRecord.samples+=@($musicLaunchSample)
 if($MaximumStartBatteryC -gt 0 -and ($null -eq $musicLaunchSample.batteryC -or $musicLaunchSample.batteryC -gt $MaximumStartBatteryC)){$musicRecord.status='awaiting-temperature';Music-Save;throw 'Battery warmed above requested start temperature; no inference started'}
 $musicRecord.status='starting';Music-Save
-$null=Music-Hdc @('shell',"aa start -a EntryAbility -b $musicBundleName --ps streamLabTest duration-benchmark --pi streamLabModel $ModelChoice --pi streamLabSeconds $DurationSeconds --pi streamLabDynamicOption $DynamicOption --pi streamLabVaeFusion $VaeFusion --ps streamLabPrecision $FloatingPrecision --ps streamLabRunTag $RunId")
+$null=Music-Hdc @('shell',"aa start -a EntryAbility -b $musicBundleName --ps streamLabTest duration-benchmark --pi streamLabModel $ModelChoice --pi streamLabSeconds $DurationSeconds --pi streamLabDynamicOption $DynamicOption --pi streamLabVaeFusion $VaeFusion --ps streamLabPrecision $FloatingPrecision --pi streamLabSeed $Seed --ps streamLabRunTag $RunId")
 $musicClock=[DateTimeOffset]::UtcNow;$musicLastAnnounce=0
 while(([DateTimeOffset]::UtcNow-$musicClock).TotalSeconds -lt 3600){
  Start-Sleep -Seconds 5
@@ -133,6 +135,7 @@ while(([DateTimeOffset]::UtcNow-$musicClock).TotalSeconds -lt 3600){
  if($musicWall-$musicLastAnnounce -ge 30){$musicLastAnnounce=$musicWall;Write-Output "${DurationSeconds}s target: $([Math]::Round($musicWall))s elapsed, phase $($musicState.phase), frames $($musicState.conditionFrames)"}
 }
 if(!$musicRecord.ContainsKey('generation')){$musicRecord.status='observer-timeout';Music-Save;throw 'No complete observed result; App left running, do not restart automatically'}
+if($musicRecord.generation.seed -ne $Seed -or $musicRecord.generation.noiseSeed -ne $Seed){$musicRecord.status='seed-mismatch';Music-Save;throw 'Requested LLM and DiT seeds were not confirmed by native final state'}
 $musicPrecisions=$musicRecord.generation.precisions
 if($FloatingPrecision -eq 'low' -and (!$musicPrecisions -or $musicPrecisions.llm -ne 'low' -or $musicPrecisions.dit -ne 'low' -or $musicPrecisions.projection -ne 'low' -or $musicPrecisions.vae -ne 'low')){$musicRecord.status='precision-mismatch';Music-Save;throw 'Requested all-Low profile was not confirmed by native final state'}
 $musicPowerAfter=Music-Hdc @('shell','hidumper -s PowerManagerService -a -a')

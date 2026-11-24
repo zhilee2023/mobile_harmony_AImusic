@@ -104750,6 +104750,41 @@
       "batteryStartC": 33.0,
       "batteryEndC": 39.0
     }
+  },
+  "stream_lab_seed42_2026_11_24": {
+    "date": "2026-11-24",
+    "device": "CMM-AL00",
+    "appVersion": "0.1.17",
+    "modelId": "larkstudio-base-v2",
+    "scope": "Actual15s selected-bundle App functional generation and playback after changing default seeds. Not a replacement120s benchmark.",
+    "seed": 42,
+    "ditNoiseSeed": 42,
+    "sampling": {
+      "temperature": 0.95,
+      "topK": 250,
+      "topPEnabled": false,
+      "repetitionPenaltyEnabled": false
+    },
+    "precisions": {
+      "dit": "low",
+      "llm": "low",
+      "projection": "low",
+      "vae": "low"
+    },
+    "audioSeconds": 15,
+    "codeCount": 375,
+    "vaeFusedCalls": 72,
+    "complete": true,
+    "controlledTimingAccepted": true,
+    "validation": {
+      "nativeSeedsConfirmed": true,
+      "allGraphOutputsFinite": true,
+      "codesChangedFromPrevious2307": true,
+      "codesSha256": "6a9558802bbd0b82c842797033f2791a24814cc7e4a66caf831e6b203bfe7280",
+      "appBuildPassed": true
+    },
+    "installedHapSha256": "3e01ab4ad6c82433d142f051a3930ee5d6995c37c2141eda8e7e538bcdb8facb",
+    "historical120sRecordUnchanged": "stream_lab_large120_all_low_2026_11_24 remains seed2307; no seed42 full120s RTF claimed."
   }
 
 }

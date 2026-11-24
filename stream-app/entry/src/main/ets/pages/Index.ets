@@ -55,6 +55,7 @@ struct Index {
   private lmDynamicOption: number = 2;
   private vaeFusion: boolean = true;
   private benchmarkRunTag: string = '';
+  private seed: number = 42;
   private startedAt: number = 0;
   @State dragging: boolean = false;
   @State previewMs: number = 0;
@@ -123,6 +124,7 @@ struct Index {
       this.lmDynamicOption = AppStorage.get<number>('streamLabDynamicOption') ?? 2;
       this.vaeFusion = AppStorage.get<boolean>('streamLabVaeFusion') ?? true;
       this.allCpuLow = AppStorage.get<string>('streamLabPrecision') === 'low';
+      this.seed = AppStorage.get<number>('streamLabSeed') ?? 42;
       this.benchmarkRunTag = this.durationBenchmark ? (AppStorage.get<string>('streamLabRunTag') ?? '') : '';
       this.testStop = autoRun === 'stop-check'; this.refresh();
       setTimeout(() => { this.start(!this.durationBenchmark && autoRun !== 'mnn-check' && autoRun !== 'mnn60-check' && autoRun !== 'music-check'); }, 800);
@@ -210,7 +212,7 @@ struct Index {
     this.startedAt = Date.now(); this.playbackError = '';
     this.firstChunk = 0; this.stage = '准备实验'; await this.keepAwake(true);
     if (this.player) await this.player.close(); await this.releaseSystem(); this.player = this.createPlayer();
-    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, croppedLm: this.model === 0 ? this.croppedLm() : '', lmDynamicOption: this.model === 0 ? this.lmDynamicOption : 0, lmPrecision: this.allCpuLow ? 'low' : 'high', ditPrecision: this.allCpuLow ? 'low' : 'high', projectionPrecision: this.allCpuLow ? 'low' : 'high', vaeFusion: this.vaeFusion, captureVaeInput: fixedBenchmark, longRun: this.seconds > 60, suppressEos: fixedBenchmark || this.fillDuration, runTag: fixedBenchmark ? this.benchmarkRunTag : '' })); }
+    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, seed: this.seed, croppedLm: this.model === 0 ? this.croppedLm() : '', lmDynamicOption: this.model === 0 ? this.lmDynamicOption : 0, lmPrecision: this.allCpuLow ? 'low' : 'high', ditPrecision: this.allCpuLow ? 'low' : 'high', projectionPrecision: this.allCpuLow ? 'low' : 'high', vaeFusion: this.vaeFusion, captureVaeInput: fixedBenchmark, longRun: this.seconds > 60, suppressEos: fixedBenchmark || this.fillDuration, runTag: fixedBenchmark ? this.benchmarkRunTag : '' })); }
     catch (error) { this.stage = String(error); this.playbackError = String(error); this.record('start-error', String(error)); }
     finally { this.busy = false; this.stopping = false; this.durationBenchmark = false; this.poll(); if (fixedBenchmark) this.awakeRelease = setTimeout(() => { this.awakeRelease = -1; this.keepAwake(false); }, 15000); else await this.keepAwake(false); }
   }

@@ -16,6 +16,8 @@ export default class EntryAbility extends UIAbility {
     if (typeof fusion === 'number') AppStorage.setOrCreate<boolean>('streamLabVaeFusion', fusion === 1);
     const precision = want.parameters?.['streamLabPrecision'];
     AppStorage.setOrCreate<string>('streamLabPrecision', precision === 'low' ? 'low' : 'high');
+    const seed = want.parameters?.['streamLabSeed'];
+    AppStorage.setOrCreate<number>('streamLabSeed', typeof seed === 'number' && seed >= 0 && seed <= 2147483647 && Math.floor(seed) === seed ? seed : 42);
   }
   onWindowStageCreate(stage: window.WindowStage): void { stage.loadContent('pages/Index'); }
 }

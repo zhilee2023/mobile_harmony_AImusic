@@ -1,6 +1,6 @@
 # 独立流式实验 App
 
-`stream-app/`，包名 `com.zhilee.levostreamlab`，名称 **LeVo 流式实验 v0.1.16**。
+`stream-app/`，包名 `com.zhilee.levostreamlab`，名称 **LeVo 流式实验 v0.1.17**。
 与 `music-app/`、研究 App 和手机原有 LarkStudio App 独立；没有覆盖旧代码、包名或模型。
 当前仅支持下面两个明确的模型契约，不是任意同名 Qwen 权重的通用播放器。
 
@@ -34,6 +34,8 @@ LLM仍沿用CPU High基线；同权重FP16实机内核／速度／hidden差异�
 v0.1.16新增可选的[全链CPU Low实验](STREAM_ALL_LOW_120_20261124.md)，High默认配方保留。
 完整120秒已完成：RTF6.851、RSS峰值约3.62GiB、纯decode163.35ms/token。
 原计划的30°C／冷却600秒准备因用户要求“现在测”取消，本轮实际33°C起测，不能标为30°C对照。
+v0.1.17按用户要求把默认seed改为42，LLM采样与DiT噪声使用各自独立、同种子的生成器。
+CLI可用`-Seed 2307`复现旧配方；上述120秒成绩仍是seed2307，不改写成seed42结果。
 
 ## 两个模型契约
 
