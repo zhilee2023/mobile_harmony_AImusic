@@ -103264,11 +103264,17 @@
       "installedHapSha256": "e582b6e55c08400ee058455920d228c989ad970ac21620406864c8e575e9581f"
     },
     "fusedApp15": {
-      "status": "awaiting-unlock",
-      "inferenceStarted": false,
+      "status": "completed",
+      "inferenceStarted": true,
+      "previousStatus": "awaiting-unlock",
       "requestedCoolingSeconds": 540,
-      "preparedRunTag": "music-large15-vae-fused-20261124-r1",
-      "reason": "Phone entered SLEEP before cooling ended; no foreground timing fabricated."
+      "coolingSecondsObserved": 540.1530434,
+      "additionalUnlockWaitSeconds": 3551.9191726,
+      "fullComparisonKey": "stream_lab_large_vae_fusion_2026_11_24",
+      "observedWholeRtf": 5.7506610312666675,
+      "vaeFusedCalls": 72,
+      "wavParity": "Both15s chunks byte-identical to original VAE",
+      "delayReason": "Phone slept after cooling; resumed after manual unlock, starting temperature differs."
     },
     "full120sFusedRemeasured": false,
     "original120sRtfRetained": 9.088482871091665,
@@ -103282,6 +103288,212 @@
       "headWeightBits": 8,
       "scope": "Configuration/source selection only, not per-operator runtime kernel dispatch audit."
     }
+  },
+  "stream_lab_large_vae_fusion_2026_11_24": {
+    "date": "2026-11-24",
+    "scope": "Same HAP15s larger-model A/B plus same real latent independent VAE comparison; not a repeat120s measurement.",
+    "device": {
+      "modelCode": "CMM-AL00",
+      "appVersion": "0.1.15",
+      "backend": "MNN ARM CPU",
+      "threads": {
+        "llm": 4,
+        "dit": 6,
+        "vae": 6
+      }
+    },
+    "modelId": "larkstudio-base-v2",
+    "sourceVaeIdentityEqualToSmall": true,
+    "sourceVaeGraphSha256": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+    "sourceVaeWeightSha256": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc",
+    "reasonOldRunUnfused": "Prior App allowed fusion only for choice0; choice1 explicitly disabled it. Original VAE weights already match.",
+    "moduleComparison": {
+      "scope": "Same real first latent from larger LM/DiT15s App generation; independent VAE sessions, CPU Low6, original W8 weights",
+      "baselineWarmSeconds": 5.522031875000001,
+      "fusedWarmSeconds": 4.951982395,
+      "speedup": 1.1151154092501576,
+      "timeReduction": 0.10323183438704808,
+      "pcmRelativeL2": 0.0,
+      "pcmMaxAbs": 0.0,
+      "pcmBytesEqual": true,
+      "customCalls": [
+        36,
+        36,
+        36,
+        36
+      ],
+      "baselinePeakRssMiB": 747.0,
+      "fusedPeakRssMiB": 716.36328125,
+      "baselineObservedMaxRssMiB": 750.8125,
+      "fusedObservedMaxRssMiB": 720.1796875
+    },
+    "appVariants": {
+      "baseline": {
+        "audioSeconds": 15,
+        "elapsedSeconds": 87.919491562,
+        "observedWholeRtf": 5.861299437466667,
+        "stageSeconds": {
+          "llm": 58.337293111999976,
+          "projection": 1.142837187,
+          "dit": 14.955231406,
+          "vae": 12.874397343
+        },
+        "stageRtf": {
+          "llm": 3.8891528741333317,
+          "projection": 0.0761891458,
+          "dit": 0.9970154270666666,
+          "vae": 0.8582931562
+        },
+        "otherSeconds": 0.6097325140000294,
+        "rssPeakMiB": 3482.859375,
+        "stageProcessRssPeakMiB": {
+          "dit": 3482.859375,
+          "llm": 2944.48828125,
+          "other": 3002.87109375,
+          "scope": "20ms sampled process RSS during each stage; includes all resident models",
+          "vae": 3482.23828125
+        },
+        "minimumAvailableMiB": 2324.0,
+        "llmTiming": {
+          "decodeForwards": 375,
+          "decodeMs": 40825.710954000024,
+          "decodeMsPerToken": 108.86856254400006,
+          "decodeTokensPerSecond": 9.185388110510253,
+          "loadMs": 3904.5164059999997,
+          "lookupMs": 2.0168799999999973,
+          "prefillMs": 13263.923281,
+          "prefillPositions": 513,
+          "prefixMs": 59.164375,
+          "samplingMs": 272.7670399999999,
+          "scope": "forward plus output synchronization; excludes sampling, condition lookup and downstream waits"
+        },
+        "firstChunkSeconds": 59.195910781,
+        "ditSetupSecondsIncluded": 2.5367351559999998,
+        "vaeSetupSecondsIncluded": 1.9388631250000001,
+        "coolingSecondsObserved": 540.0785072,
+        "installedHapSha256": "e582b6e55c08400ee058455920d228c989ad970ac21620406864c8e575e9581f",
+        "controlledTimingAccepted": true,
+        "foregroundGapObserved": false,
+        "lastScreenOffUnchanged": true,
+        "screenAwakeAtEnd": true,
+        "temperatureBatteryC": {
+          "start": 31.0,
+          "end": 34.0,
+          "peak": 34.0
+        },
+        "extraWaitAfterCoolingSeconds": 0,
+        "validation": {
+          "frames": 720000,
+          "chunkHashes": [
+            "baa0692de95ed405d2e0a6accc09266a35bbdfb51185ca4481adb5a29517f50a",
+            "8426348bfa9816c6b6e01f5af77256ebf207205a5e377ea2cbb7419cccedfba1"
+          ],
+          "vaeFusedCalls": 0,
+          "latentSha256": "ae9a92c042e8aac1892bdbfc12b3987d1b01ba7a276310f30be86d2e0ac4834d"
+        },
+        "playback": {
+          "maxPlayedMsAtCapture": 15000,
+          "errorEvents": 0
+        }
+      },
+      "fused": {
+        "audioSeconds": 15,
+        "elapsedSeconds": 86.259915469,
+        "observedWholeRtf": 5.7506610312666675,
+        "stageSeconds": {
+          "llm": 59.76825859200001,
+          "projection": 0.9880275,
+          "dit": 14.687997345,
+          "vae": 10.260953751
+        },
+        "stageRtf": {
+          "llm": 3.984550572800001,
+          "projection": 0.0658685,
+          "dit": 0.979199823,
+          "vae": 0.6840635834000001
+        },
+        "otherSeconds": 0.554678280999994,
+        "rssPeakMiB": 3450.19921875,
+        "stageProcessRssPeakMiB": {
+          "dit": 3450.19921875,
+          "llm": 2903.98828125,
+          "other": 2965.18359375,
+          "scope": "20ms sampled process RSS during each stage; includes all resident models",
+          "vae": 3364.796875
+        },
+        "minimumAvailableMiB": 2356,
+        "llmTiming": {
+          "decodeForwards": 375,
+          "decodeMs": 39961.17515600005,
+          "decodeMsPerToken": 106.56313374933346,
+          "decodeTokensPerSecond": 9.384108413630948,
+          "loadMs": 5575.690780999999,
+          "lookupMs": 1.9749969999999997,
+          "prefillMs": 13892.492343,
+          "prefillPositions": 513,
+          "prefixMs": 52.378594,
+          "samplingMs": 274.3774949999998,
+          "scope": "forward plus output synchronization; excludes sampling, condition lookup and downstream waits"
+        },
+        "firstChunkSeconds": 59.894773281,
+        "ditSetupSecondsIncluded": 2.488387812,
+        "vaeSetupSecondsIncluded": 1.414970938,
+        "coolingSecondsObserved": 540.1530434,
+        "installedHapSha256": "e582b6e55c08400ee058455920d228c989ad970ac21620406864c8e575e9581f",
+        "controlledTimingAccepted": true,
+        "foregroundGapObserved": false,
+        "lastScreenOffUnchanged": true,
+        "screenAwakeAtEnd": true,
+        "temperatureBatteryC": {
+          "start": 27.0,
+          "end": 31.0,
+          "peak": 31.0
+        },
+        "extraWaitAfterCoolingSeconds": 3551.9191726,
+        "validation": {
+          "frames": 720000,
+          "chunkHashes": [
+            "baa0692de95ed405d2e0a6accc09266a35bbdfb51185ca4481adb5a29517f50a",
+            "8426348bfa9816c6b6e01f5af77256ebf207205a5e377ea2cbb7419cccedfba1"
+          ],
+          "vaeFusedCalls": 72,
+          "latentSha256": "ae9a92c042e8aac1892bdbfc12b3987d1b01ba7a276310f30be86d2e0ac4834d"
+        },
+        "playback": {
+          "maxPlayedMsAtCapture": 15000,
+          "errorEvents": 0
+        }
+      }
+    },
+    "parity": {
+      "sameCodes": true,
+      "sameFirstLatent": true,
+      "bothWavsByteIdentical": true,
+      "sameHap": true,
+      "capturedInputBytes": 65536
+    },
+    "vaeTimeReductionIn15s": 0.2029954119305606,
+    "wholeTimeReductionIn15s": 0.01887608837944288,
+    "wholeComparisonScope": "Same HAP/input/recipe except fusion, but fused run resumed after additional unlock wait; different starting thermal state. Whole timing delta is observational, not solely fusion benefit.",
+    "existing120s": {
+      "seconds": 1090.617944531,
+      "rtf": 9.088482871091665,
+      "llmSeconds": 703.2561919909981,
+      "vaeSeconds": 174.74162843800002,
+      "fused120sRemeasured": false,
+      "subtractingAllVaeWithOtherStagesFixedRtf": 7.632302634108332
+    },
+    "runtimeAudit": {
+      "cosyvoice_kleidiai": false,
+      "meaningFromPinnedLocalMnn": "Llm::setRuntimeHint maps this key to CPU_ENABLE_KLEIDIAI=0.",
+      "llmPrecision": "high",
+      "memory": "low",
+      "bodyWeightBits": 4,
+      "headWeightBits": 8,
+      "dynamicOption": 0,
+      "kernelClaim": "Requested quantization recipe and source selection, not a per-operator runtime kernel audit."
+    },
+    "defaultChange": "Both model choices may now use checked36-node CPU Low6 Snake fusion; CLI -VaeFusion0 retains original baseline."
   }
 
 }
