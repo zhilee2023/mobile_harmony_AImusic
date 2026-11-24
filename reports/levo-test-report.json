@@ -102137,6 +102137,149 @@
       }
     },
     "interpretation": "All stages slow from window7, including fixed-shape DiT/VAE. Thermal/scheduling/load changes are hypotheses; no causal diagnosis without concurrent telemetry."
+  },
+  "stream_lab_precise_timing120_2026_11_24": {
+    "date": "2026-11-24",
+    "scope": "One actual 120s App request with independently timed LLM forward+output synchronization; no stage sums from other runs.",
+    "device": {
+      "modelCode": "CMM-AL00",
+      "appVersion": "0.1.10",
+      "backend": "MNN ARM CPU",
+      "threads": {
+        "dit": 6,
+        "lm": 4,
+        "vae": 6
+      }
+    },
+    "recipe": {
+      "llm": "28L music Qwen, W4/group64 body, W8 audio-only head, per-block dynamic A8, BF16 input embedding",
+      "dit": "W8/group64, two Euler steps, CFG1.5, batch2",
+      "vae": "W8/group64, CPU Low FP16, 36 Snake graph fusions/window",
+      "resident": true,
+      "tokenPrefetch": false,
+      "suppressEosForFixedDuration": true
+    },
+    "audioSeconds": 120.0,
+    "conditionFrames": 3000,
+    "windows": 16,
+    "elapsedSeconds": 324.601498594,
+    "observedWholeRtf": 2.7050124882833333,
+    "controlledTimingAccepted": false,
+    "foregroundGapObserved": true,
+    "lastScreenOffUnchanged": true,
+    "screenAwakeAtEnd": true,
+    "stages": {
+      "llm": {
+        "seconds": 161.44147140200008,
+        "rtf": 1.3453455950166673,
+        "romBytes": 600645003,
+        "processRssPeakMiB": 3263.59765625
+      },
+      "dit": {
+        "seconds": 72.909544061,
+        "rtf": 0.6075795338416667,
+        "romBytes": 413839536,
+        "processRssPeakMiB": 2524.93359375
+      },
+      "vae": {
+        "seconds": 88.368868593,
+        "rtf": 0.736407238275,
+        "romBytes": 86052358,
+        "processRssPeakMiB": 2524.62890625
+      }
+    },
+    "otherSeconds": 1.8816145379999512,
+    "otherRtf": 0.015680121149999594,
+    "llmTiming": {
+      "decodeForwards": 2999,
+      "decodeMs": 156409.8761110001,
+      "decodeMsPerToken": 52.15401004034682,
+      "decodeTokensPerSecond": 19.17398104625878,
+      "loadMs": 491.037032,
+      "lookupMs": 21.278898999999942,
+      "prefillMs": 2183.321094,
+      "prefillPositions": 513,
+      "prefixMs": 15.252813,
+      "samplingMs": 2311.472193000001,
+      "scope": "forward plus output synchronization; excludes sampling, condition lookup and downstream waits"
+    },
+    "rom": {
+      "bytes": {
+        "llm": 600645003,
+        "dit": 413839536,
+        "vae": 86052358,
+        "conditioner_aux": 40839847,
+        "prefix_embedding_copy": 344502272
+      },
+      "mib": {
+        "llm": 572.819712638855,
+        "dit": 394.6681365966797,
+        "vae": 82.0659236907959,
+        "conditioner_aux": 38.94791316986084,
+        "prefix_embedding_copy": 328.54296875
+      },
+      "activeDeploymentBytes": 1485879016,
+      "originalBundleAssetBytes": 1301724838,
+      "scope": "Logical file bytes. Excludes songs/logs/old full-head graph and weights; includes the separate prefix embedding still read by current runtime."
+    },
+    "rssPeakMiB": 3263.59765625,
+    "stageRamScope": "20ms sampled process RSS during each stage; includes all resident models",
+    "minimumAvailableMiB": 2334,
+    "firstChunkSeconds": 17.090095156,
+    "kvPositions": 3512,
+    "ditSetupSecondsIncluded": 0.562565625,
+    "vaeSetupSecondsIncluded": 0.807122188,
+    "installedHapSha256": "98d3153fd433df34b90a2e5af55397a165cc0d78c9acc91abe75b1fe66e7cb21",
+    "temperatureBatteryC": {
+      "start": 32.0,
+      "end": 38.0,
+      "peak": 38.0
+    },
+    "validation": {
+      "wavFrames": 5760000,
+      "sampleRate": 48000,
+      "channels": 2,
+      "chunkHashes": [
+        "108bc7b23106c0e7b1678a3b7b967733f741cbc6749cbc5c6ed096677f06bcb9",
+        "4f20b9cf3608ad6ee65aeb366034b28e78bba652c8bde9d44c165dd25518d6a1",
+        "5a13d46894f728272f719650305c4559fe1dd5e6432616696344ebfc68ff803c",
+        "aa17aeb1e44987e9d71153f0bb5c2e05d45175fb4cc97e58bd67c3eb3493c6ff",
+        "1d6522c33ad21bca9ab7d9576b62c59d3e087252b6540705b788c8f12d7fe6d2",
+        "ab7a8476a7a0e25c60709e17dee73160b1cc521f9c24ff7608ae3fe5cbdfed9d",
+        "b86196a53d0fafa6c2749e435d80c1966dacc6c50fffbc3a3845308eaf92b40c",
+        "1b709231c5ba548e34bfe54a39ff873dfbf2cf2aa8587fe74ce824e56c86ac89",
+        "9e01ace1a23aa21d517be7b39961d55ee449dbb25f9e0520e576dfa3c816aa8f",
+        "95a49f682887b61748d31459eab4706c3456318c868f2be1584f636670e0b513",
+        "3abe7a950842946cbe3929fdd866c45c8d357731df3f52b5078a02730dfa99da",
+        "23862047e66d1ff6c7d31ed0011410563a232022e107dc306ac0744d584e6a47",
+        "0b624cb30b74395c530cfe903f35db1da1665a2856fae77a16fec93cf487a2a7",
+        "ff5a320da2ca1c42a2f2ff7513d7a7458b7c1b8718222b20008ca50dd4ffc3aa",
+        "6cdbfd16191b76733f68a9491c3f05774cde3922055ee05ab0d1f3ae8f1000b8",
+        "e7b350ef77e7910b12c8319f5135022f56f0d7121ee9ee41e837c4d261a93915"
+      ],
+      "sameCodesAsPrevious120s": true,
+      "sameWavBytesAsPrevious120s": true,
+      "prefillPlusDecodeForwards": 3000
+    },
+    "playback": {
+      "maxPlayedMsAtCapture": 120000,
+      "errorEvents": 0
+    },
+    "modelFileSha256VerifiedOnPhone": {
+      "audio-head/llm.mnn": "7a7c1541d4a2503e9c4ff432140a13a03951b208b6a32467b2320b14b7da3e3a",
+      "audio-head/llm.mnn.weight": "7368ba40ba062dff320b83394d900b3b8787030a544ad9e0891210619f117417",
+      "dit/dit.mnn": "35886dc768304ef2f43e9186811bfe609c3b3bbe552a5e368093725648c0bebc",
+      "dit/dit.mnn.weight": "3cae1ed224d5070d25bd814df9e6207ea4344e7fa68bbfd6e452570f4d21db15",
+      "vae/vae.mnn": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "vae/vae.mnn.weight": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc"
+    },
+    "mnnArchiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+    "presentation": {
+      "primaryPerformanceTable": "stream_lab_small120_2026_11_24",
+      "prefillAndPureDecodeSupplement": "stream_lab_precise_timing120_2026_11_24",
+      "sameRunClaimed": false,
+      "reason": "User requested retaining previous RTF2.5 table with this run timing supplement."
+    }
   }
 
 }

@@ -38,9 +38,13 @@ static double peak(const std::vector<float>& values){double result=0;for(float v
 static double relative(const std::vector<float>& a,const std::vector<float>& b){require(a.size()==b.size(),"Reference shape mismatch");double error=0,energy=0;for(size_t i=0;i<a.size();++i){double d=a[i]-b[i];error+=d*d;energy+=double(b[i])*b[i];}return std::sqrt(error/std::max(energy,1e-30));}
 struct Trace{
   Clock::time_point start=Clock::now();std::atomic<bool> stop{false};std::atomic<long> maxRss{0},minAvailable{LONG_MAX};std::thread sampler;Json stages=Json::array();std::string sink;
+  // Process RSS during a stage, including other resident models; not exclusive allocations.
+  std::atomic<int> activePhase{0};std::atomic<long> phaseRss[4]{};
   Trace(){sampler=std::thread([this]{while(!stop){sample();std::this_thread::sleep_for(std::chrono::milliseconds(20));}});}
   ~Trace(){stop=true;sampler.join();}
-  void sample(){long value=resident(),old=maxRss.load();while(value>old&&!maxRss.compare_exchange_weak(old,value)){}value=available();old=minAvailable.load();if(value>=0)while(value<old&&!minAvailable.compare_exchange_weak(old,value)){};}
+  void sample(){int phase=activePhase.load();long value=resident(),old=maxRss.load();while(value>old&&!maxRss.compare_exchange_weak(old,value)){}old=phaseRss[phase].load();while(value>old&&!phaseRss[phase].compare_exchange_weak(old,value)){}value=available();old=minAvailable.load();if(value>=0)while(value<old&&!minAvailable.compare_exchange_weak(old,value)){};}
+  void phase(int value){sample();activePhase=value;sample();}
+  Json phasePeaks(){return {{"scope","20ms sampled process RSS during each stage; includes all resident models"},{"other",phaseRss[0].load()/1024.},{"llm",phaseRss[1].load()/1024.},{"dit",phaseRss[2].load()/1024.},{"vae",phaseRss[3].load()/1024.}};}
   void mark(const std::string& name){if(auto hook=levoStageHook.load())hook(name.c_str());sample();Json row={{"stage",name},{"seconds",seconds(start)},{"rssKiB",resident()},{"systemAvailableKiB",available()}};stages.push_back(row);if(!sink.empty()){std::ofstream out(sink,std::ios::app);out<<row.dump()<<'\n';}std::cout<<"LEVO_CHAIN_PROGRESS "<<row.dump()<<std::endl;}
   void gate(long mib=1024){sample();require(available()>=mib*1024,"System available below stage safety gate");require(resident()<5L*1024*1024,"Process RSS reached5GiB diagnostic stop");}
 };

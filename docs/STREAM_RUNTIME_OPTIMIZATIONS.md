@@ -153,3 +153,15 @@ pwsh -File tools/run_music_duration.ps1 -Device YOUR_DEVICE_ID -RunId my-audio30
 
 汇总：`python tools/merge_stream_runtime_optimizations.py`。
 只发布源代码、配置、验证摘要与统一报告；权重、音频、原始日志及签名留在本地。
+
+## v0.1.10：独立 prefill／decode 计时
+
+原生结果增加 `llmTiming`：加载、前缀准备、513位置 prefill、decode 总时间／次数、
+decode ms/token 与 token/s、采样及条件查表分别记录。Prefill 输入张量先准备好，
+prefill／decode 仅测 `forward` 到输出 `readMap` 同步完成，不含采样、DiT／VAE等待或播放。
+Token条件路径生成3000个code时，prefill的logits采样第一个code，之后应有2999次decode。
+LLM阶段总时间仍包含加载、前缀、采样和查表，因此不能直接用阶段总时间除以code数冒充纯decode。
+
+`stageProcessRssPeakMiB` 在串行各阶段按20ms采样进程RSS峰值，并在阶段边界补采样。
+它包含其他共驻模型，不能解释为该模块独占RAM，也不是GPU显存；并行预取实验的重叠阶段不能据此分摊模块RAM。
+ROM另按当前实际部署文件字节统计，排除音频、日志与未使用的旧头文件。

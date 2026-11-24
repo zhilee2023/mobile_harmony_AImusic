@@ -169,6 +169,7 @@ inline std::vector<float> prefix(const std::string& root,int width,bool small,co
     peak(values);return values;
 }
 class Prior {
+    double loadSeconds_=0,prefixSeconds_=0,prefillSeconds_=0,decodeSeconds_=0,samplingSeconds_=0,lookupSeconds_=0;size_t decodeCount_=0;
     std::unique_ptr<Llm,decltype(&Llm::destroy)> model_{nullptr,&Llm::destroy};
     MNN::Express::VARP logits_;std::unique_ptr<MappedFloats> table_;bool small_,sampling_,smallHidden_,cropped_,suppressEos_;int width_,previous_=0;MusicVocabulary vocab_;std::mt19937 random_{2307};std::vector<int> codes_;
 public:
@@ -186,38 +187,40 @@ public:
         cfg["enable_debug"]=LevoStreamProfile::active&&LevoStreamProfile::active->operators;
         {std::ofstream out(work+"/lm-config.json");out<<cfg.dump(2);}
 #endif
-        {LEVO_STREAM_SPAN("llm.load");model_.reset(Llm::createLLM(work+"/lm-config.json"));require(model_&&model_->load(),"D1 load failed");}
+        {LEVO_STREAM_SPAN("llm.load");auto tick=Clock::now();model_.reset(Llm::createLLM(work+"/lm-config.json"));require(model_&&model_->load(),"D1 load failed");loadSeconds_=seconds(tick);}
 #ifdef LEVO_STREAM_CHAIN_PROFILE
         if(LevoStreamProfile::active&&LevoStreamProfile::active->operators){auto p=LevoStreamProfile::active;model_->setDebugCallback(p->before(),p->after());}
 #endif
         check();model_->reset();model_->generate_init();
-        patch({{"phase","prefill"}});std::vector<float> p;{LEVO_STREAM_SPAN("conditioner.prefix");p=prefix(root,width_,small_,lyrics,npy);}
+        patch({{"phase","prefill"}});std::vector<float> p;{LEVO_STREAM_SPAN("conditioner.prefix");auto tick=Clock::now();p=prefix(root,width_,small_,lyrics,npy);prefixSeconds_=seconds(tick);}
         {std::ofstream out(work+"/prefix.f32",std::ios::binary);out.write(reinterpret_cast<const char*>(p.data()),p.size()*4);}
-        {LEVO_STREAM_SPAN("llm.prefill");logits_=model_->forward(MNN::Express::_Const(p.data(),{513,1,width_},MNN::Express::NCHW,halide_type_of<float>()));
-        require(logits_.get()&&logits_->readMap<float>(),"Prefill failed");}
+        auto input=MNN::Express::_Const(p.data(),{513,1,width_},MNN::Express::NCHW,halide_type_of<float>());require(input->readMap<float>(),"Cannot prepare prefill input");
+        {LEVO_STREAM_SPAN("llm.prefill");auto tick=Clock::now();logits_=model_->forward(input);
+        require(logits_.get()&&logits_->readMap<float>(),"Prefill failed");prefillSeconds_=seconds(tick);}
         if(small_&&!smallHidden_)table_=std::make_unique<MappedFloats>(root+"/conditioner/cond-token.f16");
     }
     std::vector<float> next(int index){
         LEVO_STREAM_SPAN("llm.next");
-        if(small_&&!smallHidden_&&index){LEVO_STREAM_SPAN("llm.decode");logits_=model_->forward({vocab_.inputAudioBase+previous_},false);
-#ifdef LEVO_STREAM_CHAIN_PROFILE
-            require(logits_.get()&&logits_->readMap<float>(),"Profiled decode failed");
-#endif
+        if(small_&&!smallHidden_&&index){LEVO_STREAM_SPAN("llm.decode");auto tick=Clock::now();logits_=model_->forward({vocab_.inputAudioBase+previous_},false);
+            require(logits_.get()&&logits_->readMap<float>(),"Decode failed");decodeSeconds_+=seconds(tick);++decodeCount_;
         }
         int code=(index*997+2307)%16384;
         if(sampling_){
             LEVO_STREAM_SPAN("llm.sampling");
+            auto tick=Clock::now();
             const int classes=vocab_.classes,audioBase=vocab_.audioBase,eos=vocab_.eos;require(logits_.get()&&logits_->getInfo()->size==classes,"D1输出词表不匹配");const float* p=logits_->readMap<float>();require(p,"Cannot read sampling logits");
-            code=sampleMusicCode(p,vocab_,suppressEos_,random_);if(code<0)return {};
+            code=sampleMusicCode(p,vocab_,suppressEos_,random_);samplingSeconds_+=seconds(tick);if(code<0)return {};
         }
         previous_=code;codes_.push_back(code);std::vector<float> condition(small_?1024:2560);
-        if(small_&&!smallHidden_){LEVO_STREAM_SPAN("conditioner.lookup");table_->row(code,1024,condition.data());}
-        else{LEVO_STREAM_SPAN("llm.decode");logits_=model_->forward({code+vocab_.inputAudioBase},false); // consume-aligned hidden, as in supplied 4B specification
-            LevoHiddenResearch::copySingleStepInto(*model_,condition.data(),width_,LevoHiddenResearch::SingleStepLayout::Channels1x1);}
+        if(small_&&!smallHidden_){LEVO_STREAM_SPAN("conditioner.lookup");auto tick=Clock::now();table_->row(code,1024,condition.data());lookupSeconds_+=seconds(tick);}
+        else{LEVO_STREAM_SPAN("llm.decode");auto tick=Clock::now();logits_=model_->forward({code+vocab_.inputAudioBase},false); // consume-aligned hidden, as in supplied 4B specification
+            require(logits_.get()&&logits_->readMap<float>(),"Decode failed");decodeSeconds_+=seconds(tick);++decodeCount_;
+            auto lookup=Clock::now();LevoHiddenResearch::copySingleStepInto(*model_,condition.data(),width_,LevoHiddenResearch::SingleStepLayout::Channels1x1);lookupSeconds_+=seconds(lookup);}
         require(logits_.get()&&logits_->readMap<float>(),"D1 decode failed");return condition;
     }
     size_t kvPositions()const{return model_->getCurrentHistory();}
     const std::vector<int>& codes()const{return codes_;}
+    Json timings()const{return {{"scope","forward plus output synchronization; excludes sampling, condition lookup and downstream waits"},{"loadMs",loadSeconds_*1000},{"prefixMs",prefixSeconds_*1000},{"prefillPositions",513},{"prefillMs",prefillSeconds_*1000},{"decodeForwards",decodeCount_},{"decodeMs",decodeSeconds_*1000},{"decodeMsPerToken",decodeCount_?decodeSeconds_*1000/decodeCount_:0.},{"decodeTokensPerSecond",decodeSeconds_?decodeCount_/decodeSeconds_:0.},{"samplingMs",samplingSeconds_*1000},{"lookupMs",lookupSeconds_*1000}};}
 };
 inline void little(std::ofstream& out,uint32_t value,int bytes){for(int i=0;i<bytes;++i)out.put(char((value>>(8*i))&255));}
 inline void header(std::ofstream& out,uint32_t samples){out.seekp(0);out.write("RIFF",4);little(out,36+samples*4,4);out.write("WAVEfmt ",8);little(out,16,4);little(out,1,2);little(out,2,2);little(out,48000,4);little(out,192000,4);little(out,4,2);little(out,16,2);out.write("data",4);little(out,samples*4,4);}
@@ -247,7 +250,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
        {"generatedSamples",0},{"requestedFrames",requested},{"conditionFrames",0},{"model",choice},{"conditionMode",choice==0?smallCondition:"hidden-projector"},{"transportOnly",transport},{"diagnosticOnly",lyrics.empty()||transport||smallCondition!="token"},{"musicQualityClaimed",false},
        {"resident",resident},{"tokenPrefetch",prefetch},{"threads",{{"lm",lmThreads},{"dit",ditThreads},{"vae",vaeThreads}}},{"croppedLm",croppedLm},{"ditSteps",steps},{"cfgEnabled",cfg},{"cfgScale",cfg?1.5:0.},{"ditBatch",batch},{"unconditionalComputeRemoved",batch==1},{"chunkTimings",Json::array()},{"vaeFusion",vaeFusion},
        {"lmDynamicOption",dynamicOption},{"suppressEos",suppressEos},{"longRun",longRun},{"runTag",options.value("runTag",std::string())}};}
-    Trace trace;double lmTime=0,muTime=0,ditTime=0,vaeTime=0,ditSetup=0,vaeSetup=0;std::vector<float> conditions;std::unique_ptr<Prior> prior;
+    Trace trace;trace.phase(1);double lmTime=0,muTime=0,ditTime=0,vaeTime=0,ditSetup=0,vaeSetup=0;std::vector<float> conditions;std::unique_ptr<Prior> prior;
     std::unique_ptr<Graph> keptDit,keptVae;
     struct Fetched {std::vector<float> values;int count=0;bool eos=false;double elapsed=0;};std::future<Fetched> pending;
     size_t observedKv=0;
@@ -261,7 +264,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
             const auto chunkTick=Clock::now();const double previousLm=lmTime,previousDit=ditTime,previousVae=vaeTime,previousDitSetup=ditSetup,previousVaeSetup=vaeSetup;
             if(pending.valid()){auto data=pending.get();conditions.insert(conditions.end(),data.values.begin(),data.values.end());produced+=data.count;lmTime+=data.elapsed;if(data.eos){eos=true;actual=produced;}patch({{"conditionFrames",produced},{"lmSeconds",lmTime}});}
             const int wanted=start+std::min(256,actual-start);
-            patch({{"phase","decode"},{"chunk",index+1}});
+            trace.phase(1);patch({{"phase","decode"},{"chunk",index+1}});
             while(produced<wanted){check();if(transport){std::this_thread::sleep_for(std::chrono::milliseconds(2));++produced;}
                 else{auto tick=Clock::now();auto h=prior->next(produced);lmTime+=seconds(tick);if(h.empty()){eos=true;actual=produced;break;}conditions.insert(conditions.end(),h.begin(),h.end());++produced;}
                 if(produced%16==0||produced==wanted)patch({{"conditionFrames",produced},{"lmSeconds",lmTime}});
@@ -291,7 +294,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
                         for(int at=from;at<nextWanted;++at){check();auto value=prior->next(at);if(value.empty()){data.eos=true;break;}data.values.insert(data.values.end(),value.begin(),value.end());++data.count;}
                         data.elapsed=seconds(tick);return data;});}
                 }
-                {patch({{"phase","dit"}});auto tick=Clock::now();if(!keptDit){auto setup=Clock::now();keptDit=std::make_unique<Graph>(root+"/dit/dit.mnn",false,ditThreads,false,batch);ditSetup+=seconds(setup);}check();
+                {trace.phase(2);patch({{"phase","dit"}});auto tick=Clock::now();if(!keptDit){auto setup=Clock::now();keptDit=std::make_unique<Graph>(root+"/dit/dit.mnn",false,ditThreads,false,batch);ditSetup+=seconds(setup);}check();
                     for(int step=0;step<steps;++step){check();patch({{"step",step+1},{"steps",steps}});float t=float(step)/steps;
                         if(index)for(int j=0;j<64*64;++j)x[j]=(1-(1-1e-4f)*t)*noise[j]+t*context[j];
                         std::vector<float> input(batch*256*1200,0),attn(batch*256*256,0);
@@ -304,10 +307,10 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
                     if(!resident)keptDit.reset();ditTime+=seconds(tick);}
                 if(index)std::copy_n(context.data(),64*64,x.data());last=x;check();
                 std::vector<float> latent(64*256);for(int c=0;c<64;++c)for(int t=0;t<256;++t)latent[c*256+t]=x[t*64+c]*stddev[c]+mean[c];
-                {patch({{"phase","vae"}});auto tick=Clock::now();if(!keptVae){auto setup=Clock::now();keptVae=std::make_unique<Graph>(root+"/vae/vae.mnn",true,vaeThreads,true,0,vaeFusion);vaeSetup+=seconds(setup);}
+                {trace.phase(3);patch({{"phase","vae"}});auto tick=Clock::now();if(!keptVae){auto setup=Clock::now();keptVae=std::make_unique<Graph>(root+"/vae/vae.mnn",true,vaeThreads,true,0,vaeFusion);vaeSetup+=seconds(setup);}
                     pcm=keptVae->run({{"",std::move(latent)}},2*491520);if(!resident)keptVae.reset();vaeTime+=seconds(tick);}
             }
-            check();if(index)for(int c=0;c<2;++c)for(int i=0;i<64*1920;++i){float r=float(i)/(64*1920-1);pcm[size_t(c)*491520+i]=tail[size_t(c)*64*1920+i]*(1-r)+pcm[size_t(c)*491520+i]*r;}
+            trace.phase(0);check();if(index)for(int c=0;c<2;++c)for(int i=0;i<64*1920;++i){float r=float(i)/(64*1920-1);pcm[size_t(c)*491520+i]=tail[size_t(c)*64*1920+i]*(1-r)+pcm[size_t(c)*491520+i]*r;}
             const int count=(valid-(final?0:64))*1920;const std::string path=work+"/chunk-"+std::to_string(index)+".wav";
             writeChunk(path,pcm,count);check();if(!final){tail.resize(2*64*1920);for(int c=0;c<2;++c)std::copy_n(pcm.data()+size_t(c)*491520+192*1920,64*1920,tail.data()+size_t(c)*64*1920);}
             {std::lock_guard<std::mutex> lock(stateMutex);state["chunks"].push_back({{"path",path},{"startSample",emitted},{"samples",count},{"index",index}});emitted+=count;state["generatedSamples"]=emitted;state["phase"]="published";
@@ -319,9 +322,9 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
         require(snapshot()["generatedSamples"].get<size_t>()==size_t(actual)*1920,"Published duration mismatch");patch({{"status","completed"},{"actualFrames",actual},{"endedWithEos",eos}});
     }catch(const std::exception& e){patch({{"status",cancelled?"stopped":"error"},{"error",e.what()}});}
     if(pending.valid()){try{pending.get();}catch(...){} }
-    if(prior){std::ofstream(work+"/codes.json")<<Json(prior->codes()).dump();}
+    trace.phase(0);if(prior){std::ofstream(work+"/codes.json")<<Json(prior->codes()).dump();patch({{"llmTiming",prior->timings()}});}
     keptVae.reset();keptDit.reset();prior.reset();trace.sample();patch({{"busy",false},{"elapsedSeconds",seconds(trace.start)},{"rssPeakMiB",trace.maxRss.load()/1024.},{"ditSetupSeconds",ditSetup},{"vaeSetupSeconds",vaeSetup},
-        {"minimumAvailableMiB",trace.minAvailable.load()/1024.},{"lmSeconds",lmTime},{"muSeconds",muTime},{"ditSeconds",ditTime},{"vaeSeconds",vaeTime}});
+        {"minimumAvailableMiB",trace.minAvailable.load()/1024.},{"stageProcessRssPeakMiB",trace.phasePeaks()},{"lmSeconds",lmTime},{"muSeconds",muTime},{"ditSeconds",ditTime},{"vaeSeconds",vaeTime}});
     auto result=snapshot();std::ofstream(work+"/result.json")<<result.dump(2);return result;
 }
 }
