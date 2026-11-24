@@ -13,6 +13,7 @@ class Solution:
     traffic_dual: float = 0
     artificial_mass: float = 0
     solver: str = 'CPLEX'
+    pricing_phase: str = 'latency'
 
 
 def admissible(pool, known, scratch_budget):
@@ -41,10 +42,9 @@ def solve(pool, known, *, integer=False, traffic_budget=None, scratch_budget=Non
         model.parameters.mip.tolerances.absmipgap.set(0)
     costs = [float(known[s.id].latency_ms) for s in specs]
     names = [s.id for s in specs]
-    big_m = 1+sum(costs)
     artificial = [] if integer else ['__phase1_'+str(i) for i in range(pool.nodes)]
     names += artificial
-    model.variables.add(names=names,obj=costs+[big_m]*len(artificial),lb=[0]*len(names),
+    model.variables.add(names=names,obj=costs if integer else [0.]*len(specs)+[1.]*len(artificial),lb=[0]*len(names),
                         ub=[1 if integer else cplex.infinity]*len(names),
                         types='B'*len(names) if integer else '')
     rows=[];rhs=[];senses=[]
@@ -58,6 +58,18 @@ def solve(pool, known, *, integer=False, traffic_budget=None, scratch_budget=Non
         rhs.append(float(traffic_budget));senses.append('L')
     model.linear_constraints.add(lin_expr=rows,senses=''.join(senses),rhs=rhs)
     model.solve()
+    phase='latency'
+    if not integer and model.solution.is_primal_feasible():
+        if model.solution.get_status()!=1:raise RuntimeError('Phase-I LP did not reach optimality')
+        mass=sum(model.solution.get_values()[len(specs):])
+        if mass > 1e-7:
+            # Phase-I pricing gives each real column objective coefficient ZERO.
+            phase='feasibility'
+        else:
+            model.variables.set_upper_bounds([(len(specs)+i,0.) for i in range(len(artificial))])
+            model.objective.set_linear(list(enumerate(costs+[0.]*len(artificial))))
+            model.solve()
+            if not model.solution.is_primal_feasible():raise RuntimeError('LP feasibility changed when artificial columns were fixed to zero')
     if not model.solution.is_primal_feasible():
         return Solution(None,[],False,False)
     values=model.solution.get_values();status=model.solution.get_status()
@@ -71,7 +83,7 @@ def solve(pool, known, *, integer=False, traffic_budget=None, scratch_budget=Non
         if not optimal:raise RuntimeError('LP did not reach optimality; do not use uncertified prices')
         prices=model.solution.get_dual_values();duals=prices[:pool.nodes]
         if traffic_budget is not None:traffic_dual=prices[-1]
-    return Solution(objective,selected,feasible,optimal,duals,traffic_dual,mass)
+    return Solution(objective,selected,feasible,optimal,duals,traffic_dual,mass,pricing_phase=phase)
 
 
 def shortest_path(pool, known, *, scratch_budget=None, traffic_budget=None):
@@ -99,9 +111,10 @@ def exact_pool_cg(pool, *, traffic_budget=None, scratch_budget=None):
         best=None
         for spec in admissible(pool,all_outcomes,scratch_budget):
             if spec.id in known:continue
-            rc=all_outcomes[spec.id].latency_ms-sum(lp.duals[spec.start:spec.end])-lp.traffic_dual*spec.traffic_bytes
+            cost=0. if lp.pricing_phase=='feasibility' else all_outcomes[spec.id].latency_ms
+            rc=cost-sum(lp.duals[spec.start:spec.end])-lp.traffic_dual*spec.traffic_bytes
             if best is None or (rc,spec.id)<(best[0],best[1].id):best=(rc,spec)
-        history.append({'knownColumns':len(known),'lpMs':lp.objective_ms,'artificialMass':lp.artificial_mass,
+        history.append({'knownColumns':len(known),'pricingPhase':lp.pricing_phase,'lpMs':lp.objective_ms,'artificialMass':lp.artificial_mass,
                         'minimumUnseenReducedCost':best[0] if best else None})
         if best is None or best[0] >= -1e-7:break
         known[best[1].id]=all_outcomes[best[1].id]

@@ -138,6 +138,8 @@ outcome字段：`status,latency_ms,relative_l2,source`。状态为passed／compi
 | DP／Shortest Path | 串行区间且无累计traffic约束时的精确对照 |
 
 受限主问题有Phase-I人工列保证LP基；含人工列的解不报告成真实可行执行方案。
+可行性阶段先最小化人工质量，达到0后将人工变量固定为0再优化真实延迟；不是用任意big-M混合目标。
+feasibility pricing中真实列的成本为0，latency pricing才使用实测／预测成本。完整推导及反例见[两阶段理论](LLM_OPERATOR_THEORY.md)。
 逻辑traffic预算可加和；scratch仅作单kernel可行性／max约束，不错当成可加和的物理SRAM峰值。
 最终真实RAM和整模型延迟必须由实际部署再验证，不能用候选成本求和替代。
 CPLEX默认不接受MIP相对gap作为“精确Oracle”；超时可行解不冒充最优。
@@ -190,8 +192,26 @@ Agent stage输出签名和实际totalTokens；缺失计费数据记unknown，配
 
 ## 本次验证状态（2026-11-24）
 
-- Python完整测试76项通过，含CPLEX实际求解、DP、动态／固定对偶、失败预算与设备空闲门槛。
-- 独立App的unsigned HAP和同源OHOS CLI均已交叉构建成功。
+- Python完整测试85项通过，含CPLEX实际求解、DP、动态／固定对偶、失败预算、真实Phase-I与超时进程树回收。
+- 独立App已签名安装，0.6B与4B两套真实固定输入均完成前台亮屏基线、重复数值与单独热点诊断；旧App保持独立。
 - 命令行以100个**合成测试候选**完成8种策略×3个seed的24次查询研究；CPLEX整数Oracle与DP在数值容差内一致。该自检不是实机kernel性能。
 - 两套真实音乐LM及固定输入已复制到手机独立CLI测试目录并核对SHA256；没有改写旧App模型。
-- 新App独立签名配置尚未完成，手机息屏；本次未执行新的真机推理，不报告token/s、加速比或实机候选库成果。完成手动签名、解锁后按上面命令运行。
+- 原样重编译的编译→正确性→设备→完整固定LLM工作量回归链通过，未声称新kernel加速。
+- 1592条图内逐节点记录、20组独立FP32微基准及名义复制带宽已采集。完整表与证据范围见[真机基准](LLM_OPERATOR_BASELINES.md)，图与理论见[Roofline／两阶段说明](LLM_OPERATOR_THEORY.md)。
+
+独立算子与参考线复现：
+
+```powershell
+cmake --build ./native-build --target llm_operator_calibration -j 4
+python ./tools/run_llm_operator_calibration.py --device DEVICE `
+  --root /data/local/tmp/llm-operator-baseline-CASE --tag calibration-new
+python ./tools/summarize_llm_operator_lab.py --baselines BASELINE_JSON `
+  --profiles OPERATOR_JSON --calibration CALIBRATION_JSON --output summary-new.json
+python ./tools/plot_llm_operator_roofline.py --input summary-new.json --output-prefix plots/new-reference
+python ./tools/review_llm_operator_hotspots.py --profiles OPERATOR_JSON `
+  --output review-new.json --model haiku
+```
+
+校准只需同形状真实prefix，不加载训练权重；MatMul为合成FP32参数、RMSNorm单位gamma，不能冒充实际W4／W8 standalone kernel。
+CLI协作默认无文件／Shell／MCP工具，只发送明确选定的算子汇总，不读取签名或凭据。模型路由采用用户本机Claude配置，记录返回的modelUsage。
+重要理论、代码与测试也可通过外部Agent阶段委派，但必须收到交付并完成复核／测试后才算实现。后续三次协作超时未交付，本次没有将其成果虚记为完成。

@@ -8,6 +8,9 @@ from levo_harmony.operator_lab.solver import solve,shortest_path,exact_pool_cg
 from levo_harmony.operator_lab.search import discover,roofline_ms
 from levo_harmony.operator_lab.pipeline import Budget,execute_candidate
 from levo_harmony.operator_lab.runner import DeviceLock,ensure_idle
+from levo_harmony.operator_lab.reporting import operator_tables,baseline_summary,roofline_calibration
+from levo_harmony.operator_lab.claude import decode_output,review,invoke
+from unittest.mock import patch
 
 def example():
     specs=[Spec('n'+str(i),i,i+1,traffic_bytes=2,baseline=True) for i in range(4)]
@@ -17,6 +20,56 @@ def example():
     return Pool(4,specs,values,'unit-test-only','synthetic_test')
 
 class PoolTests(unittest.TestCase):
+    def test_agent_failure_does_not_report_zero_token_cost(self):
+        with tempfile.TemporaryDirectory() as t:
+            r=execute_candidate({'id':'agent-failure','signature':'s'},
+                {'agent':[sys.executable,'-c','raise SystemExit(2)'],'compile':['unused'],'correctness':['unused'],'device':['unused']},Path(t)/'trial',Budget())
+            self.assertEqual(r['status'],'agent_failed');self.assertIsNone(r['budget']['agentTokens'])
+            self.assertEqual(r['budget']['compilationAttempts'],0)
+
+    def test_timeout_stops_owned_cli_process_tree(self):
+        import subprocess,os
+        from unittest.mock import MagicMock
+        process=MagicMock();process.pid=12345;process.communicate.side_effect=[subprocess.TimeoutExpired('cli',1),(b'',b'')]
+        with patch('levo_harmony.operator_lab.claude.subprocess.Popen',return_value=process),patch('levo_harmony.operator_lab.claude.subprocess.run') as stop:
+            with self.assertRaisesRegex(RuntimeError,'usage unknown'):invoke(['test-cli'],b'task',timeout=1,cwd='.')
+            if os.name=='nt':self.assertEqual(stop.call_args.args[0],['taskkill.exe','/PID','12345','/T','/F'])
+            else:process.kill.assert_called_once()
+
+    def test_claude_windows_output_can_be_utf8_or_gb18030(self):
+        for encoding in ['utf-8','gb18030']:
+            self.assertEqual(decode_output('算子基准'.encode(encoding)),'算子基准')
+
+    def test_claude_delegation_is_read_only_and_records_actual_model(self):
+        import json
+        from types import SimpleNamespace
+        payload=dict(subtype='success',is_error=False,usage={'input_tokens':10},modelUsage={'test-model':{}},result='{}')
+        with tempfile.TemporaryDirectory() as t,patch('levo_harmony.operator_lab.claude.invoke',return_value=SimpleNamespace(returncode=0,stdout=json.dumps(payload).encode())) as call:
+            r=review({'operator':'Convolution'},Path(t)/'review.json',executable='test-claude')
+            argv=call.call_args.args[0]
+            self.assertIn('--tools=',argv);self.assertIn('--safe-mode',argv);self.assertIn('--strict-mcp-config',argv)
+            self.assertEqual(list(r['cliResponse']['modelUsage']),['test-model'])
+            with self.assertRaises(ValueError):review({},Path(t)/'review.json',executable='test-claude')
+
+    def test_callback_decode_cost_is_normalized_by_forwards(self):
+        node=dict(name='layer',type='Convolution',calls=2,seconds=.006,inputShapes=[[1,4]],outputShapes=[[1,4]],logicalInputBytes=16,logicalOutputBytes=16,backendObservations={'backend0/coreBytes4':2})
+        r=dict(controlledAppTimingAccepted=True,native=dict(status='completed',instrumented=True,rounds=[{'decodeForwards':2}],operators={'nodes':[dict(node,phase='decode')]}))
+        t=operator_tables(r);self.assertEqual(t['types'][0]['sumPerForwardMs'],3);self.assertEqual(t['nodes'][0]['meanCallMs'],3)
+        self.assertIn('not measured DRAM',t['scope'])
+        r['controlledAppTimingAccepted']=False
+        with self.assertRaises(ValueError):operator_tables(r)
+
+    def test_callback_run_cannot_become_uninstrumented_baseline(self):
+        with self.assertRaises(ValueError):baseline_summary(dict(controlledAppTimingAccepted=True,native=dict(status='completed',instrumented=True)))
+
+    def test_roofline_calibration_retains_evidence_limits(self):
+        row=dict(operator='MatMul',attainedFlopsPerSecond=1e9,flops=200,logicalBytes=100,modelShape='small',phaseShape='decode',warmMedianMs=.1)
+        r=dict(screenAccepted=True,native=dict(success=True,rows=[row],threads=4,precision='high',bandwidth={'nominalBytesPerSecond':1e8}))
+        c=roofline_calibration(r);self.assertEqual(c['points'][0]['arithmeticIntensity'],2)
+        self.assertFalse(c['memoryBoundClassificationClaimed']);self.assertFalse(c['strictLowerBoundClaimed'])
+        r['screenAccepted']=False
+        with self.assertRaises(ValueError):roofline_calibration(r)
+
     def test_unknown_running_app_state_cannot_be_force_stopped(self):
         class HdcStub:
             def __init__(self,state):self.state=state
@@ -96,6 +149,23 @@ class PoolTests(unittest.TestCase):
 
 @unittest.skipUnless(importlib.util.find_spec('cplex'),'Optional CPLEX required for mathematical baselines')
 class CplexTests(unittest.TestCase):
+    def test_true_phase_one_does_not_trade_feasibility_for_latency(self):
+        p=Pool(1,[Spec('n',0,1,traffic_bytes=1000000,baseline=True),Spec('c',0,1,traffic_bytes=999999)],
+               {'n':Outcome('passed',1,0,'synthetic_test'),'c':Outcome('passed',1000,0,'synthetic_test')},'phase1-counterexample','synthetic_test')
+        first=solve(p,p.seeds(),traffic_budget=999999)
+        self.assertFalse(first.feasible);self.assertEqual(first.pricing_phase,'feasibility')
+        full=solve(p,p.full_outcomes_for_evaluation_only(),traffic_budget=999999)
+        self.assertTrue(full.feasible);self.assertAlmostEqual(full.objective_ms,1000);self.assertEqual(full.pricing_phase,'latency')
+        cg=exact_pool_cg(p,traffic_budget=999999)
+        self.assertAlmostEqual(cg['lpLowerBoundMs'],1000);self.assertEqual(cg['history'][0]['pricingPhase'],'feasibility')
+
+    def test_traffic_dual_sign_and_fractional_integer_gap(self):
+        p=Pool(1,[Spec('n',0,1,traffic_bytes=10,baseline=True),Spec('c',0,1,traffic_bytes=20)],
+               {'n':Outcome('passed',1,0,'synthetic_test'),'c':Outcome('passed',.5,0,'synthetic_test')},'traffic-dual','synthetic_test')
+        values=p.full_outcomes_for_evaluation_only();lp=solve(p,values,traffic_budget=15);mip=solve(p,values,integer=True,traffic_budget=15)
+        self.assertAlmostEqual(lp.objective_ms,.75);self.assertAlmostEqual(mip.objective_ms,1);self.assertLess(lp.traffic_dual,0)
+        for spec in p.specs.values():self.assertAlmostEqual(values[spec.id].latency_ms-sum(lp.duals[spec.start:spec.end])-lp.traffic_dual*spec.traffic_bytes,0)
+
     def test_full_pool_integer_oracle_matches_serial_dp(self):
         p=example();v=p.full_outcomes_for_evaluation_only();self.assertAlmostEqual(solve(p,v,integer=True).objective_ms,shortest_path(p,v).objective_ms)
 

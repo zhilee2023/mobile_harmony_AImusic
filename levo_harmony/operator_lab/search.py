@@ -39,7 +39,8 @@ def discover(pool, policy, budget, *, seed=42, traffic_budget=None, scratch_budg
             if policy=='flops':return (-s.flops,s.id)
             if policy=='memory':return (-s.traffic_bytes,s.id)
             if policy=='roofline':return (prediction(s)-sum(baseline_node[s.start:s.end]),s.id)
-            return (prediction(s)-sum(lp.duals[s.start:s.end])-lp.traffic_dual*s.traffic_bytes,s.id)
+            predicted=0. if lp.pricing_phase=='feasibility' else prediction(s)
+            return (predicted-sum(lp.duals[s.start:s.end])-lp.traffic_dual*s.traffic_bytes,s.id)
         candidate=rng.choice(sorted(unseen,key=lambda s:s.id)) if policy=='random' else min(unseen,key=rank)
         outcome=oracle.query(candidate.id);known[candidate.id]=outcome
         result=solve(pool,known,integer=True,traffic_budget=traffic_budget,scratch_budget=scratch_budget)

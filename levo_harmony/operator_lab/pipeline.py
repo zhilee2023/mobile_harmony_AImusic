@@ -59,7 +59,9 @@ def execute_candidate(task,commands,workspace,budget,*,epsilon=1e-3,timeout=600)
             done=subprocess.run(argv,cwd=workspace,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=min(timeout,remaining))
             (workspace/(stage+'.log')).write_text(done.stdout+'\n'+done.stderr,encoding='utf-8')
             row={'stage':stage,'seconds':time.monotonic()-tick,'exitCode':done.returncode};result['stages'].append(row)
-            if done.returncode:result['status']=stage+'_failed';break
+            if done.returncode:
+                if stage=='agent':budget.tokens_known=False
+                result['status']=stage+'_failed';break
             payload=json.loads(output.read_text(encoding='utf-8'))
             if payload.get('signature')!=task['signature']:raise ValueError('Stage result signature differs from baseline task')
             if stage=='agent':
@@ -81,6 +83,7 @@ def execute_candidate(task,commands,workspace,budget,*,epsilon=1e-3,timeout=600)
                 if not isinstance(latency,(int,float)) or not math.isfinite(latency) or latency<0:raise ValueError('Missing actual full-graph measurement')
                 result['wholeGraphLatencyMs']=latency;result['deployable']=True
         except (OSError,ValueError,RuntimeError,subprocess.TimeoutExpired) as error:
+            if stage=='agent':budget.tokens_known=False
             result['status']=stage+'_failed';result['error']=str(error);break
     else:result['status']='passed'
     # A kernel-only success cannot become a measured end-to-end speedup.
