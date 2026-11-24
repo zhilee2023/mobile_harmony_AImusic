@@ -52,15 +52,15 @@ void writeFloats(const std::string& path,const std::vector<float>& values){
 }
 }
 int main(int argc,char** argv){
-    if(argc!=8){std::cerr<<"MODEL_ROOT PREFIX_F32 CODES_JSON OUTPUT_NEW_DIR high|low perf|audit DECODE_COUNT\n";return 2;}
+    if(argc!=8){std::cerr<<"MODEL_ROOT PREFIX_F32 CODES_JSON OUTPUT_NEW_DIR high|low perf|audit|long DECODE_COUNT\n";return 2;}
     const std::string root=argv[1],output=argv[4],precision=argv[5],mode=argv[6];
-    const bool audit=mode=="audit";const int steps=std::stoi(argv[7]);
+    const bool audit=mode=="audit",longRun=mode=="long";const int steps=std::stoi(argv[7]);
     Json report={{"success",false},{"scope","Actual36-layer music LM; same513-position prefix and teacher-code history, consume-aligned hidden; not whole-chain RTF"},
         {"precision",precision},{"auditEnabled",audit},{"bodyWeightBits",4},{"headWeightBits",8},{"dynamicOption",0},{"attentionMode",8},{"threads",4}};
     Trace trace;bool outputCreated=false;
     try{
-        require(precision=="high"||precision=="low","Unknown precision");require(mode=="perf"||audit,"Unknown mode");
-        require(steps>0&&steps<=256&&(!audit||steps<=4),"Bounded probe only");
+        require(precision=="high"||precision=="low","Unknown precision");require(mode=="perf"||audit||longRun,"Unknown mode");
+        require(steps>0&&steps<=(longRun?3000:256)&&(!audit||steps<=4),"Probe duration bound exceeded");
         require(!std::filesystem::exists(output),"Preserve existing probe results");std::filesystem::create_directories(output);outputCreated=true;
         auto prompt=read(argv[2],513*2560);auto codes=readJson(argv[3]).get<std::vector<int>>();
         require(codes.size()>=size_t(steps),"Insufficient teacher codes");
@@ -91,20 +91,27 @@ int main(int argc,char** argv){
         }
         model->reset();model->generate_init();auto input=MNN::Express::_Const(prompt.data(),{513,1,2560},MNN::Express::NCHW,halide_type_of<float>());
         require(input->readMap<float>(),"Cannot prepare prefix");
-        std::vector<float> logits,hidden(size_t(steps)*2560);Json greedy=Json::array();double decode=0,lookup=0;
+        std::vector<float> logits,hidden,hiddenRow(2560);Json greedy=Json::array(),snapshots=Json::array(),blocks=Json::array(),tokenMs=Json::array();
+        double decode=0,lookup=0,blockSeconds=0;int blockCount=0;
         tick=Clock::now();auto v=model->forward(input);require(v.get()&&v->getInfo()->size==16385,"Invalid prefill output");
         const float* p=v->readMap<float>();require(p,"Cannot synchronize prefill");report["prefillMs"]=1000*seconds(tick);
-        auto capture=[&](){for(int k=0;k<16385;++k)require(std::isfinite(p[k]),"Nonfinite logits");
-            greedy.push_back(int(std::max_element(p,p+16385)-p));logits.insert(logits.end(),p,p+16385);};capture();
+        auto capture=[&](bool keep){for(int k=0;k<16385;++k)require(std::isfinite(p[k]),"Nonfinite logits");
+            greedy.push_back(int(std::max_element(p,p+16385)-p));if(keep)logits.insert(logits.end(),p,p+16385);};capture(true);
         std::cout<<"PRECISION_PREFILL "<<precision<<" "<<report["prefillMs"]<<std::endl;
         for(int i=0;i<steps;++i){
             trace.gate(650);tick=Clock::now();v=model->forward({1+codes[i]},false);
-            require(v.get()&&v->getInfo()->size==16385,"Invalid decode output");p=v->readMap<float>();require(p,"Cannot synchronize decode");decode+=seconds(tick);
-            capture();tick=Clock::now();LevoHiddenResearch::copySingleStepInto(*model,hidden.data()+size_t(i)*2560,2560,LevoHiddenResearch::SingleStepLayout::Channels1x1);lookup+=seconds(tick);
-            if(i%16==15)std::cout<<"PRECISION_DECODE "<<precision<<" "<<i+1<<" "<<decode*1000/(i+1)<<std::endl;
+            require(v.get()&&v->getInfo()->size==16385,"Invalid decode output");p=v->readMap<float>();require(p,"Cannot synchronize decode");const double elapsed=seconds(tick);decode+=elapsed;blockSeconds+=elapsed;++blockCount;tokenMs.push_back(elapsed*1000);
+            const bool keep=!longRun||i==0||i==63||i==255||(i+1)%250==0||i==steps-1;
+            capture(keep);tick=Clock::now();LevoHiddenResearch::copySingleStepInto(*model,hiddenRow.data(),2560,LevoHiddenResearch::SingleStepLayout::Channels1x1);lookup+=seconds(tick);
+            if(keep){hidden.insert(hidden.end(),hiddenRow.begin(),hiddenRow.end());snapshots.push_back(i+1);}
+            if(longRun&&((i+1)%250==0||i==steps-1)){
+                Json block={{"lastDecode",i+1},{"decodeCount",blockCount},{"decodeMsPerToken",1000*blockSeconds/blockCount},{"kvPositions",model->getCurrentHistory()},{"processRssMiB",resident()/1024.},{"rssPeakMiB",trace.maxRss.load()/1024.},{"minimumAvailableMiB",trace.minAvailable.load()/1024.}};
+                blocks.push_back(block);std::ofstream(output+"/progress.json")<<block.dump();std::cout<<"PRECISION_LONG "<<precision<<" "<<block.dump()<<std::endl;blockSeconds=0;blockCount=0;
+            }else if(!longRun&&i%16==15)std::cout<<"PRECISION_DECODE "<<precision<<" "<<i+1<<" "<<decode*1000/(i+1)<<std::endl;
         }
         report["prefillPositions"]=513;report["decodeForwards"]=steps;report["decodeMs"]=decode*1000;report["decodeMsPerToken"]=decode*1000/steps;
         report["decodeTokensPerSecond"]=steps/decode;report["hiddenCopyMs"]=lookup*1000;report["kvPositions"]=model->getCurrentHistory();report["greedyIndices"]=greedy;
+        report["longRun"]=longRun;report["snapshotDecodePositions"]=snapshots;report["decodeBlocks"]=blocks;report["decodeTokenMs"]=tokenMs;
         report["backendTensorObservations"]=backends;report["quantKernelCalls"]=hooks.result();
         report["auditTimingExcludedFromComparison"]=audit;
         writeFloats(output+"/logits.f32",logits);writeFloats(output+"/hidden.f32",hidden);report["success"]=true;

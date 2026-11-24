@@ -17,6 +17,7 @@ struct Index {
   @State lyrics: string = SHORT_LYRICS;
   @State lyricPreset: number = 0;
   @State fillDuration: boolean = true;
+  @State allCpuLow: boolean = false;
   @State styles: StyleChoice[] = [];
   @State styleIndex: number = 0;
   @State modelReady: boolean = false;
@@ -121,6 +122,7 @@ struct Index {
       if (this.durationBenchmark && (this.seconds >= 240 || this.model === 1)) { this.lyrics = LONG_LYRICS; this.lyricPreset = 1; }
       this.lmDynamicOption = AppStorage.get<number>('streamLabDynamicOption') ?? 2;
       this.vaeFusion = AppStorage.get<boolean>('streamLabVaeFusion') ?? true;
+      this.allCpuLow = AppStorage.get<string>('streamLabPrecision') === 'low';
       this.benchmarkRunTag = this.durationBenchmark ? (AppStorage.get<string>('streamLabRunTag') ?? '') : '';
       this.testStop = autoRun === 'stop-check'; this.refresh();
       setTimeout(() => { this.start(!this.durationBenchmark && autoRun !== 'mnn-check' && autoRun !== 'mnn60-check' && autoRun !== 'music-check'); }, 800);
@@ -208,7 +210,7 @@ struct Index {
     this.startedAt = Date.now(); this.playbackError = '';
     this.firstChunk = 0; this.stage = '准备实验'; await this.keepAwake(true);
     if (this.player) await this.player.close(); await this.releaseSystem(); this.player = this.createPlayer();
-    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, croppedLm: this.model === 0 ? this.croppedLm() : '', lmDynamicOption: this.model === 0 ? this.lmDynamicOption : 0, vaeFusion: this.vaeFusion, captureVaeInput: fixedBenchmark, longRun: this.seconds > 60, suppressEos: fixedBenchmark || this.fillDuration, runTag: fixedBenchmark ? this.benchmarkRunTag : '' })); }
+    try { await this.player.open(); await native.start(this.root(), this.model, Math.round(this.seconds * 25), transport, this.lyrics, this.styles[this.styleIndex]?.path ?? '', JSON.stringify({ resident: this.model === 0, ditSteps: 2, cfg: true, croppedLm: this.model === 0 ? this.croppedLm() : '', lmDynamicOption: this.model === 0 ? this.lmDynamicOption : 0, lmPrecision: this.allCpuLow ? 'low' : 'high', ditPrecision: this.allCpuLow ? 'low' : 'high', projectionPrecision: this.allCpuLow ? 'low' : 'high', vaeFusion: this.vaeFusion, captureVaeInput: fixedBenchmark, longRun: this.seconds > 60, suppressEos: fixedBenchmark || this.fillDuration, runTag: fixedBenchmark ? this.benchmarkRunTag : '' })); }
     catch (error) { this.stage = String(error); this.playbackError = String(error); this.record('start-error', String(error)); }
     finally { this.busy = false; this.stopping = false; this.durationBenchmark = false; this.poll(); if (fixedBenchmark) this.awakeRelease = setTimeout(() => { this.awakeRelease = -1; this.keepAwake(false); }, 15000); else await this.keepAwake(false); }
   }
@@ -241,6 +243,10 @@ struct Index {
           Row({ space: 10 }) {
             Toggle({ type: ToggleType.Switch, isOn: this.fillDuration }).enabled(!this.busy).onChange((value: boolean) => { this.fillDuration = value; })
             Text('生成到所选时长，忽略提前EOS').fontSize(13)
+          }.width('100%')
+          Row({ space: 10 }) {
+            Toggle({ type: ToggleType.Switch, isOn: this.allCpuLow }).enabled(!this.busy).onChange((value: boolean) => { this.allCpuLow = value; })
+            Text('全链CPU Low／FP16（实验）').fontSize(13)
           }.width('100%')
         }.padding(16).backgroundColor(Color.White).borderRadius(20)
         Column({ space: 14 }) {

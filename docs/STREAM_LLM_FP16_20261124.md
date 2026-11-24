@@ -64,14 +64,21 @@ Low相对High的logits L2为5.97%，65行argmax一致率90.77%；
 新增独立目标`levo_stream_lm_precision`，链接与App相同的固定MNN静态库，未更改App的默认精度。
 
 ```text
-levo_stream_lm_precision MODEL_ROOT PREFIX_F32 CODES_JSON NEW_OUTPUT_DIR high|low perf|audit DECODE_COUNT
+levo_stream_lm_precision MODEL_ROOT PREFIX_F32 CODES_JSON NEW_OUTPUT_DIR high|low perf|audit|long DECODE_COUNT
 ```
+
+长上下文模式为`long`，最多3000次decode；KV持续增长，不按窗口清空。
+每250次输出一段计时和RAM记录，只稀疏保留logits／hidden快照，避免保存全部输出显著放大RAM。
+它仍使用相同的真实code历史，未运行下游DiT／VAE，也不生成120秒音乐。
 
 `MODEL_ROOT`须为相同36层音乐bundle，前缀是该bundle实际准备的513×2560 float32输入，
 codes是实际音频code历史。输出目录必须不存在；perf最多256次decode，audit最多4次。
 性能测试禁止audit，logits与hidden在同步计时外保存；hidden复制另行计时。
 只公开探针、文档与统一报告，不提交权重、前缀、code文件或音频。
 
-目前保留High生产基线。FP16已证实可运行并省RAM，下一步应做原FP16权重参考或同输入条件到音频验证，
+High生产基线保留；v0.1.16已另加可选的Low整链实验，不改默认配方。
+该可选配方已经完成[120秒App实测](STREAM_ALL_LOW_120_20261124.md)：RTF6.851、RSS峰值3.62GiB；
+它不是上文64-token短测的外推结果。
+FP16已证实可运行并省RAM，原FP16权重参考或同输入条件到音频仍需验证，
 再决定默认精度或只对部分算子使用FP16；不把配置切换直接当成完整精度与音质验收。
 统一记录：`reports/levo-test-report.json`中的`stream_lab_large_lm_precision_2026_11_24`。

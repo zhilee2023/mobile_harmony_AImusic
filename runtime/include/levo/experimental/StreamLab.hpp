@@ -173,13 +173,14 @@ class Prior {
     std::unique_ptr<Llm,decltype(&Llm::destroy)> model_{nullptr,&Llm::destroy};
     MNN::Express::VARP logits_;std::unique_ptr<MappedFloats> table_;bool small_,sampling_,smallHidden_,cropped_,suppressEos_;int width_,previous_=0;MusicVocabulary vocab_;std::mt19937 random_{2307};std::vector<int> codes_;
 public:
-    Prior(const std::string& root,const std::string& work,bool small,const std::string& lyrics="",const std::string& npy="",bool smallHidden=false,const std::string& croppedLm="",int threads=4,int dynamicOption=0,bool suppressEos=false):small_(small),sampling_(!lyrics.empty()),smallHidden_(smallHidden),cropped_(!croppedLm.empty()),suppressEos_(suppressEos),width_(small?1024:2560),vocab_(musicVocabulary(small,croppedLm)){
+    Prior(const std::string& root,const std::string& work,bool small,const std::string& lyrics="",const std::string& npy="",bool smallHidden=false,const std::string& croppedLm="",int threads=4,int dynamicOption=0,bool suppressEos=false,const std::string& precision="high"):small_(small),sampling_(!lyrics.empty()),smallHidden_(smallHidden),cropped_(!croppedLm.empty()),suppressEos_(suppressEos),width_(small?1024:2560),vocab_(musicVocabulary(small,croppedLm)){
         LEVO_STREAM_SPAN("llm.initialize");
         require(!cropped_||small,"Music-head crop is for the small model only");
         if(cropped_)require(std::filesystem::file_size(croppedLm+"/embeddings_bf16.bin")==344502272,"Cropped LM requires the complete input embedding file");
         patch({{"musicVocabulary",{{"classes",vocab_.classes},{"audioOutputBase",vocab_.audioBase},{"eosOutput",vocab_.eos},{"inputAudioBase",vocab_.inputAudioBase}}}});
+        require(precision=="high"||precision=="low","Unsupported LLM precision");
         Json cfg={{"base_dir",cropped_?croppedLm+"/":root+"/lm/"},{"llm_model","llm.mnn"},{"llm_weight","llm.mnn.weight"},{"llm_config","llm_config.json"},
-          {"tokenizer_file","tokenizer.mtok"},{"embedding_file","embeddings_bf16.bin"},{"backend_type","cpu"},{"precision","high"},{"memory","low"},{"power","high"},
+          {"tokenizer_file","tokenizer.mtok"},{"embedding_file","embeddings_bf16.bin"},{"backend_type","cpu"},{"precision",precision},{"memory","low"},{"power","high"},
           {"thread_num",threads},{"reuse_kv",false},{"attention_mode",8},{"hidden_states",!small||smallHidden},{"all_logits",false},{"cosyvoice_kleidiai",false},{"tmp_path",work+"/"}};
         require(dynamicOption==0||dynamicOption==2,"Unsupported dynamic A8 option");cfg["dynamic_option"]=dynamicOption;
         {std::ofstream out(work+"/lm-config.json");out<<cfg.dump(2);}
@@ -234,6 +235,8 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     const bool longRun=options.value("longRun",false),suppressEos=options.value("suppressEos",false);
     validateDuration(choice,requested,longRun);
     const int dynamicOption=options.value("lmDynamicOption",0);require(dynamicOption==0||dynamicOption==2,"Unsupported dynamic A8 option");
+    const std::string lmPrecision=options.value("lmPrecision",std::string("high")),ditPrecision=options.value("ditPrecision",std::string("high")),projectionPrecision=options.value("projectionPrecision",std::string("high"));
+    for(const auto& precision:{lmPrecision,ditPrecision,projectionPrecision})require(precision=="high"||precision=="low","Unsupported CPU precision experiment");
     const std::string smallCondition=options.value("smallCondition",std::string("token"));
     require(smallCondition=="token"||(choice==0&&smallCondition=="hidden-consume"),"Unknown condition experiment");
     const bool resident=options.value("resident",choice==0),cfg=options.value("cfg",true),vaeFusion=options.value("vaeFusion",false);
@@ -250,14 +253,14 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
     {std::lock_guard<std::mutex> lock(stateMutex);state={{"runId",id},{"busy",true},{"status","generating"},{"phase","loading"},{"chunks",Json::array()},
        {"generatedSamples",0},{"requestedFrames",requested},{"conditionFrames",0},{"model",choice},{"conditionMode",choice==0?smallCondition:"hidden-projector"},{"transportOnly",transport},{"diagnosticOnly",lyrics.empty()||transport||smallCondition!="token"},{"musicQualityClaimed",false},
        {"resident",resident},{"tokenPrefetch",prefetch},{"threads",{{"lm",lmThreads},{"dit",ditThreads},{"vae",vaeThreads}}},{"croppedLm",croppedLm},{"ditSteps",steps},{"cfgEnabled",cfg},{"cfgScale",cfg?1.5:0.},{"ditBatch",batch},{"unconditionalComputeRemoved",batch==1},{"chunkTimings",Json::array()},{"vaeFusion",vaeFusion},
-       {"lmDynamicOption",dynamicOption},{"suppressEos",suppressEos},{"longRun",longRun},{"captureVaeInput",captureVaeInput},{"runTag",options.value("runTag",std::string())}};}
+       {"lmDynamicOption",dynamicOption},{"precisions",{{"llm",lmPrecision},{"dit",ditPrecision},{"projection",projectionPrecision},{"vae","low"}}},{"suppressEos",suppressEos},{"longRun",longRun},{"captureVaeInput",captureVaeInput},{"runTag",options.value("runTag",std::string())}};}
     Trace trace;trace.phase(1);double lmTime=0,muTime=0,ditTime=0,vaeTime=0,ditSetup=0,vaeSetup=0;std::vector<float> conditions;std::unique_ptr<Prior> prior;
     std::unique_ptr<Graph> keptDit,keptVae;
     struct Fetched {std::vector<float> values;int count=0;bool eos=false;double elapsed=0;};std::future<Fetched> pending;
     size_t observedKv=0;
     std::vector<float> last,tail;std::mt19937 rng(2307);std::normal_distribution<float> normal;
     try{
-        if(!transport){require(inspect(appRoot,choice)["ready"],"Import matching model bundle first");if(longRun)require(requested<=readJson(root+"/model-bundle.json")["runtime"].value("maxFrames",choice==0?7500:3000),"Bundle-declared duration bound exceeded");check();auto tick=Clock::now();prior=std::make_unique<Prior>(root,work,choice==0,lyrics,npy,smallCondition=="hidden-consume",croppedLm,lmThreads,dynamicOption,suppressEos);lmTime+=seconds(tick);}
+        if(!transport){require(inspect(appRoot,choice)["ready"],"Import matching model bundle first");if(longRun)require(requested<=readJson(root+"/model-bundle.json")["runtime"].value("maxFrames",choice==0?7500:3000),"Bundle-declared duration bound exceeded");check();auto tick=Clock::now();prior=std::make_unique<Prior>(root,work,choice==0,lyrics,npy,smallCondition=="hidden-consume",croppedLm,lmThreads,dynamicOption,suppressEos,lmPrecision);lmTime+=seconds(tick);}
         const int hidden=choice==0?1024:2560;int produced=0,index=0;size_t emitted=0;
         std::vector<float> masks,mean,stddev;if(!transport){masks=read(root+"/aux/mask.f32",144);mean=read(root+"/aux/mean.f32",64);stddev=read(root+"/aux/std.f32",64);}
         int actual=requested;bool eos=false;
@@ -278,7 +281,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
             else {
                 std::vector<float> mu(256*1024);
                 if(choice==0){for(int row=0;row<256;++row)std::copy_n(conditions.data()+size_t((start+row)%produced)*1024,1024,mu.data()+row*1024);}
-                else {trace.phase(0);patch({{"phase","projection"}});auto tick=Clock::now();Graph projector(root+"/mu/mu.mnn",false,4);std::vector<float> input(2048*2560);
+                else {trace.phase(0);patch({{"phase","projection"}});auto tick=Clock::now();Graph projector(root+"/mu/mu.mnn",projectionPrecision=="low",4);std::vector<float> input(2048*2560);
                     for(int row=0;row<256;++row)std::copy_n(conditions.data()+size_t((start+row)%produced)*2560,2560,input.data()+row*2560);
                     auto output=projector.run({{"",std::move(input)}},2048*1024);std::copy_n(output.data(),256*1024,mu.data());muTime+=seconds(tick);}
                 std::vector<float> context(256*64,0),noise(256*64),x;
@@ -287,7 +290,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
                 if(prefetch){
                     // Finish all graph creation/vector-sine hook changes before
                     // another thread uses the prior. Each model has one owner.
-                    if(!keptDit){auto tick=Clock::now();keptDit=std::make_unique<Graph>(root+"/dit/dit.mnn",false,ditThreads,false,batch);double elapsed=seconds(tick);ditSetup+=elapsed;ditTime+=elapsed;}
+                    if(!keptDit){auto tick=Clock::now();keptDit=std::make_unique<Graph>(root+"/dit/dit.mnn",ditPrecision=="low",ditThreads,false,batch);double elapsed=seconds(tick);ditSetup+=elapsed;ditTime+=elapsed;}
                     if(!keptVae){auto tick=Clock::now();keptVae=std::make_unique<Graph>(root+"/vae/vae.mnn",true,vaeThreads,true);double elapsed=seconds(tick);vaeSetup+=elapsed;vaeTime+=elapsed;}
                     const int nextStart=start+192,nextWanted=nextStart+std::min(256,actual-nextStart),from=produced;
                     if(!final&&!eos&&nextWanted>from){pending=std::async(std::launch::async,[&,from,nextWanted]{
@@ -295,7 +298,7 @@ inline Json run(const std::string& appRoot,int choice,int requested,bool transpo
                         for(int at=from;at<nextWanted;++at){check();auto value=prior->next(at);if(value.empty()){data.eos=true;break;}data.values.insert(data.values.end(),value.begin(),value.end());++data.count;}
                         data.elapsed=seconds(tick);return data;});}
                 }
-                {trace.phase(2);patch({{"phase","dit"}});auto tick=Clock::now();if(!keptDit){auto setup=Clock::now();keptDit=std::make_unique<Graph>(root+"/dit/dit.mnn",false,ditThreads,false,batch);ditSetup+=seconds(setup);}check();
+                {trace.phase(2);patch({{"phase","dit"}});auto tick=Clock::now();if(!keptDit){auto setup=Clock::now();keptDit=std::make_unique<Graph>(root+"/dit/dit.mnn",ditPrecision=="low",ditThreads,false,batch);ditSetup+=seconds(setup);}check();
                     for(int step=0;step<steps;++step){check();patch({{"step",step+1},{"steps",steps}});float t=float(step)/steps;
                         if(index)for(int j=0;j<64*64;++j)x[j]=(1-(1-1e-4f)*t)*noise[j]+t*context[j];
                         std::vector<float> input(batch*256*1200,0),attn(batch*256*256,0);

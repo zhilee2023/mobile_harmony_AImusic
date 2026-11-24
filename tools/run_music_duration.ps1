@@ -5,7 +5,9 @@ param(
  [ValidateSet(0,1)][int]$ModelChoice=0,
  [ValidateSet(0,2)][int]$DynamicOption=2,
  [ValidateSet(0,1)][int]$VaeFusion=1,
+ [ValidateSet('high','low')][string]$FloatingPrecision='high',
  [ValidateRange(0,600)][int]$CoolingSeconds=180,
+ [ValidateRange(0,50)][int]$MaximumStartBatteryC=0,
  [switch]$ResumePrepared,
  [string]$DevEcoRoot='C:\Program Files\Huawei\DevEco Studio'
 )
@@ -36,12 +38,13 @@ function Music-Sample {
  $musicValues=@($musicRaw -split "`n" | ForEach-Object {$_.Trim()})
  return @{utc=[DateTimeOffset]::UtcNow.ToString('o');batteryC=if($musicValues[0] -match '^\d+$'){[double]$musicValues[0]/10}else{$null};socNodeC=if($musicValues.Count -gt 1 -and $musicValues[1] -match '^\d+$'){[double]$musicValues[1]/1000}else{$null}}
 }
-$musicRecord=@{runTag=$RunId;bundleName=$musicBundleName;modelChoice=$ModelChoice;requestedDurationSeconds=$DurationSeconds;dynamicOption=$DynamicOption;vaeFusion=[bool]$VaeFusion;status='preparing';coolingSecondsRequested=$CoolingSeconds;
+$musicRecord=@{runTag=$RunId;bundleName=$musicBundleName;modelChoice=$ModelChoice;requestedDurationSeconds=$DurationSeconds;dynamicOption=$DynamicOption;vaeFusion=[bool]$VaeFusion;floatingPrecision=$FloatingPrecision;maximumStartBatteryC=$MaximumStartBatteryC;status='preparing';coolingSecondsRequested=$CoolingSeconds;
  scope='Actual selected-model App fixed-length generation with playback; W4 body/W8 head, DiT CPU2steps CFG1.5, CPU Low VAE; dynamic option and fusion recorded explicitly; EOS suppressed for timing';
  samples=@();createdUtc=[DateTimeOffset]::UtcNow.ToString('o')}
 if($ResumePrepared){
  $musicPrepared=Get-Content -LiteralPath (Join-Path $musicDir 'run.json') -Raw -Encoding UTF8 | ConvertFrom-Json
- if($musicPrepared.status -ne 'awaiting-unlock' -or [int]$musicPrepared.modelChoice -ne $ModelChoice -or $musicPrepared.requestedDurationSeconds -ne $DurationSeconds -or $musicPrepared.dynamicOption -ne $DynamicOption -or [bool]$musicPrepared.vaeFusion -ne [bool]$VaeFusion){throw 'Only the same prepared, not-yet-started measurement may resume'}
+ $musicPreparedPrecision=if($musicPrepared.floatingPrecision){[string]$musicPrepared.floatingPrecision}else{'high'}
+ if($musicPrepared.status -notin @('awaiting-unlock','awaiting-temperature') -or [int]$musicPrepared.modelChoice -ne $ModelChoice -or $musicPrepared.requestedDurationSeconds -ne $DurationSeconds -or $musicPrepared.dynamicOption -ne $DynamicOption -or [bool]$musicPrepared.vaeFusion -ne [bool]$VaeFusion -or $musicPreparedPrecision -ne $FloatingPrecision -or [int]$musicPrepared.maximumStartBatteryC -ne $MaximumStartBatteryC){throw 'Only the same prepared, not-yet-started measurement may resume'}
  $musicRecord=@{};foreach($musicProperty in $musicPrepared.psobject.Properties){$musicRecord[$musicProperty.Name]=$musicProperty.Value}
  $musicRecord.resumedUtc=[DateTimeOffset]::UtcNow.ToString('o')
 }
@@ -69,6 +72,18 @@ if(!$ResumePrepared){
  }
  $musicRecord.coolingSecondsObserved=([DateTimeOffset]::UtcNow-$musicCoolStart).TotalSeconds
 }
+if($MaximumStartBatteryC -gt 0){
+ $musicTemperatureStart=[DateTimeOffset]::UtcNow;$musicLastTemperatureAnnounce=-30
+ while($true){
+  $musicTemperatureSample=Music-Sample;$musicRecord.samples+=@($musicTemperatureSample);Music-Save
+  if($null -ne $musicTemperatureSample.batteryC -and $musicTemperatureSample.batteryC -le $MaximumStartBatteryC){break}
+  $musicTemperatureWait=([DateTimeOffset]::UtcNow-$musicTemperatureStart).TotalSeconds
+  if($musicTemperatureWait-$musicLastTemperatureAnnounce -ge 30){$musicLastTemperatureAnnounce=$musicTemperatureWait;Write-Output "Waiting for battery <=${MaximumStartBatteryC}C; current $($musicTemperatureSample.batteryC)C"}
+  if($musicTemperatureWait -ge 3600){$musicRecord.status='awaiting-temperature';Music-Save;throw 'Start temperature not reached; no inference started'}
+  Start-Sleep -Seconds 15
+ }
+ $musicRecord.additionalTemperatureWaitSeconds=([DateTimeOffset]::UtcNow-$musicTemperatureStart).TotalSeconds;Music-Save
+}
 $musicPower=Music-Hdc @('shell','hidumper -s PowerManagerService -a -a')
 [IO.File]::WriteAllText((Join-Path $musicDir 'power-before.txt'),$musicPower,[Text.UTF8Encoding]::new($false))
 if($musicPower -notmatch 'Current State: AWAKE'){$musicRecord.status='awaiting-unlock';Music-Save;throw 'Manually unlock the phone; no inference started'}
@@ -79,8 +94,10 @@ if(!$musicRecord.installedHapSha256){throw 'Cannot verify installed HAP hash; no
 $musicBeforeStart=Music-ReadState
 if($musicBeforeStart -and $musicBeforeStart.busy){$musicRecord.status='blocked-active-task-after-cooling';Music-Save;throw 'Another generation became active during cooling; App left untouched'}
 $null=Music-Hdc @('shell',"aa force-stop $musicBundleName") # Confirmed idle above, one fresh process per duration.
-$musicRecord.samples+=@(Music-Sample);$musicRecord.status='starting';Music-Save
-$null=Music-Hdc @('shell',"aa start -a EntryAbility -b $musicBundleName --ps streamLabTest duration-benchmark --pi streamLabModel $ModelChoice --pi streamLabSeconds $DurationSeconds --pi streamLabDynamicOption $DynamicOption --pi streamLabVaeFusion $VaeFusion --ps streamLabRunTag $RunId")
+$musicLaunchSample=Music-Sample;$musicRecord.samples+=@($musicLaunchSample)
+if($MaximumStartBatteryC -gt 0 -and ($null -eq $musicLaunchSample.batteryC -or $musicLaunchSample.batteryC -gt $MaximumStartBatteryC)){$musicRecord.status='awaiting-temperature';Music-Save;throw 'Battery warmed above requested start temperature; no inference started'}
+$musicRecord.status='starting';Music-Save
+$null=Music-Hdc @('shell',"aa start -a EntryAbility -b $musicBundleName --ps streamLabTest duration-benchmark --pi streamLabModel $ModelChoice --pi streamLabSeconds $DurationSeconds --pi streamLabDynamicOption $DynamicOption --pi streamLabVaeFusion $VaeFusion --ps streamLabPrecision $FloatingPrecision --ps streamLabRunTag $RunId")
 $musicClock=[DateTimeOffset]::UtcNow;$musicLastAnnounce=0
 while(([DateTimeOffset]::UtcNow-$musicClock).TotalSeconds -lt 3600){
  Start-Sleep -Seconds 5
@@ -116,6 +133,8 @@ while(([DateTimeOffset]::UtcNow-$musicClock).TotalSeconds -lt 3600){
  if($musicWall-$musicLastAnnounce -ge 30){$musicLastAnnounce=$musicWall;Write-Output "${DurationSeconds}s target: $([Math]::Round($musicWall))s elapsed, phase $($musicState.phase), frames $($musicState.conditionFrames)"}
 }
 if(!$musicRecord.ContainsKey('generation')){$musicRecord.status='observer-timeout';Music-Save;throw 'No complete observed result; App left running, do not restart automatically'}
+$musicPrecisions=$musicRecord.generation.precisions
+if($FloatingPrecision -eq 'low' -and (!$musicPrecisions -or $musicPrecisions.llm -ne 'low' -or $musicPrecisions.dit -ne 'low' -or $musicPrecisions.projection -ne 'low' -or $musicPrecisions.vae -ne 'low')){$musicRecord.status='precision-mismatch';Music-Save;throw 'Requested all-Low profile was not confirmed by native final state'}
 $musicPowerAfter=Music-Hdc @('shell','hidumper -s PowerManagerService -a -a')
 [IO.File]::WriteAllText((Join-Path $musicDir 'power-after.txt'),$musicPowerAfter,[Text.UTF8Encoding]::new($false))
 $musicRecord.lastScreenOffUnchanged=([regex]::Match($musicPowerAfter,'Last Screen Off:\s*(\d+)').Groups[1].Value -eq $musicOffBefore)

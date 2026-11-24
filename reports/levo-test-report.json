@@ -104110,6 +104110,646 @@
       "existingOutputGuardPassed": true,
       "appDefaultUnchanged": true
     }
+  },
+  "stream_lab_large120_all_low_2026_11_24": {
+    "date": "2026-11-24",
+    "device": {
+      "modelCode": "CMM-AL00",
+      "appVersion": "0.1.16",
+      "backend": "MNN ARM CPU",
+      "threads": {
+        "dit": 6,
+        "lm": 4,
+        "vae": 6
+      }
+    },
+    "modelId": "larkstudio-base-v2",
+    "scope": "Actual4B-profile36L music Qwen plus39L DiT and fused VAE, complete120s App generation and playback. Runtime Low profile, not all operators/accumulators forced FP16.",
+    "recipe": {
+      "llm": "W4/group64,headW8,dynamicA8 option0,CPU Low4threads",
+      "dit": "W8/group64,CPU Low6threads,2Eulersteps,CFG1.5,batch2",
+      "projection": "2560->2800->1024,CPU Low4threads",
+      "vae": "W8/group64,CPU Low6threads,NEON sine,36 Snake fusions/window",
+      "kv": "attentionMode8,no KV quantization,513->3513 positions",
+      "resident": "LLM remains for request; projection,DiT,VAE recreated per window",
+      "weightsChanged": false,
+      "sampling": {
+        "temperature": 0.95,
+        "topK": 250,
+        "topP": null,
+        "repetitionPenalty": null,
+        "llmSeed": 2307,
+        "ditNoiseSeed": 2307,
+        "eosSuppressedForBenchmark": true
+      }
+    },
+    "startPolicy": {
+      "originalRequest": "Cooldown>=600s and battery<=30C",
+      "preparationStatus": "cancelled-before-start",
+      "latestUserInstruction": "Start now",
+      "actualStartBatteryC": 33.0,
+      "labelledAs30CTest": false,
+      "newRunCoolingSecondsRequested": 0,
+      "secondsSincePreviousCompletedObserver": 410.071443
+    },
+    "audioSeconds": 120,
+    "conditionFrames": 3000,
+    "lyricTokens": 318,
+    "windows": 16,
+    "elapsedSeconds": 822.148803281,
+    "observedWholeRtf": 6.8512400273416665,
+    "stages": {
+      "llm": {
+        "seconds": 514.5287313929995,
+        "rtf": 4.287739428274995,
+        "romBytes": 2178201339,
+        "processRssPeakMiB": 3420.82421875
+      },
+      "dit": {
+        "seconds": 157.145612188,
+        "rtf": 1.3095467682333333,
+        "romBytes": 722929404,
+        "processRssPeakMiB": 3703.47265625
+      },
+      "vae": {
+        "seconds": 138.789813124,
+        "rtf": 1.1565817760333335,
+        "romBytes": 86052358,
+        "processRssPeakMiB": 3645.703125
+      },
+      "projection": {
+        "seconds": 8.770349999999999,
+        "rtf": 0.07308624999999999,
+        "romBytes": 20089968
+      }
+    },
+    "otherSeconds": 2.914296576000538,
+    "otherRtf": 0.024285804800004484,
+    "llmTiming": {
+      "decodeForwards": 3000,
+      "decodeMs": 490056.586458001,
+      "decodeMsPerToken": 163.35219548600034,
+      "decodeTokensPerSecond": 6.12174202510613,
+      "loadMs": 7028.397188,
+      "lookupMs": 18.551712999999957,
+      "prefillMs": 14408.208125,
+      "prefillPositions": 513,
+      "prefixMs": 91.084375,
+      "samplingMs": 2909.3881279999973,
+      "scope": "forward plus output synchronization; excludes sampling, condition lookup and downstream waits"
+    },
+    "rom": {
+      "bytes": {
+        "aux": 5184,
+        "clap": 2176,
+        "conditioner": 789372386,
+        "dit": 722929404,
+        "lm": 2178201339,
+        "mu": 20089968,
+        "vae": 86052358
+      },
+      "totalBytes": 3796652815,
+      "scope": "Phone verified logical asset sizes, excluding HAP,audio,logs; no extra copy added outside this bundle"
+    },
+    "rssPeakMiB": 3703.47265625,
+    "stageRamScope": "20ms sampled process RSS during each stage; includes all resident models",
+    "minimumAvailableMiB": 2174,
+    "firstChunkSeconds": 60.184435937,
+    "kvPositions": 3513,
+    "ditSetupSecondsIncluded": 24.760651095000004,
+    "vaeSetupSecondsIncluded": 24.298998748000002,
+    "controls": {
+      "controlledTimingAccepted": true,
+      "foregroundStateSampleCounts": {
+        "FOREGROUND": 150
+      },
+      "foregroundGapObserved": false,
+      "lastScreenOffUnchanged": true,
+      "screenAwakeAtEnd": true,
+      "temperatureBatteryC": {
+        "start": 33.0,
+        "end": 40.0,
+        "peak": 40.0
+      }
+    },
+    "validation": {
+      "wavFrames": 5760000,
+      "sampleRate": 48000,
+      "channels": 2,
+      "samePrefixAsHigh120": true,
+      "allCodeIdsValid": true,
+      "vaeFusedCalls": 576,
+      "sourceWeightsUnchanged": true,
+      "audioChunks": [
+        {
+          "index": 0,
+          "frames": 368640,
+          "sha256": "e8aaea42c36bda50463eaa98d7af129352445880c33099a7fb18c2537fc166c7",
+          "rms": 0.08690522725675959,
+          "absolutePeak": 0.75975829340495,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 1,
+          "frames": 368640,
+          "sha256": "213202a989357768f766d659bf6ea87731e0e4e2de660e074008ea0c50d2fd2e",
+          "rms": 0.06353898637317663,
+          "absolutePeak": 0.4750816370128483,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 2,
+          "frames": 368640,
+          "sha256": "60d24355836ae3c3535185356ea4cd7c8056cb7cd6c5c6e5c6801e23fc1d2c1c",
+          "rms": 0.06242961026807567,
+          "absolutePeak": 0.6757713553270058,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 3,
+          "frames": 368640,
+          "sha256": "4c9483cf4b620708c1a3b6fe7513a67e84b8248ed6ec2571720c66bf1862977b",
+          "rms": 0.06546373808491465,
+          "absolutePeak": 0.4987640003662221,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 4,
+          "frames": 368640,
+          "sha256": "2794d8ee7722e0b32cffbdf3af2d71eb28daad7edb56186f31518cf73d2f28c8",
+          "rms": 0.05402187834292199,
+          "absolutePeak": 0.4499343852046266,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 5,
+          "frames": 368640,
+          "sha256": "7de940e50cffc3fd1c42c7aa1c81cdb139e246fe5180628eb96380aa473eddc7",
+          "rms": 0.060405246400995455,
+          "absolutePeak": 0.48313852351451153,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 6,
+          "frames": 368640,
+          "sha256": "844a60a9578a52e48ae13354146764e996298cbc8690f9565c92fc50b13b443a",
+          "rms": 0.06272892227098824,
+          "absolutePeak": 0.6468092898342845,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 7,
+          "frames": 368640,
+          "sha256": "cabf54071cc833c7eeded62e4e02746133e3ac995a931eec6ba1b17933a758b9",
+          "rms": 0.05566033718960578,
+          "absolutePeak": 0.49412518692587054,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 8,
+          "frames": 368640,
+          "sha256": "20c0f24ea289c1c58d80d816d0ba5940876ec3ee4d6c07f6c472482e3e9df6b7",
+          "rms": 0.033571450829697605,
+          "absolutePeak": 0.4868007446516312,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 9,
+          "frames": 368640,
+          "sha256": "beed9b5fed861022014349b89c527451ee26107366ad6504de3ec188252d83b7",
+          "rms": 0.022212457854610006,
+          "absolutePeak": 0.22556230353709525,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 10,
+          "frames": 368640,
+          "sha256": "5b33bc8cf7420467316f18f3a5c7f6a84b0e3c10dc02ca0c2c8f7ace690b401f",
+          "rms": 0.018486300345622427,
+          "absolutePeak": 0.20932645649586473,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 11,
+          "frames": 368640,
+          "sha256": "3dc1ed3c6e29daeb7f21c50b91662cc23825094fcb0cc1b0015f509f3951dbb8",
+          "rms": 0.1339624150356018,
+          "absolutePeak": 0.8486281929990539,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 12,
+          "frames": 368640,
+          "sha256": "7978432897ff876c8fa283662bc5a9993b0f817ec032d50816a7b9f78710b4c0",
+          "rms": 0.08759739131543941,
+          "absolutePeak": 0.6616107669301431,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 13,
+          "frames": 368640,
+          "sha256": "e84b7b15957dce6d034ca6d115fca17b6679e7687964efd4c9f5adc0f9c7874e",
+          "rms": 0.06136128247363559,
+          "absolutePeak": 0.5336771752067629,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 14,
+          "frames": 368640,
+          "sha256": "56f0fb102910d73e92af6040085a4c4bb82813bd4d170e353ca1ec57589d8838",
+          "rms": 0.04285367216957822,
+          "absolutePeak": 0.4951017792291024,
+          "clipFraction": 0.0
+        },
+        {
+          "index": 15,
+          "frames": 230400,
+          "sha256": "41da3d4dcd6d358b63979f3c69c72357bdd7eafcea9f95a2598382444ad1160b",
+          "rms": 0.020186673508140345,
+          "absolutePeak": 0.16013061922055727,
+          "clipFraction": 0.0
+        }
+      ],
+      "musicQualityEquivalenceClaimed": false,
+      "appBuildPassed": true,
+      "unitTestsPassed": 59
+    },
+    "playback": {
+      "maxPlayedMsAtCapture": 120000,
+      "errorEvents": 0
+    },
+    "installedHapSha256": "4ed7a0c886ef3bb28a15b616d30a9783a0e6279addbdcb6ace13fcc096b6dd11",
+    "modelAssetSha256": {
+      "aux/mask.f32": "fcba089778a84bbea7d9e4a0a08a52a52aadfe051fe931afa7c8da883cd7a20b",
+      "aux/mean.f32": "deb9b0bda8348a3d480bce0b2dc6235479f5a4a0e8d341038ffef4c36bbab2d1",
+      "aux/std.f32": "49a307581ddf10d44981a1188d19db9261b3d461b0354f5b2e6733bdad152f66",
+      "aux/zero.f32": "632e160cfc15b9c5a3718cd64f36cc92cef4fffbb6d9620f3606c8cfbb6aa0c5",
+      "clap/default.npy": "4e9b1e2eaa0d6adf3ba09cfa342b4ae892ba4d567d9add3cc00329c71b5dc1a1",
+      "conditioner/artist.f32": "5c7d2505f37ba733d76524afaee62657836ba2a619312bd515034623384ee316",
+      "conditioner/bow_genre.f32": "122eea1f5e5b1d50b7c9e546c2e44cfd7f0ef22b4d8eabea806236459bdf8faf",
+      "conditioner/genre2start.f32": "172fe0e4bb05a92acbbf4e9ce4c8e1239c8e7afce2bedac42d1721059f0623d3",
+      "conditioner/start.f32": "727e9c868b12154ec041400600271ef5653686e7ca7cad4804988f7000c6da69",
+      "conditioner/tokenizer.mtok": "ba0b8db1fc65350682e401f3ffcc574dfb4a352c59c32c398692afc717c2ea3e",
+      "conditioner/x_emb.f16": "2a5e986b9d7662c0de5dc7449a15720d1a2d4b9384760df28caeaae571d7fa0f",
+      "dit/dit.mnn": "57cc07a877c01b3e49e6538edba7a1629b5d8072e1dfa8d43ce4279aa9207f27",
+      "dit/dit.mnn.weight": "3c4c19462e376e32172e82213440874f603217dd14c77c2985a095ce3513fa10",
+      "lm/embeddings_bf16.bin": "738c956722bce8057faae0782ba5ca6597aee4ce91a5f1589d84bd71a74946fc",
+      "lm/llm.mnn": "5505a31d0f4c16bc6cb9d04cd1e3ba5fbca38e6a97a356b2f76368d791ff78bb",
+      "lm/llm.mnn.weight": "d1191c69cf589dfc575014d3fccddcf78a5e5d430796e0a1ed366f62b024c1de",
+      "lm/llm_config.json": "6bb5fbf98e10f435f2a2004ab3f2f4a1b4c0570e236b41b98fec28eaac09d51a",
+      "lm/tokenizer.mtok": "8c4051ca922c4240ea14550cb3a38f276b9630c8aba314b0977ce9c0b7b22dbf",
+      "mu/mu.mnn": "13cd21745c89041bc5cba16eafab592c33af06a3ab287de401b4fcb686713506",
+      "mu/mu.mnn.weight": "58d5727033b6ec83a5a8580da7da1869af9319b5d46b9dc389eb21ef5e2e115b",
+      "vae/vae.mnn": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "vae/vae.mnn.weight": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc"
+    },
+    "chunkTimings": [
+      {
+        "ditSeconds": 7.205577812,
+        "ditSetupSeconds": 1.898235,
+        "index": 0,
+        "lmSeconds": 24.435066406000026,
+        "rssMiB": 1823.63671875,
+        "vaeSeconds": 6.439024843,
+        "vaeSetupSeconds": 1.479519531,
+        "wallSeconds": 38.638271718
+      },
+      {
+        "ditSeconds": 6.951765155999999,
+        "ditSetupSeconds": 1.271781563,
+        "index": 1,
+        "lmSeconds": 19.48606421799999,
+        "rssMiB": 2574.39453125,
+        "vaeSeconds": 5.6645703130000005,
+        "vaeSetupSeconds": 0.7479031249999999,
+        "wallSeconds": 32.626436094
+      },
+      {
+        "ditSeconds": 6.681957499999999,
+        "ditSetupSeconds": 1.3238551559999996,
+        "index": 2,
+        "lmSeconds": 17.875265012999975,
+        "rssMiB": 2591.01953125,
+        "vaeSeconds": 6.986334062000001,
+        "vaeSetupSeconds": 2.0203232809999996,
+        "wallSeconds": 32.077252344
+      },
+      {
+        "ditSeconds": 8.925310156000002,
+        "ditSetupSeconds": 1.1154818750000004,
+        "index": 3,
+        "lmSeconds": 16.594775155000008,
+        "rssMiB": 2607.78515625,
+        "vaeSeconds": 8.448151719000002,
+        "vaeSetupSeconds": 0.9532601559999998,
+        "wallSeconds": 34.545831719
+      },
+      {
+        "ditSeconds": 10.881842032000002,
+        "ditSetupSeconds": 1.634564375,
+        "index": 4,
+        "lmSeconds": 32.34688639700002,
+        "rssMiB": 2628.1015625,
+        "vaeSeconds": 9.429028125000002,
+        "vaeSetupSeconds": 1.7096231250000002,
+        "wallSeconds": 53.311271094
+      },
+      {
+        "ditSeconds": 10.613664063000002,
+        "ditSetupSeconds": 1.5348828119999993,
+        "index": 5,
+        "lmSeconds": 33.39748125600008,
+        "rssMiB": 2663.10546875,
+        "vaeSeconds": 8.758318281000001,
+        "vaeSetupSeconds": 1.1071042190000009,
+        "wallSeconds": 53.526380781
+      },
+      {
+        "ditSeconds": 10.086739063000003,
+        "ditSetupSeconds": 1.400460313,
+        "index": 6,
+        "lmSeconds": 34.12846155999998,
+        "rssMiB": 2697.95703125,
+        "vaeSeconds": 9.710520936999998,
+        "vaeSetupSeconds": 1.6277296870000004,
+        "wallSeconds": 54.632859687
+      },
+      {
+        "ditSeconds": 10.556917030999998,
+        "ditSetupSeconds": 1.613426562999999,
+        "index": 7,
+        "lmSeconds": 35.02047686800012,
+        "rssMiB": 2712.6875,
+        "vaeSeconds": 8.626712656999999,
+        "vaeSetupSeconds": 1.0105542179999993,
+        "wallSeconds": 54.872885
+      },
+      {
+        "ditSeconds": 11.100190780999995,
+        "ditSetupSeconds": 1.731120624999999,
+        "index": 8,
+        "lmSeconds": 36.228972185999794,
+        "rssMiB": 2732.40234375,
+        "vaeSeconds": 9.926060000000007,
+        "vaeSetupSeconds": 2.0294057819999995,
+        "wallSeconds": 57.939584063
+      },
+      {
+        "ditSeconds": 11.006771719,
+        "ditSetupSeconds": 1.4599267190000003,
+        "index": 9,
+        "lmSeconds": 36.784199687000125,
+        "rssMiB": 2781.50390625,
+        "vaeSeconds": 8.459620936999997,
+        "vaeSetupSeconds": 0.9138914059999994,
+        "wallSeconds": 56.970654063
+      },
+      {
+        "ditSeconds": 10.425718750000001,
+        "ditSetupSeconds": 1.5414090620000014,
+        "index": 10,
+        "lmSeconds": 38.03925484100006,
+        "rssMiB": 2828.48828125,
+        "vaeSeconds": 9.815209999999993,
+        "vaeSetupSeconds": 1.7519240620000005,
+        "wallSeconds": 59.111558282
+      },
+      {
+        "ditSeconds": 11.382536719,
+        "ditSetupSeconds": 1.7052432820000014,
+        "index": 11,
+        "lmSeconds": 38.3642496789995,
+        "rssMiB": 2870.00390625,
+        "vaeSeconds": 9.04612625,
+        "vaeSetupSeconds": 0.9447345309999999,
+        "wallSeconds": 59.619117032
+      },
+      {
+        "ditSeconds": 10.952634375000002,
+        "ditSetupSeconds": 1.6629393750000006,
+        "index": 12,
+        "lmSeconds": 40.388273895000054,
+        "rssMiB": 2882.5859375,
+        "vaeSeconds": 10.573011405999992,
+        "vaeSetupSeconds": 2.039799843000001,
+        "wallSeconds": 62.738060312
+      },
+      {
+        "ditSeconds": 11.649974999999998,
+        "ditSetupSeconds": 1.7701460940000011,
+        "index": 13,
+        "lmSeconds": 40.917599849999874,
+        "rssMiB": 2918.640625,
+        "vaeSeconds": 10.265159843999996,
+        "vaeSetupSeconds": 1.9468096880000019,
+        "wallSeconds": 63.652703437
+      },
+      {
+        "ditSeconds": 10.806030469000007,
+        "ditSetupSeconds": 1.518514531000001,
+        "index": 14,
+        "lmSeconds": 41.89976438099984,
+        "rssMiB": 2945.49609375,
+        "vaeSeconds": 10.060555938000007,
+        "vaeSetupSeconds": 2.9062343750000004,
+        "wallSeconds": 63.51128
+      },
+      {
+        "ditSeconds": 7.917981561999994,
+        "ditSetupSeconds": 1.5786637500000005,
+        "index": 15,
+        "lmSeconds": 7.08272015700004,
+        "rssMiB": 2962.1875,
+        "vaeSeconds": 6.581407812000009,
+        "vaeSetupSeconds": 1.1101817189999998,
+        "wallSeconds": 22.224574687
+      }
+    ],
+    "comparisonToPreviousHigh": {
+      "key": "stream_lab_large120_fused_2026_11_24",
+      "baselineRtf": 8.089769966141667,
+      "observedWholeTimeReduction": 0.15309828882448484,
+      "stagesTimeReduction": {
+        "llm": 0.1883386876559422,
+        "dit": 0.12738474883054052,
+        "vae": 0.007421461482144287,
+        "projection": 0.3556125948686544
+      },
+      "ramPeakMiBReduction": 698.51953125,
+      "limitation": "One run/profile, different starting temperatures and HAP versions; observational comparison, not a matched-temperature randomized crossover."
+    },
+    "preceding15sFunctionalCheck": {
+      "completed": true,
+      "actualAudioSeconds": 15.0,
+      "precisions": {
+        "dit": "low",
+        "llm": "low",
+        "projection": "low",
+        "vae": "low"
+      },
+      "finiteGraphOutputs": true,
+      "fusedCalls": 72,
+      "performanceAccepted": false,
+      "reason": "Last Screen Off changed during before/after check; timing quarantined."
+    },
+    "standaloneLow3000Decode": {
+      "scope": "Separate native LLM-only teacher-history probe, no DiT/VAE/audio. Not App RTFor directly interchangeable timing. High standalone comparison deferred when user requested all-Low full chain.",
+      "result": {
+        "attentionMode": 8,
+        "auditEnabled": false,
+        "auditTimingExcludedFromComparison": false,
+        "bodyWeightBits": 4,
+        "decodeBlocks": [
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 99.23146437600002,
+            "kvPositions": 763,
+            "lastDecode": 250,
+            "minimumAvailableMiB": 3002.0,
+            "processRssMiB": 2407.109375,
+            "rssPeakMiB": 2509.96875
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 132.03007744000007,
+            "kvPositions": 1013,
+            "lastDecode": 500,
+            "minimumAvailableMiB": 2972.0,
+            "processRssMiB": 2443.421875,
+            "rssPeakMiB": 2577.33203125
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 147.999481272,
+            "kvPositions": 1263,
+            "lastDecode": 750,
+            "minimumAvailableMiB": 2967.0,
+            "processRssMiB": 2479.6328125,
+            "rssPeakMiB": 2645.87109375
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 152.92158999199998,
+            "kvPositions": 1513,
+            "lastDecode": 1000,
+            "minimumAvailableMiB": 2924.0,
+            "processRssMiB": 2515.83203125,
+            "rssPeakMiB": 2722.4921875
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 158.78302562400012,
+            "kvPositions": 1763,
+            "lastDecode": 1250,
+            "minimumAvailableMiB": 2875.0,
+            "processRssMiB": 2553.140625,
+            "rssPeakMiB": 2795.890625
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 163.01041747999992,
+            "kvPositions": 2013,
+            "lastDecode": 1500,
+            "minimumAvailableMiB": 2829.0,
+            "processRssMiB": 2589.37890625,
+            "rssPeakMiB": 2867.12109375
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 169.508141904,
+            "kvPositions": 2263,
+            "lastDecode": 1750,
+            "minimumAvailableMiB": 2783.0,
+            "processRssMiB": 2616.54296875,
+            "rssPeakMiB": 2923.24609375
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 176.33293063600004,
+            "kvPositions": 2513,
+            "lastDecode": 2000,
+            "minimumAvailableMiB": 2743.0,
+            "processRssMiB": 2652.6875,
+            "rssPeakMiB": 2991.75
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 182.12491373599997,
+            "kvPositions": 2763,
+            "lastDecode": 2250,
+            "minimumAvailableMiB": 2708.0,
+            "processRssMiB": 2690.0078125,
+            "rssPeakMiB": 3065.1875
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 189.2757231319999,
+            "kvPositions": 3013,
+            "lastDecode": 2500,
+            "minimumAvailableMiB": 2662.0,
+            "processRssMiB": 2726.125,
+            "rssPeakMiB": 3148.26953125
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 204.96289124000006,
+            "kvPositions": 3263,
+            "lastDecode": 2750,
+            "minimumAvailableMiB": 2606.0,
+            "processRssMiB": 2762.41015625,
+            "rssPeakMiB": 3220.5390625
+          },
+          {
+            "decodeCount": 250,
+            "decodeMsPerToken": 215.4934031280001,
+            "kvPositions": 3513,
+            "lastDecode": 3000,
+            "minimumAvailableMiB": 2543.0,
+            "processRssMiB": 2798.5390625,
+            "rssPeakMiB": 3292.62890625
+          }
+        ],
+        "decodeForwards": 3000,
+        "decodeMs": 497918.5149899992,
+        "decodeMsPerToken": 165.97283832999972,
+        "decodeTokensPerSecond": 6.025082236719507,
+        "dynamicOption": 0,
+        "headWeightBits": 8,
+        "hiddenCopyMs": 16.27285899999984,
+        "kvPositions": 3513,
+        "loadMs": 4520.307188000001,
+        "longRun": true,
+        "minimumAvailableMiB": 2543.0,
+        "precision": "low",
+        "prefillMs": 12077.313437,
+        "prefillPositions": 513,
+        "rssPeakMiB": 3292.62890625,
+        "snapshotDecodePositions": [
+          1,
+          64,
+          250,
+          256,
+          500,
+          750,
+          1000,
+          1250,
+          1500,
+          1750,
+          2000,
+          2250,
+          2500,
+          2750,
+          3000
+        ],
+        "success": true,
+        "threads": 4,
+        "decodeP50Ms": 162.638984,
+        "decodeP95Ms": 217.16458545
+      },
+      "screenAwakeChecks": 98,
+      "batteryStartC": 33.0,
+      "batteryEndC": 39.0
+    }
   }
 
 }

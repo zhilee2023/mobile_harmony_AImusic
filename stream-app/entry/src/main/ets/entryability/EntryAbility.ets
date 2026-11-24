@@ -14,6 +14,8 @@ export default class EntryAbility extends UIAbility {
     if (typeof tag === 'string') AppStorage.setOrCreate<string>('streamLabRunTag', tag);
     const fusion = want.parameters?.['streamLabVaeFusion'];
     if (typeof fusion === 'number') AppStorage.setOrCreate<boolean>('streamLabVaeFusion', fusion === 1);
+    const precision = want.parameters?.['streamLabPrecision'];
+    AppStorage.setOrCreate<string>('streamLabPrecision', precision === 'low' ? 'low' : 'high');
   }
   onWindowStageCreate(stage: window.WindowStage): void { stage.loadContent('pages/Index'); }
 }
