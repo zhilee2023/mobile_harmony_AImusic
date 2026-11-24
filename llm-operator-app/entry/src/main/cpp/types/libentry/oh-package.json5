@@ -1,0 +1,1 @@
+{ "name": "libentry.so", "version": "0.1.0", "description": "Read-only memory diagnostics", "types": "./index.d.ts" }

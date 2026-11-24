@@ -83,6 +83,8 @@
 
 ## PC验证
 
+独立[LLM算子实验App与自动化基线](docs/LLM_OPERATOR_LAB.md)已加入：固定真实音乐Qwen输入、分开测Prefill／Decode、候选编译与数值回归，以及CPLEX／CG／DP的有限候选库对照。原音乐App和权重保留；第三方系统的实际适配范围见文档。
+
 ```powershell
 python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v

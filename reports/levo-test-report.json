@@ -104903,6 +104903,83 @@
     },
     "historicalFinding": "Earlier full120s High and Low both used muq-text-warm-pop.npy due to initial model0 refresh then auto model1 retaining the style index. Their prefixes matched; keep performance numbers and annotate the actual text style.",
     "sampling": "Both now seed42; temperature0.95/topK250 unchanged."
+  },
+  "llm_operator_lab_20261124": {
+    "scope": "Independent LLM-only operator research App and host finite-pool/CPLEX automation; no new phone latency claim",
+    "package": "com.zhilee.llmoperatorlab",
+    "version": "0.1.0",
+    "preservedApplications": [
+      "com.zhilee.levoharmony",
+      "com.zhilee.levomusic",
+      "com.zhilee.levostreamlab"
+    ],
+    "implementation": {
+      "phone": "Shared native B0 executor; separate optional instrumented callback diagnostic",
+      "timing": "513-position real prefix plus fixed real teacher-code decode history; first and warm rounds separate",
+      "metrics": [
+        "prefillMs",
+        "decodeMsPerToken",
+        "decodeTokensPerSecond",
+        "20ms sampled process RSS",
+        "KV positions"
+      ],
+      "host": [
+        "CPLEX LP/MIP exact cover",
+        "serial shortest-path DP",
+        "Random",
+        "Greedy",
+        "FLOPs",
+        "Memory",
+        "Roofline",
+        "Frozen Dual",
+        "dynamic Dual",
+        "Dual+Roofline"
+      ],
+      "candidatePipeline": "External agent (optional) -> isolated CMake -> numerical regression -> device -> whole fixed-LLM graph validation",
+      "mnnSourceScope": "Existing pinned project fork; not verified clean upstream MNN",
+      "numericalDefaultRelativeL2": 0.001,
+      "budgetAccounting": "Failed compilations and device attempts count; unknown external agent usage is not reported as zero"
+    },
+    "validation": {
+      "pythonSuite": {
+        "passed": 76,
+        "failed": 0
+      },
+      "unsignedHarmonyHap": {
+        "build": "passed",
+        "bytes": 6954749,
+        "sha256": "ee3127ab0a5e82229800c32cb5381ab1b7529725f824c370f8c7238fd954f06a"
+      },
+      "ohosCli": {
+        "build": "passed",
+        "sha256": "f9b547a6facab2dd71c7d578c55eb942bca399e580b8d82b3c35f498f058cd72"
+      },
+      "mathematicalCliSmoke": {
+        "scope": "synthetic_test_only",
+        "candidateCount": 100,
+        "policyCount": 8,
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "independentSearches": 24,
+        "cplexIntegerOptimal": true,
+        "dpMatchesCplexWithin1eMinus6": true,
+        "devicePerformanceClaimed": false
+      },
+      "deviceCases": "Two real style-matched existing music LM copies and input fixtures verified by SHA256 in separate CLI data directory",
+      "newPhoneInference": "not_run",
+      "newAppInstallation": "awaiting_own_debug_signature_and_manual_unlock"
+    },
+    "limitations": [
+      "No measured100-500 fusion-kernel pool yet",
+      "Original Korch/MoKA/ncnn/TVM system ports not completed",
+      "Serial contiguous-interval cost model only; not arbitrary DAG optimization",
+      "Heuristic pricing does not imply global optimality",
+      "Logical IO and per-kernel scratch are not hardware-measured DRAM/SRAM",
+      "Candidate cost sums do not replace measured whole-model latency"
+    ],
+    "guide": "docs/LLM_OPERATOR_LAB.md"
   }
-
 }

@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "LLM 算子实验"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "LLM 算子实验"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "独立MNN baseline与算子诊断执行器"
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 .codec-deps/
 .plot-deps/
 .muq-deps/
+.operator-deps/
 incoming/
 .venv/
 __pycache__/
@@ -56,3 +57,13 @@ stream-app/entry/oh_modules/
 stream-app/entry/.cxx/
 stream-app/entry/build/
 stream-app/entry/src/main/cpp/stream-local.cmake
+llm-operator-app/build-profile.json5
+llm-operator-app/.hvigor/
+llm-operator-app/.idea/
+llm-operator-app/.appanalyzer/
+llm-operator-app/local.properties
+llm-operator-app/oh_modules/
+llm-operator-app/entry/oh_modules/
+llm-operator-app/entry/.cxx/
+llm-operator-app/entry/build/
+llm-operator-app/entry/src/main/cpp/operator-local.cmake

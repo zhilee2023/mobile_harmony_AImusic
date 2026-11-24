@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "numbering": "User's latest B0–B8 table; finite-pool policy implementations are separate from full third-party systems",
+  "systems": [
+    {"id":"B0","name":"MNN pinned baseline","implementation":"native executor","stockUpstreamClaimed":false},
+    {"id":"B1","name":"ncnn","implementation":"not_ported","upstream":"https://github.com/Tencent/ncnn"},
+    {"id":"B2","name":"TVM MetaSchedule","implementation":"not_ported","upstream":"https://github.com/apache/tvm"},
+    {"id":"B3","name":"Korch-style","implementation":"CPLEX exact-cover reference for a supplied serial interval pool only; original enumeration/fission/backend not ported","upstream":"https://github.com/humuyan/Korch"},
+    {"id":"B4","name":"Random","selector":"random","implementation":"finite-pool query study"},
+    {"id":"B5","name":"Greedy","selector":"greedy","implementation":"finite-pool query study"},
+    {"id":"B6","name":"MoKA / external agent","implementation":"external stage adapter; upstream Android pipeline not ported or measured","upstream":"https://github.com/zeezou-isee/MobileKernelBench_git"},
+    {"id":"B7","name":"CG + Agent","selector":"dual","implementation":"finite-pool predictor pricing plus optional external stage adapter; no global optimality guarantee"},
+    {"id":"B8","name":"CG + Roofline + Agent","selector":"dual_roofline","implementation":"same restricted framework; measured calibration and provider required"}
+  ],
+  "auxiliarySelectors": ["frozen_dual","flops","memory","roofline"],
+  "dpBaseline":"Exact shortest path for the implemented serial interval model without aggregate traffic constraint",
+  "notClaimed": ["ported original Korch", "ported original MoKA", "measured100–500 fusion kernels", "arbitrary DAG global optimality", "CPU cache treated as software SRAM", "hardware counters for actual DRAM traffic"]
+}

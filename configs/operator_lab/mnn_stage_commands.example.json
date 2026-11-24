@@ -1,0 +1,6 @@
+{
+  "compile": ["{python}", "{repo}/tools/llm_operator_mnn_stage.py", "--stage", "compile", "--task", "{task}", "--workspace", "{workspace}", "--result", "{result}"],
+  "correctness": ["{python}", "{repo}/tools/llm_operator_mnn_stage.py", "--stage", "correctness", "--task", "{task}", "--workspace", "{workspace}", "--result", "{result}"],
+  "device": ["{python}", "{repo}/tools/llm_operator_mnn_stage.py", "--stage", "device", "--task", "{task}", "--workspace", "{workspace}", "--result", "{result}"],
+  "graph": ["{python}", "{repo}/tools/llm_operator_mnn_stage.py", "--stage", "graph", "--task", "{task}", "--workspace", "{workspace}", "--result", "{result}"]
+}
