@@ -14,5 +14,6 @@
   ],
   "auxiliarySelectors": ["frozen_dual","flops","memory","roofline"],
   "dpBaseline":"Exact shortest path for the implemented serial interval model without aggregate traffic constraint",
+  "sharedImplementationMaster":{"module":"levo_harmony/operator_lab/patterns.py","features":["frequency weighted placements","one activation cost per implementation","spent development budget","known-catalog linkage-aware LP pricing","MIP oracle","frequency greedy with global redeployment"],"unknownOnlinePatternPricingCertified":false},
   "notClaimed": ["ported original Korch", "ported original MoKA", "measured100–500 fusion kernels", "arbitrary DAG global optimality", "CPU cache treated as software SRAM", "hardware counters for actual DRAM traffic"]
 }

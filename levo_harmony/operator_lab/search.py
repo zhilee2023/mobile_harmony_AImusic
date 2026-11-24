@@ -46,6 +46,6 @@ def discover(pool, policy, budget, *, seed=42, traffic_budget=None, scratch_budg
         result=solve(pool,known,integer=True,traffic_budget=traffic_budget,scratch_budget=scratch_budget)
         trace.append({'queries':iteration+1,'candidate':candidate.id,'outcome':outcome.status,'bestModelledMs':result.objective_ms if result.feasible else None,
                       'selected':result.selected if result.feasible else [],'solverOptimal':result.optimal,'elapsedSeconds':time.perf_counter()-start})
-    return {'policy':policy,'seed':seed,'poolScope':pool.scope,'queryCount':len(oracle.calls),'trace':trace,
+    return {'policy':policy,'seed':seed,'poolScope':pool.scope,'costDomain':pool.cost_domain,'queryCount':len(oracle.calls),'trace':trace,
             'compilationAttempts':None,'agentTokens':None,'globalLowerBoundMs':None,'globalOptimalityClaimed':False,
             'scope':'Finite-pool hidden-query simulation; costs of building the pool are separate. Best modelled plan is not measured whole-LLM latency.'}

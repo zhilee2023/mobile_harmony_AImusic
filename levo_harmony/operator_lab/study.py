@@ -26,7 +26,7 @@ def study(pool,policies,budget,seeds,*,traffic_budget=None,scratch_budget=None,c
     if traffic_budget is None:
         result=shortest_path(pool,pool.full_outcomes_for_evaluation_only(),scratch_budget=scratch_budget)
         dp={'objectiveMs':result.objective_ms,'selected':result.selected,'optimal':result.optimal}
-    return {'schemaVersion':1,'scope':pool.scope,'poolSignature':pool.signature,'candidateCount':len(pool.specs),'nodeCount':pool.nodes,
+    return {'schemaVersion':1,'scope':pool.scope,'costDomain':pool.cost_domain,'poolSignature':pool.signature,'candidateCount':len(pool.specs),'nodeCount':pool.nodes,
             'restrictions':'Fixed serial order, contiguous interval kernels. Scratch is per-kernel working-set eligibility; traffic is a logical estimate budget. Not arbitrary DAG fusion, physical SRAM, measured DRAM or full-LLM latency.',
             'evaluationOracle':{'objectiveMs':oracle.objective_ms,'optimal':oracle.optimal,'selected':oracle.selected,'scope':'Finite provided pool, not all possible code implementations'},
             'dpBaseline':dp,'dpNotApplicableReason':'Aggregate traffic resource is enabled' if traffic_budget is not None else None,

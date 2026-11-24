@@ -160712,5 +160712,5062 @@
     },
     "results": "docs/LLM_OPERATOR_BASELINES.md",
     "theory": "docs/LLM_OPERATOR_THEORY.md"
+  },
+  "frequency_aware_kernel_candidates_20261124": {
+    "scope": "Existing MUL_SILU cache-tiling pilot plus frequency-aware fixed-charge research model; not new multi-operator fusion or a proven E2E speedup",
+    "model": "LarkStudio small0.6B",
+    "precision": "CPU High",
+    "threads": 4,
+    "validation": {
+      "pythonTestsPassed": 104,
+      "generatedCandidateCompiles": 5,
+      "isolatedCliProcesses": 18,
+      "wholeLlmCliProcesses": 10,
+      "allLogitRegressionL2": 0,
+      "appRebuiltSignedInstalled": true,
+      "appFunctionalRun": {
+        "decodeSteps": 16,
+        "rounds": 1,
+        "allFinite": true,
+        "hapSha256": "48e2366f8484b8e3b108563128839cabd7198fe3b377846c577979a6b3a8f4d7",
+        "performanceComparisonClaimed": false
+      }
+    },
+    "implementation": {
+      "kind": "Cache-block the same existing MNN SiLU and Mul functions",
+      "tiles": [
+        256,
+        1024,
+        4096,
+        8192
+      ],
+      "identityRecompileTile": 0,
+      "unchangedMnnArchiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+      "guards": "FP32 only; nonoverlapping output/input ranges; small tasks and unsupported cases retain original path",
+      "codegen": "Deterministic guarded source transform; no received Agent proposal",
+      "qualityScope": "Full actual capture output checks; complete LM logits regression; isolated framework overhead differs from graph execution"
+    },
+    "measuredCandidatePool": {
+      "schemaVersion": 1,
+      "nodes": 1,
+      "signature": "485fa0dcb0b53ebbecb7e422229fa90b1d292dc2c3e664516b09be06808a52a5",
+      "scope": "device_standalone",
+      "candidates": [
+        {
+          "id": "stock",
+          "start": 0,
+          "end": 1,
+          "traffic_bytes": 31518720,
+          "scratch_bytes": 0,
+          "flops": 0,
+          "predicted_ms": null,
+          "baseline": true
+        },
+        {
+          "id": "tile256",
+          "start": 0,
+          "end": 1,
+          "traffic_bytes": 31518720,
+          "scratch_bytes": 0,
+          "flops": 0,
+          "predicted_ms": null,
+          "baseline": false
+        },
+        {
+          "id": "tile1024",
+          "start": 0,
+          "end": 1,
+          "traffic_bytes": 31518720,
+          "scratch_bytes": 0,
+          "flops": 0,
+          "predicted_ms": null,
+          "baseline": false
+        },
+        {
+          "id": "tile4096",
+          "start": 0,
+          "end": 1,
+          "traffic_bytes": 31518720,
+          "scratch_bytes": 0,
+          "flops": 0,
+          "predicted_ms": null,
+          "baseline": false
+        },
+        {
+          "id": "tile8192",
+          "start": 0,
+          "end": 1,
+          "traffic_bytes": 31518720,
+          "scratch_bytes": 0,
+          "flops": 0,
+          "predicted_ms": null,
+          "baseline": false
+        }
+      ],
+      "outcomes": {
+        "stock": {
+          "status": "passed",
+          "latency_ms": 1.377812,
+          "relative_l2": 0.0,
+          "source": "device_standalone"
+        },
+        "tile256": {
+          "status": "passed",
+          "latency_ms": 1.286407,
+          "relative_l2": 0.0,
+          "source": "device_standalone"
+        },
+        "tile1024": {
+          "status": "passed",
+          "latency_ms": 1.304687,
+          "relative_l2": 0.0,
+          "source": "device_standalone"
+        },
+        "tile4096": {
+          "status": "passed",
+          "latency_ms": 1.291562,
+          "relative_l2": 0.0,
+          "source": "device_standalone"
+        },
+        "tile8192": {
+          "status": "passed",
+          "latency_ms": 1.325157,
+          "relative_l2": 0.0,
+          "source": "device_standalone"
+        }
+      },
+      "statistics": {
+        "stock": {
+          "prefill": {
+            "medianMs": 1.377812,
+            "processMediansMs": [
+              1.377812,
+              1.364688,
+              1.434844
+            ],
+            "processStdevMs": 0.037297794251135045,
+            "relativeL2": 0.0
+          },
+          "decode": {
+            "medianMs": 0.041563,
+            "processMediansMs": [
+              0.041563,
+              0.039844,
+              0.04375
+            ],
+            "processStdevMs": 0.0019576672342356857,
+            "relativeL2": 0.0
+          }
+        },
+        "tile0": {
+          "prefill": {
+            "medianMs": 1.347968,
+            "processMediansMs": [
+              1.331719,
+              1.5157809999999998,
+              1.347968
+            ],
+            "processStdevMs": 0.10190195681307256,
+            "relativeL2": 0.0
+          },
+          "decode": {
+            "medianMs": 0.043281,
+            "processMediansMs": [
+              0.043281,
+              0.04,
+              0.045312000000000005
+            ],
+            "processStdevMs": 0.0026804000323334843,
+            "relativeL2": 0.0
+          }
+        },
+        "tile256": {
+          "prefill": {
+            "medianMs": 1.286407,
+            "processMediansMs": [
+              1.24125,
+              1.286407,
+              1.53875
+            ],
+            "processStdevMs": 0.16032383597893363,
+            "relativeL2": 0.0
+          },
+          "decode": {
+            "medianMs": 0.042813,
+            "processMediansMs": [
+              0.042813,
+              0.036875000000000005,
+              0.044219
+            ],
+            "processStdevMs": 0.003898098168765547,
+            "relativeL2": 0.0
+          }
+        },
+        "tile1024": {
+          "prefill": {
+            "medianMs": 1.304687,
+            "processMediansMs": [
+              1.3282820000000002,
+              1.299375,
+              1.304687
+            ],
+            "processStdevMs": 0.015386985940506269,
+            "relativeL2": 0.0
+          },
+          "decode": {
+            "medianMs": 0.037656,
+            "processMediansMs": [
+              0.034999999999999996,
+              0.043125,
+              0.037656
+            ],
+            "processStdevMs": 0.004142863784066926,
+            "relativeL2": 0.0
+          }
+        },
+        "tile4096": {
+          "prefill": {
+            "medianMs": 1.291562,
+            "processMediansMs": [
+              1.1482809999999999,
+              1.308437,
+              1.291562
+            ],
+            "processStdevMs": 0.08800014670631721,
+            "relativeL2": 0.0
+          },
+          "decode": {
+            "medianMs": 0.038906,
+            "processMediansMs": [
+              0.038906,
+              0.038281,
+              0.043125
+            ],
+            "processStdevMs": 0.002634859958327953,
+            "relativeL2": 0.0
+          }
+        },
+        "tile8192": {
+          "prefill": {
+            "medianMs": 1.325157,
+            "processMediansMs": [
+              1.309375,
+              1.325157,
+              1.491719
+            ],
+            "processStdevMs": 0.10102912591921208,
+            "relativeL2": 0.0
+          },
+          "decode": {
+            "medianMs": 0.037188,
+            "processMediansMs": [
+              0.037188,
+              0.037032,
+              0.041719
+            ],
+            "processStdevMs": 0.0026621503213254748,
+            "relativeL2": 0.0
+          }
+        }
+      },
+      "oracle": {
+        "selected": [
+          "tile256"
+        ],
+        "objectiveMs": 1.286407,
+        "optimal": true
+      },
+      "limitations": [
+        "One existing fused operator; not a multi-operator fusion plan or evidence for CG advantage",
+        "Cost is median of3 process medians; statistical uncertainty remains",
+        "traffic_bytes estimates boundary/intermediate logical reads/writes; not measured DRAM",
+        "scratch_bytes is extra candidate allocation only, not total MNN working set",
+        "Tile0 is an identity recompilation control and excluded from optimized candidates",
+        "Decode path for large tiles falls back; apparent differences may be noise",
+        "Whole-LLM validation must gate deployment; isolated winner is not automatically promoted"
+      ]
+    },
+    "isolatedTrials": [
+      {
+        "repeat": 0,
+        "variant": "tile1024",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 28,
+          "elapsedSeconds": 0.104121562,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 4.644686999999999,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.739844,
+              "warmMedianMs": 1.3282820000000002,
+              "warmMinMs": 0.935469,
+              "warmSamplesMs": [
+                0.935469,
+                0.978593,
+                1.046875,
+                1.1800000000000002,
+                1.235312,
+                1.238437,
+                1.252656,
+                1.263281,
+                1.298125,
+                1.300625,
+                1.302187,
+                1.322031,
+                1.3282820000000002,
+                1.339688,
+                1.34,
+                1.344843,
+                1.355782,
+                1.359375,
+                1.3692190000000002,
+                1.3984379999999998,
+                1.399531,
+                1.4762499999999998,
+                1.677812,
+                1.709219,
+                1.739844
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.39218800000000004,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.041719,
+              "warmMedianMs": 0.034999999999999996,
+              "warmMinMs": 0.020625,
+              "warmSamplesMs": [
+                0.020625,
+                0.020781,
+                0.020937,
+                0.023281,
+                0.027968,
+                0.027969,
+                0.029375,
+                0.032187,
+                0.032187,
+                0.033125,
+                0.033125,
+                0.033282,
+                0.034999999999999996,
+                0.036719,
+                0.036719,
+                0.037188,
+                0.037343,
+                0.037813,
+                0.038125,
+                0.039063,
+                0.039063,
+                0.039063,
+                0.039375,
+                0.040157000000000005,
+                0.041719
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.08984375,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile1024"
+        }
+      },
+      {
+        "repeat": 0,
+        "variant": "tile0",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 56,
+          "elapsedSeconds": 0.111621406,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 4.918594,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.582813,
+              "warmMedianMs": 1.331719,
+              "warmMinMs": 1.185,
+              "warmSamplesMs": [
+                1.185,
+                1.1896879999999999,
+                1.1923439999999998,
+                1.194375,
+                1.223125,
+                1.2292189999999998,
+                1.229687,
+                1.244219,
+                1.289063,
+                1.306094,
+                1.312187,
+                1.3223429999999998,
+                1.331719,
+                1.342969,
+                1.3439070000000002,
+                1.347188,
+                1.374219,
+                1.403593,
+                1.4154689999999999,
+                1.4451559999999999,
+                1.4640630000000001,
+                1.4896880000000001,
+                1.5004689999999998,
+                1.53125,
+                1.582813
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.45218800000000003,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.048594000000000005,
+              "warmMedianMs": 0.043281,
+              "warmMinMs": 0.027344,
+              "warmSamplesMs": [
+                0.027344,
+                0.030468000000000002,
+                0.030937,
+                0.034999999999999996,
+                0.035781,
+                0.036405999999999994,
+                0.036405999999999994,
+                0.038906,
+                0.039063,
+                0.039844,
+                0.042187,
+                0.042188,
+                0.043281,
+                0.044062,
+                0.044375,
+                0.044531,
+                0.044688000000000005,
+                0.04625,
+                0.047188,
+                0.047344,
+                0.0475,
+                0.048124999999999994,
+                0.048124999999999994,
+                0.048438,
+                0.048594000000000005
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.2421875,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile0"
+        }
+      },
+      {
+        "repeat": 0,
+        "variant": "tile256",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 56,
+          "elapsedSeconds": 0.110665625,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 5.544375,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.55875,
+              "warmMedianMs": 1.24125,
+              "warmMinMs": 1.150938,
+              "warmSamplesMs": [
+                1.150938,
+                1.154062,
+                1.155938,
+                1.159532,
+                1.1689070000000001,
+                1.189687,
+                1.195,
+                1.2056250000000002,
+                1.213125,
+                1.2151569999999998,
+                1.219063,
+                1.2240630000000001,
+                1.24125,
+                1.2432809999999999,
+                1.2550000000000001,
+                1.259063,
+                1.276094,
+                1.296407,
+                1.321406,
+                1.335,
+                1.345,
+                1.378437,
+                1.46875,
+                1.5206250000000001,
+                1.55875
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.41609399999999996,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.049219,
+              "warmMedianMs": 0.042813,
+              "warmMinMs": 0.029063,
+              "warmSamplesMs": [
+                0.029063,
+                0.030468000000000002,
+                0.031405999999999996,
+                0.031405999999999996,
+                0.032813,
+                0.037187000000000005,
+                0.039062,
+                0.040156,
+                0.040469000000000005,
+                0.042344,
+                0.042656,
+                0.042656,
+                0.042813,
+                0.043125,
+                0.043593,
+                0.04375,
+                0.043907,
+                0.044375,
+                0.044531,
+                0.044532,
+                0.045000000000000005,
+                0.045000000000000005,
+                0.045469,
+                0.0475,
+                0.049219
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.16796875,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile256"
+        }
+      },
+      {
+        "repeat": 0,
+        "variant": "tile4096",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 28,
+          "elapsedSeconds": 0.109599844,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 5.2673440000000005,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.39375,
+              "warmMedianMs": 1.1482809999999999,
+              "warmMinMs": 0.746718,
+              "warmSamplesMs": [
+                0.746718,
+                0.7537499999999999,
+                0.758594,
+                0.790312,
+                0.865781,
+                0.886719,
+                0.8940629999999999,
+                0.896718,
+                0.9489070000000001,
+                1.064844,
+                1.077656,
+                1.106562,
+                1.1482809999999999,
+                1.278438,
+                1.290469,
+                1.291563,
+                1.292813,
+                1.3054679999999999,
+                1.312344,
+                1.319062,
+                1.334219,
+                1.338437,
+                1.357813,
+                1.3603129999999999,
+                1.39375
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.410938,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.05,
+              "warmMedianMs": 0.038906,
+              "warmMinMs": 0.021719,
+              "warmSamplesMs": [
+                0.021719,
+                0.028282,
+                0.028437,
+                0.028906,
+                0.029532000000000003,
+                0.029686999999999998,
+                0.031719,
+                0.032031,
+                0.036718,
+                0.0375,
+                0.037812000000000005,
+                0.038438,
+                0.038906,
+                0.039063,
+                0.039531,
+                0.04,
+                0.040157000000000005,
+                0.041407,
+                0.041562,
+                0.041563,
+                0.041875,
+                0.042969,
+                0.045937,
+                0.0475,
+                0.05
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.2421875,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile4096"
+        }
+      },
+      {
+        "repeat": 0,
+        "variant": "stock",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 0,
+          "elapsedSeconds": 0.116861562,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 5.012499999999999,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.701719,
+              "warmMedianMs": 1.377812,
+              "warmMinMs": 1.317657,
+              "warmSamplesMs": [
+                1.317657,
+                1.317813,
+                1.321406,
+                1.321719,
+                1.324219,
+                1.324687,
+                1.3309369999999998,
+                1.337656,
+                1.339844,
+                1.365937,
+                1.3692190000000002,
+                1.377344,
+                1.377812,
+                1.405156,
+                1.551719,
+                1.6631250000000002,
+                1.666094,
+                1.6695309999999999,
+                1.671093,
+                1.6784379999999999,
+                1.67875,
+                1.680625,
+                1.681875,
+                1.682656,
+                1.701719
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.410938,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.084375,
+              "warmMedianMs": 0.041563,
+              "warmMinMs": 0.029375,
+              "warmSamplesMs": [
+                0.029375,
+                0.030157,
+                0.035781,
+                0.038593999999999996,
+                0.039218,
+                0.04,
+                0.040156,
+                0.040625,
+                0.040625,
+                0.040782,
+                0.041094000000000006,
+                0.041094000000000006,
+                0.041563,
+                0.042031,
+                0.042187,
+                0.042187,
+                0.042188,
+                0.0425,
+                0.042812,
+                0.043281,
+                0.043281,
+                0.044375,
+                0.04625,
+                0.061093999999999996,
+                0.084375
+              ]
+            }
+          ],
+          "rssPeakMiB": 43.86328125,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "baseline"
+        }
+      },
+      {
+        "repeat": 0,
+        "variant": "tile8192",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 28,
+          "elapsedSeconds": 0.111320938,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 5.891406,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.7523440000000001,
+              "warmMedianMs": 1.309375,
+              "warmMinMs": 0.967813,
+              "warmSamplesMs": [
+                0.967813,
+                1.151406,
+                1.1710939999999999,
+                1.2235939999999998,
+                1.2351560000000001,
+                1.235468,
+                1.242656,
+                1.2445309999999998,
+                1.245157,
+                1.258437,
+                1.2609380000000001,
+                1.293125,
+                1.309375,
+                1.333593,
+                1.36,
+                1.381406,
+                1.404844,
+                1.417343,
+                1.456094,
+                1.615937,
+                1.622187,
+                1.6587500000000002,
+                1.6845320000000001,
+                1.7049999999999998,
+                1.7523440000000001
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.414219,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.061093999999999996,
+              "warmMedianMs": 0.037188,
+              "warmMinMs": 0.020625,
+              "warmSamplesMs": [
+                0.020625,
+                0.026563,
+                0.026875,
+                0.027187,
+                0.031405999999999996,
+                0.032344,
+                0.033438,
+                0.033906,
+                0.034375,
+                0.036719,
+                0.037187000000000005,
+                0.037187000000000005,
+                0.037188,
+                0.038281,
+                0.038593,
+                0.04,
+                0.042031,
+                0.04375,
+                0.044375,
+                0.045469,
+                0.047656,
+                0.048124999999999994,
+                0.048124999999999994,
+                0.049219,
+                0.061093999999999996
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.25390625,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile8192"
+        }
+      },
+      {
+        "repeat": 1,
+        "variant": "tile8192",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 28,
+          "elapsedSeconds": 0.114071563,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 5.092188,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.853906,
+              "warmMedianMs": 1.325157,
+              "warmMinMs": 1.157969,
+              "warmSamplesMs": [
+                1.157969,
+                1.1726569999999998,
+                1.185,
+                1.1875,
+                1.187657,
+                1.2107809999999999,
+                1.2181250000000001,
+                1.248281,
+                1.271093,
+                1.275625,
+                1.2925,
+                1.298593,
+                1.325157,
+                1.330938,
+                1.335938,
+                1.374844,
+                1.4281249999999999,
+                1.448593,
+                1.51,
+                1.5103119999999999,
+                1.519375,
+                1.553282,
+                1.6978119999999999,
+                1.710157,
+                1.853906
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.39625,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.054688,
+              "warmMedianMs": 0.037032,
+              "warmMinMs": 0.019531999999999997,
+              "warmSamplesMs": [
+                0.019531999999999997,
+                0.033125,
+                0.033437,
+                0.03375,
+                0.033906,
+                0.034688,
+                0.035156,
+                0.035157,
+                0.035468,
+                0.03625,
+                0.03625,
+                0.036719,
+                0.037032,
+                0.037812000000000005,
+                0.03875,
+                0.039062,
+                0.040937,
+                0.041406000000000005,
+                0.0425,
+                0.04375,
+                0.044688000000000005,
+                0.045469,
+                0.047344,
+                0.048281,
+                0.054688
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.3828125,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile8192"
+        }
+      },
+      {
+        "repeat": 1,
+        "variant": "tile4096",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 28,
+          "elapsedSeconds": 0.113463125,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 6.763281,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.793906,
+              "warmMedianMs": 1.308437,
+              "warmMinMs": 1.1840629999999999,
+              "warmSamplesMs": [
+                1.1840629999999999,
+                1.263281,
+                1.264063,
+                1.266562,
+                1.266563,
+                1.2687499999999998,
+                1.27,
+                1.2717189999999998,
+                1.273281,
+                1.275312,
+                1.2884369999999998,
+                1.295938,
+                1.308437,
+                1.31625,
+                1.338907,
+                1.343437,
+                1.362656,
+                1.363438,
+                1.366719,
+                1.516718,
+                1.575469,
+                1.601875,
+                1.674687,
+                1.7359369999999998,
+                1.793906
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.410782,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.051875,
+              "warmMedianMs": 0.038281,
+              "warmMinMs": 0.018906000000000003,
+              "warmSamplesMs": [
+                0.018906000000000003,
+                0.026250000000000002,
+                0.026562000000000002,
+                0.026875,
+                0.027343,
+                0.03125,
+                0.031562,
+                0.034844,
+                0.03625,
+                0.037032,
+                0.037187000000000005,
+                0.037344,
+                0.038281,
+                0.038906,
+                0.039687,
+                0.039844,
+                0.040938,
+                0.041093000000000005,
+                0.041406000000000005,
+                0.042343,
+                0.043282,
+                0.045781,
+                0.046718,
+                0.047030999999999996,
+                0.051875
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.3984375,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile4096"
+        }
+      },
+      {
+        "repeat": 1,
+        "variant": "tile1024",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 28,
+          "elapsedSeconds": 0.112368282,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 5.870469,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.664219,
+              "warmMedianMs": 1.299375,
+              "warmMinMs": 0.7368750000000001,
+              "warmSamplesMs": [
+                0.7368750000000001,
+                0.840625,
+                0.887656,
+                1.125469,
+                1.142969,
+                1.166719,
+                1.184844,
+                1.2137499999999999,
+                1.28375,
+                1.297656,
+                1.297813,
+                1.298281,
+                1.299375,
+                1.31625,
+                1.327813,
+                1.346407,
+                1.347031,
+                1.348438,
+                1.4117190000000002,
+                1.440625,
+                1.4575,
+                1.519531,
+                1.542656,
+                1.578437,
+                1.664219
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.18125,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.207031,
+              "warmMedianMs": 0.043125,
+              "warmMinMs": 0.029375,
+              "warmSamplesMs": [
+                0.029375,
+                0.030000000000000002,
+                0.030937,
+                0.032031,
+                0.032813,
+                0.033594,
+                0.037187000000000005,
+                0.039062,
+                0.041406000000000005,
+                0.041563,
+                0.042188,
+                0.042812,
+                0.043125,
+                0.043436999999999996,
+                0.043594,
+                0.043906,
+                0.044218,
+                0.044375,
+                0.045000000000000005,
+                0.046406,
+                0.046875,
+                0.047032,
+                0.05375,
+                0.05625,
+                0.207031
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.2265625,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile1024"
+        }
+      },
+      {
+        "repeat": 1,
+        "variant": "tile0",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 56,
+          "elapsedSeconds": 0.117103906,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 7.629688,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.734375,
+              "warmMedianMs": 1.5157809999999998,
+              "warmMinMs": 1.306094,
+              "warmSamplesMs": [
+                1.306094,
+                1.318125,
+                1.325,
+                1.325156,
+                1.330312,
+                1.336563,
+                1.366562,
+                1.369063,
+                1.374219,
+                1.375156,
+                1.389219,
+                1.4732809999999998,
+                1.5157809999999998,
+                1.529531,
+                1.559688,
+                1.564219,
+                1.566094,
+                1.5853130000000002,
+                1.6262500000000002,
+                1.655156,
+                1.663907,
+                1.691093,
+                1.704687,
+                1.728594,
+                1.734375
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.40937500000000004,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.055781,
+              "warmMedianMs": 0.04,
+              "warmMinMs": 0.021406,
+              "warmSamplesMs": [
+                0.021406,
+                0.022812000000000002,
+                0.024688,
+                0.02875,
+                0.029686999999999998,
+                0.033281000000000005,
+                0.033594,
+                0.035937,
+                0.039531,
+                0.039842999999999996,
+                0.039844,
+                0.04,
+                0.04,
+                0.040625,
+                0.0425,
+                0.042812,
+                0.042813,
+                0.042813,
+                0.043438,
+                0.043906,
+                0.044062,
+                0.052344,
+                0.052344,
+                0.055781,
+                0.055781
+              ]
+            }
+          ],
+          "rssPeakMiB": 50.109375,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile0"
+        }
+      },
+      {
+        "repeat": 1,
+        "variant": "tile256",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 56,
+          "elapsedSeconds": 0.110769688,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 4.825157,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.655625,
+              "warmMedianMs": 1.286407,
+              "warmMinMs": 1.1781249999999999,
+              "warmSamplesMs": [
+                1.1781249999999999,
+                1.183593,
+                1.2107809999999999,
+                1.2603119999999999,
+                1.262969,
+                1.2701559999999998,
+                1.2706250000000001,
+                1.272188,
+                1.272657,
+                1.2735940000000001,
+                1.277813,
+                1.282813,
+                1.286407,
+                1.2870309999999998,
+                1.2940619999999998,
+                1.326875,
+                1.3271870000000001,
+                1.4606249999999998,
+                1.464844,
+                1.474375,
+                1.519687,
+                1.620313,
+                1.627187,
+                1.630156,
+                1.655625
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.14109300000000002,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.050936999999999996,
+              "warmMedianMs": 0.036875000000000005,
+              "warmMinMs": 0.020156,
+              "warmSamplesMs": [
+                0.020156,
+                0.026719,
+                0.028437,
+                0.031562,
+                0.031563,
+                0.031719,
+                0.031719,
+                0.032499999999999994,
+                0.034375,
+                0.035157,
+                0.036562,
+                0.036875000000000005,
+                0.036875000000000005,
+                0.037187000000000005,
+                0.037188,
+                0.037969,
+                0.038125,
+                0.038281,
+                0.038281,
+                0.038593999999999996,
+                0.039375,
+                0.039532,
+                0.039687999999999994,
+                0.045937,
+                0.050936999999999996
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.23828125,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile256"
+        }
+      },
+      {
+        "repeat": 1,
+        "variant": "stock",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 0,
+          "elapsedSeconds": 0.115392969,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 5.012188,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 2.021719,
+              "warmMedianMs": 1.364688,
+              "warmMinMs": 1.2096870000000002,
+              "warmSamplesMs": [
+                1.2096870000000002,
+                1.213281,
+                1.214218,
+                1.224375,
+                1.2365620000000002,
+                1.2959370000000001,
+                1.3054679999999999,
+                1.312032,
+                1.3164069999999999,
+                1.326406,
+                1.346406,
+                1.360938,
+                1.364688,
+                1.373438,
+                1.427656,
+                1.443593,
+                1.499531,
+                1.5164060000000001,
+                1.525469,
+                1.5425,
+                1.5517180000000002,
+                1.7053129999999999,
+                1.747813,
+                1.9464059999999999,
+                2.021719
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.435781,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.043594,
+              "warmMedianMs": 0.039844,
+              "warmMinMs": 0.027656,
+              "warmSamplesMs": [
+                0.027656,
+                0.031562,
+                0.034844,
+                0.034999999999999996,
+                0.035311999999999996,
+                0.035781,
+                0.035781,
+                0.036405999999999994,
+                0.038281,
+                0.038907,
+                0.039532,
+                0.039844,
+                0.039844,
+                0.04,
+                0.04,
+                0.04,
+                0.040156,
+                0.040313,
+                0.040469000000000005,
+                0.040469000000000005,
+                0.040625,
+                0.040938,
+                0.041875,
+                0.042656,
+                0.043594
+              ]
+            }
+          ],
+          "rssPeakMiB": 43.9140625,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "baseline"
+        }
+      },
+      {
+        "repeat": 2,
+        "variant": "tile256",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 56,
+          "elapsedSeconds": 0.119739375,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 3.541875,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.7775,
+              "warmMedianMs": 1.53875,
+              "warmMinMs": 1.269688,
+              "warmSamplesMs": [
+                1.269688,
+                1.328594,
+                1.339531,
+                1.377344,
+                1.396406,
+                1.4512500000000002,
+                1.452969,
+                1.455156,
+                1.477812,
+                1.5175,
+                1.53375,
+                1.534062,
+                1.53875,
+                1.540156,
+                1.5510929999999998,
+                1.568594,
+                1.574375,
+                1.574843,
+                1.616094,
+                1.618906,
+                1.627656,
+                1.634531,
+                1.647032,
+                1.6503130000000001,
+                1.7775
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.149063,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.18937500000000002,
+              "warmMedianMs": 0.044219,
+              "warmMinMs": 0.031562,
+              "warmSamplesMs": [
+                0.031562,
+                0.031563,
+                0.034219,
+                0.042187,
+                0.043594,
+                0.043594,
+                0.043594,
+                0.043594,
+                0.043594,
+                0.04375,
+                0.043906,
+                0.044062,
+                0.044219,
+                0.044531,
+                0.044531,
+                0.044531,
+                0.044844,
+                0.045312000000000005,
+                0.045313,
+                0.045469,
+                0.045625,
+                0.045782,
+                0.047344,
+                0.053125,
+                0.18937500000000002
+              ]
+            }
+          ],
+          "rssPeakMiB": 50.41796875,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile256"
+        }
+      },
+      {
+        "repeat": 2,
+        "variant": "tile0",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 56,
+          "elapsedSeconds": 0.112966875,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 5.080625,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.5512499999999998,
+              "warmMedianMs": 1.347968,
+              "warmMinMs": 1.08,
+              "warmSamplesMs": [
+                1.08,
+                1.175,
+                1.1757810000000002,
+                1.181562,
+                1.1851559999999999,
+                1.210156,
+                1.233907,
+                1.260625,
+                1.32875,
+                1.331406,
+                1.33375,
+                1.337969,
+                1.347968,
+                1.3498430000000001,
+                1.351093,
+                1.351562,
+                1.3565630000000002,
+                1.358594,
+                1.372812,
+                1.3756249999999999,
+                1.38125,
+                1.387031,
+                1.463125,
+                1.521094,
+                1.5512499999999998
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.4925,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.088281,
+              "warmMedianMs": 0.045312000000000005,
+              "warmMinMs": 0.036562,
+              "warmSamplesMs": [
+                0.036562,
+                0.038437,
+                0.038438,
+                0.039219,
+                0.04,
+                0.040156,
+                0.042032,
+                0.0425,
+                0.042656,
+                0.043281,
+                0.04375,
+                0.044531,
+                0.045312000000000005,
+                0.046719,
+                0.047187,
+                0.047342999999999996,
+                0.049688,
+                0.051562,
+                0.053282,
+                0.055469,
+                0.056406000000000005,
+                0.059218999999999994,
+                0.060156,
+                0.06156300000000001,
+                0.088281
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.171875,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile0"
+        }
+      },
+      {
+        "repeat": 2,
+        "variant": "tile8192",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 28,
+          "elapsedSeconds": 0.117577344,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 5.450157,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.6668749999999999,
+              "warmMedianMs": 1.491719,
+              "warmMinMs": 1.164375,
+              "warmSamplesMs": [
+                1.164375,
+                1.203594,
+                1.2037499999999999,
+                1.258907,
+                1.304687,
+                1.307032,
+                1.347969,
+                1.350312,
+                1.41125,
+                1.423281,
+                1.424688,
+                1.429375,
+                1.491719,
+                1.4937500000000001,
+                1.52625,
+                1.5306250000000001,
+                1.534062,
+                1.540156,
+                1.552031,
+                1.560156,
+                1.5715620000000001,
+                1.584531,
+                1.591094,
+                1.636562,
+                1.6668749999999999
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.408594,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.050782,
+              "warmMedianMs": 0.041719,
+              "warmMinMs": 0.029844000000000002,
+              "warmSamplesMs": [
+                0.029844000000000002,
+                0.030781000000000003,
+                0.030781999999999997,
+                0.030938,
+                0.031562,
+                0.033125,
+                0.037968,
+                0.03875,
+                0.039842999999999996,
+                0.040312,
+                0.040625,
+                0.040781000000000005,
+                0.041719,
+                0.042031,
+                0.042968,
+                0.043438,
+                0.043906,
+                0.043906,
+                0.044219,
+                0.044219,
+                0.044531,
+                0.045000000000000005,
+                0.045469,
+                0.048282000000000005,
+                0.050782
+              ]
+            }
+          ],
+          "rssPeakMiB": 50.38671875,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile8192"
+        }
+      },
+      {
+        "repeat": 2,
+        "variant": "stock",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 0,
+          "elapsedSeconds": 0.118722812,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 4.850782,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.639219,
+              "warmMedianMs": 1.434844,
+              "warmMinMs": 1.258437,
+              "warmSamplesMs": [
+                1.258437,
+                1.2829689999999998,
+                1.332031,
+                1.338437,
+                1.36125,
+                1.379063,
+                1.383125,
+                1.390312,
+                1.408906,
+                1.418594,
+                1.4228129999999999,
+                1.428906,
+                1.434844,
+                1.442657,
+                1.4557820000000001,
+                1.472656,
+                1.493282,
+                1.5115619999999999,
+                1.5299999999999998,
+                1.573594,
+                1.579062,
+                1.591406,
+                1.595938,
+                1.606406,
+                1.639219
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.417031,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.19906200000000002,
+              "warmMedianMs": 0.04375,
+              "warmMinMs": 0.025156,
+              "warmSamplesMs": [
+                0.025156,
+                0.032343,
+                0.032344,
+                0.032656,
+                0.033907,
+                0.034062,
+                0.037187000000000005,
+                0.037969,
+                0.038906,
+                0.041719,
+                0.042344,
+                0.043438,
+                0.04375,
+                0.043906,
+                0.044219,
+                0.044375,
+                0.045000000000000005,
+                0.046562,
+                0.046875,
+                0.047342999999999996,
+                0.047344,
+                0.04875,
+                0.050156,
+                0.050469,
+                0.19906200000000002
+              ]
+            }
+          ],
+          "rssPeakMiB": 49.640625,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "baseline"
+        }
+      },
+      {
+        "repeat": 2,
+        "variant": "tile4096",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 28,
+          "elapsedSeconds": 0.112429687,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 5.412031000000001,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.598125,
+              "warmMedianMs": 1.291562,
+              "warmMinMs": 0.9629690000000001,
+              "warmSamplesMs": [
+                0.9629690000000001,
+                1.1870310000000002,
+                1.1929690000000002,
+                1.193281,
+                1.2225000000000001,
+                1.2406249999999999,
+                1.249531,
+                1.249843,
+                1.2553130000000001,
+                1.262187,
+                1.2675,
+                1.273281,
+                1.291562,
+                1.292969,
+                1.301407,
+                1.315469,
+                1.3168749999999998,
+                1.318594,
+                1.319844,
+                1.325469,
+                1.369688,
+                1.374063,
+                1.3998439999999999,
+                1.4807810000000001,
+                1.598125
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.195938,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.074531,
+              "warmMedianMs": 0.043125,
+              "warmMinMs": 0.029530999999999998,
+              "warmSamplesMs": [
+                0.029530999999999998,
+                0.029530999999999998,
+                0.031093999999999997,
+                0.031405999999999996,
+                0.034218,
+                0.035938,
+                0.037656,
+                0.037813,
+                0.040938,
+                0.041563,
+                0.041875,
+                0.042812,
+                0.043125,
+                0.043125,
+                0.043436999999999996,
+                0.043593,
+                0.04375,
+                0.043906,
+                0.044219,
+                0.044375,
+                0.044531,
+                0.045000000000000005,
+                0.045625,
+                0.052813,
+                0.074531
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.3203125,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile4096"
+        }
+      },
+      {
+        "repeat": 2,
+        "variant": "tile1024",
+        "screenAccepted": true,
+        "startBatteryC": 30.0,
+        "endBatteryC": 30.0,
+        "native": {
+          "candidateCalls": 28,
+          "elapsedSeconds": 0.109339532,
+          "precision": "high",
+          "rows": [
+            {
+              "calls": 28,
+              "checkedElements": 1575936,
+              "elements": 1575936,
+              "firstMs": 4.175313,
+              "phase": "prefill",
+              "relativeL2": 0.0,
+              "warmMaxMs": 1.65,
+              "warmMedianMs": 1.304687,
+              "warmMinMs": 1.251407,
+              "warmSamplesMs": [
+                1.251407,
+                1.2546879999999998,
+                1.268438,
+                1.276562,
+                1.278281,
+                1.278594,
+                1.281563,
+                1.2843749999999998,
+                1.2873430000000001,
+                1.2903120000000001,
+                1.297656,
+                1.300313,
+                1.304687,
+                1.33,
+                1.330313,
+                1.334687,
+                1.343125,
+                1.387031,
+                1.521406,
+                1.5462500000000001,
+                1.60875,
+                1.625,
+                1.634531,
+                1.643125,
+                1.65
+              ]
+            },
+            {
+              "calls": 28,
+              "checkedElements": 3072,
+              "elements": 3072,
+              "firstMs": 0.396563,
+              "phase": "decode",
+              "relativeL2": 0.0,
+              "warmMaxMs": 0.16484400000000002,
+              "warmMedianMs": 0.037656,
+              "warmMinMs": 0.021094,
+              "warmSamplesMs": [
+                0.021094,
+                0.024688,
+                0.031562,
+                0.031563,
+                0.032969000000000005,
+                0.033125,
+                0.033438,
+                0.03375,
+                0.035625,
+                0.036718,
+                0.037344,
+                0.037344,
+                0.037656,
+                0.037813,
+                0.038438,
+                0.038593,
+                0.040625,
+                0.040625,
+                0.043906,
+                0.045625,
+                0.049531,
+                0.062344,
+                0.159063,
+                0.164218,
+                0.16484400000000002
+              ]
+            }
+          ],
+          "rssPeakMiB": 44.24609375,
+          "schemaVersion": 1,
+          "scope": "Isolated existing MNN MUL_SILU operator, actual first-block MLP activations. Not new graph fusion or whole-LLM speedup.",
+          "status": "completed",
+          "threads": 4,
+          "variantId": "tile1024"
+        }
+      }
+    ],
+    "frequencyPlanning": {
+      "model": "small0.6B",
+      "baselineFamilyCost": {
+        "costDomain": "template_workload",
+        "contexts": {
+          "prefill": {
+            "callsPerForward": 28,
+            "forwards": 1,
+            "occurrences": 28,
+            "costMs": 24.513437999999997,
+            "source": "graph_callback"
+          },
+          "decode": {
+            "callsPerForward": 28,
+            "forwards": 64,
+            "occurrences": 1792,
+            "costMs": 8.519904,
+            "source": "graph_callback"
+          }
+        },
+        "knownKernelCostMs": 33.033342,
+        "totalCostMs": 33.033342,
+        "extraOverheadMs": 0,
+        "overheadsKnown": true,
+        "evidence": "graph_callback_proxy",
+        "wholeModelBenefitProven": false
+      },
+      "profileNormalization": {
+        "prefill": {
+          "observedCalls": 28,
+          "observedForwards": 1,
+          "callSites": 28,
+          "extrapolated": false
+        },
+        "decode": {
+          "observedCalls": 56,
+          "observedForwards": 2,
+          "callSites": 28,
+          "extrapolated": true
+        }
+      },
+      "estimates": {
+        "tile256": {
+          "costDomain": "template_workload",
+          "contexts": {
+            "prefill": {
+              "callsPerForward": 28,
+              "forwards": 1,
+              "occurrences": 28,
+              "costMs": 24.513437999999997,
+              "source": "graph_callback",
+              "ratio": 0.9336593091074835,
+              "estimatedCostMs": 22.88719958692913
+            },
+            "decode": {
+              "callsPerForward": 28,
+              "forwards": 64,
+              "occurrences": 1792,
+              "costMs": 8.519904,
+              "source": "graph_callback",
+              "ratio": 1.0300748261675046,
+              "estimatedCostMs": 8.776138631763827
+            }
+          },
+          "estimatedKernelCostMs": 31.663338218692957,
+          "savingBeforeUnmeasuredOverheadsMs": 1.370003781307041,
+          "estimatedNetSavingMs": null,
+          "extraOverheadMs": null,
+          "eligibleForDeploymentFromEstimate": false,
+          "scope": "Context callback baseline scaled by isolated ratios, heuristic only; not a measured whole-graph cost"
+        },
+        "tile1024": {
+          "costDomain": "template_workload",
+          "contexts": {
+            "prefill": {
+              "callsPerForward": 28,
+              "forwards": 1,
+              "occurrences": 28,
+              "costMs": 24.513437999999997,
+              "source": "graph_callback",
+              "ratio": 0.9469267214975627,
+              "estimatedCostMs": 23.212429477973767
+            },
+            "decode": {
+              "callsPerForward": 28,
+              "forwards": 64,
+              "occurrences": 1792,
+              "costMs": 8.519904,
+              "source": "graph_callback",
+              "ratio": 1.0,
+              "estimatedCostMs": 8.519904
+            }
+          },
+          "estimatedKernelCostMs": 31.732333477973768,
+          "savingBeforeUnmeasuredOverheadsMs": 1.3010085220262297,
+          "estimatedNetSavingMs": null,
+          "extraOverheadMs": null,
+          "eligibleForDeploymentFromEstimate": false,
+          "scope": "Context callback baseline scaled by isolated ratios, heuristic only; not a measured whole-graph cost"
+        },
+        "tile4096": {
+          "costDomain": "template_workload",
+          "contexts": {
+            "prefill": {
+              "callsPerForward": 28,
+              "forwards": 1,
+              "occurrences": 28,
+              "costMs": 24.513437999999997,
+              "source": "graph_callback",
+              "ratio": 0.9374007484330228,
+              "estimatedCostMs": 22.9789151278665
+            },
+            "decode": {
+              "callsPerForward": 28,
+              "forwards": 64,
+              "occurrences": 1792,
+              "costMs": 8.519904,
+              "source": "graph_callback",
+              "ratio": 1.0,
+              "estimatedCostMs": 8.519904
+            }
+          },
+          "estimatedKernelCostMs": 31.4988191278665,
+          "savingBeforeUnmeasuredOverheadsMs": 1.534522872133497,
+          "estimatedNetSavingMs": null,
+          "extraOverheadMs": null,
+          "eligibleForDeploymentFromEstimate": false,
+          "scope": "Context callback baseline scaled by isolated ratios, heuristic only; not a measured whole-graph cost"
+        },
+        "tile8192": {
+          "costDomain": "template_workload",
+          "contexts": {
+            "prefill": {
+              "callsPerForward": 28,
+              "forwards": 1,
+              "occurrences": 28,
+              "costMs": 24.513437999999997,
+              "source": "graph_callback",
+              "ratio": 0.9617836105361253,
+              "estimatedCostMs": 23.57662290629345
+            },
+            "decode": {
+              "callsPerForward": 28,
+              "forwards": 64,
+              "occurrences": 1792,
+              "costMs": 8.519904,
+              "source": "graph_callback",
+              "ratio": 1.0,
+              "estimatedCostMs": 8.519904
+            }
+          },
+          "estimatedKernelCostMs": 32.09652690629345,
+          "savingBeforeUnmeasuredOverheadsMs": 0.9368150937065494,
+          "estimatedNetSavingMs": null,
+          "extraOverheadMs": null,
+          "eligibleForDeploymentFromEstimate": false,
+          "scope": "Context callback baseline scaled by isolated ratios, heuristic only; not a measured whole-graph cost"
+        }
+      },
+      "retrospectivePlan": {
+        "feasible": true,
+        "optimal": true,
+        "objectiveMs": 31.4988191278665,
+        "selected": [
+          "tile4096_layer0",
+          "tile4096_layer1",
+          "tile4096_layer2",
+          "tile4096_layer3",
+          "tile4096_layer4",
+          "tile4096_layer5",
+          "tile4096_layer6",
+          "tile4096_layer7",
+          "tile4096_layer8",
+          "tile4096_layer9",
+          "tile4096_layer10",
+          "tile4096_layer11",
+          "tile4096_layer12",
+          "tile4096_layer13",
+          "tile4096_layer14",
+          "tile4096_layer15",
+          "tile4096_layer16",
+          "tile4096_layer17",
+          "tile4096_layer18",
+          "tile4096_layer19",
+          "tile4096_layer20",
+          "tile4096_layer21",
+          "tile4096_layer22",
+          "tile4096_layer23",
+          "tile4096_layer24",
+          "tile4096_layer25",
+          "tile4096_layer26",
+          "tile4096_layer27"
+        ],
+        "developed": [
+          "stock",
+          "tile4096"
+        ],
+        "usedKernels": [
+          "tile4096"
+        ],
+        "developmentCost": 1.0,
+        "budgetUnit": "candidate_build_attempts",
+        "spentBudget": 0,
+        "artificialMass": 0,
+        "pricingPhase": "latency",
+        "performanceProven": false,
+        "evidenceScope": "Finite catalog additive runtime-cost model; callback/predicted costs and LP optimum are not actual whole-graph speedup"
+      },
+      "currentSunkCostPlan": {
+        "feasible": true,
+        "optimal": true,
+        "objectiveMs": 31.4988191278665,
+        "selected": [
+          "tile4096_layer0",
+          "tile4096_layer1",
+          "tile4096_layer2",
+          "tile4096_layer3",
+          "tile4096_layer4",
+          "tile4096_layer5",
+          "tile4096_layer6",
+          "tile4096_layer7",
+          "tile4096_layer8",
+          "tile4096_layer9",
+          "tile4096_layer10",
+          "tile4096_layer11",
+          "tile4096_layer12",
+          "tile4096_layer13",
+          "tile4096_layer14",
+          "tile4096_layer15",
+          "tile4096_layer16",
+          "tile4096_layer17",
+          "tile4096_layer18",
+          "tile4096_layer19",
+          "tile4096_layer20",
+          "tile4096_layer21",
+          "tile4096_layer22",
+          "tile4096_layer23",
+          "tile4096_layer24",
+          "tile4096_layer25",
+          "tile4096_layer26",
+          "tile4096_layer27"
+        ],
+        "developed": [
+          "stock",
+          "tile256",
+          "tile1024",
+          "tile4096",
+          "tile8192"
+        ],
+        "usedKernels": [
+          "tile4096"
+        ],
+        "developmentCost": 0.0,
+        "budgetUnit": "candidate_build_attempts",
+        "spentBudget": 0,
+        "artificialMass": 0,
+        "pricingPhase": "latency",
+        "performanceProven": false,
+        "evidenceScope": "Finite catalog additive runtime-cost model; callback/predicted costs and LP optimum are not actual whole-graph speedup"
+      },
+      "knownCatalogCg": {
+        "lp": {
+          "feasible": true,
+          "optimal": true,
+          "objectiveMs": 31.4988191278665,
+          "selected": [
+            "tile4096_layer0",
+            "tile4096_layer1",
+            "tile4096_layer2",
+            "tile4096_layer3",
+            "tile4096_layer4",
+            "tile4096_layer5",
+            "tile4096_layer6",
+            "tile4096_layer7",
+            "tile4096_layer8",
+            "tile4096_layer9",
+            "tile4096_layer10",
+            "tile4096_layer11",
+            "tile4096_layer12",
+            "tile4096_layer13",
+            "tile4096_layer14",
+            "tile4096_layer15",
+            "tile4096_layer16",
+            "tile4096_layer17",
+            "tile4096_layer18",
+            "tile4096_layer19",
+            "tile4096_layer20",
+            "tile4096_layer21",
+            "tile4096_layer22",
+            "tile4096_layer23",
+            "tile4096_layer24",
+            "tile4096_layer25",
+            "tile4096_layer26",
+            "tile4096_layer27"
+          ],
+          "developed": [
+            "stock",
+            "tile4096"
+          ],
+          "usedKernels": [
+            "tile4096"
+          ],
+          "developmentCost": 1.0,
+          "budgetUnit": "candidate_build_attempts",
+          "spentBudget": 0,
+          "artificialMass": 0.0,
+          "pricingPhase": "latency",
+          "performanceProven": false,
+          "evidenceScope": "Finite catalog additive runtime-cost model; callback/predicted costs and LP optimum are not actual whole-graph speedup",
+          "coverDuals": [
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628,
+            1.1308335078104628
+          ],
+          "linkDuals": {
+            "stock_layer0": 0.0,
+            "tile256_layer0": 0.0,
+            "tile1024_layer0": 0.0,
+            "tile4096_layer0": -0.005875681815230571,
+            "tile8192_layer0": 0.0,
+            "stock_layer1": 0.0,
+            "tile256_layer1": 0.0,
+            "tile1024_layer1": 0.0,
+            "tile4096_layer1": -0.005875681815230571,
+            "tile8192_layer1": 0.0,
+            "stock_layer2": 0.0,
+            "tile256_layer2": 0.0,
+            "tile1024_layer2": 0.0,
+            "tile4096_layer2": 0.0,
+            "tile8192_layer2": 0.0,
+            "stock_layer3": 0.0,
+            "tile256_layer3": 0.0,
+            "tile1024_layer3": 0.0,
+            "tile4096_layer3": 0.0,
+            "tile8192_layer3": 0.0,
+            "stock_layer4": 0.0,
+            "tile256_layer4": 0.0,
+            "tile1024_layer4": 0.0,
+            "tile4096_layer4": 0.0,
+            "tile8192_layer4": 0.0,
+            "stock_layer5": 0.0,
+            "tile256_layer5": 0.0,
+            "tile1024_layer5": 0.0,
+            "tile4096_layer5": 0.0,
+            "tile8192_layer5": 0.0,
+            "stock_layer6": 0.0,
+            "tile256_layer6": 0.0,
+            "tile1024_layer6": 0.0,
+            "tile4096_layer6": 0.0,
+            "tile8192_layer6": 0.0,
+            "stock_layer7": 0.0,
+            "tile256_layer7": 0.0,
+            "tile1024_layer7": 0.0,
+            "tile4096_layer7": 0.0,
+            "tile8192_layer7": 0.0,
+            "stock_layer8": 0.0,
+            "tile256_layer8": 0.0,
+            "tile1024_layer8": 0.0,
+            "tile4096_layer8": 0.0,
+            "tile8192_layer8": 0.0,
+            "stock_layer9": 0.0,
+            "tile256_layer9": 0.0,
+            "tile1024_layer9": 0.0,
+            "tile4096_layer9": 0.0,
+            "tile8192_layer9": 0.0,
+            "stock_layer10": 0.0,
+            "tile256_layer10": 0.0,
+            "tile1024_layer10": 0.0,
+            "tile4096_layer10": 0.0,
+            "tile8192_layer10": 0.0,
+            "stock_layer11": 0.0,
+            "tile256_layer11": 0.0,
+            "tile1024_layer11": 0.0,
+            "tile4096_layer11": 0.0,
+            "tile8192_layer11": 0.0,
+            "stock_layer12": 0.0,
+            "tile256_layer12": 0.0,
+            "tile1024_layer12": 0.0,
+            "tile4096_layer12": 0.0,
+            "tile8192_layer12": 0.0,
+            "stock_layer13": 0.0,
+            "tile256_layer13": 0.0,
+            "tile1024_layer13": 0.0,
+            "tile4096_layer13": 0.0,
+            "tile8192_layer13": 0.0,
+            "stock_layer14": 0.0,
+            "tile256_layer14": 0.0,
+            "tile1024_layer14": 0.0,
+            "tile4096_layer14": 0.0,
+            "tile8192_layer14": 0.0,
+            "stock_layer15": 0.0,
+            "tile256_layer15": 0.0,
+            "tile1024_layer15": 0.0,
+            "tile4096_layer15": 0.0,
+            "tile8192_layer15": 0.0,
+            "stock_layer16": 0.0,
+            "tile256_layer16": 0.0,
+            "tile1024_layer16": 0.0,
+            "tile4096_layer16": 0.0,
+            "tile8192_layer16": 0.0,
+            "stock_layer17": 0.0,
+            "tile256_layer17": 0.0,
+            "tile1024_layer17": 0.0,
+            "tile4096_layer17": 0.0,
+            "tile8192_layer17": 0.0,
+            "stock_layer18": 0.0,
+            "tile256_layer18": 0.0,
+            "tile1024_layer18": 0.0,
+            "tile4096_layer18": 0.0,
+            "tile8192_layer18": 0.0,
+            "stock_layer19": 0.0,
+            "tile256_layer19": 0.0,
+            "tile1024_layer19": 0.0,
+            "tile4096_layer19": 0.0,
+            "tile8192_layer19": 0.0,
+            "stock_layer20": 0.0,
+            "tile256_layer20": 0.0,
+            "tile1024_layer20": 0.0,
+            "tile4096_layer20": 0.0,
+            "tile8192_layer20": 0.0,
+            "stock_layer21": 0.0,
+            "tile256_layer21": 0.0,
+            "tile1024_layer21": 0.0,
+            "tile4096_layer21": 0.0,
+            "tile8192_layer21": 0.0,
+            "stock_layer22": 0.0,
+            "tile256_layer22": 0.0,
+            "tile1024_layer22": 0.0,
+            "tile4096_layer22": 0.0,
+            "tile8192_layer22": 0.0,
+            "stock_layer23": 0.0,
+            "tile256_layer23": 0.0,
+            "tile1024_layer23": 0.0,
+            "tile4096_layer23": 0.0,
+            "tile8192_layer23": 0.0,
+            "stock_layer24": 0.0,
+            "tile256_layer24": 0.0,
+            "tile1024_layer24": 0.0,
+            "tile4096_layer24": 0.0,
+            "tile8192_layer24": 0.0,
+            "stock_layer25": 0.0,
+            "tile256_layer25": 0.0,
+            "tile1024_layer25": 0.0,
+            "tile4096_layer25": 0.0,
+            "tile8192_layer25": 0.0,
+            "stock_layer26": 0.0,
+            "tile256_layer26": 0.0,
+            "tile1024_layer26": 0.0,
+            "tile4096_layer26": 0.0,
+            "tile8192_layer26": 0.0,
+            "stock_layer27": 0.0,
+            "tile256_layer27": 0.0,
+            "tile1024_layer27": 0.0,
+            "tile4096_layer27": 0.0,
+            "tile8192_layer27": 0.0
+          },
+          "budgetDual": 0.0,
+          "trafficDual": 0.0
+        },
+        "restrictedInteger": {
+          "feasible": true,
+          "optimal": true,
+          "objectiveMs": 31.4988191278665,
+          "selected": [
+            "tile4096_layer0",
+            "tile4096_layer1",
+            "tile4096_layer2",
+            "tile4096_layer3",
+            "tile4096_layer4",
+            "tile4096_layer5",
+            "tile4096_layer6",
+            "tile4096_layer7",
+            "tile4096_layer8",
+            "tile4096_layer9",
+            "tile4096_layer10",
+            "tile4096_layer11",
+            "tile4096_layer12",
+            "tile4096_layer13",
+            "tile4096_layer14",
+            "tile4096_layer15",
+            "tile4096_layer16",
+            "tile4096_layer17",
+            "tile4096_layer18",
+            "tile4096_layer19",
+            "tile4096_layer20",
+            "tile4096_layer21",
+            "tile4096_layer22",
+            "tile4096_layer23",
+            "tile4096_layer24",
+            "tile4096_layer25",
+            "tile4096_layer26",
+            "tile4096_layer27"
+          ],
+          "developed": [
+            "stock",
+            "tile4096"
+          ],
+          "usedKernels": [
+            "tile4096"
+          ],
+          "developmentCost": 1.0,
+          "budgetUnit": "candidate_build_attempts",
+          "spentBudget": 0,
+          "artificialMass": 0,
+          "pricingPhase": "latency",
+          "performanceProven": false,
+          "evidenceScope": "Finite catalog additive runtime-cost model; callback/predicted costs and LP optimum are not actual whole-graph speedup"
+        },
+        "fullInteger": {
+          "feasible": true,
+          "optimal": true,
+          "objectiveMs": 31.4988191278665,
+          "selected": [
+            "tile4096_layer0",
+            "tile4096_layer1",
+            "tile4096_layer2",
+            "tile4096_layer3",
+            "tile4096_layer4",
+            "tile4096_layer5",
+            "tile4096_layer6",
+            "tile4096_layer7",
+            "tile4096_layer8",
+            "tile4096_layer9",
+            "tile4096_layer10",
+            "tile4096_layer11",
+            "tile4096_layer12",
+            "tile4096_layer13",
+            "tile4096_layer14",
+            "tile4096_layer15",
+            "tile4096_layer16",
+            "tile4096_layer17",
+            "tile4096_layer18",
+            "tile4096_layer19",
+            "tile4096_layer20",
+            "tile4096_layer21",
+            "tile4096_layer22",
+            "tile4096_layer23",
+            "tile4096_layer24",
+            "tile4096_layer25",
+            "tile4096_layer26",
+            "tile4096_layer27"
+          ],
+          "developed": [
+            "stock",
+            "tile4096"
+          ],
+          "usedKernels": [
+            "tile4096"
+          ],
+          "developmentCost": 1.0,
+          "budgetUnit": "candidate_build_attempts",
+          "spentBudget": 0,
+          "artificialMass": 0,
+          "pricingPhase": "latency",
+          "performanceProven": false,
+          "evidenceScope": "Finite catalog additive runtime-cost model; callback/predicted costs and LP optimum are not actual whole-graph speedup"
+        },
+        "history": [
+          {
+            "activeColumns": 28,
+            "phase": "latency",
+            "objectiveMs": 33.033342,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 29,
+            "phase": "latency",
+            "objectiveMs": 32.97853761170952,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 30,
+            "phase": "latency",
+            "objectiveMs": 32.923733223419035,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 31,
+            "phase": "latency",
+            "objectiveMs": 32.86892883512855,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 32,
+            "phase": "latency",
+            "objectiveMs": 32.81412444683807,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 33,
+            "phase": "latency",
+            "objectiveMs": 32.75932005854759,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 34,
+            "phase": "latency",
+            "objectiveMs": 32.70451567025711,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 35,
+            "phase": "latency",
+            "objectiveMs": 32.649711281966624,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 36,
+            "phase": "latency",
+            "objectiveMs": 32.59490689367614,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 37,
+            "phase": "latency",
+            "objectiveMs": 32.54010250538566,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 38,
+            "phase": "latency",
+            "objectiveMs": 32.48529811709518,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 39,
+            "phase": "latency",
+            "objectiveMs": 32.4304937288047,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 40,
+            "phase": "latency",
+            "objectiveMs": 32.375689340514214,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 41,
+            "phase": "latency",
+            "objectiveMs": 32.320884952223736,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 42,
+            "phase": "latency",
+            "objectiveMs": 32.26608056393325,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 43,
+            "phase": "latency",
+            "objectiveMs": 32.211276175642766,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 44,
+            "phase": "latency",
+            "objectiveMs": 32.15647178735229,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 45,
+            "phase": "latency",
+            "objectiveMs": 32.1016673990618,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 46,
+            "phase": "latency",
+            "objectiveMs": 32.046863010771325,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 47,
+            "phase": "latency",
+            "objectiveMs": 31.99205862248084,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 48,
+            "phase": "latency",
+            "objectiveMs": 31.93725423419036,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 49,
+            "phase": "latency",
+            "objectiveMs": 31.882449845899878,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 50,
+            "phase": "latency",
+            "objectiveMs": 31.827645457609393,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 51,
+            "phase": "latency",
+            "objectiveMs": 31.77284106931891,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 52,
+            "phase": "latency",
+            "objectiveMs": 31.71803668102843,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 53,
+            "phase": "latency",
+            "objectiveMs": 31.66323229273795,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 54,
+            "phase": "latency",
+            "objectiveMs": 31.608427904447467,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 55,
+            "phase": "latency",
+            "objectiveMs": 31.553623516156982,
+            "minimumReducedCost": -0.054804388290482065
+          },
+          {
+            "activeColumns": 56,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 57,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 58,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 59,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 60,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 61,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 62,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 63,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 64,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 65,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 66,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 67,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 68,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 69,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 70,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 71,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 72,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 73,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 74,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 75,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 76,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 77,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 78,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 79,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 80,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 81,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 82,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 83,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": -0.04892870647525149
+          },
+          {
+            "activeColumns": 84,
+            "phase": "latency",
+            "objectiveMs": 31.4988191278665,
+            "minimumReducedCost": 0.0024641164028860185
+          }
+        ],
+        "scope": "Known finite catalog, up-front y variables/link rows, numerical LP pricing certificate only",
+        "restrictedIntegerGlobalClaimed": false
+      },
+      "frequencyGreedy": {
+        "solution": {
+          "feasible": true,
+          "optimal": true,
+          "objectiveMs": 31.4988191278665,
+          "selected": [
+            "tile4096_layer0",
+            "tile4096_layer1",
+            "tile4096_layer2",
+            "tile4096_layer3",
+            "tile4096_layer4",
+            "tile4096_layer5",
+            "tile4096_layer6",
+            "tile4096_layer7",
+            "tile4096_layer8",
+            "tile4096_layer9",
+            "tile4096_layer10",
+            "tile4096_layer11",
+            "tile4096_layer12",
+            "tile4096_layer13",
+            "tile4096_layer14",
+            "tile4096_layer15",
+            "tile4096_layer16",
+            "tile4096_layer17",
+            "tile4096_layer18",
+            "tile4096_layer19",
+            "tile4096_layer20",
+            "tile4096_layer21",
+            "tile4096_layer22",
+            "tile4096_layer23",
+            "tile4096_layer24",
+            "tile4096_layer25",
+            "tile4096_layer26",
+            "tile4096_layer27"
+          ],
+          "developed": [
+            "stock",
+            "tile4096"
+          ],
+          "usedKernels": [
+            "tile4096"
+          ],
+          "developmentCost": 0.0,
+          "budgetUnit": "candidate_build_attempts",
+          "spentBudget": 1,
+          "artificialMass": 0,
+          "pricingPhase": "latency",
+          "performanceProven": false,
+          "evidenceScope": "Finite catalog additive runtime-cost model; callback/predicted costs and LP optimum are not actual whole-graph speedup"
+        },
+        "trace": [
+          {
+            "kernel": "tile4096",
+            "gainMs": 1.534522872133497,
+            "paidDevelopmentBudget": 1,
+            "objectiveMs": 31.4988191278665
+          }
+        ],
+        "paidBudget": 1,
+        "seconds": 0.007874200004152954,
+        "scope": "Offline marginal-gain greedy with global redeployment; frequency weighted, development paid once; not Agent token billing"
+      },
+      "deploymentDecision": "keep_stock; no stable whole-LLM benefit demonstrated",
+      "wholeTrials": [
+        {
+          "scope": "Paired CLI same-MNN whole fixed LM workload, not controlled App speedup or music RTF",
+          "order": [
+            "stock",
+            "tile4096",
+            "tile0",
+            "tile4096",
+            "stock",
+            "tile0"
+          ],
+          "trials": [
+            {
+              "index": 0,
+              "variant": "stock",
+              "prefillMs": 2034.2419529999997,
+              "decodeMsPerToken": 17.838891570312494,
+              "workloadMs": 3175.9310134999996,
+              "rssPeakMiB": 511.01953125,
+              "calls": 0,
+              "regression": {
+                "logits": {
+                  "relativeL2": 0.0,
+                  "maxAbs": 0.0
+                }
+              },
+              "startBatteryC": 30.0,
+              "endBatteryC": 30.0
+            },
+            {
+              "index": 1,
+              "variant": "tile4096",
+              "prefillMs": 2103.2478905,
+              "decodeMsPerToken": 19.1103601015625,
+              "workloadMs": 3326.3109369999997,
+              "rssPeakMiB": 515.22265625,
+              "calls": 84,
+              "regression": {
+                "logits": {
+                  "relativeL2": 0.0,
+                  "maxAbs": 0.0
+                }
+              },
+              "startBatteryC": 30.0,
+              "endBatteryC": 31.0
+            },
+            {
+              "index": 2,
+              "variant": "tile0",
+              "prefillMs": 2091.528516,
+              "decodeMsPerToken": 18.9951391640625,
+              "workloadMs": 3307.2174225,
+              "rssPeakMiB": 511.14453125,
+              "calls": 5460,
+              "regression": {
+                "logits": {
+                  "relativeL2": 0.0,
+                  "maxAbs": 0.0
+                }
+              },
+              "startBatteryC": 31.0,
+              "endBatteryC": 32.0
+            },
+            {
+              "index": 3,
+              "variant": "tile4096",
+              "prefillMs": 2091.175469,
+              "decodeMsPerToken": 19.291898203125,
+              "workloadMs": 3325.8569540000003,
+              "rssPeakMiB": 511.203125,
+              "calls": 84,
+              "regression": {
+                "logits": {
+                  "relativeL2": 0.0,
+                  "maxAbs": 0.0
+                }
+              },
+              "startBatteryC": 32.0,
+              "endBatteryC": 32.0
+            },
+            {
+              "index": 4,
+              "variant": "stock",
+              "prefillMs": 2157.6610935,
+              "decodeMsPerToken": 19.470456554687498,
+              "workloadMs": 3403.770313,
+              "rssPeakMiB": 511.21875,
+              "calls": 0,
+              "regression": {
+                "logits": {
+                  "relativeL2": 0.0,
+                  "maxAbs": 0.0
+                }
+              },
+              "startBatteryC": 32.0,
+              "endBatteryC": 33.0
+            },
+            {
+              "index": 5,
+              "variant": "tile0",
+              "prefillMs": 2111.7974215000004,
+              "decodeMsPerToken": 18.971768757812498,
+              "workloadMs": 3325.9906220000003,
+              "rssPeakMiB": 511.52734375,
+              "calls": 5460,
+              "regression": {
+                "logits": {
+                  "relativeL2": 0.0,
+                  "maxAbs": 0.0
+                }
+              },
+              "startBatteryC": 33.0,
+              "endBatteryC": 33.0
+            }
+          ]
+        },
+        {
+          "scope": "ABBA CLI fixed whole-LLM workload; not App or music speedup",
+          "order": [
+            "stock",
+            "tile256",
+            "tile256",
+            "stock"
+          ],
+          "trials": [
+            {
+              "index": 0,
+              "variant": "stock",
+              "prefillMs": 1980.6699214999999,
+              "decodeMsPerToken": 18.75201175,
+              "workloadMs": 3180.7986735,
+              "rssPeakMiB": 510.77734375,
+              "calls": 0,
+              "regression": {
+                "logits": {
+                  "relativeL2": 0.0,
+                  "maxAbs": 0.0
+                }
+              },
+              "startBatteryC": 32.0,
+              "endBatteryC": 32.0
+            },
+            {
+              "index": 1,
+              "variant": "tile256",
+              "prefillMs": 2136.267891,
+              "decodeMsPerToken": 19.214589906249998,
+              "workloadMs": 3366.001645,
+              "rssPeakMiB": 513.30859375,
+              "calls": 5460,
+              "regression": {
+                "logits": {
+                  "relativeL2": 0.0,
+                  "maxAbs": 0.0
+                }
+              },
+              "startBatteryC": 32.0,
+              "endBatteryC": 32.0
+            },
+            {
+              "index": 2,
+              "variant": "tile256",
+              "prefillMs": 2109.5517185,
+              "decodeMsPerToken": 19.475953374999992,
+              "workloadMs": 3356.0127344999996,
+              "rssPeakMiB": 513.18359375,
+              "calls": 5460,
+              "regression": {
+                "logits": {
+                  "relativeL2": 0.0,
+                  "maxAbs": 0.0
+                }
+              },
+              "startBatteryC": 33.0,
+              "endBatteryC": 33.0
+            },
+            {
+              "index": 3,
+              "variant": "stock",
+              "prefillMs": 2217.9095315,
+              "decodeMsPerToken": 19.4332153671875,
+              "workloadMs": 3461.6353150000004,
+              "rssPeakMiB": 510.83203125,
+              "calls": 0,
+              "regression": {
+                "logits": {
+                  "relativeL2": 0.0,
+                  "maxAbs": 0.0
+                }
+              },
+              "startBatteryC": 34.0,
+              "endBatteryC": 34.0
+            }
+          ]
+        }
+      ],
+      "developmentAccounting": "Retrospective budget1 is illustrative. All5 pilot sources already compiled once; current additional development charge is0. Failed Agent usage unknown.",
+      "scope": "Fixed513 prefix+64decode only; callback/standalone ratio extrapolation is a heuristic; no real whole-graph optimality or multi-operator fusion claim"
+    },
+    "repeatedNodeHints": {
+      "patternHints": [
+        {
+          "id": "a18994c9d53ce901b43c3bc9578a58c5e6a444b26f828bc345291346a743f6cd",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/layers.{layer}/self_attn/FusedAttention",
+          "operator": "Attention",
+          "inputShapes": [
+            [
+              1,
+              513,
+              16,
+              128
+            ],
+            [
+              1,
+              513,
+              8,
+              128
+            ],
+            [
+              513,
+              1024,
+              1,
+              1
+            ],
+            []
+          ],
+          "outputShapes": [
+            [
+              513,
+              2048,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.12/self_attn/FusedAttention",
+            "/layers.6/self_attn/FusedAttention",
+            "/layers.14/self_attn/FusedAttention",
+            "/layers.1/self_attn/FusedAttention",
+            "/layers.7/self_attn/FusedAttention",
+            "/layers.13/self_attn/FusedAttention",
+            "/layers.10/self_attn/FusedAttention",
+            "/layers.2/self_attn/FusedAttention",
+            "/layers.15/self_attn/FusedAttention",
+            "/layers.11/self_attn/FusedAttention",
+            "/layers.3/self_attn/FusedAttention",
+            "/layers.9/self_attn/FusedAttention",
+            "/layers.5/self_attn/FusedAttention",
+            "/layers.4/self_attn/FusedAttention",
+            "/layers.8/self_attn/FusedAttention",
+            "/layers.17/self_attn/FusedAttention",
+            "/layers.26/self_attn/FusedAttention",
+            "/layers.27/self_attn/FusedAttention",
+            "/layers.16/self_attn/FusedAttention",
+            "/layers.25/self_attn/FusedAttention",
+            "/layers.19/self_attn/FusedAttention",
+            "/layers.24/self_attn/FusedAttention",
+            "/layers.18/self_attn/FusedAttention",
+            "/layers.20/self_attn/FusedAttention",
+            "/layers.22/self_attn/FusedAttention",
+            "/layers.21/self_attn/FusedAttention",
+            "/layers.23/self_attn/FusedAttention",
+            "/layers.0/self_attn/FusedAttention"
+          ],
+          "observedCalls": 28,
+          "totalMs": 594.9982829999998,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": true,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "429365050b8e629e46d3dc0582a92f0fa7be6e57f6244d3bb5d1051aa4319bcc",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/layers.{layer}/mlp/down_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              513,
+              3072,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.2/mlp/down_proj/Linear",
+            "/layers.15/mlp/down_proj/Linear",
+            "/layers.8/mlp/down_proj/Linear",
+            "/layers.3/mlp/down_proj/Linear",
+            "/layers.1/mlp/down_proj/Linear",
+            "/layers.10/mlp/down_proj/Linear",
+            "/layers.7/mlp/down_proj/Linear",
+            "/layers.6/mlp/down_proj/Linear",
+            "/layers.5/mlp/down_proj/Linear",
+            "/layers.0/mlp/down_proj/Linear",
+            "/layers.12/mlp/down_proj/Linear",
+            "/layers.25/mlp/down_proj/Linear",
+            "/layers.13/mlp/down_proj/Linear",
+            "/layers.4/mlp/down_proj/Linear",
+            "/layers.22/mlp/down_proj/Linear",
+            "/layers.18/mlp/down_proj/Linear",
+            "/layers.17/mlp/down_proj/Linear",
+            "/layers.26/mlp/down_proj/Linear",
+            "/layers.27/mlp/down_proj/Linear",
+            "/layers.14/mlp/down_proj/Linear",
+            "/layers.9/mlp/down_proj/Linear",
+            "/layers.23/mlp/down_proj/Linear",
+            "/layers.20/mlp/down_proj/Linear",
+            "/layers.11/mlp/down_proj/Linear",
+            "/layers.24/mlp/down_proj/Linear",
+            "/layers.19/mlp/down_proj/Linear",
+            "/layers.21/mlp/down_proj/Linear",
+            "/layers.16/mlp/down_proj/Linear"
+          ],
+          "observedCalls": 28,
+          "totalMs": 308.548124,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "f8b5b462296ccd1c4a61d8cacc1f7e5eef4a1112749dc6a5b8cf361220df4aa6",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/layers.{layer}/mlp/gate_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              513,
+              3072,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.12/mlp/gate_proj/Linear",
+            "/layers.6/mlp/gate_proj/Linear",
+            "/layers.3/mlp/gate_proj/Linear",
+            "/layers.8/mlp/gate_proj/Linear",
+            "/layers.10/mlp/gate_proj/Linear",
+            "/layers.15/mlp/gate_proj/Linear",
+            "/layers.2/mlp/gate_proj/Linear",
+            "/layers.16/mlp/gate_proj/Linear",
+            "/layers.20/mlp/gate_proj/Linear",
+            "/layers.0/mlp/gate_proj/Linear",
+            "/layers.24/mlp/gate_proj/Linear",
+            "/layers.21/mlp/gate_proj/Linear",
+            "/layers.7/mlp/gate_proj/Linear",
+            "/layers.26/mlp/gate_proj/Linear",
+            "/layers.18/mlp/gate_proj/Linear",
+            "/layers.25/mlp/gate_proj/Linear",
+            "/layers.4/mlp/gate_proj/Linear",
+            "/layers.22/mlp/gate_proj/Linear",
+            "/layers.5/mlp/gate_proj/Linear",
+            "/layers.13/mlp/gate_proj/Linear",
+            "/layers.17/mlp/gate_proj/Linear",
+            "/layers.14/mlp/gate_proj/Linear",
+            "/layers.19/mlp/gate_proj/Linear",
+            "/layers.27/mlp/gate_proj/Linear",
+            "/layers.9/mlp/gate_proj/Linear",
+            "/layers.11/mlp/gate_proj/Linear",
+            "/layers.23/mlp/gate_proj/Linear",
+            "/layers.1/mlp/gate_proj/Linear"
+          ],
+          "observedCalls": 28,
+          "totalMs": 285.722501,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "ae5f7332ab3dfce12ab58ba69f4473e0f184a85c4aba01d1b13342e788cdeed5",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/layers.{layer}/mlp/up_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              513,
+              3072,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.15/mlp/up_proj/Linear",
+            "/layers.3/mlp/up_proj/Linear",
+            "/layers.1/mlp/up_proj/Linear",
+            "/layers.8/mlp/up_proj/Linear",
+            "/layers.10/mlp/up_proj/Linear",
+            "/layers.12/mlp/up_proj/Linear",
+            "/layers.6/mlp/up_proj/Linear",
+            "/layers.0/mlp/up_proj/Linear",
+            "/layers.22/mlp/up_proj/Linear",
+            "/layers.24/mlp/up_proj/Linear",
+            "/layers.20/mlp/up_proj/Linear",
+            "/layers.25/mlp/up_proj/Linear",
+            "/layers.4/mlp/up_proj/Linear",
+            "/layers.21/mlp/up_proj/Linear",
+            "/layers.27/mlp/up_proj/Linear",
+            "/layers.18/mlp/up_proj/Linear",
+            "/layers.17/mlp/up_proj/Linear",
+            "/layers.26/mlp/up_proj/Linear",
+            "/layers.2/mlp/up_proj/Linear",
+            "/layers.13/mlp/up_proj/Linear",
+            "/layers.19/mlp/up_proj/Linear",
+            "/layers.7/mlp/up_proj/Linear",
+            "/layers.14/mlp/up_proj/Linear",
+            "/layers.23/mlp/up_proj/Linear",
+            "/layers.16/mlp/up_proj/Linear",
+            "/layers.5/mlp/up_proj/Linear",
+            "/layers.9/mlp/up_proj/Linear",
+            "/layers.11/mlp/up_proj/Linear"
+          ],
+          "observedCalls": 28,
+          "totalMs": 282.63234800000004,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "deb7ecff90dbcd1be9a7b7e8048d89ed9a0f7b97c1d18c71ea9cfbec49d5439c",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/layers.{layer}/self_attn/o_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              513,
+              2048,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.12/self_attn/o_proj/Linear",
+            "/layers.10/self_attn/o_proj/Linear",
+            "/layers.15/self_attn/o_proj/Linear",
+            "/layers.3/self_attn/o_proj/Linear",
+            "/layers.6/self_attn/o_proj/Linear",
+            "/layers.8/self_attn/o_proj/Linear",
+            "/layers.11/self_attn/o_proj/Linear",
+            "/layers.0/self_attn/o_proj/Linear",
+            "/layers.17/self_attn/o_proj/Linear",
+            "/layers.2/self_attn/o_proj/Linear",
+            "/layers.24/self_attn/o_proj/Linear",
+            "/layers.1/self_attn/o_proj/Linear",
+            "/layers.14/self_attn/o_proj/Linear",
+            "/layers.19/self_attn/o_proj/Linear",
+            "/layers.18/self_attn/o_proj/Linear",
+            "/layers.23/self_attn/o_proj/Linear",
+            "/layers.21/self_attn/o_proj/Linear",
+            "/layers.26/self_attn/o_proj/Linear",
+            "/layers.20/self_attn/o_proj/Linear",
+            "/layers.22/self_attn/o_proj/Linear",
+            "/layers.4/self_attn/o_proj/Linear",
+            "/layers.5/self_attn/o_proj/Linear",
+            "/layers.25/self_attn/o_proj/Linear",
+            "/layers.27/self_attn/o_proj/Linear",
+            "/layers.9/self_attn/o_proj/Linear",
+            "/layers.7/self_attn/o_proj/Linear",
+            "/layers.16/self_attn/o_proj/Linear",
+            "/layers.13/self_attn/o_proj/Linear"
+          ],
+          "observedCalls": 28,
+          "totalMs": 205.42031200000002,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "d0e46a4570cb4d9f1edaefd8629023a364950703b4baf915d4d27c27b5414cbc",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/layers.{layer}/self_attn/q_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              513,
+              2048,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.15/self_attn/q_proj/Linear",
+            "/layers.0/self_attn/q_proj/Linear",
+            "/layers.14/self_attn/q_proj/Linear",
+            "/layers.12/self_attn/q_proj/Linear",
+            "/layers.3/self_attn/q_proj/Linear",
+            "/layers.4/self_attn/q_proj/Linear",
+            "/layers.11/self_attn/q_proj/Linear",
+            "/layers.8/self_attn/q_proj/Linear",
+            "/layers.2/self_attn/q_proj/Linear",
+            "/layers.1/self_attn/q_proj/Linear",
+            "/layers.6/self_attn/q_proj/Linear",
+            "/layers.13/self_attn/q_proj/Linear",
+            "/layers.19/self_attn/q_proj/Linear",
+            "/layers.7/self_attn/q_proj/Linear",
+            "/layers.18/self_attn/q_proj/Linear",
+            "/layers.23/self_attn/q_proj/Linear",
+            "/layers.24/self_attn/q_proj/Linear",
+            "/layers.5/self_attn/q_proj/Linear",
+            "/layers.9/self_attn/q_proj/Linear",
+            "/layers.25/self_attn/q_proj/Linear",
+            "/layers.10/self_attn/q_proj/Linear",
+            "/layers.27/self_attn/q_proj/Linear",
+            "/layers.22/self_attn/q_proj/Linear",
+            "/layers.26/self_attn/q_proj/Linear",
+            "/layers.20/self_attn/q_proj/Linear",
+            "/layers.21/self_attn/q_proj/Linear",
+            "/layers.17/self_attn/q_proj/Linear",
+            "/layers.16/self_attn/q_proj/Linear"
+          ],
+          "observedCalls": 28,
+          "totalMs": 205.318127,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "8b8ded483a3aac555770bb30dbf66a990006e7417448f69ba2285e9c5ae01f0d",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/layers.{layer}/self_attn/v_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.4/self_attn/v_proj/Linear",
+            "/layers.6/self_attn/v_proj/Linear",
+            "/layers.13/self_attn/v_proj/Linear",
+            "/layers.12/self_attn/v_proj/Linear",
+            "/layers.0/self_attn/v_proj/Linear",
+            "/layers.1/self_attn/v_proj/Linear",
+            "/layers.3/self_attn/v_proj/Linear",
+            "/layers.15/self_attn/v_proj/Linear",
+            "/layers.8/self_attn/v_proj/Linear",
+            "/layers.11/self_attn/v_proj/Linear",
+            "/layers.14/self_attn/v_proj/Linear",
+            "/layers.7/self_attn/v_proj/Linear",
+            "/layers.20/self_attn/v_proj/Linear",
+            "/layers.24/self_attn/v_proj/Linear",
+            "/layers.19/self_attn/v_proj/Linear",
+            "/layers.5/self_attn/v_proj/Linear",
+            "/layers.21/self_attn/v_proj/Linear",
+            "/layers.26/self_attn/v_proj/Linear",
+            "/layers.25/self_attn/v_proj/Linear",
+            "/layers.18/self_attn/v_proj/Linear",
+            "/layers.22/self_attn/v_proj/Linear",
+            "/layers.23/self_attn/v_proj/Linear",
+            "/layers.2/self_attn/v_proj/Linear",
+            "/layers.10/self_attn/v_proj/Linear",
+            "/layers.27/self_attn/v_proj/Linear",
+            "/layers.9/self_attn/v_proj/Linear",
+            "/layers.17/self_attn/v_proj/Linear",
+            "/layers.16/self_attn/v_proj/Linear"
+          ],
+          "observedCalls": 28,
+          "totalMs": 109.19577900000002,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "e921900c0965fa6799458de1a45312479a96af2eb65b0b306a52cb1d8f0c72ec",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/layers.{layer}/self_attn/k_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.12/self_attn/k_proj/Linear",
+            "/layers.0/self_attn/k_proj/Linear",
+            "/layers.15/self_attn/k_proj/Linear",
+            "/layers.14/self_attn/k_proj/Linear",
+            "/layers.3/self_attn/k_proj/Linear",
+            "/layers.8/self_attn/k_proj/Linear",
+            "/layers.11/self_attn/k_proj/Linear",
+            "/layers.4/self_attn/k_proj/Linear",
+            "/layers.6/self_attn/k_proj/Linear",
+            "/layers.22/self_attn/k_proj/Linear",
+            "/layers.24/self_attn/k_proj/Linear",
+            "/layers.27/self_attn/k_proj/Linear",
+            "/layers.19/self_attn/k_proj/Linear",
+            "/layers.26/self_attn/k_proj/Linear",
+            "/layers.23/self_attn/k_proj/Linear",
+            "/layers.18/self_attn/k_proj/Linear",
+            "/layers.10/self_attn/k_proj/Linear",
+            "/layers.9/self_attn/k_proj/Linear",
+            "/layers.20/self_attn/k_proj/Linear",
+            "/layers.25/self_attn/k_proj/Linear",
+            "/layers.21/self_attn/k_proj/Linear",
+            "/layers.2/self_attn/k_proj/Linear",
+            "/layers.13/self_attn/k_proj/Linear",
+            "/layers.5/self_attn/k_proj/Linear",
+            "/layers.1/self_attn/k_proj/Linear",
+            "/layers.7/self_attn/k_proj/Linear",
+            "/layers.17/self_attn/k_proj/Linear",
+            "/layers.16/self_attn/k_proj/Linear"
+          ],
+          "observedCalls": 28,
+          "totalMs": 102.59031499999999,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "c146f4b1ccde31ec14ea3efbdfbdcbe36f26457b4eaa808f8277ded7ddefe7e1",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/layers.{layer}/self_attn/FusedRoPE",
+          "operator": "RoPE",
+          "inputShapes": [
+            [
+              513,
+              2048,
+              1,
+              1
+            ],
+            [
+              513,
+              1024,
+              1,
+              1
+            ],
+            [
+              1,
+              513,
+              1,
+              128
+            ],
+            [
+              1,
+              513,
+              1,
+              128
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              513,
+              16,
+              128
+            ],
+            [
+              1,
+              513,
+              8,
+              128
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.12/self_attn/FusedRoPE",
+            "/layers.0/self_attn/FusedRoPE",
+            "/layers.6/self_attn/FusedRoPE",
+            "/layers.4/self_attn/FusedRoPE",
+            "/layers.1/self_attn/FusedRoPE",
+            "/layers.27/self_attn/FusedRoPE",
+            "/layers.13/self_attn/FusedRoPE",
+            "/layers.16/self_attn/FusedRoPE",
+            "/layers.2/self_attn/FusedRoPE",
+            "/layers.3/self_attn/FusedRoPE",
+            "/layers.17/self_attn/FusedRoPE",
+            "/layers.15/self_attn/FusedRoPE",
+            "/layers.9/self_attn/FusedRoPE",
+            "/layers.14/self_attn/FusedRoPE",
+            "/layers.5/self_attn/FusedRoPE",
+            "/layers.19/self_attn/FusedRoPE",
+            "/layers.7/self_attn/FusedRoPE",
+            "/layers.21/self_attn/FusedRoPE",
+            "/layers.8/self_attn/FusedRoPE",
+            "/layers.20/self_attn/FusedRoPE",
+            "/layers.22/self_attn/FusedRoPE",
+            "/layers.10/self_attn/FusedRoPE",
+            "/layers.23/self_attn/FusedRoPE",
+            "/layers.24/self_attn/FusedRoPE",
+            "/layers.26/self_attn/FusedRoPE",
+            "/layers.18/self_attn/FusedRoPE",
+            "/layers.25/self_attn/FusedRoPE",
+            "/layers.11/self_attn/FusedRoPE"
+          ],
+          "observedCalls": 28,
+          "totalMs": 26.120786000000003,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "b44d0f37940db332cc4ea91b3d57012d987ae11bc5e482f282658043c16a413f",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/blocks.{layer}/mlp/Mul_output_0",
+          "operator": "BinaryOp",
+          "inputShapes": [
+            [
+              513,
+              3072,
+              1,
+              1
+            ],
+            [
+              513,
+              3072,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              513,
+              3072,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/blocks.2/mlp/Mul_output_0",
+            "/blocks.12/mlp/Mul_output_0",
+            "/blocks.0/mlp/Mul_output_0",
+            "/blocks.17/mlp/Mul_output_0",
+            "/blocks.21/mlp/Mul_output_0",
+            "/blocks.25/mlp/Mul_output_0",
+            "/blocks.23/mlp/Mul_output_0",
+            "/blocks.24/mlp/Mul_output_0",
+            "/blocks.19/mlp/Mul_output_0",
+            "/blocks.26/mlp/Mul_output_0",
+            "/blocks.22/mlp/Mul_output_0",
+            "/blocks.20/mlp/Mul_output_0",
+            "/blocks.27/mlp/Mul_output_0",
+            "/blocks.16/mlp/Mul_output_0",
+            "/blocks.18/mlp/Mul_output_0",
+            "/blocks.13/mlp/Mul_output_0",
+            "/blocks.3/mlp/Mul_output_0",
+            "/blocks.15/mlp/Mul_output_0",
+            "/blocks.6/mlp/Mul_output_0",
+            "/blocks.14/mlp/Mul_output_0",
+            "/blocks.7/mlp/Mul_output_0",
+            "/blocks.5/mlp/Mul_output_0",
+            "/blocks.8/mlp/Mul_output_0",
+            "/blocks.4/mlp/Mul_output_0",
+            "/blocks.1/mlp/Mul_output_0",
+            "/blocks.11/mlp/Mul_output_0",
+            "/blocks.10/mlp/Mul_output_0",
+            "/blocks.9/mlp/Mul_output_0"
+          ],
+          "observedCalls": 28,
+          "totalMs": 24.513438000000004,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "a5e56c60c07a3f0c3ec7cfbb83aac54bd85697f9309d33eff7d1eff60bfe528b",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/blocks.{layer}/post_attention_layernorm/Mul_1_output_0",
+          "operator": "LayerNorm",
+          "inputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ],
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ],
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/blocks.13/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.17/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.2/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.12/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.27/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.26/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.11/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.9/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.3/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.1/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.7/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.19/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.10/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.22/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.24/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.8/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.15/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.20/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.21/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.5/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.14/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.18/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.4/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.6/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.23/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.0/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.25/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.16/post_attention_layernorm/Mul_1_output_0"
+          ],
+          "observedCalls": 28,
+          "totalMs": 23.969374000000002,
+          "observedForwards": 1,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "22d85d2cb90d58696bb1f38c02d69994cc6c85e94f64f53836a1091bd983bc7d",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "prefill",
+          "role": "/blocks.{layer}/input_layernorm/Mul_1_output_0",
+          "operator": "LayerNorm",
+          "inputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ],
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              513,
+              1024,
+              1,
+              1
+            ],
+            [
+              513,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/blocks.13/input_layernorm/Mul_1_output_0",
+            "/blocks.2/input_layernorm/Mul_1_output_0",
+            "/blocks.15/input_layernorm/Mul_1_output_0",
+            "/blocks.9/input_layernorm/Mul_1_output_0",
+            "/blocks.7/input_layernorm/Mul_1_output_0",
+            "/blocks.1/input_layernorm/Mul_1_output_0",
+            "/blocks.24/input_layernorm/Mul_1_output_0",
+            "/blocks.20/input_layernorm/Mul_1_output_0",
+            "/blocks.11/input_layernorm/Mul_1_output_0",
+            "/blocks.18/input_layernorm/Mul_1_output_0",
+            "/blocks.26/input_layernorm/Mul_1_output_0",
+            "/blocks.22/input_layernorm/Mul_1_output_0",
+            "/blocks.5/input_layernorm/Mul_1_output_0",
+            "/blocks.12/input_layernorm/Mul_1_output_0",
+            "/blocks.3/input_layernorm/Mul_1_output_0",
+            "/blocks.8/input_layernorm/Mul_1_output_0",
+            "/blocks.6/input_layernorm/Mul_1_output_0",
+            "/blocks.21/input_layernorm/Mul_1_output_0",
+            "/blocks.10/input_layernorm/Mul_1_output_0",
+            "/blocks.16/input_layernorm/Mul_1_output_0",
+            "/blocks.4/input_layernorm/Mul_1_output_0",
+            "/blocks.19/input_layernorm/Mul_1_output_0",
+            "/blocks.14/input_layernorm/Mul_1_output_0",
+            "/blocks.23/input_layernorm/Mul_1_output_0",
+            "/blocks.27/input_layernorm/Mul_1_output_0",
+            "/blocks.17/input_layernorm/Mul_1_output_0",
+            "/blocks.25/input_layernorm/Mul_1_output_0"
+          ],
+          "observedCalls": 27,
+          "totalMs": 23.519219,
+          "observedForwards": 1,
+          "callsPerForward": 27.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "a161d866b45f39bf0dbf5f05a3c0683beec934b0b53085a67074b70fd4c52458",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/layers.{layer}/self_attn/FusedAttention",
+          "operator": "Attention",
+          "inputShapes": [
+            [
+              1,
+              1,
+              16,
+              128
+            ],
+            [
+              1,
+              1,
+              8,
+              128
+            ],
+            [
+              1,
+              1024,
+              1,
+              1
+            ],
+            []
+          ],
+          "outputShapes": [
+            [
+              1,
+              2048,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.26/self_attn/FusedAttention",
+            "/layers.0/self_attn/FusedAttention",
+            "/layers.3/self_attn/FusedAttention",
+            "/layers.20/self_attn/FusedAttention",
+            "/layers.7/self_attn/FusedAttention",
+            "/layers.1/self_attn/FusedAttention",
+            "/layers.15/self_attn/FusedAttention",
+            "/layers.5/self_attn/FusedAttention",
+            "/layers.25/self_attn/FusedAttention",
+            "/layers.17/self_attn/FusedAttention",
+            "/layers.11/self_attn/FusedAttention",
+            "/layers.2/self_attn/FusedAttention",
+            "/layers.4/self_attn/FusedAttention",
+            "/layers.9/self_attn/FusedAttention",
+            "/layers.27/self_attn/FusedAttention",
+            "/layers.23/self_attn/FusedAttention",
+            "/layers.21/self_attn/FusedAttention",
+            "/layers.24/self_attn/FusedAttention",
+            "/layers.14/self_attn/FusedAttention",
+            "/layers.8/self_attn/FusedAttention",
+            "/layers.22/self_attn/FusedAttention",
+            "/layers.6/self_attn/FusedAttention",
+            "/layers.10/self_attn/FusedAttention",
+            "/layers.16/self_attn/FusedAttention",
+            "/layers.13/self_attn/FusedAttention",
+            "/layers.12/self_attn/FusedAttention",
+            "/layers.18/self_attn/FusedAttention",
+            "/layers.19/self_attn/FusedAttention"
+          ],
+          "observedCalls": 56,
+          "totalMs": 10.774217999999998,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": true,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "41bb0c4857113edd08d572faad99c1740bf704ce915392394c491feef4b83d12",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/layers.{layer}/mlp/down_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              1,
+              3072,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.4/mlp/down_proj/Linear",
+            "/layers.24/mlp/down_proj/Linear",
+            "/layers.26/mlp/down_proj/Linear",
+            "/layers.25/mlp/down_proj/Linear",
+            "/layers.3/mlp/down_proj/Linear",
+            "/layers.11/mlp/down_proj/Linear",
+            "/layers.9/mlp/down_proj/Linear",
+            "/layers.5/mlp/down_proj/Linear",
+            "/layers.7/mlp/down_proj/Linear",
+            "/layers.8/mlp/down_proj/Linear",
+            "/layers.20/mlp/down_proj/Linear",
+            "/layers.6/mlp/down_proj/Linear",
+            "/layers.10/mlp/down_proj/Linear",
+            "/layers.27/mlp/down_proj/Linear",
+            "/layers.23/mlp/down_proj/Linear",
+            "/layers.18/mlp/down_proj/Linear",
+            "/layers.17/mlp/down_proj/Linear",
+            "/layers.13/mlp/down_proj/Linear",
+            "/layers.14/mlp/down_proj/Linear",
+            "/layers.0/mlp/down_proj/Linear",
+            "/layers.21/mlp/down_proj/Linear",
+            "/layers.16/mlp/down_proj/Linear",
+            "/layers.12/mlp/down_proj/Linear",
+            "/layers.15/mlp/down_proj/Linear",
+            "/layers.1/mlp/down_proj/Linear",
+            "/layers.22/mlp/down_proj/Linear",
+            "/layers.2/mlp/down_proj/Linear",
+            "/layers.19/mlp/down_proj/Linear"
+          ],
+          "observedCalls": 56,
+          "totalMs": 4.020622,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "a881b336b8b5a69f2efc15a8e9145c82f85a14f1dad9be5c229ecdf1b90086e1",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/layers.{layer}/mlp/gate_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              3072,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.20/mlp/gate_proj/Linear",
+            "/layers.8/mlp/gate_proj/Linear",
+            "/layers.11/mlp/gate_proj/Linear",
+            "/layers.4/mlp/gate_proj/Linear",
+            "/layers.25/mlp/gate_proj/Linear",
+            "/layers.5/mlp/gate_proj/Linear",
+            "/layers.13/mlp/gate_proj/Linear",
+            "/layers.0/mlp/gate_proj/Linear",
+            "/layers.6/mlp/gate_proj/Linear",
+            "/layers.17/mlp/gate_proj/Linear",
+            "/layers.9/mlp/gate_proj/Linear",
+            "/layers.26/mlp/gate_proj/Linear",
+            "/layers.24/mlp/gate_proj/Linear",
+            "/layers.22/mlp/gate_proj/Linear",
+            "/layers.23/mlp/gate_proj/Linear",
+            "/layers.10/mlp/gate_proj/Linear",
+            "/layers.7/mlp/gate_proj/Linear",
+            "/layers.12/mlp/gate_proj/Linear",
+            "/layers.14/mlp/gate_proj/Linear",
+            "/layers.18/mlp/gate_proj/Linear",
+            "/layers.27/mlp/gate_proj/Linear",
+            "/layers.15/mlp/gate_proj/Linear",
+            "/layers.16/mlp/gate_proj/Linear",
+            "/layers.21/mlp/gate_proj/Linear",
+            "/layers.1/mlp/gate_proj/Linear",
+            "/layers.2/mlp/gate_proj/Linear",
+            "/layers.3/mlp/gate_proj/Linear",
+            "/layers.19/mlp/gate_proj/Linear"
+          ],
+          "observedCalls": 56,
+          "totalMs": 3.855305,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "44173263126c626831bc8a99ecd553bd6785ad6b374db5dd31dd1d53815693a6",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/layers.{layer}/mlp/up_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              3072,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.18/mlp/up_proj/Linear",
+            "/layers.26/mlp/up_proj/Linear",
+            "/layers.25/mlp/up_proj/Linear",
+            "/layers.24/mlp/up_proj/Linear",
+            "/layers.7/mlp/up_proj/Linear",
+            "/layers.27/mlp/up_proj/Linear",
+            "/layers.9/mlp/up_proj/Linear",
+            "/layers.5/mlp/up_proj/Linear",
+            "/layers.23/mlp/up_proj/Linear",
+            "/layers.20/mlp/up_proj/Linear",
+            "/layers.15/mlp/up_proj/Linear",
+            "/layers.10/mlp/up_proj/Linear",
+            "/layers.4/mlp/up_proj/Linear",
+            "/layers.17/mlp/up_proj/Linear",
+            "/layers.6/mlp/up_proj/Linear",
+            "/layers.0/mlp/up_proj/Linear",
+            "/layers.8/mlp/up_proj/Linear",
+            "/layers.14/mlp/up_proj/Linear",
+            "/layers.21/mlp/up_proj/Linear",
+            "/layers.13/mlp/up_proj/Linear",
+            "/layers.22/mlp/up_proj/Linear",
+            "/layers.11/mlp/up_proj/Linear",
+            "/layers.12/mlp/up_proj/Linear",
+            "/layers.16/mlp/up_proj/Linear",
+            "/layers.3/mlp/up_proj/Linear",
+            "/layers.2/mlp/up_proj/Linear",
+            "/layers.1/mlp/up_proj/Linear",
+            "/layers.19/mlp/up_proj/Linear"
+          ],
+          "observedCalls": 56,
+          "totalMs": 3.8390629999999994,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "a3920025dae8979f5983e1c9349caec36de0a749be64e3e6cfac573253aca451",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/layers.{layer}/self_attn/q_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              2048,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.19/self_attn/q_proj/Linear",
+            "/layers.15/self_attn/q_proj/Linear",
+            "/layers.2/self_attn/q_proj/Linear",
+            "/layers.20/self_attn/q_proj/Linear",
+            "/layers.0/self_attn/q_proj/Linear",
+            "/layers.5/self_attn/q_proj/Linear",
+            "/layers.25/self_attn/q_proj/Linear",
+            "/layers.27/self_attn/q_proj/Linear",
+            "/layers.6/self_attn/q_proj/Linear",
+            "/layers.8/self_attn/q_proj/Linear",
+            "/layers.11/self_attn/q_proj/Linear",
+            "/layers.26/self_attn/q_proj/Linear",
+            "/layers.9/self_attn/q_proj/Linear",
+            "/layers.7/self_attn/q_proj/Linear",
+            "/layers.23/self_attn/q_proj/Linear",
+            "/layers.10/self_attn/q_proj/Linear",
+            "/layers.13/self_attn/q_proj/Linear",
+            "/layers.22/self_attn/q_proj/Linear",
+            "/layers.12/self_attn/q_proj/Linear",
+            "/layers.21/self_attn/q_proj/Linear",
+            "/layers.14/self_attn/q_proj/Linear",
+            "/layers.18/self_attn/q_proj/Linear",
+            "/layers.24/self_attn/q_proj/Linear",
+            "/layers.16/self_attn/q_proj/Linear",
+            "/layers.4/self_attn/q_proj/Linear",
+            "/layers.3/self_attn/q_proj/Linear",
+            "/layers.1/self_attn/q_proj/Linear",
+            "/layers.17/self_attn/q_proj/Linear"
+          ],
+          "observedCalls": 56,
+          "totalMs": 3.822350999999999,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "6b2b1db383c4cf7674591b350008cc744fdb65af51f60d3a5c445d3b46b44549",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/layers.{layer}/self_attn/o_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              1,
+              2048,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.8/self_attn/o_proj/Linear",
+            "/layers.26/self_attn/o_proj/Linear",
+            "/layers.7/self_attn/o_proj/Linear",
+            "/layers.4/self_attn/o_proj/Linear",
+            "/layers.5/self_attn/o_proj/Linear",
+            "/layers.27/self_attn/o_proj/Linear",
+            "/layers.13/self_attn/o_proj/Linear",
+            "/layers.25/self_attn/o_proj/Linear",
+            "/layers.20/self_attn/o_proj/Linear",
+            "/layers.14/self_attn/o_proj/Linear",
+            "/layers.6/self_attn/o_proj/Linear",
+            "/layers.22/self_attn/o_proj/Linear",
+            "/layers.21/self_attn/o_proj/Linear",
+            "/layers.0/self_attn/o_proj/Linear",
+            "/layers.16/self_attn/o_proj/Linear",
+            "/layers.9/self_attn/o_proj/Linear",
+            "/layers.18/self_attn/o_proj/Linear",
+            "/layers.17/self_attn/o_proj/Linear",
+            "/layers.23/self_attn/o_proj/Linear",
+            "/layers.15/self_attn/o_proj/Linear",
+            "/layers.12/self_attn/o_proj/Linear",
+            "/layers.11/self_attn/o_proj/Linear",
+            "/layers.10/self_attn/o_proj/Linear",
+            "/layers.24/self_attn/o_proj/Linear",
+            "/layers.3/self_attn/o_proj/Linear",
+            "/layers.1/self_attn/o_proj/Linear",
+            "/layers.2/self_attn/o_proj/Linear",
+            "/layers.19/self_attn/o_proj/Linear"
+          ],
+          "observedCalls": 56,
+          "totalMs": 2.7835910000000004,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "112b79abce8837d76003e68de94d6a61750553b4f68bd49f66c988c9b7442bfc",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/layers.{layer}/self_attn/k_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.15/self_attn/k_proj/Linear",
+            "/layers.6/self_attn/k_proj/Linear",
+            "/layers.9/self_attn/k_proj/Linear",
+            "/layers.25/self_attn/k_proj/Linear",
+            "/layers.10/self_attn/k_proj/Linear",
+            "/layers.24/self_attn/k_proj/Linear",
+            "/layers.7/self_attn/k_proj/Linear",
+            "/layers.20/self_attn/k_proj/Linear",
+            "/layers.26/self_attn/k_proj/Linear",
+            "/layers.27/self_attn/k_proj/Linear",
+            "/layers.5/self_attn/k_proj/Linear",
+            "/layers.21/self_attn/k_proj/Linear",
+            "/layers.12/self_attn/k_proj/Linear",
+            "/layers.23/self_attn/k_proj/Linear",
+            "/layers.16/self_attn/k_proj/Linear",
+            "/layers.18/self_attn/k_proj/Linear",
+            "/layers.11/self_attn/k_proj/Linear",
+            "/layers.14/self_attn/k_proj/Linear",
+            "/layers.4/self_attn/k_proj/Linear",
+            "/layers.17/self_attn/k_proj/Linear",
+            "/layers.8/self_attn/k_proj/Linear",
+            "/layers.22/self_attn/k_proj/Linear",
+            "/layers.2/self_attn/k_proj/Linear",
+            "/layers.13/self_attn/k_proj/Linear",
+            "/layers.19/self_attn/k_proj/Linear",
+            "/layers.3/self_attn/k_proj/Linear",
+            "/layers.1/self_attn/k_proj/Linear",
+            "/layers.0/self_attn/k_proj/Linear"
+          ],
+          "observedCalls": 56,
+          "totalMs": 1.597502,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "9001b07cbc3df6133df1ca0d81b5a5397baf1eb02926f30f653028daa416f7a4",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/layers.{layer}/self_attn/v_proj/Linear",
+          "operator": "Convolution",
+          "inputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.9/self_attn/v_proj/Linear",
+            "/layers.15/self_attn/v_proj/Linear",
+            "/layers.14/self_attn/v_proj/Linear",
+            "/layers.18/self_attn/v_proj/Linear",
+            "/layers.5/self_attn/v_proj/Linear",
+            "/layers.24/self_attn/v_proj/Linear",
+            "/layers.0/self_attn/v_proj/Linear",
+            "/layers.6/self_attn/v_proj/Linear",
+            "/layers.26/self_attn/v_proj/Linear",
+            "/layers.25/self_attn/v_proj/Linear",
+            "/layers.20/self_attn/v_proj/Linear",
+            "/layers.17/self_attn/v_proj/Linear",
+            "/layers.10/self_attn/v_proj/Linear",
+            "/layers.13/self_attn/v_proj/Linear",
+            "/layers.21/self_attn/v_proj/Linear",
+            "/layers.12/self_attn/v_proj/Linear",
+            "/layers.8/self_attn/v_proj/Linear",
+            "/layers.16/self_attn/v_proj/Linear",
+            "/layers.4/self_attn/v_proj/Linear",
+            "/layers.23/self_attn/v_proj/Linear",
+            "/layers.22/self_attn/v_proj/Linear",
+            "/layers.11/self_attn/v_proj/Linear",
+            "/layers.2/self_attn/v_proj/Linear",
+            "/layers.3/self_attn/v_proj/Linear",
+            "/layers.1/self_attn/v_proj/Linear",
+            "/layers.7/self_attn/v_proj/Linear",
+            "/layers.27/self_attn/v_proj/Linear",
+            "/layers.19/self_attn/v_proj/Linear"
+          ],
+          "observedCalls": 56,
+          "totalMs": 1.5418729999999998,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "478b5f97f28068500f321b6352d6a078cd1f05525cac3620793923891179e4a0",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/layers.{layer}/self_attn/FusedRoPE",
+          "operator": "RoPE",
+          "inputShapes": [
+            [
+              1,
+              2048,
+              1,
+              1
+            ],
+            [
+              1,
+              1024,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              128
+            ],
+            [
+              1,
+              1,
+              1,
+              128
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              1,
+              16,
+              128
+            ],
+            [
+              1,
+              1,
+              8,
+              128
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/layers.9/self_attn/FusedRoPE",
+            "/layers.15/self_attn/FusedRoPE",
+            "/layers.7/self_attn/FusedRoPE",
+            "/layers.6/self_attn/FusedRoPE",
+            "/layers.25/self_attn/FusedRoPE",
+            "/layers.0/self_attn/FusedRoPE",
+            "/layers.26/self_attn/FusedRoPE",
+            "/layers.5/self_attn/FusedRoPE",
+            "/layers.21/self_attn/FusedRoPE",
+            "/layers.4/self_attn/FusedRoPE",
+            "/layers.22/self_attn/FusedRoPE",
+            "/layers.11/self_attn/FusedRoPE",
+            "/layers.19/self_attn/FusedRoPE",
+            "/layers.23/self_attn/FusedRoPE",
+            "/layers.27/self_attn/FusedRoPE",
+            "/layers.20/self_attn/FusedRoPE",
+            "/layers.16/self_attn/FusedRoPE",
+            "/layers.1/self_attn/FusedRoPE",
+            "/layers.3/self_attn/FusedRoPE",
+            "/layers.18/self_attn/FusedRoPE",
+            "/layers.13/self_attn/FusedRoPE",
+            "/layers.17/self_attn/FusedRoPE",
+            "/layers.8/self_attn/FusedRoPE",
+            "/layers.10/self_attn/FusedRoPE",
+            "/layers.12/self_attn/FusedRoPE",
+            "/layers.24/self_attn/FusedRoPE",
+            "/layers.2/self_attn/FusedRoPE",
+            "/layers.14/self_attn/FusedRoPE"
+          ],
+          "observedCalls": 56,
+          "totalMs": 0.435622,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "794c86c3f7ee17f6b468ee55c73dda668c4a36b8b17dfb0c1531e70716371410",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/blocks.{layer}/mlp/Mul_output_0",
+          "operator": "BinaryOp",
+          "inputShapes": [
+            [
+              1,
+              3072,
+              1,
+              1
+            ],
+            [
+              1,
+              3072,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              3072,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/blocks.18/mlp/Mul_output_0",
+            "/blocks.19/mlp/Mul_output_0",
+            "/blocks.3/mlp/Mul_output_0",
+            "/blocks.27/mlp/Mul_output_0",
+            "/blocks.26/mlp/Mul_output_0",
+            "/blocks.5/mlp/Mul_output_0",
+            "/blocks.15/mlp/Mul_output_0",
+            "/blocks.8/mlp/Mul_output_0",
+            "/blocks.7/mlp/Mul_output_0",
+            "/blocks.2/mlp/Mul_output_0",
+            "/blocks.21/mlp/Mul_output_0",
+            "/blocks.20/mlp/Mul_output_0",
+            "/blocks.17/mlp/Mul_output_0",
+            "/blocks.24/mlp/Mul_output_0",
+            "/blocks.14/mlp/Mul_output_0",
+            "/blocks.1/mlp/Mul_output_0",
+            "/blocks.23/mlp/Mul_output_0",
+            "/blocks.6/mlp/Mul_output_0",
+            "/blocks.0/mlp/Mul_output_0",
+            "/blocks.12/mlp/Mul_output_0",
+            "/blocks.4/mlp/Mul_output_0",
+            "/blocks.25/mlp/Mul_output_0",
+            "/blocks.16/mlp/Mul_output_0",
+            "/blocks.22/mlp/Mul_output_0",
+            "/blocks.10/mlp/Mul_output_0",
+            "/blocks.9/mlp/Mul_output_0",
+            "/blocks.11/mlp/Mul_output_0",
+            "/blocks.13/mlp/Mul_output_0"
+          ],
+          "observedCalls": 56,
+          "totalMs": 0.266247,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "0d466251a5a25d4dc088e92f8ba79f862324fca16daddb58d9bcb7ef432bfbed",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/blocks.{layer}/post_attention_layernorm/Mul_1_output_0",
+          "operator": "LayerNorm",
+          "inputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ],
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ],
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/blocks.9/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.21/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.15/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.2/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.26/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.11/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.24/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.8/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.7/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.3/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.27/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.23/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.14/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.17/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.20/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.6/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.22/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.1/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.13/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.19/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.18/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.25/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.12/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.0/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.4/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.5/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.10/post_attention_layernorm/Mul_1_output_0",
+            "/blocks.16/post_attention_layernorm/Mul_1_output_0"
+          ],
+          "observedCalls": 56,
+          "totalMs": 0.11312600000000006,
+          "observedForwards": 2,
+          "callsPerForward": 28.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        },
+        {
+          "id": "a4442c0f8edaf8d8b126dca1e024feb440557f20491503b65d4bfbfb443700a8",
+          "model": "larkstudio-small-0.6b-v1",
+          "mnn": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+          "phase": "decode",
+          "role": "/blocks.{layer}/input_layernorm/Mul_1_output_0",
+          "operator": "LayerNorm",
+          "inputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ],
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "outputShapes": [
+            [
+              1,
+              1024,
+              1,
+              1
+            ],
+            [
+              1,
+              1024,
+              1,
+              1
+            ]
+          ],
+          "backendKeys": [
+            "backend0/coreBytes4"
+          ],
+          "sites": [
+            "/blocks.14/input_layernorm/Mul_1_output_0",
+            "/blocks.7/input_layernorm/Mul_1_output_0",
+            "/blocks.11/input_layernorm/Mul_1_output_0",
+            "/blocks.13/input_layernorm/Mul_1_output_0",
+            "/blocks.26/input_layernorm/Mul_1_output_0",
+            "/blocks.24/input_layernorm/Mul_1_output_0",
+            "/blocks.25/input_layernorm/Mul_1_output_0",
+            "/blocks.18/input_layernorm/Mul_1_output_0",
+            "/blocks.21/input_layernorm/Mul_1_output_0",
+            "/blocks.5/input_layernorm/Mul_1_output_0",
+            "/blocks.12/input_layernorm/Mul_1_output_0",
+            "/blocks.1/input_layernorm/Mul_1_output_0",
+            "/blocks.2/input_layernorm/Mul_1_output_0",
+            "/blocks.10/input_layernorm/Mul_1_output_0",
+            "/blocks.17/input_layernorm/Mul_1_output_0",
+            "/blocks.8/input_layernorm/Mul_1_output_0",
+            "/blocks.6/input_layernorm/Mul_1_output_0",
+            "/blocks.20/input_layernorm/Mul_1_output_0",
+            "/blocks.19/input_layernorm/Mul_1_output_0",
+            "/blocks.22/input_layernorm/Mul_1_output_0",
+            "/blocks.15/input_layernorm/Mul_1_output_0",
+            "/blocks.3/input_layernorm/Mul_1_output_0",
+            "/blocks.9/input_layernorm/Mul_1_output_0",
+            "/blocks.27/input_layernorm/Mul_1_output_0",
+            "/blocks.23/input_layernorm/Mul_1_output_0",
+            "/blocks.16/input_layernorm/Mul_1_output_0",
+            "/blocks.4/input_layernorm/Mul_1_output_0"
+          ],
+          "observedCalls": 54,
+          "totalMs": 0.10562400000000004,
+          "observedForwards": 2,
+          "callsPerForward": 27.0,
+          "reuseProven": false,
+          "dependencyLegalityProven": false,
+          "needsKvBucket": false,
+          "unverifiedFields": [
+            "operator subtype/attributes",
+            "layout",
+            "dtype/weight quantization ABI",
+            "ISA compatibility",
+            "dependency edges"
+          ]
+        }
+      ],
+      "scope": "Repeated single-node hints only; no subtype/layout/dependency proof or automatic graph fusion"
+    },
+    "decision": "keep_stock; both isolated choice tile256 and frequency-estimated choice tile4096 have no stable whole-LLM speedup",
+    "mathematicalScope": {
+      "master": "x_placement<=y_kernel, frequency-weighted runtime, development paid once, sunk/failed spend distinguished",
+      "pricing": "Exact finite known catalog with all activation variables and linkage rows present up front; includes linkage duals",
+      "onlineUnknownPatternPricingCertified": false,
+      "frequencyGreedy": "Weighted marginal gain with global redeployment; solver time is part of search cost",
+      "costDomains": "single_invocation and template_workload guarded against mixing/double counting",
+      "repeatedMining": "24 repeated single-node hints only, no dependency/layout/quant ABI proof"
+    },
+    "cooperation": {
+      "attempts": 1,
+      "timeoutSeconds": 40,
+      "proposalReceived": false,
+      "tokenUsage": null,
+      "ownedProcessTreeStopped": true
+    },
+    "guides": [
+      "docs/LLM_MULSILU_PILOT.md",
+      "docs/FREQUENCY_AWARE_COLUMN_GENERATION.md"
+    ]
   }
 }

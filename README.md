@@ -85,6 +85,8 @@
 
 独立[LLM算子实验App与自动化基线](docs/LLM_OPERATOR_LAB.md)已加入：固定真实音乐Qwen输入、分开测Prefill／Decode、候选编译与数值回归，以及CPLEX／CG／DP的有限候选库对照。原音乐App和权重保留；第三方系统的实际适配范围见文档。
 
+新增[频率感知＋共享开发预算模型](docs/FREQUENCY_AWARE_COLUMN_GENERATION.md)，区分开发一次与多位置／多token运行；[首轮真实候选](docs/LLM_MULSILU_PILOT.md)数值通过但未证明整LLM提速，仍保留原版。
+
 ```powershell
 python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v

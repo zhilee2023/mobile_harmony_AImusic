@@ -132,6 +132,15 @@ def _run_device(hdc,repo,remote_root,model,options,output,*,transport='app',bina
         if result['status']=='completed':
             hdc.receive(remote_root+'/runs/'+result['runId']+'/reference-logits.f32',output/'reference-logits.f32')
             if model:hdc.receive(remote_root+'/runs/'+result['runId']+'/reference-hidden.f32',output/'reference-hidden.f32')
+            capture=(result.get('operators') or {}).get('capture',{})
+            if capture.get('phases'):
+                (output/'captures').mkdir()
+                for phase in capture['phases'].values():
+                    for item in phase.values():
+                        name=item['file']
+                        if not re.fullmatch(r'[A-Za-z0-9_-]+\.f32',name):raise ValueError('Unsafe capture filename')
+                        hdc.receive(remote_root+'/runs/'+result['runId']+'/captures/'+name,output/'captures'/name)
+                        item['sha256']=hashlib.sha256((output/'captures'/name).read_bytes()).hexdigest()
         if reference is not None and result['status']=='completed':
             prior=json.loads((Path(reference)/'llm-operator-report.json').read_text(encoding='utf-8'));prior_native=prior['native']
             for field in ['profile','fixture','precision','threads','requestedDecodeSteps']:

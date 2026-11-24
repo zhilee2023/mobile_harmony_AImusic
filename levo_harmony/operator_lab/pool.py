@@ -17,6 +17,7 @@ class Spec:
     flops: float = 0
     predicted_ms: float | None = None
     baseline: bool = False
+    predicted_cost_domain: str = 'single_invocation'
 
     def validate(self, nodes):
         if not re.fullmatch(r'[A-Za-z0-9_.-]{1,100}', self.id):
@@ -35,6 +36,7 @@ class Outcome:
     latency_ms: float | None = None
     relative_l2: float | None = None
     source: str = 'unmeasured'
+    cost_domain: str = 'single_invocation'
 
     @property
     def passed(self):
@@ -59,12 +61,13 @@ class Pool:
     v1 deliberately models serial blocks with contiguous fusion intervals.
     It does not mislabel arbitrary-DAG fusion/peak liveness as implemented.
     """
-    def __init__(self, nodes, specs, outcomes, signature, scope):
+    def __init__(self, nodes, specs, outcomes, signature, scope, cost_domain='single_invocation'):
         if not isinstance(nodes, int) or not 1 <= nodes <= 256:
             raise ValueError('Serial block must have1–256 primitive nodes')
         if scope not in {'device_standalone', 'instrumented_callback_proxy', 'synthetic_test'}:
             raise ValueError('Unknown pool evidence scope')
-        self.nodes, self.signature, self.scope = nodes, signature, scope
+        if cost_domain not in {'single_invocation','template_workload'}:raise ValueError('Unknown cost domain')
+        self.nodes, self.signature, self.scope, self.cost_domain = nodes, signature, scope, cost_domain
         self.specs = {s.id: s for s in specs}
         if len(self.specs) != len(specs) or not self.specs:
             raise ValueError('Candidate IDs must be nonempty and unique')
@@ -75,6 +78,8 @@ class Pool:
         for spec in specs:
             spec.validate(nodes)
             self._outcomes[spec.id].validate()
+            if self._outcomes[spec.id].cost_domain!=cost_domain:raise ValueError('Do not mix per-call and workload-total outcome costs')
+            if spec.predicted_ms is not None and spec.predicted_cost_domain!=cost_domain:raise ValueError('Pricing predictor and master costs use different domains')
             if spec.baseline:
                 if spec.end != spec.start+1 or not self._outcomes[spec.id].passed:
                     raise ValueError('Seed baseline must be a passed native singleton')
@@ -99,7 +104,7 @@ class Pool:
         if value.get('schemaVersion') != 1:
             raise ValueError('Unknown pool schema')
         return cls(value['nodes'], [Spec(**s) for s in value['candidates']],
-                   {k: Outcome(**v) for k,v in value['outcomes'].items()}, value['signature'], value['scope'])
+                   {k: Outcome(**v) for k,v in value['outcomes'].items()}, value['signature'], value['scope'],value.get('costDomain','single_invocation'))
 
 
 class QueryOracle:

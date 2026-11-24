@@ -1,0 +1,20 @@
+{
+  "scope": "synthetic_test",
+  "nodes": 4,
+  "budgetUnit": "candidate_build_attempts",
+  "kernels": [
+    {"id":"native","development_cost":0,"compatibility":"toy-v1","native":true},
+    {"id":"A","development_cost":1,"compatibility":"toy-v1"},
+    {"id":"B","development_cost":1,"compatibility":"toy-v1"},
+    {"id":"C","development_cost":1,"compatibility":"toy-v1"}
+  ],
+  "placements": [
+    {"id":"n0","kernel":"native","covers":[0],"frequency":100,"latency_ms":1,"compatibility":"toy-v1","evidence":"prediction","relative_l2":null},
+    {"id":"n1","kernel":"native","covers":[1],"frequency":100,"latency_ms":1,"compatibility":"toy-v1","evidence":"prediction","relative_l2":null},
+    {"id":"n2","kernel":"native","covers":[2],"frequency":100,"latency_ms":1,"compatibility":"toy-v1","evidence":"prediction","relative_l2":null},
+    {"id":"n3","kernel":"native","covers":[3],"frequency":100,"latency_ms":1,"compatibility":"toy-v1","evidence":"prediction","relative_l2":null},
+    {"id":"a","kernel":"A","covers":[0,1],"frequency":100,"latency_ms":1.5,"compatibility":"toy-v1","evidence":"prediction","relative_l2":null},
+    {"id":"b","kernel":"B","covers":[1,2],"frequency":100,"latency_ms":1.2,"compatibility":"toy-v1","evidence":"prediction","relative_l2":null},
+    {"id":"c","kernel":"C","covers":[2,3],"frequency":100,"latency_ms":1.4,"compatibility":"toy-v1","evidence":"prediction","relative_l2":null}
+  ]
+}

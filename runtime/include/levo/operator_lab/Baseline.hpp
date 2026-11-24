@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <mutex>
 #include <sstream>
+#include "MlpCapture.hpp"
 
 namespace LlmOperatorLab {
 #ifndef LLM_OPERATOR_MNN_SHA256
@@ -48,6 +49,8 @@ inline Json inspect(const std::string& root,int model){
 }
 struct Profiler {
     std::string phase;size_t ordinal=0;Json nodes=Json::object();
+    MlpCapture capture;
+    explicit Profiler(std::string captureRoot={}):capture(std::move(captureRoot)){}
     struct Pending {std::string key;Clock::time_point start;};std::vector<Pending> pending;
     static Json shapes(const std::vector<MNN::Tensor*>& tensors){Json result=Json::array();for(auto t:tensors)result.push_back(t->shape());return result;}
     static uint64_t logicalBytes(const std::vector<MNN::Tensor*>& tensors){uint64_t value=0;for(auto t:tensors)value+=uint64_t(t->elementSize())*((t->getType().bits+7)/8);return value;}
@@ -55,9 +58,10 @@ struct Profiler {
         const std::string key=phase+"/"+std::to_string(ordinal++)+"/"+info->name();
         if(!nodes.contains(key))nodes[key]={{"id",key},{"phase",phase},{"name",info->name()},{"type",info->type()},{"calls",0},{"seconds",0.},{"maxSeconds",0.},
             {"inputShapes",shapes(tensors)},{"logicalInputBytes",logicalBytes(tensors)},{"mnnReportedFlops",info->flops()},{"backendObservations",Json::object()}};
+        capture.before(phase,info->name(),tensors);
         pending.push_back({key,Clock::now()});return true;
     };}
-    MNN::TensorCallBackWithInfo after(){return [this](const std::vector<MNN::Tensor*>& tensors,const MNN::OperatorInfo*){
+    MNN::TensorCallBackWithInfo after(){return [this](const std::vector<MNN::Tensor*>& tensors,const MNN::OperatorInfo* info){
         const auto end=Clock::now();require(!pending.empty(),"Unmatched operator callback");auto p=pending.back();pending.pop_back();auto& row=nodes[p.key];
         const double elapsed=std::chrono::duration<double>(end-p.start).count();row["calls"]=row["calls"].get<int>()+1;row["seconds"]=row["seconds"].get<double>()+elapsed;row["maxSeconds"]=std::max(row["maxSeconds"].get<double>(),elapsed);
         row["outputShapes"]=shapes(tensors);row["logicalOutputBytes"]=logicalBytes(tensors);
@@ -65,11 +69,11 @@ struct Profiler {
             const auto core=static_cast<MNN::CPUBackend*>(bn)->functions();const std::string tag="backend"+std::to_string(type)+"/coreBytes"+std::to_string(core->bytes);
             auto& counts=row["backendObservations"];counts[tag]=counts.value(tag,0)+1;
         }
-        return true;
+        capture.after(phase,info->name(),tensors);return true;
     };}
     Json report(){require(pending.empty(),"Incomplete operator callbacks");Json rows=Json::array();for(const auto& row:nodes)rows.push_back(row);
         std::sort(rows.begin(),rows.end(),[](const Json& a,const Json& b){return a["seconds"].get<double>()>b["seconds"].get<double>();});
-        return {{"nodes",rows},{"scope","Instrumented CPU callback wall time, separate from normal timing. IO bytes are logical tensor estimates; exclude implicit weights and internal KV reads; not measured DRAM/SRAM."}};
+        return {{"nodes",rows},{"capture",capture.report()},{"scope","Instrumented CPU callback wall time, separate from normal timing. IO bytes are logical tensor estimates; exclude implicit weights and internal KV reads; not measured DRAM/SRAM."}};
     }
 };
 inline void guard(const Json& options){
@@ -83,6 +87,7 @@ inline Json run(const std::string& root,int model,const Json& options){
     require(mode=="baseline"||mode=="operators","Unknown executor mode");const bool instrumented=mode=="operators";
     require(steps>0&&steps<=3000&&rounds>0&&rounds<=5&&threads>=1&&threads<=8,"Baseline dimensions outside experiment bounds");
     require(!instrumented||(steps<=4&&rounds==1),"Operator diagnostics use1round/at most4decode, excluded from baseline performance");
+    require(!options.value("captureMlp",false)||instrumented,"MLP capture is diagnostic-only");
     require(precision=="high"||precision=="low","Unknown CPU precision");
     auto checked=inspect(root,model);require(checked.value("ready",false),checked.value("error",std::string("Case not deployed")));
     const auto manifest=checked["manifest"];const int width=model?2560:1024;const bool hidden=model==1;
@@ -106,7 +111,7 @@ inline Json run(const std::string& root,int model,const Json& options){
         if(LlmOperatorCandidateSetup)LlmOperatorCandidateSetup();
         auto tick=Clock::now();std::unique_ptr<Llm,decltype(&Llm::destroy)> llm(Llm::createLLM(output+"/config.json"),&Llm::destroy);require(llm&&llm->load(),"Pinned music LM failed to load");report["loadMs"]=seconds(tick)*1000;
         const auto candidateBefore=LlmOperatorCandidateCalls?LlmOperatorCandidateCalls():0;
-        Profiler profiler;if(instrumented)llm->setDebugCallback(profiler.before(),profiler.after());
+        Profiler profiler(options.value("captureMlp",false)?output+"/captures":std::string());if(instrumented)llm->setDebugCallback(profiler.before(),profiler.after());
         std::vector<float> referenceLogits,referenceHidden;Json checkpointSteps=Json::array();
         for(int round=0;round<rounds;++round){
             llm->reset();llm->generate_init();guard(options);patch({{"round",round+1},{"phase","prefill"},{"decodeDone",0}});

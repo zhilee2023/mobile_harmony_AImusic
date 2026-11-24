@@ -3,6 +3,7 @@
 ## 交付范围
 
 独立工程`llm-operator-app/`，包名`com.zhilee.llmoperatorlab`，不覆盖LeVo音乐、流式实验或原模型包。
+新增[真实候选试验](LLM_MULSILU_PILOT.md)与[频率感知、共享开发模型](FREQUENCY_AWARE_COLUMN_GENERATION.md)：区分开发次数、调用次数及完整工作量成本。
 手机执行LLM固定工作量的baseline／算子诊断，电脑执行候选库查询、CPLEX／DP与编译回归链。
 本版不生成音乐、不调用DiT／VAE，也不把其计时冒充整首音乐RTF。
 
@@ -192,7 +193,7 @@ Agent stage输出签名和实际totalTokens；缺失计费数据记unknown，配
 
 ## 本次验证状态（2026-11-24）
 
-- Python完整测试85项通过，含CPLEX实际求解、DP、动态／固定对偶、失败预算、真实Phase-I与超时进程树回收。
+- Python完整测试104项通过，含CPLEX实际求解、DP、共享开发预算、频次／成本域、动态／固定对偶、失败预算、真实Phase-I与超时进程树回收。
 - 独立App已签名安装，0.6B与4B两套真实固定输入均完成前台亮屏基线、重复数值与单独热点诊断；旧App保持独立。
 - 命令行以100个**合成测试候选**完成8种策略×3个seed的24次查询研究；CPLEX整数Oracle与DP在数值容差内一致。该自检不是实机kernel性能。
 - 两套真实音乐LM及固定输入已复制到手机独立CLI测试目录并核对SHA256；没有改写旧App模型。
