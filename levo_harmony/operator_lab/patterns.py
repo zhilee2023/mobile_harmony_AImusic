@@ -72,10 +72,19 @@ def eligible(catalog,*,allow_predictions=False,epsilon=1e-3,workspace_budget=Non
             and (workspace_budget is None or p.workspace_bytes<=workspace_budget)]
 
 
-def solve_master(catalog,budget,*,active=None,integer=False,spent=0,traffic_budget=None,workspace_budget=None,allow_predictions=False,epsilon=1e-3,seconds=30):
+def amortized_development_weight(weight, expected_runs):
+    if not math.isfinite(weight) or weight < 0:
+        raise ValueError('Development weight must be finite and nonnegative')
+    if type(expected_runs) is not int or expected_runs < 1:
+        raise ValueError('Expected runs must be a positive integer')
+    return weight / expected_runs
+
+
+def solve_master(catalog,budget,*,active=None,integer=False,spent=0,traffic_budget=None,workspace_budget=None,allow_predictions=False,epsilon=1e-3,seconds=30,development_weight=0.,expected_runs=1):
     import cplex
     if any(not math.isfinite(v) or v<0 for v in [budget,spent]) or spent>budget:raise ValueError('Invalid development budget ledger')
     if not math.isfinite(epsilon) or epsilon<0 or workspace_budget is not None and workspace_budget<0:raise ValueError('Invalid error/workspace bound')
+    weight = amortized_development_weight(development_weight, expected_runs)
     placements=eligible(catalog,allow_predictions=allow_predictions,workspace_budget=workspace_budget,epsilon=epsilon)
     active=set(catalog.placements) if active is None else set(active)
     if not active<=catalog.placements.keys():raise ValueError('Unknown active placement')
@@ -87,7 +96,11 @@ def solve_master(catalog,budget,*,active=None,integer=False,spent=0,traffic_budg
     ny=len(kernels);nx=len(columns);art=0 if integer else catalog.nodes
     y={k.id:i for i,k in enumerate(kernels)};x={p.id:ny+i for i,p in enumerate(columns)}
     names=['develop_'+k.id for k in kernels]+['use_'+p.id for p in columns]+['art_'+str(i) for i in range(art)]
-    real_costs=[0.]*ny+[p.runtime_cost for p in columns]
+    development_coefficients = [weight * k.incremental_cost for k in kernels]
+    if not all(math.isfinite(value) for value in development_coefficients):
+        raise ValueError('Development penalty overflow')
+    # Activation costs are attached to y, once for any number of x placements.
+    real_costs=development_coefficients+[p.runtime_cost for p in columns]
     model.variables.add(names=names,obj=real_costs if integer else [0.]*(ny+nx)+[1.]*art,
                         lb=[0.]*len(names),ub=[1.]*(ny+nx)+[cplex.infinity]*art,types='B'*len(names) if integer else '')
     rows=[];rhs=[];senses=[]
@@ -112,16 +125,26 @@ def solve_master(catalog,budget,*,active=None,integer=False,spent=0,traffic_budg
         if sum(model.solution.get_values()[ny+nx:])>1e-7:phase='feasibility'
         else:
             model.variables.set_upper_bounds([(ny+nx+i,0.) for i in range(art)]);model.objective.set_linear(list(enumerate(real_costs+[0.]*art)));model.solve()
-    if not model.solution.is_primal_feasible():return dict(feasible=False,optimal=False,objectiveMs=None,selected=[],developed=[])
+    if not model.solution.is_primal_feasible():return dict(feasible=False,optimal=False,objectiveMs=None,runtimeMs=None,developmentPenaltyMs=None,selected=[],developed=[])
     optimal=model.solution.get_status()==(101 if integer else 1)
     if not integer and not optimal:raise RuntimeError('LP prices require optimal solve')
     values=model.solution.get_values();mass=sum(values[ny+nx:]);feasible=mass<=1e-7
-    result=dict(feasible=feasible,optimal=optimal,objectiveMs=sum(values[x[p.id]]*p.runtime_cost for p in columns) if feasible else None,
-        selected=[p.id for p in columns if values[x[p.id]]>1e-7],developed=[k.id for k in kernels if values[y[k.id]]>1e-7],
+    # With zero penalty the solver may leave unused activations on. Taking
+    # y_k=max_j x_kj preserves the objective and only frees budget.
+    activation = dict.fromkeys(catalog.kernels, 0.)
+    for placement in columns:
+        activation[placement.kernel] = max(activation[placement.kernel], values[x[placement.id]])
+    development_cost = math.fsum(activation[k.id] * k.incremental_cost for k in kernels)
+    runtime = math.fsum(values[x[p.id]] * p.runtime_cost for p in columns)
+    penalty = weight * development_cost
+    result=dict(feasible=feasible,optimal=optimal,objectiveMs=runtime+penalty if feasible else None,
+        runtimeMs=runtime if feasible else None,developmentPenaltyMs=penalty if feasible else None,
+        selected=[p.id for p in columns if values[x[p.id]]>1e-7],developed=[k.id for k in kernels if activation[k.id]>1e-7],
         usedKernels=sorted({p.kernel for p in columns if values[x[p.id]]>1e-7}),
-        developmentCost=sum(values[y[k.id]]*k.incremental_cost for k in kernels),budgetUnit=catalog.budget_unit,spentBudget=spent,
+        developmentCost=development_cost,budgetUnit=catalog.budget_unit,spentBudget=spent,
+        developmentWeight=development_weight,expectedRuns=expected_runs,effectiveDevelopmentWeight=weight,
         artificialMass=mass,pricingPhase=phase,performanceProven=False,
-        evidenceScope='Finite catalog additive runtime-cost model; callback/predicted costs and LP optimum are not actual whole-graph speedup')
+        evidenceScope='Finite catalog per-run combined objective. Predicted or callback cost does not establish whole-graph performance.')
     if not integer:
         dual=model.solution.get_dual_values();result.update(coverDuals=dual[:catalog.nodes],linkDuals={p.id:dual[link[p.id]] for p in placements},budgetDual=dual[budget_row],trafficDual=dual[traffic_row] if traffic_row is not None else 0.)
     return result
@@ -155,6 +178,7 @@ def frequency_greedy(catalog,budget,*,spent=0,**kwargs):
     comparisons. Paid development is irreversible, even if later not deployed.
     """
     tick=time.perf_counter();developed={k.id for k in catalog.kernels.values() if k.native or k.developed};paid=spent;trace=[]
+    weight = amortized_development_weight(kwargs.get('development_weight', 0.), kwargs.get('expected_runs', 1))
     def evaluate(extra=None):
         ks=[replace(k,developed=k.id in developed) for k in catalog.kernels.values()]
         current=Catalog(catalog.nodes,ks,list(catalog.placements.values()),budget_unit=catalog.budget_unit)
@@ -174,6 +198,7 @@ def frequency_greedy(catalog,budget,*,spent=0,**kwargs):
             if gain>1e-7:choices.append((gain/k.incremental_cost if k.incremental_cost else math.inf,k.id,gain,trial))
         if not choices:break
         _,kid,gain,_=max(choices,key=lambda c:(c[0],c[1]));paid+=catalog.kernels[kid].incremental_cost;developed.add(kid);base=evaluate()
-        trace.append(dict(kernel=kid,gainMs=gain,paidDevelopmentBudget=paid,objectiveMs=base['objectiveMs']))
-    return dict(solution=base,trace=trace,paidBudget=paid,seconds=time.perf_counter()-tick,
+        trace.append(dict(kernel=kid,gainMs=gain,paidDevelopmentBudget=paid,objectiveMs=base['runtimeMs']+weight*(paid-spent)))
+    return dict(solution=base,trace=trace,paidBudget=paid,newDevelopmentCost=paid-spent,
+                planningObjectiveMs=base['runtimeMs']+weight*(paid-spent),seconds=time.perf_counter()-tick,
                 scope='Offline marginal-gain greedy with global redeployment; frequency weighted, development paid once; not Agent token billing')

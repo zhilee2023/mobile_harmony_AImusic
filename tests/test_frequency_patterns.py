@@ -1,5 +1,7 @@
 import importlib.util,unittest
+import json
 from dataclasses import replace
+from pathlib import Path
 from levo_harmony.operator_lab.workload import Exposure,Timing,aggregate_cost,estimate_variant
 from levo_harmony.operator_lab.pool import Pool,Spec,Outcome
 from levo_harmony.operator_lab.patterns import Kernel,Placement,Catalog,solve_master,exact_catalog_cg,frequency_greedy
@@ -40,6 +42,12 @@ class WorkloadTests(unittest.TestCase):
 
 @unittest.skipUnless(importlib.util.find_spec('cplex'),'Optional CPLEX required')
 class PatternMasterTests(unittest.TestCase):
+    def fixed_cost_chain(self):
+        source = Path(__file__).resolve().parents[1] / 'configs/operator_lab/fixed_development_example.json'
+        data = json.loads(source.read_text(encoding='utf-8'))
+        return Catalog(data['nodes'], [Kernel(**k) for k in data['kernels']],
+                       [Placement(**p) for p in data['placements']], budget_unit=data['budgetUnit'])
+
     def shared(self):
         ks=[Kernel('native',0,'fp32',native=True),Kernel('shared',1,'fp32')]
         ps=[Placement('n'+str(i),'native',(i,),10,1,'fp32') for i in range(3)]
@@ -48,6 +56,49 @@ class PatternMasterTests(unittest.TestCase):
     def test_development_paid_once_for_three_placements(self):
         r=solve_master(self.shared(),1,integer=True)
         self.assertAlmostEqual(r['objectiveMs'],15);self.assertEqual(r['selected'],['s0','s1','s2']);self.assertAlmostEqual(r['developmentCost'],1)
+        weighted = solve_master(self.shared(), 1, integer=True, development_weight=4)
+        self.assertEqual(weighted['selected'], ['s0', 's1', 's2'])
+        self.assertAlmostEqual(weighted['runtimeMs'], 15)
+        self.assertAlmostEqual(weighted['developmentPenaltyMs'], 4)
+        self.assertAlmostEqual(weighted['objectiveMs'], 19)
+
+    def test_fixed_penalty_switches_strategies_at_both_breakpoints(self):
+        catalog = self.fixed_cost_chain()
+        for weight, time, cost in [(0, 12.5, 2), (.49, 12.5, 2), (1, 13, 1), (5.99, 13, 1), (6.01, 19, 0)]:
+            with self.subTest(weight=weight):
+                result = solve_master(catalog, 2, integer=True, development_weight=weight)
+                self.assertTrue(result['optimal'])
+                self.assertAlmostEqual(result['runtimeMs'], time)
+                self.assertAlmostEqual(result['developmentCost'], cost)
+                self.assertAlmostEqual(result['objectiveMs'], time + weight*cost)
+        for weight, tied in [(.5, 13.5), (6, 19)]:
+            self.assertAlmostEqual(solve_master(catalog, 2, integer=True,
+                                               development_weight=weight)['objectiveMs'], tied)
+
+    def test_amortization_changes_the_penalty_while_budget_and_sunk_cost_stay_fixed(self):
+        catalog = self.fixed_cost_chain()
+        result = solve_master(catalog, 2, integer=True, development_weight=1, expected_runs=10)
+        self.assertAlmostEqual(result['runtimeMs'], 12.5)
+        self.assertAlmostEqual(result['objectiveMs'], 12.7)
+        capped = solve_master(catalog, 2, integer=True, development_weight=1, expected_runs=10, spent=1)
+        self.assertAlmostEqual(capped['runtimeMs'], 13)
+        self.assertAlmostEqual(capped['developmentPenaltyMs'], .1)
+        developed = [replace(k, developed=True) if k.id == 'BC' else k for k in catalog.kernels.values()]
+        sunk = solve_master(Catalog(catalog.nodes, developed, list(catalog.placements.values())),
+                            1, integer=True, development_weight=10, spent=1)
+        self.assertAlmostEqual(sunk['objectiveMs'], 13)
+        self.assertAlmostEqual(sunk['developmentCost'], 0)
+
+    def test_weighted_pricing_matches_full_lp_and_greedy_keeps_paid_cost(self):
+        catalog = self.fixed_cost_chain()
+        cg = exact_catalog_cg(catalog, 2, development_weight=1)
+        full = solve_master(catalog, 2, development_weight=1)
+        self.assertAlmostEqual(cg['lp']['objectiveMs'], full['objectiveMs'])
+        self.assertAlmostEqual(cg['fullInteger']['objectiveMs'], 14)
+        greedy = frequency_greedy(catalog, 2, development_weight=1)
+        self.assertEqual([row['kernel'] for row in greedy['trace']], ['BC'])
+        self.assertAlmostEqual(greedy['planningObjectiveMs'], 14)
+        self.assertAlmostEqual(greedy['newDevelopmentCost'], 1)
     def test_failed_development_spend_and_sunk_kernels_are_distinct(self):
         c=self.shared();r=solve_master(c,1,spent=1,integer=True)
         self.assertAlmostEqual(r['objectiveMs'],30)

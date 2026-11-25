@@ -21,6 +21,10 @@ def main(argv=None):
     p.add_argument('--mode',choices=['mip','cg','frequency-greedy'],default='mip');p.add_argument('--allow-predictions',action='store_true');p.add_argument('--output',required=True)
     p.add_argument('--workspace-budget',type=int);p.add_argument('--traffic-budget',type=float)
     p.add_argument('--allow-synthetic',action='store_true')
+    p.add_argument('--development-weight',type=float,default=0.,
+                   help='One-time development penalty in ms per budget unit before amortization')
+    p.add_argument('--expected-runs',type=int,default=1,
+                   help='Amortize development over repetitions of the modeled workload')
     p=sub.add_parser('mine-repetitions');p.add_argument('--profile',required=True);p.add_argument('--output',required=True)
     p=sub.add_parser('mine-subgraphs');p.add_argument('--profile',required=True);p.add_argument('--graph',required=True)
     p.add_argument('--model-sha256',required=True);p.add_argument('--output',required=True)
@@ -34,6 +38,9 @@ def main(argv=None):
     p.add_argument('--expansion',choices=['bound','current'],default='bound')
     p.add_argument('--top-k',type=int,default=10);p.add_argument('--development-plan')
     p.add_argument('--prior');p.add_argument('--dual-alpha',type=float,default=1.)
+    p.add_argument('--development-weight',type=float,
+                   help='Rank by net marginal ms instead of by marginal ms per cost')
+    p.add_argument('--expected-runs',type=int,default=1)
     args=parser.parse_args(argv)
     if args.command=='pool-study':
         pool=Pool.read(args.pool)
@@ -46,7 +53,9 @@ def main(argv=None):
         data=json.loads(Path(args.catalog).read_text(encoding='utf-8'))
         if data.get('scope')=='synthetic_test' and not args.allow_synthetic:parser.error('Synthetic catalogs require --allow-synthetic')
         catalog=Catalog(data['nodes'],[Kernel(**k) for k in data['kernels']],[Placement(**p) for p in data['placements']],budget_unit=data['budgetUnit'])
-        kwargs=dict(spent=args.spent,workspace_budget=args.workspace_budget,traffic_budget=args.traffic_budget,allow_predictions=args.allow_predictions)
+        kwargs=dict(spent=args.spent,workspace_budget=args.workspace_budget,traffic_budget=args.traffic_budget,
+                    allow_predictions=args.allow_predictions,development_weight=args.development_weight,
+                    expected_runs=args.expected_runs)
         if args.mode=='cg':result=exact_catalog_cg(catalog,args.budget,**kwargs)
         elif args.mode=='frequency-greedy':result=frequency_greedy(catalog,args.budget,**kwargs)
         else:result=solve_master(catalog,args.budget,integer=True,**kwargs)
@@ -60,7 +69,8 @@ def main(argv=None):
             json.loads(Path(args.profile).read_text(encoding='utf-8')),model_sha256=args.model_sha256,
             bandwidth_gbps=args.bandwidth_gbps,width=args.beam_width,maximum=args.max_nodes,
             policy=args.policy,verified=verified,epsilon=args.epsilon,expansion=args.expansion,
-            top_k=args.top_k,development=plan,prior=prior,alpha=args.dual_alpha)
+            top_k=args.top_k,development=plan,prior=prior,alpha=args.dual_alpha,
+            development_weight=args.development_weight,expected_runs=args.expected_runs)
         write_new(args.output,result)
         for phase,data in result['phases'].items():
             print(f"{phase}: {len(data['proposals'])} proposals, {data['nonzeroDualRows']} nonzero dual rows")

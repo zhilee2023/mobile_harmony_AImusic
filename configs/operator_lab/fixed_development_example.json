@@ -1,0 +1,22 @@
+{
+  "scope": "synthetic_test",
+  "nodes": 7,
+  "budgetUnit": "candidate_build_attempts",
+  "kernels": [
+    {"id": "native", "development_cost": 0, "compatibility": "chain-v1", "native": true},
+    {"id": "BC", "development_cost": 1, "compatibility": "chain-v1"},
+    {"id": "EB", "development_cost": 1, "compatibility": "chain-v1"}
+  ],
+  "placements": [
+    {"id": "a", "kernel": "native", "covers": [0], "frequency": 1, "latency_ms": 2, "compatibility": "chain-v1"},
+    {"id": "b_first", "kernel": "native", "covers": [1], "frequency": 1, "latency_ms": 3, "compatibility": "chain-v1"},
+    {"id": "c_first", "kernel": "native", "covers": [2], "frequency": 1, "latency_ms": 2, "compatibility": "chain-v1"},
+    {"id": "d", "kernel": "native", "covers": [3], "frequency": 1, "latency_ms": 3, "compatibility": "chain-v1"},
+    {"id": "e", "kernel": "native", "covers": [4], "frequency": 1, "latency_ms": 4, "compatibility": "chain-v1"},
+    {"id": "b_last", "kernel": "native", "covers": [5], "frequency": 1, "latency_ms": 3, "compatibility": "chain-v1"},
+    {"id": "c_last", "kernel": "native", "covers": [6], "frequency": 1, "latency_ms": 2, "compatibility": "chain-v1"},
+    {"id": "bc_first", "kernel": "BC", "covers": [1, 2], "frequency": 1, "latency_ms": 2, "compatibility": "chain-v1"},
+    {"id": "bc_last", "kernel": "BC", "covers": [5, 6], "frequency": 1, "latency_ms": 2, "compatibility": "chain-v1"},
+    {"id": "eb_last", "kernel": "EB", "covers": [4, 5], "frequency": 1, "latency_ms": 3.5, "compatibility": "chain-v1"}
+  ]
+}

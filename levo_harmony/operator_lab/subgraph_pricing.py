@@ -7,6 +7,7 @@ import math
 import time
 
 from .subgraphs import PURE_TYPES, _graphs, _json, matched_profile_rows, profile_context
+from .patterns import amortized_development_weight
 
 
 @dataclass(frozen=True)
@@ -321,10 +322,15 @@ def _cover_price_bound(prices, existing):
     return cover
 
 
-def _marginal_ranking(graph, master, existing, proposals, new_sites, limit, plan, *, prices=None):
+def _marginal_ranking(graph, master, existing, proposals, new_sites, limit, plan, *, prices=None, weight=None):
     if not master['optimal']:
         return [], {'status': 'base_integer_optimum_unavailable', 'bestInDiscoveredPoolCertified': False}
     costs, default_cost, remaining, blocked = _development_settings(plan)
+    weighted = weight is not None
+
+    def score(gain, cost):
+        return gain - weight * cost if weighted else gain / cost
+
     shortlist = []
     cover = _cover_price_bound(prices, existing) if prices is not None else None
     gap = max(0.0, math.fsum(cover.values()) - master['gainMs']) if cover is not None else None
@@ -341,28 +347,39 @@ def _marginal_ranking(graph, master, existing, proposals, new_sites, limit, plan
             positive_reduced = math.fsum(max(0, site.gain_ms -
                 math.fsum(cover.get(node, 0.0) for node in site.region)) for site in candidate_sites)
             upper = min(upper, gap + positive_reduced)
-        shortlist.append((upper / cost, identifier, cost))
+        shortlist.append((score(upper, cost), identifier, cost, upper))
     shortlist.sort(key=lambda item: (-item[0], item[1]))
+    if weighted:
+        limit = min(limit, sum(bound > 1e-9 for bound, *_ in shortlist))
     ranking = []
-    unresolved = [value for value, _, _ in shortlist[limit:]]
-    for upper_per_cost, identifier, cost in shortlist[:limit]:
+    unresolved = [value for value, *_ in shortlist[limit:]]
+    for bound, identifier, cost, gross_upper in shortlist[:limit]:
         trial, _ = solve_packing(graph, existing + new_sites[identifier])
         gain = max(0.0, trial['gainMs'] - master['gainMs']) if trial['optimal'] else None
         if gain is None:
-            unresolved.append(upper_per_cost)
+            unresolved.append(bound)
         ranking.append({'id': identifier, 'predictedMarginalMs': gain, 'estimatedCost': cost,
                         'predictedMarginalMsPerCost': gain / cost if gain is not None else None,
-                        'marginalUpperMsPerCost': upper_per_cost,
+                        'marginalUpperMsPerCost': gross_upper / cost,
+                        'developmentPenaltyMs': weight * cost if weighted else None,
+                        'predictedNetMarginalMs': score(gain, cost) if weighted and gain is not None else None,
+                        'selectionScore': score(gain, cost) if gain is not None else None,
                         'deploymentCostModelSolved': trial['optimal']})
-    ranking.sort(key=lambda r: (r['predictedMarginalMs'] is None,
-        -(r['predictedMarginalMsPerCost'] or 0), r['id']))
-    best = ranking[0]['predictedMarginalMsPerCost'] if ranking else None
+    ranking.sort(key=lambda r: (r['selectionScore'] is None, -(r['selectionScore'] or 0), r['id']))
+    best = ranking[0]['selectionScore'] if ranking else None
     unresolved_upper = max(unresolved, default=None)
+    # Keeping the existing plan is available with zero incremental value.
+    incumbent = max(0.0, best or 0.0)
+    certify = (weighted or best is not None) and (
+        unresolved_upper is None or unresolved_upper <= incumbent + 1e-9)
     summary = {'status': 'evaluated' if ranking else 'none_evaluated',
                'eligibleCandidates': len(shortlist), 'evaluatedCandidates': len(ranking),
-               'coverageLpGapUpperMs': gap, 'unresolvedUpperMsPerCost': unresolved_upper,
-               'bestInDiscoveredPoolCertified': (best is not None and
-                   (unresolved_upper is None or unresolved_upper <= best + 1e-9)),
+               'coverageLpGapUpperMs': gap,
+               'selectionMetric': 'net_marginal_ms' if weighted else 'marginal_ms_per_cost',
+               'unresolvedUpperMsPerCost': unresolved_upper if not weighted else None,
+               'unresolvedUpperNetMs': unresolved_upper if weighted else None,
+               'recommendedDevelopmentId': ranking[0]['id'] if incumbent > 1e-9 else None,
+               'bestInDiscoveredPoolCertified': certify,
                'certificateScope': 'One next development choice, discovered candidates, additive input cost model'}
     return ranking, summary
 
@@ -379,7 +396,8 @@ def _smoothed_prices(prices, rows, previous, alpha):
 
 def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
                     width=32, maximum=6, policy='dual', verified=None, epsilon=.001,
-                    expansion='bound', top_k=10, development=None, prior=None, alpha=1.0):
+                    expansion='bound', top_k=10, development=None, prior=None, alpha=1.0,
+                    development_weight=None, expected_runs=1):
     if not 2 <= maximum <= 6 or not 1 <= width <= 256:
         raise ValueError('Use 2–6 nodes and a beam width of 1–256')
     if not math.isfinite(bandwidth_gbps) or bandwidth_gbps <= 0 or not math.isfinite(epsilon) or epsilon < 0:
@@ -388,6 +406,7 @@ def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
         raise ValueError('Unknown search policy')
     if expansion not in {'bound', 'current'} or not 0 <= top_k <= 30 or not 0 < alpha <= 1:
         raise ValueError('Invalid expansion, shortlist size or dual smoothing factor')
+    weight = amortized_development_weight(0. if development_weight is None else development_weight, expected_runs)
     _development_settings(development)
     native, forwards, context, lookup = profile_context(report, model_sha256)
     profile_sha = hashlib.sha256(_json(report).encode()).hexdigest()
@@ -447,7 +466,8 @@ def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
                 'priorityScoreMs': bundle['gainMs'], 'bundleOptimal': bundle['optimal'],
                 'evidence': 'predicted_logical_traffic', 'fusionReady': False})
         ranked, ranking_status = _marginal_ranking(graph, master, verified_sites, proposals,
-            new_sites, top_k, development, prices=prices if policy == 'dual' else None)
+            new_sites, top_k, development, prices=prices if policy == 'dual' else None,
+            weight=weight if development_weight is not None else None)
         phases[phase] = {'observedForwards': count, 'verifiedSites': len(verified_sites),
             'verifiedMaster': master, 'nonzeroDualRows': sum(v > 1e-9 for v in prices.values()),
             'dualRowsUsed': sum(v > 1e-9 for v in search.prices.values()),
@@ -457,6 +477,8 @@ def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
     return {'schemaVersion': 1, 'modelId': native['modelId'], 'modelSha256': model_sha256,
         'profileSha256': profile_sha, 'graphSha256': graph_sha, 'policy': policy, 'beamWidth': width,
         'maxNodes': maximum, 'expansion': expansion, 'topK': top_k, 'dualAlpha': alpha,
+        'developmentWeight': development_weight, 'expectedRuns': expected_runs,
+        'effectiveDevelopmentWeight': weight if development_weight is not None else None,
         'proxyBandwidthGBs': bandwidth_gbps, 'expansionSitesPerTemplate': 2, 'phases': phases,
         'pricingComplete': False, 'dualRelaxation': 'Primitive nonoverlap LP, before contraction cycle cuts',
         'scope': 'Finite beam and logical tensor traffic proxy; only supplied paired-device measurements enter the master. No end-to-end gain estimate.'}

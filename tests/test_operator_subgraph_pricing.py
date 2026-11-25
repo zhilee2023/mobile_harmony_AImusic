@@ -139,6 +139,26 @@ class PricingTests(unittest.TestCase):
         self.assertEqual(status['unresolvedUpperMsPerCost'], 50)
         self.assertFalse(status['bestInDiscoveredPoolCertified'])
 
+    def test_weighted_next_choice_charges_a_reusable_implementation_once(self):
+        graph = TensorGraph('toy', [node(str(i), 'UnaryOp', [i], [i+1]) for i in range(7)])
+        existing = [Site('bc0', frozenset({1, 2}), 3), Site('bc1', frozenset({5, 6}), 3)]
+        sites = {'eb': [Site('eb', frozenset({4, 5}), 3.5)]}
+        master, prices = solve_packing(graph, existing)
+        proposals = [{'id': 'eb'}]
+        _, expensive = _marginal_ranking(graph, master, existing, proposals, sites,
+                                         1, None, prices=prices, weight=1.)
+        self.assertIsNone(expensive['recommendedDevelopmentId'])
+        self.assertTrue(expensive['bestInDiscoveredPoolCertified'])
+        rows, cheap = _marginal_ranking(graph, master, existing, proposals, sites,
+                                        1, None, prices=prices, weight=.25)
+        self.assertEqual(cheap['recommendedDevelopmentId'], 'eb')
+        self.assertAlmostEqual(rows[0]['predictedMarginalMs'], .5)
+        self.assertAlmostEqual(rows[0]['predictedNetMarginalMs'], .25)
+        empty, prices = solve_packing(graph, [])
+        reused, _ = _marginal_ranking(graph, empty, [], [{'id': 'bc'}], {'bc': existing},
+                                     1, None, prices=prices, weight=1.)
+        self.assertAlmostEqual(reused[0]['predictedNetMarginalMs'], 5)
+
     def test_stabilization_uses_same_graph_and_profile_without_changing_integer_master(self):
         graph, report = fixture([node('a', 'UnaryOp', [0], [1]), node('b', 'UnaryOp', [1], [2])])
         verified = {

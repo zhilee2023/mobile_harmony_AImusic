@@ -167407,5 +167407,185 @@
     },
     "pythonTestsPassed": 129,
     "scopeLimit": "Certificate covers one candidate choice, within discovered candidates and the additive cost model. No Beam completeness or physical speedup is certified."
+  },
+  "llmFixedDevelopmentObjective20261125": {
+    "date": "2026-11-25",
+    "scope": "Synthetic BC/EB sensitivity and a replay of an existing diagnostic profile. No new device timings.",
+    "objective": "runtimeMs + (developmentWeight / expectedRuns) * newDevelopmentCost",
+    "syntheticBreakpointsEffectiveWeight": [
+      0.5,
+      6
+    ],
+    "syntheticTrials": [
+      {
+        "mode": "mip",
+        "budget": 2,
+        "developmentWeight": 0.0,
+        "expectedRuns": 1,
+        "effectiveDevelopmentWeight": 0.0,
+        "runtimeMs": 12.5,
+        "developmentCost": 2.0,
+        "developmentPenaltyMs": 0.0,
+        "objectiveMs": 12.5,
+        "usedKernels": [
+          "BC",
+          "EB",
+          "native"
+        ]
+      },
+      {
+        "mode": "mip",
+        "budget": 2,
+        "developmentWeight": 0.25,
+        "expectedRuns": 1,
+        "effectiveDevelopmentWeight": 0.25,
+        "runtimeMs": 12.5,
+        "developmentCost": 2.0,
+        "developmentPenaltyMs": 0.5,
+        "objectiveMs": 13.0,
+        "usedKernels": [
+          "BC",
+          "EB",
+          "native"
+        ]
+      },
+      {
+        "mode": "mip",
+        "budget": 2,
+        "developmentWeight": 0.5,
+        "expectedRuns": 1,
+        "effectiveDevelopmentWeight": 0.5,
+        "runtimeMs": 12.5,
+        "developmentCost": 2.0,
+        "developmentPenaltyMs": 1.0,
+        "objectiveMs": 13.5,
+        "usedKernels": [
+          "BC",
+          "EB",
+          "native"
+        ]
+      },
+      {
+        "mode": "mip",
+        "budget": 2,
+        "developmentWeight": 1.0,
+        "expectedRuns": 1,
+        "effectiveDevelopmentWeight": 1.0,
+        "runtimeMs": 13.0,
+        "developmentCost": 1.0,
+        "developmentPenaltyMs": 1.0,
+        "objectiveMs": 14.0,
+        "usedKernels": [
+          "BC",
+          "native"
+        ]
+      },
+      {
+        "mode": "mip",
+        "budget": 2,
+        "developmentWeight": 6.0,
+        "expectedRuns": 1,
+        "effectiveDevelopmentWeight": 6.0,
+        "runtimeMs": 19.0,
+        "developmentCost": 0.0,
+        "developmentPenaltyMs": 0.0,
+        "objectiveMs": 19.0,
+        "usedKernels": [
+          "native"
+        ]
+      },
+      {
+        "mode": "mip",
+        "budget": 2,
+        "developmentWeight": 7.0,
+        "expectedRuns": 1,
+        "effectiveDevelopmentWeight": 7.0,
+        "runtimeMs": 19.0,
+        "developmentCost": 0.0,
+        "developmentPenaltyMs": 0.0,
+        "objectiveMs": 19.0,
+        "usedKernels": [
+          "native"
+        ]
+      },
+      {
+        "mode": "mip",
+        "budget": 2,
+        "developmentWeight": 1.0,
+        "expectedRuns": 10,
+        "effectiveDevelopmentWeight": 0.1,
+        "runtimeMs": 12.5,
+        "developmentCost": 2.0,
+        "developmentPenaltyMs": 0.2,
+        "objectiveMs": 12.7,
+        "usedKernels": [
+          "BC",
+          "EB",
+          "native"
+        ]
+      },
+      {
+        "mode": "mip",
+        "budget": 1,
+        "developmentWeight": 1.0,
+        "expectedRuns": 10,
+        "effectiveDevelopmentWeight": 0.1,
+        "runtimeMs": 13.0,
+        "developmentCost": 1.0,
+        "developmentPenaltyMs": 0.1,
+        "objectiveMs": 13.1,
+        "usedKernels": [
+          "BC",
+          "native"
+        ]
+      },
+      {
+        "mode": "cg",
+        "budget": 2,
+        "developmentWeight": 1.0,
+        "expectedRuns": 1,
+        "effectiveDevelopmentWeight": 1.0,
+        "runtimeMs": 13.0,
+        "developmentCost": 1.0,
+        "developmentPenaltyMs": 1.0,
+        "objectiveMs": 14.0,
+        "usedKernels": [
+          "BC",
+          "native"
+        ]
+      }
+    ],
+    "weightedDiagnosticReplay": {
+      "developmentWeight": 100.0,
+      "phases": {
+        "prefill": {
+          "status": "none_evaluated",
+          "eligibleCandidates": 52,
+          "evaluatedCandidates": 0,
+          "coverageLpGapUpperMs": 0.0,
+          "selectionMetric": "net_marginal_ms",
+          "unresolvedUpperMsPerCost": null,
+          "unresolvedUpperNetMs": -37.66247191258152,
+          "recommendedDevelopmentId": null,
+          "bestInDiscoveredPoolCertified": true,
+          "certificateScope": "One next development choice, discovered candidates, additive input cost model"
+        },
+        "decode": {
+          "status": "none_evaluated",
+          "eligibleCandidates": 54,
+          "evaluatedCandidates": 0,
+          "coverageLpGapUpperMs": 0.0,
+          "selectionMetric": "net_marginal_ms",
+          "unresolvedUpperMsPerCost": null,
+          "unresolvedUpperNetMs": -99.75696870141357,
+          "recommendedDevelopmentId": null,
+          "bestInDiscoveredPoolCertified": true,
+          "certificateScope": "One next development choice, discovered candidates, additive input cost model"
+        }
+      }
+    },
+    "pythonTestsPassed": 133,
+    "newDevelopmentCostPaidOnce": true,
+    "pastAttemptsStillUseHardBudget": true
   }
 }
