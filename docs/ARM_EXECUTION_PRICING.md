@@ -11,7 +11,21 @@
 
 两种候选均未通过相对 L2 0.1% 的数值筛选。两组的原版重复输出逐元素一致。保持原 DiT 路径。分时数据来自 27–30°C 的亮屏 CLI。两种候选使用各自同组的原版基线。
 
-独立实验入口为 `levo_dit_gelu_pricing BUNDLE CODES_JSON NEW_OUTPUT_DIR stock|gelu|cube`。实验在内存中重写，保持原图和外部权重文件的内容。可单独构建 `levo_dit_gelu_pricing`。输出 velocity 是本地配对输入，结果 JSON 可用来验收。
+独立实验入口为 `levo_dit_gelu_pricing BUNDLE CODES_JSON NEW_OUTPUT_DIR stock|gelu|cube [--trace]`。实验在内存中重写，保持原图和外部权重文件的内容。可单独构建 `levo_dit_gelu_pricing`。输出 velocity 是本地配对输入，结果 JSON 可用来验收。`--trace` 采集第一去噪步的中间结果，独立于性能计时。
+
+### 数值差异追踪
+
+复用同一首窗输入。第一层 Up 输出三种写法逐元素一致。原生 ARM GELU 使用有理式近似 Tanh，原图的独立 Tanh 走指数计算。单改 Pow 时，`pow(x,3)` 与两次 FP32 乘法的舍入也不同。测试对相同首个 FFN 的 Tanh GELU 输出和随后 Down 投影的 A8 输入进行了独立采样。
+
+| 首步检查点 | 原生 GELU | 两次乘法 |
+| --- | ---: | ---: |
+| 第一层 GELU 输出相对 L2 | 0.002565% | 7.94e-7% |
+| 第一层动态 A8 变化 | 8 个值，分布在 8 行 | 0 |
+| 第一层 Down 输出相对 L2 | 0.10901% | 0% |
+| 第 11 层 Down 输出相对 L2 | 4.86546% | 2.29161% |
+| 第一处 Down 的动态 A8 变化 | 第 1 层 | 第 5 层 |
+
+GELU 版首层有 8 个 A8 码改变，恰好对应 Down 输出上发生变化的同 8 行和 9,600 个元素。W8 Dense 的输入在 Packing 前动态量化。独立的逐层 A8 摘要显示，到第二去噪步两种候选的 22 层 Down 均与原版不同。第二步的 latent 来自第一步 velocity 更新，会继承第一步差异。插桩前后 velocity 对每个变体均逐元素一致。
 
 ## 实际 W4 执行路径
 

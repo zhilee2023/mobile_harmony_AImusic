@@ -168038,5 +168038,278 @@
       "bothRequirePackAbiParity": true,
       "scope": "Graph identity and current operator timings. Reuse performance not measured."
     }
+  },
+  "frameworkAwareDiTGeluNumericTrace20261125": {
+    "date": "2026-11-25",
+    "scope": "Real DiT sample, separate CPU High numeric trace. No change to default inference. Callback hotspots use the earlier four measured forward calls.",
+    "hotspotsMsPerStep": {
+      "ffnDown": 397.98870975,
+      "raster": 306.58206924999996,
+      "mlpPow": 240.4449215,
+      "ffnUp": 198.43113449999998,
+      "qkv": 153.1327735
+    },
+    "checkpoints": {
+      "gelu": {
+        "down": {
+          "relativeL2": 0.001090088682010611,
+          "maxAbs": 0.07683861255645752,
+          "elementDiffCount": 9600,
+          "elements": 614400
+        },
+        "down10": {
+          "relativeL2": 0.04865456849916093,
+          "maxAbs": 0.26397062838077545,
+          "elementDiffCount": 614400,
+          "elements": 614400
+        },
+        "down21": {
+          "relativeL2": 0.2373391740808896,
+          "maxAbs": 4.4781365394592285,
+          "elementDiffCount": 614400,
+          "elements": 614400
+        },
+        "gelu": {
+          "relativeL2": 2.5647726171985364e-05,
+          "maxAbs": 0.00018229743000119925,
+          "elementDiffCount": 1826117,
+          "elements": 2457600
+        },
+        "up": {
+          "relativeL2": 0.0,
+          "maxAbs": 0.0,
+          "elementDiffCount": 0,
+          "elements": 2457600
+        },
+        "velocity": [
+          {
+            "relativeL2": 0.04207830847051308,
+            "maxAbs": 0.2699149250984192,
+            "elementDiffCount": 32768,
+            "elements": 32768
+          },
+          {
+            "relativeL2": 0.09326203677506839,
+            "maxAbs": 1.106502890586853,
+            "elementDiffCount": 32768,
+            "elements": 32768
+          }
+        ]
+      },
+      "cube": {
+        "down": {
+          "relativeL2": 0.0,
+          "maxAbs": 0.0,
+          "elementDiffCount": 0,
+          "elements": 614400
+        },
+        "down10": {
+          "relativeL2": 0.022916069395146153,
+          "maxAbs": 0.11463379859924316,
+          "elementDiffCount": 307200,
+          "elements": 614400
+        },
+        "down21": {
+          "relativeL2": 0.16502937254246797,
+          "maxAbs": 5.086714148521423,
+          "elementDiffCount": 358238,
+          "elements": 614400
+        },
+        "gelu": {
+          "relativeL2": 7.94170394326665e-09,
+          "maxAbs": 5.937851028647856e-07,
+          "elementDiffCount": 8899,
+          "elements": 2457600
+        },
+        "power": {
+          "relativeL2": 4.6204038002627285e-08,
+          "maxAbs": 0.015625,
+          "elementDiffCount": 634387,
+          "elements": 2457600
+        },
+        "up": {
+          "relativeL2": 0.0,
+          "maxAbs": 0.0,
+          "elementDiffCount": 0,
+          "elements": 2457600
+        },
+        "velocity": [
+          {
+            "relativeL2": 0.028475956864368424,
+            "maxAbs": 0.26641952991485596,
+            "elementDiffCount": 19203,
+            "elements": 32768
+          },
+          {
+            "relativeL2": 0.06950663568263803,
+            "maxAbs": 0.8422763347625732,
+            "elementDiffCount": 32768,
+            "elements": 32768
+          }
+        ]
+      }
+    },
+    "firstDownQuantization": {
+      "stock": {
+        "W8Route": {
+          "weightBits": 8,
+          "dynamic": 1,
+          "quantBeforePacking": 1,
+          "batchedQuant": 1,
+          "option": 0,
+          "channelPack": 4,
+          "inputBlocks": 1
+        },
+        "int8ElementsChanged": 0,
+        "int8RowsChanged": [],
+        "downRowsChanged": [],
+        "originalTraceVelocityIdentical": true,
+        "step1DownLayersWithDifferentQuantizedA": [],
+        "step2DownLayersWithDifferentQuantizedA": []
+      },
+      "gelu": {
+        "W8Route": {
+          "weightBits": 8,
+          "dynamic": 1,
+          "quantBeforePacking": 1,
+          "batchedQuant": 1,
+          "option": 0,
+          "channelPack": 4,
+          "inputBlocks": 1
+        },
+        "int8ElementsChanged": 8,
+        "int8RowsChanged": [
+          45,
+          130,
+          180,
+          224,
+          261,
+          267,
+          402,
+          415
+        ],
+        "downRowsChanged": [
+          45,
+          130,
+          180,
+          224,
+          261,
+          267,
+          402,
+          415
+        ],
+        "originalTraceVelocityIdentical": true,
+        "step1DownLayersWithDifferentQuantizedA": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ],
+        "step2DownLayersWithDifferentQuantizedA": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      "cube": {
+        "W8Route": {
+          "weightBits": 8,
+          "dynamic": 1,
+          "quantBeforePacking": 1,
+          "batchedQuant": 1,
+          "option": 0,
+          "channelPack": 4,
+          "inputBlocks": 1
+        },
+        "int8ElementsChanged": 0,
+        "int8RowsChanged": [],
+        "downRowsChanged": [],
+        "originalTraceVelocityIdentical": true,
+        "step1DownLayersWithDifferentQuantizedA": [
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ],
+        "step2DownLayersWithDifferentQuantizedA": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      }
+    },
+    "checkpointBinarySha256": "cb82889ffc3031d1cc873cdda08d5ab87683dd4ef997534edaff46fbf1e6a01e",
+    "privateQuantizationProbeSha256": "75981d5ddfbd173257a402e7afdb269ce624047cfc80c690c1c11d492b80c93b",
+    "digestsOnlyForLaterQuantizedDownInputs": true
   }
 }

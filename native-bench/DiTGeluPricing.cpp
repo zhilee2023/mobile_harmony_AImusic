@@ -162,17 +162,37 @@ std::vector<float> conditioning(const std::string& root, const std::string& code
     }
     return mu;
 }
+
+const char* checkpoint(const std::string& name) {
+    const auto first = std::string("/cfm/estimator/h.0/mlp/");
+    if (name == first + "c_fc/Gemm_output_0__matmul_converted") return "up";
+    if (name == first + "act/Pow_output_0") return "power";
+    if (name == first + "act/Mul_3_output_0" || name == first + "act/GeluPricing") return "gelu";
+    if (name == first + "c_proj/Gemm_output_0__matmul_converted") return "down";
+    if (name == "/cfm/estimator/h.10/mlp/c_proj/Gemm_output_0__matmul_converted") return "down10";
+    if (name == "/cfm/estimator/h.21/mlp/c_proj/Gemm_output_0__matmul_converted") return "down21";
+    return nullptr;
+}
+
+void capture(const std::string& path, MNN::Tensor* tensor) {
+    MNN::Tensor host(tensor, MNN::Tensor::CAFFE, true);
+    require(host.getType().bits == 32 && tensor->copyToHostTensor(&host), "Checkpoint capture failed");
+    std::ofstream file(path, std::ios::binary);
+    require(bool(file.write(reinterpret_cast<const char*>(host.host<float>()),
+                            host.elementSize() * sizeof(float))), "Checkpoint write failed");
+}
 }
 
 int main(int argc, char** argv) {
-    if (argc != 5) {
-        std::cerr << "bundleDir codes.json outputDir stock|gelu|cube\n";
+    if (argc != 5 && (argc != 6 || std::string(argv[5]) != "--trace")) {
+        std::cerr << "bundleDir codes.json outputDir stock|gelu|cube [--trace]\n";
         return 2;
     }
+    const bool traceNumerics = argc == 6;
     const std::string bundle = argv[1], output = argv[3], mode = argv[4];
     Json report = {{"success", false}, {"mode", mode}, {"fixture", "first 256 real music codes, fixed noise"},
                    {"precision", "CPU High"}, {"threads", 6}, {"batch", 2}, {"cfgScale", 1.5},
-                   {"stepsPerRound", 2}, {"rounds", Json::array()}};
+                   {"stepsPerRound", 2}, {"rounds", Json::array()}, {"checkpointTrace", traceNumerics}};
     if (std::filesystem::exists(output)) return 3;
     std::filesystem::create_directories(output);
     Trace trace;
@@ -189,6 +209,7 @@ int main(int argc, char** argv) {
         require(bool(net), "Cannot load DiT");
         net->setExternalFile(weight.c_str());
         net->setSessionMode(MNN::Interpreter::Session_Resize_Defer);
+        if (traceNumerics) net->setSessionMode(MNN::Interpreter::Session_Debug);
         net->setSessionHint(MNN::Interpreter::CPU_ENABLE_KLEIDIAI, 0);
         MNN::BackendConfig backend;
         backend.precision = MNN::BackendConfig::Precision_High;
@@ -227,7 +248,8 @@ int main(int argc, char** argv) {
         }
         const std::vector<float> attention(2 * frames * frames, 1.f);
         std::ofstream reference(output + "/velocity.f32", std::ios::binary);
-        for (int round = 0; round < 3; ++round) {
+        Json checkpoints = Json::array();
+        for (int round = 0; round < (traceNumerics ? 1 : 3); ++round) {
             auto latent = noise;
             Json steps = Json::array();
             for (int step = 0; step < 2; ++step) {
@@ -240,7 +262,21 @@ int main(int argc, char** argv) {
                 put("attention_mask", attention);
                 put("timestep", std::vector<float>(2, step * .5f));
                 const auto kernel = Clock::now();
-                require(net->runSession(session) == MNN::NO_ERROR, "DiT forward failed");
+                if (traceNumerics && step == 0) {
+                    const auto before = [](const std::vector<MNN::Tensor*>&, const MNN::OperatorInfo*) { return true; };
+                    const auto after = [&](const std::vector<MNN::Tensor*>& tensors, const MNN::OperatorInfo* info) {
+                        if (const auto* name = checkpoint(info->name())) {
+                            require(tensors.size() == 1, "Expected one checkpoint tensor");
+                            capture(output + "/" + name + ".f32", tensors.front());
+                            checkpoints.push_back({{"name", name}, {"shape", tensors.front()->shape()}});
+                        }
+                        return true;
+                    };
+                    require(net->runSessionWithCallBackInfo(session, before, after, true) == MNN::NO_ERROR,
+                            "DiT checkpoint run failed");
+                } else {
+                    require(net->runSession(session) == MNN::NO_ERROR, "DiT forward failed");
+                }
                 const double forward = seconds(kernel);
                 auto* result = net->getSessionOutput(session, "velocity");
                 require(result, "Missing DiT velocity");
@@ -263,6 +299,10 @@ int main(int argc, char** argv) {
             }
             report["rounds"].push_back(steps);
             trace.sample();
+        }
+        if (traceNumerics) {
+            require(checkpoints.size() == (mode == "gelu" ? 5 : 6), "Missing expected checkpoint");
+            report["checkpoints"] = checkpoints;
         }
         net->releaseSession(session);
         report["success"] = true;
