@@ -84,6 +84,10 @@ inline void saveFloats(const std::string& path,const std::vector<float>& values)
 inline Json run(const std::string& root,int model,const Json& options){
     const int steps=options.value("decodeSteps",64),rounds=options.value("rounds",3),threads=options.value("threads",4);
     const std::string mode=options.value("mode",std::string("baseline")),precision=options.value("precision",std::string("high"));
+    const std::string memory=options.value("memory",std::string("low"));
+    require(memory=="low"||memory=="normal","Unknown operator-lab memory mode");
+    require(memory!="normal"||(model==0&&precision=="high"&&available()>3400*1024L),
+            "Float-weight reference requires the small case, CPU High and 3400 MiB available");
     require(mode=="baseline"||mode=="operators","Unknown executor mode");const bool instrumented=mode=="operators";
     require(steps>0&&steps<=3000&&rounds>0&&rounds<=5&&threads>=1&&threads<=8,"Baseline dimensions outside experiment bounds");
     require(!instrumented||(steps<=4&&rounds==1),"Operator diagnostics use1round/at most4decode, excluded from baseline performance");
@@ -93,7 +97,7 @@ inline Json run(const std::string& root,int model,const Json& options){
     const auto manifest=checked["manifest"];const int width=model?2560:1024;const bool hidden=model==1;
     const std::string dir=root+"/cases/"+caseName(model),id=std::to_string(std::chrono::system_clock::now().time_since_epoch().count()),output=root+"/runs/"+id;
     require(!std::filesystem::exists(output),"Preserve previous experiment");std::filesystem::create_directories(output);
-    Json report={{"schemaVersion",1},{"runId",id},{"status","running"},{"system","B0_MNN_pinned"},{"mode",mode},{"modelId",manifest["modelId"]},{"profile",manifest["profile"]},
+    Json report={{"schemaVersion",1},{"runId",id},{"status","running"},{"system","B0_MNN_pinned"},{"mode",mode},{"memoryMode",memory},{"modelId",manifest["modelId"]},{"profile",manifest["profile"]},
         {"fixture",manifest["fixture"]},{"runTag",options.value("runTag",std::string())},{"precision",precision},{"threads",threads},{"instrumented",instrumented},
         {"nativeBackendSource","Existing pinned MNN archive; not claimed unmodified upstream"},{"mnnArchiveSha256",LLM_OPERATOR_MNN_SHA256},{"variantId",LLM_OPERATOR_VARIANT_ID},{"scope","LLM-only real music model, fixed teacher-code history. No DiT,VAE,sampling or generated audio; not whole-music RTF."},
         {"rounds",Json::array()},{"caseSignature",manifest.value("caseSignature",std::string())},{"requestedDecodeSteps",steps}};
@@ -105,7 +109,7 @@ inline Json run(const std::string& root,int model,const Json& options){
         for(int i=0;i<steps;++i)require(codes[i]>=0&&codes[i]<16384,"Invalid fixture music code");
         const int dynamic=manifest["profile"]["dynamicOption"];
         Json config={{"base_dir",dir+"/lm/"},{"llm_model","llm.mnn"},{"llm_weight","llm.mnn.weight"},{"llm_config","llm_config.json"},{"tokenizer_file","tokenizer.mtok"},{"embedding_file","embeddings_bf16.bin"},
-            {"backend_type","cpu"},{"precision",precision},{"memory","low"},{"power","high"},{"thread_num",threads},{"reuse_kv",false},{"attention_mode",8},{"dynamic_option",dynamic},
+            {"backend_type","cpu"},{"precision",precision},{"memory",memory},{"power","high"},{"thread_num",threads},{"reuse_kv",false},{"attention_mode",8},{"dynamic_option",dynamic},
             {"hidden_states",hidden},{"all_logits",false},{"cosyvoice_kleidiai",false},{"enable_debug",instrumented},{"tmp_path",output+"/"}};
         {std::ofstream out(output+"/config.json");out<<config.dump(2);}
         if(LlmOperatorCandidateSetup)LlmOperatorCandidateSetup();

@@ -71,6 +71,9 @@ def _run_device(hdc,repo,remote_root,model,options,output,*,transport='app',bina
         record['caseSignature']=manifest['caseSignature'];record['modelManifest']=manifest;record['status']='cooling';save()
         problem={'profile':manifest['profile'],'fixture':manifest['fixture'],'files':manifest['files'],
                  'precision':options['precision'],'threads':options['threads'],'decodeSteps':options['decodeSteps']}
+        if options.get('memory', 'low') != 'low':
+            if transport != 'cli':raise ValueError('Expanded weights reference requires CLI transport')
+            problem['memory']=options['memory']
         record['measurementSignature']=hashlib.sha256(json.dumps(problem,sort_keys=True).encode()).hexdigest()
         tick=time.monotonic()
         while True:
@@ -145,6 +148,8 @@ def _run_device(hdc,repo,remote_root,model,options,output,*,transport='app',bina
             prior=json.loads((Path(reference)/'llm-operator-report.json').read_text(encoding='utf-8'));prior_native=prior['native']
             for field in ['profile','fixture','precision','threads','requestedDecodeSteps']:
                 if prior_native[field]!=result[field]:raise ValueError('Regression signature mismatch: '+field)
+            if prior_native.get('memoryMode','low')!=result.get('memoryMode','low'):
+                raise ValueError('Regression signature mismatch: memoryMode')
             prior_files={f['relative']:f['sha256'] for f in prior['modelManifest']['files']}
             for f in manifest['files']:
                 if f['relative']!='lm/llm.mnn' and prior_files.get(f['relative'])!=f['sha256']:raise ValueError('Weights, vocabulary or fixed inputs changed during operator comparison')

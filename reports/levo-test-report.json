@@ -168311,5 +168311,159 @@
     "checkpointBinarySha256": "cb82889ffc3031d1cc873cdda08d5ab87683dd4ef997534edaff46fbf1e6a01e",
     "privateQuantizationProbeSha256": "75981d5ddfbd173257a402e7afdb269ce624047cfc80c690c1c11d492b80c93b",
     "digestsOnlyForLaterQuantizedDownInputs": true
+  },
+  "frameworkAwareActivationPrecisionComparison20261125": {
+    "date": "2026-11-25",
+    "device": "CMM-AL00",
+    "scope": "Same already-quantized weights, dynamic A8 versus FP32-expanded convolution path. No pre-quantization weight reference.",
+    "originalGeluUnchangedInBoth": true,
+    "referenceDenominator": "Expanded-weight float path",
+    "originalCheckpointFound": false,
+    "dit": {
+      "rawVelocity_vsFloatRelativeL2": [
+        0.06290006434733653,
+        0.11971661989754595
+      ],
+      "cfg15Velocity_vsFloatRelativeL2": [
+        0.06925971617287044,
+        0.13274975940322037
+      ],
+      "lowRepeatExact": true,
+      "runs": [
+        {
+          "memory": "low",
+          "rssPeakMiB": 474.6484375,
+          "minAvailableMiB": 4101.0,
+          "setupMs": 832.100781,
+          "warmTwoStepsMs": 3279.6311725
+        },
+        {
+          "memory": "normal",
+          "rssPeakMiB": 1596.2578125,
+          "minAvailableMiB": 3560.0,
+          "setupMs": 2235.556094,
+          "warmTwoStepsMs": 9486.6135935
+        },
+        {
+          "memory": "low",
+          "rssPeakMiB": 474.29296875,
+          "minAvailableMiB": 4619.0,
+          "setupMs": 875.139688,
+          "warmTwoStepsMs": 3520.341797
+        }
+      ],
+      "probeSha256": "df5e306a63dbef1f8881baf37805e6e0e1ec3b62ce3a92e6dd19915c08783d50"
+    },
+    "llm": {
+      "prefill_vsFloatRelativeL2": 0.013508415525829048,
+      "decode_vsFloatRelativeL2": 0.01191305111366502,
+      "maxForward_vsFloatRelativeL2": 0.021448656847993245,
+      "allLogits_vsFloatRelativeL2": 0.011954866501470776,
+      "argmaxMatched": 33,
+      "forwards": 33,
+      "runs": [
+        {
+          "memory": "low",
+          "caseSignature": "9fb32c3eaa8c72dadac56618e803fb63d04f1fc3c161d95cf7700c5c57157c02",
+          "binarySha256": "3fbe206bb5099f18b5a569eb8a7c1945d2e9d55df0b4cd169311be24312e1bac",
+          "rssPeakMiB": 497.08203125,
+          "minimumAvailableMiB": 4603.0,
+          "loadMs": 667.179375,
+          "prefillMs": 2256.4825,
+          "decodeMsPerToken": 18.960947312500004,
+          "argmaxEqualDecodeOnly": 32
+        },
+        {
+          "memory": "normal",
+          "caseSignature": "9fb32c3eaa8c72dadac56618e803fb63d04f1fc3c161d95cf7700c5c57157c02",
+          "binarySha256": "3fbe206bb5099f18b5a569eb8a7c1945d2e9d55df0b4cd169311be24312e1bac",
+          "rssPeakMiB": 1960.8984375,
+          "minimumAvailableMiB": 3403.0,
+          "loadMs": 2496.3875,
+          "prefillMs": 5114.027811999999,
+          "decodeMsPerToken": 64.870317375,
+          "argmaxEqualDecodeOnly": 32
+        }
+      ]
+    },
+    "routeAudit": {
+      "dit": {
+        "low": {
+          "totalQuantizedWeightConvNames": 92,
+          "expandedFloatConvNames": 0,
+          "coreBytesCounts": {
+            "4": 92
+          },
+          "uniqueByWeightBits": {
+            "8": 92
+          }
+        },
+        "normal": {
+          "totalQuantizedWeightConvNames": 92,
+          "expandedFloatConvNames": 92,
+          "coreBytesCounts": {
+            "4": 92
+          },
+          "uniqueByWeightBits": {
+            "8": 92
+          }
+        }
+      },
+      "llm": {
+        "low": {
+          "totalQuantizedWeightConvNames": 197,
+          "expandedFloatConvNames": 0,
+          "coreBytesCounts": {
+            "4": 197
+          },
+          "uniqueByWeightBits": {
+            "4": 196,
+            "8": 1
+          }
+        },
+        "normal": {
+          "totalQuantizedWeightConvNames": 197,
+          "expandedFloatConvNames": 197,
+          "coreBytesCounts": {
+            "4": 197
+          },
+          "uniqueByWeightBits": {
+            "4": 196,
+            "8": 1
+          }
+        }
+      },
+      "sharedInputAudit": {
+        "513": {
+          "qkv": {
+            "sameInt8Layers": 28,
+            "sameScaleAndBiasLayers": 28,
+            "samePackParametersLayers": 28,
+            "weightDependentBiasLayers": 0
+          },
+          "upGate": {
+            "sameInt8Layers": 28,
+            "sameScaleAndBiasLayers": 28,
+            "samePackParametersLayers": 28,
+            "weightDependentBiasLayers": 0
+          }
+        },
+        "1": {
+          "qkv": {
+            "sameInt8Layers": 28,
+            "sameScaleAndBiasLayers": 28,
+            "samePackParametersLayers": 28,
+            "weightDependentBiasLayers": 0
+          },
+          "upGate": {
+            "sameInt8Layers": 28,
+            "sameScaleAndBiasLayers": 28,
+            "samePackParametersLayers": 28,
+            "weightDependentBiasLayers": 0
+          }
+        }
+      }
+    },
+    "repositoryTestsPassed": 139
   }
 }

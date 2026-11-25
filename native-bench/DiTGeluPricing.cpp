@@ -184,14 +184,21 @@ void capture(const std::string& path, MNN::Tensor* tensor) {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 5 && (argc != 6 || std::string(argv[5]) != "--trace")) {
-        std::cerr << "bundleDir codes.json outputDir stock|gelu|cube [--trace]\n";
+    if (argc < 5 || argc > 7) {
+        std::cerr << "bundleDir codes.json outputDir stock|gelu|cube [--trace] [--float-activation]\n";
         return 2;
     }
-    const bool traceNumerics = argc == 6;
+    bool traceNumerics = false, floatActivation = false;
+    for (int arg = 5; arg < argc; ++arg) {
+        const std::string flag = argv[arg];
+        if (flag == "--trace" && !traceNumerics) traceNumerics = true;
+        else if (flag == "--float-activation" && !floatActivation) floatActivation = true;
+        else return 2;
+    }
     const std::string bundle = argv[1], output = argv[3], mode = argv[4];
     Json report = {{"success", false}, {"mode", mode}, {"fixture", "first 256 real music codes, fixed noise"},
                    {"precision", "CPU High"}, {"threads", 6}, {"batch", 2}, {"cfgScale", 1.5},
+                   {"memoryMode", floatActivation ? "normal" : "low"},
                    {"stepsPerRound", 2}, {"rounds", Json::array()}, {"checkpointTrace", traceNumerics}};
     if (std::filesystem::exists(output)) return 3;
     std::filesystem::create_directories(output);
@@ -213,7 +220,8 @@ int main(int argc, char** argv) {
         net->setSessionHint(MNN::Interpreter::CPU_ENABLE_KLEIDIAI, 0);
         MNN::BackendConfig backend;
         backend.precision = MNN::BackendConfig::Precision_High;
-        backend.memory = MNN::BackendConfig::Memory_Low;
+        backend.memory = floatActivation ? MNN::BackendConfig::Memory_Normal : MNN::BackendConfig::Memory_Low;
+        if (floatActivation) require(available() > 3000 * 1024L, "Need 3000 MiB available for expanded weights");
         backend.power = MNN::BackendConfig::Power_High;
         MNN::ScheduleConfig config;
         config.type = MNN_FORWARD_CPU;

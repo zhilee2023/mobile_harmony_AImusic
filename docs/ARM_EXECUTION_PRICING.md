@@ -43,3 +43,23 @@ Prefill 的 Pack A 和两类 GEMM 数值采用每次执行各阶段最慢 worker
 22 层 DiT 均已使用 `1200→3600` 的合并 QKV。0.6B LLM 的 28 层均有独立 Q/K/V 共用一个输入张量，另有 28 处 Up/Gate 共用输入。候选可先根据共享输入和执行器的量化、线程、tile 信息筛查，再通过量化组和 packed ABI 实测确认复用。
 
 以形状组的动态量化、Pack A 为依据，假设 Q 的一次输入准备可复用于 K、V，理想代理收益为约 22.69 ms/Prefill 或 0.102 ms/Decode；Up/Gate 减少一次输入准备的对应估计约 11.92 ms 和 0.054 ms。两项仍需测复用后的 GEMM、输出布局和缓冲生命周期。假设代理不能用于填充实测候选库。
+
+## 启用与关闭动态 A8 的同权重对照
+
+独立 CLI 保持图、外部权重、输入和 CPU High 不变，以 `Memory_Normal` 展开同一批已量化权重为 FP32，作为这轮的参考。原版 DiT 的 GELU 保持原公式。独立插桩确认 DiT 的 92 个 W8 卷积位置在浮点组展开权重，LLM 的 196 个 W4 和 1 个 W8 输出头也是如此。插桩复算输出与对应的无插桩执行逐元素一致。此比较包含动态激活量化和两种矩阵内核的数值差异。未取得这两套音乐模型量化前的匹配 checkpoint。
+
+| 模块 | 动态 A8 | 同权重浮点执行 |
+| --- | ---: | ---: |
+| DiT，256 帧，两步 | 3.400 秒 | 9.487 秒 |
+| DiT 进程最高采样 RSS | 474.65 MiB | 1,596.26 MiB |
+| 0.6B LLM Prefill，513 位置 | 2,256.48 ms | 5,114.03 ms |
+| 0.6B LLM Decode，32 次 | 18.961 ms/token | 64.870 ms/token |
+| 0.6B LLM 进程最高采样 RSS | 497.08 MiB | 1,960.90 MiB |
+
+以浮点组作为相对 L2 的分母。DiT 两步的原始 velocity 为 6.290% 和 11.972%，CFG 1.5 混合后为 6.926% 和 13.275%。第二步沿各自第一步更新后的 latent 继续。DiT 顺序为 Low、Normal、Low，三轮取后两轮。两次 Low 输出逐元素一致。
+
+LLM 使用固定 513 位置 Prefill 和 32 次 teacher-forced Decode。Prefill logits 相对 L2 为 1.351%，Decode 汇总为 1.191%，最差单次前向为 2.145%，33 次前向的 argmax 均一致。LLM 性能为每种路径一个独立进程，各取第二轮，电池约 32–33°C。两项对照均为模块级，没运行歌曲生成。
+
+进一步核对 W4 Dense 的输入准备。对 513 位置 Prefill 和首个 Decode token，在实际执行中记录 INT8 输入和 scale/zero-point 缓冲的摘要。Q/K/V 三路和 Up/Gate 两路，各自在两阶段的 28 层均一致，对应的 Pack A 参数也全部一致，且未进入依赖各投影权重的 bias 更新分支。证据支持优先验证 Q/K/V 复用。跨算子缓存的生命周期及合并后的时延仍需验证。
+
+`levo_dit_gelu_pricing` 的浮点参考使用 `stock --float-activation`。LLM 参考使用 `tools/run_llm_operator_lab.py --transport cli --memory normal`，同一模型和相同 teacher token 数的默认 Low 组用于比较。
