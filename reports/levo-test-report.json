@@ -168465,5 +168465,936 @@
       }
     },
     "repositoryTestsPassed": 139
+  },
+  "frameworkAwareDiTFixedLatentAndTop1020261125": {
+    "date": "2026-11-25",
+    "device": "CMM-AL00",
+    "scope": "Fixed-latent numeric retest, with previously enumerated graph Top 10. Estimated gains use logical bandwidth.",
+    "sharedPackingCatalog": {
+      "llm": {
+        "QKV": {
+          "layers": 28,
+          "prefillProxyGainMs": 22.69218,
+          "decodeProxyGainMs": 0.10195
+        },
+        "UpGate": {
+          "layers": 28,
+          "prefillProxyGainMs": 11.91614,
+          "decodeProxyGainMs": 0.053515
+        }
+      },
+      "dit": {
+        "sameDirectInputQuantizedProjectionTemplates": 0,
+        "existingFusedQkv": 22
+      }
+    },
+    "connectedSubgraphTop10": {
+      "llm": {
+        "prefill": [
+          {
+            "rank": 1,
+            "nodes": [
+              "O-proj",
+              "Post-AttnNorm",
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down"
+            ],
+            "id": "afe09f47",
+            "operatorCount": 6,
+            "chosenSites": 28,
+            "estimatedNetMs": 32.31316271199477,
+            "estimatedGrossMsPerForward": 32.32316271199477
+          },
+          {
+            "rank": 2,
+            "nodes": [
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm",
+              "Q-proj"
+            ],
+            "id": "1ac2d35c",
+            "operatorCount": 6,
+            "chosenSites": 27,
+            "estimatedNetMs": 31.158764043709237,
+            "estimatedGrossMsPerForward": 31.16876404370924
+          },
+          {
+            "rank": 3,
+            "nodes": [
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm"
+            ],
+            "id": "53eb5c3c",
+            "operatorCount": 5,
+            "chosenSites": 27,
+            "estimatedNetMs": 31.158764043709237,
+            "estimatedGrossMsPerForward": 31.16876404370924
+          },
+          {
+            "rank": 4,
+            "nodes": [
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm",
+              "K-proj"
+            ],
+            "id": "6f790d4e",
+            "operatorCount": 6,
+            "chosenSites": 27,
+            "estimatedNetMs": 31.158764043709237,
+            "estimatedGrossMsPerForward": 31.16876404370924
+          },
+          {
+            "rank": 5,
+            "nodes": [
+              "Post-AttnNorm",
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm"
+            ],
+            "id": "eef9a4ea",
+            "operatorCount": 6,
+            "chosenSites": 27,
+            "estimatedNetMs": 31.158764043709237,
+            "estimatedGrossMsPerForward": 31.16876404370924
+          },
+          {
+            "rank": 6,
+            "nodes": [
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down"
+            ],
+            "id": "60a0b45a",
+            "operatorCount": 4,
+            "chosenSites": 28,
+            "estimatedNetMs": 29.080846440795295,
+            "estimatedGrossMsPerForward": 29.090846440795296
+          },
+          {
+            "rank": 7,
+            "nodes": [
+              "Post-AttnNorm",
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down"
+            ],
+            "id": "6d718e9f",
+            "operatorCount": 5,
+            "chosenSites": 28,
+            "estimatedNetMs": 29.080846440795295,
+            "estimatedGrossMsPerForward": 29.090846440795296
+          },
+          {
+            "rank": 8,
+            "nodes": [
+              "O-proj",
+              "Post-AttnNorm",
+              "Gate",
+              "Up",
+              "SiLU×Up"
+            ],
+            "id": "b3e95cb3",
+            "operatorCount": 5,
+            "chosenSites": 28,
+            "estimatedNetMs": 22.61621389839634,
+            "estimatedGrossMsPerForward": 22.62621389839634
+          },
+          {
+            "rank": 9,
+            "nodes": [
+              "Gate",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm",
+              "K-proj"
+            ],
+            "id": "2b62bb65",
+            "operatorCount": 5,
+            "chosenSites": 27,
+            "estimatedNetMs": 21.80813483059647,
+            "estimatedGrossMsPerForward": 21.81813483059647
+          },
+          {
+            "rank": 10,
+            "nodes": [
+              "Up",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm",
+              "K-proj",
+              "V-proj"
+            ],
+            "id": "2bde8a11",
+            "operatorCount": 6,
+            "chosenSites": 27,
+            "estimatedNetMs": 21.80813483059647,
+            "estimatedGrossMsPerForward": 21.81813483059647
+          }
+        ],
+        "decode": [
+          {
+            "rank": 1,
+            "nodes": [
+              "O-proj",
+              "Post-AttnNorm",
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down"
+            ],
+            "id": "c29c7d01",
+            "operatorCount": 6,
+            "chosenSites": 28,
+            "estimatedNetMs": 0.11601622889666578,
+            "estimatedGrossMsPerForward": 0.06300811444833289
+          },
+          {
+            "rank": 2,
+            "nodes": [
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm",
+              "Q-proj"
+            ],
+            "id": "6e74104f",
+            "operatorCount": 6,
+            "chosenSites": 27,
+            "estimatedNetMs": 0.11151564929321343,
+            "estimatedGrossMsPerForward": 0.060757824646606715
+          },
+          {
+            "rank": 3,
+            "nodes": [
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm",
+              "K-proj"
+            ],
+            "id": "6f8f0c49",
+            "operatorCount": 6,
+            "chosenSites": 27,
+            "estimatedNetMs": 0.11151564929321343,
+            "estimatedGrossMsPerForward": 0.060757824646606715
+          },
+          {
+            "rank": 4,
+            "nodes": [
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm"
+            ],
+            "id": "7e9ecac1",
+            "operatorCount": 5,
+            "chosenSites": 27,
+            "estimatedNetMs": 0.11151564929321343,
+            "estimatedGrossMsPerForward": 0.060757824646606715
+          },
+          {
+            "rank": 5,
+            "nodes": [
+              "Post-AttnNorm",
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm"
+            ],
+            "id": "c7aa7803",
+            "operatorCount": 6,
+            "chosenSites": 27,
+            "estimatedNetMs": 0.11151564929321343,
+            "estimatedGrossMsPerForward": 0.060757824646606715
+          },
+          {
+            "rank": 6,
+            "nodes": [
+              "Post-AttnNorm",
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down"
+            ],
+            "id": "740003cb",
+            "operatorCount": 5,
+            "chosenSites": 28,
+            "estimatedNetMs": 0.1034146060069992,
+            "estimatedGrossMsPerForward": 0.0567073030034996
+          },
+          {
+            "rank": 7,
+            "nodes": [
+              "Gate",
+              "Up",
+              "SiLU×Up",
+              "Down"
+            ],
+            "id": "a35a8208",
+            "operatorCount": 4,
+            "chosenSites": 28,
+            "estimatedNetMs": 0.1034146060069992,
+            "estimatedGrossMsPerForward": 0.0567073030034996
+          },
+          {
+            "rank": 8,
+            "nodes": [
+              "O-proj",
+              "Post-AttnNorm",
+              "Gate",
+              "Up",
+              "SiLU×Up"
+            ],
+            "id": "b4f79d10",
+            "operatorCount": 5,
+            "chosenSites": 28,
+            "estimatedNetMs": 0.07821136022766605,
+            "estimatedGrossMsPerForward": 0.04410568011383302
+          },
+          {
+            "rank": 9,
+            "nodes": [
+              "Gate",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm",
+              "Q-proj",
+              "K-proj"
+            ],
+            "id": "00d53446",
+            "operatorCount": 6,
+            "chosenSites": 27,
+            "estimatedNetMs": 0.0750609545052494,
+            "estimatedGrossMsPerForward": 0.042530477252624696
+          },
+          {
+            "rank": 10,
+            "nodes": [
+              "Gate",
+              "SiLU×Up",
+              "Down",
+              "下一层 InputNorm",
+              "Q-proj"
+            ],
+            "id": "36f04371",
+            "operatorCount": 5,
+            "chosenSites": 27,
+            "estimatedNetMs": 0.0750609545052494,
+            "estimatedGrossMsPerForward": 0.042530477252624696
+          }
+        ]
+      },
+      "dit": [
+        {
+          "id": "96c377a9150e4e67765ca373b8b73c390bee66b386783de03188cacc409c2e0e",
+          "ops": [
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Mul_2_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Tanh_output_0",
+              "type": "UnaryOp",
+              "subtype": "TANH",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Add_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Mul_3_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            }
+          ],
+          "size": 4,
+          "placements": 22,
+          "chosen": 22,
+          "grossSavingMsPerForward": 35.6445904593426,
+          "logicalBytesPerForward": 1297612800.0,
+          "baselineCallbackMsPerForward": 61.10851575,
+          "excludesExistingSnake": false
+        },
+        {
+          "id": "2087478c03881132fc1a30dd4a2c74e9d378c179a5af5d4ab6d38bd79d67d239",
+          "ops": [
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Tanh_output_0",
+              "type": "UnaryOp",
+              "subtype": "TANH",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Add_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Mul_3_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            }
+          ],
+          "size": 3,
+          "placements": 22,
+          "chosen": 22,
+          "grossSavingMsPerForward": 23.763060306228404,
+          "logicalBytesPerForward": 865075200.0,
+          "baselineCallbackMsPerForward": 53.0901965,
+          "excludesExistingSnake": false
+        },
+        {
+          "id": "ee45abe41e7e5a5e4f81f38dc318fa4bb43691702b4f19063d321169e2f959d8",
+          "ops": [
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Mul_2_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Tanh_output_0",
+              "type": "UnaryOp",
+              "subtype": "TANH",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Add_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            }
+          ],
+          "size": 3,
+          "placements": 22,
+          "chosen": 22,
+          "grossSavingMsPerForward": 23.763060306228404,
+          "logicalBytesPerForward": 865075200.0,
+          "baselineCallbackMsPerForward": 44.4303905,
+          "excludesExistingSnake": false
+        },
+        {
+          "id": "5d68541f196ab0e74bcc6764484fc9df4c6f812a3488b81d23b2ca62186ba7b6",
+          "ops": [
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Tanh_output_0",
+              "type": "UnaryOp",
+              "subtype": "TANH",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Add_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            }
+          ],
+          "size": 2,
+          "placements": 22,
+          "chosen": 22,
+          "grossSavingMsPerForward": 11.881530153114202,
+          "logicalBytesPerForward": 432537600.0,
+          "baselineCallbackMsPerForward": 36.41207125,
+          "excludesExistingSnake": false
+        },
+        {
+          "id": "a0a9624ee8a0e571eb9506e6c0d2f320ef2e2ca7f24a1d012069319847b22b9e",
+          "ops": [
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Mul_2_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Tanh_output_0",
+              "type": "UnaryOp",
+              "subtype": "TANH",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            }
+          ],
+          "size": 2,
+          "placements": 22,
+          "chosen": 22,
+          "grossSavingMsPerForward": 11.881530153114202,
+          "logicalBytesPerForward": 432537600.0,
+          "baselineCallbackMsPerForward": 38.57132775,
+          "excludesExistingSnake": false
+        },
+        {
+          "id": "b0dbbcab75d28e5cb30dfd7646f29f74dc96eab44533d09686215d72671b71a1",
+          "ops": [
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Add_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.0/mlp/act/Mul_3_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            }
+          ],
+          "size": 2,
+          "placements": 22,
+          "chosen": 22,
+          "grossSavingMsPerForward": 11.881530153114202,
+          "logicalBytesPerForward": 432537600.0,
+          "baselineCallbackMsPerForward": 22.537188,
+          "excludesExistingSnake": false
+        },
+        {
+          "id": "03a07b1d237a1593a216902813b998bde55861feb9311085f39eb2c7d2a106d2",
+          "ops": [
+            {
+              "name": "/cfm/estimator/h.14/mlp/act/Mul_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.14/mlp/act/Add_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.14/mlp/act/Mul_2_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.14/mlp/act/Tanh_output_0",
+              "type": "UnaryOp",
+              "subtype": "TANH",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.14/mlp/act/Add_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.14/mlp/act/Mul_3_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            }
+          ],
+          "size": 6,
+          "placements": 1,
+          "chosen": 1,
+          "grossSavingMsPerForward": 2.7003477620714094,
+          "logicalBytesPerForward": 98304000.0,
+          "baselineCallbackMsPerForward": 3.85035175,
+          "excludesExistingSnake": false
+        },
+        {
+          "id": "052e6f8f8f2158c84e88cb04962756efd30603657922e1e93ebe04ecd4371cf9",
+          "ops": [
+            {
+              "name": "/cfm/estimator/h.18/mlp/act/Mul_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.18/mlp/act/Add_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.18/mlp/act/Mul_2_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.18/mlp/act/Tanh_output_0",
+              "type": "UnaryOp",
+              "subtype": "TANH",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.18/mlp/act/Add_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.18/mlp/act/Mul_3_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            }
+          ],
+          "size": 6,
+          "placements": 1,
+          "chosen": 1,
+          "grossSavingMsPerForward": 2.7003477620714094,
+          "logicalBytesPerForward": 98304000.0,
+          "baselineCallbackMsPerForward": 3.717265,
+          "excludesExistingSnake": false
+        },
+        {
+          "id": "0544a57de70f61156146352b6e57db0dfbca9f41dc36dc0092c7338b474aa943",
+          "ops": [
+            {
+              "name": "/cfm/estimator/h.16/mlp/act/Mul_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.16/mlp/act/Add_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.16/mlp/act/Mul_2_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.16/mlp/act/Tanh_output_0",
+              "type": "UnaryOp",
+              "subtype": "TANH",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.16/mlp/act/Add_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.16/mlp/act/Mul_3_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            }
+          ],
+          "size": 6,
+          "placements": 1,
+          "chosen": 1,
+          "grossSavingMsPerForward": 2.7003477620714094,
+          "logicalBytesPerForward": 98304000.0,
+          "baselineCallbackMsPerForward": 3.80503875,
+          "excludesExistingSnake": false
+        },
+        {
+          "id": "07b733ee62af55963568ae7bbcaac77da92d55d3ec0b8dcc752bedd966c0cd0e",
+          "ops": [
+            {
+              "name": "/cfm/estimator/h.19/mlp/act/Pow_output_0",
+              "type": "BinaryOp",
+              "subtype": "POW",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.19/mlp/act/Mul_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.19/mlp/act/Add_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.19/mlp/act/Mul_2_output_0",
+              "type": "BinaryOp",
+              "subtype": "MUL",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.19/mlp/act/Tanh_output_0",
+              "type": "UnaryOp",
+              "subtype": "TANH",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            },
+            {
+              "name": "/cfm/estimator/h.19/mlp/act/Add_1_output_0",
+              "type": "BinaryOp",
+              "subtype": "ADD",
+              "outputShapes": [
+                [
+                  512,
+                  4800
+                ]
+              ]
+            }
+          ],
+          "size": 6,
+          "placements": 1,
+          "chosen": 1,
+          "grossSavingMsPerForward": 2.7003477620714094,
+          "logicalBytesPerForward": 98304000.0,
+          "baselineCallbackMsPerForward": 14.5114845,
+          "excludesExistingSnake": false
+        }
+      ]
+    },
+    "fixedLatentNumericDiT": {
+      "dynamic-versus-float": {
+        "firstStepRawRelativeL2": 0.06290006434733653,
+        "secondStepOwnLatentRawRelativeL2": 0.11971661989754595,
+        "secondStepSharedLatentRawRelativeL2": 0.08358226131619446,
+        "firstStepCfgRelativeL2": 0.06925971617287044,
+        "secondStepOwnLatentCfgRelativeL2": 0.13274975940322037,
+        "secondStepSharedLatentCfgRelativeL2": 0.10692014821221653,
+        "firstStepOutputUnchanged": true
+      },
+      "gelu-versus-original": {
+        "firstStepRawRelativeL2": 0.04207830847051308,
+        "secondStepOwnLatentRawRelativeL2": 0.09326203677506839,
+        "secondStepSharedLatentRawRelativeL2": 0.05825176578165603,
+        "firstStepCfgRelativeL2": 0.05327461690777099,
+        "secondStepOwnLatentCfgRelativeL2": 0.13108692803894048,
+        "secondStepSharedLatentCfgRelativeL2": 0.09419223929782458,
+        "firstStepOutputUnchanged": true
+      },
+      "cube-versus-original": {
+        "firstStepRawRelativeL2": 0.028475956864368424,
+        "secondStepOwnLatentRawRelativeL2": 0.06950663568263803,
+        "secondStepSharedLatentRawRelativeL2": 0.05609250555918841,
+        "firstStepCfgRelativeL2": 0.015701005381286156,
+        "secondStepOwnLatentCfgRelativeL2": 0.10931243711922675,
+        "secondStepSharedLatentCfgRelativeL2": 0.09241848588821676,
+        "firstStepOutputUnchanged": true
+      }
+    },
+    "nativeProbeSha256": "cb732fcd148ada089bf9bc83bfc25fee40f0c4d081da14162211464967161358"
   }
 }

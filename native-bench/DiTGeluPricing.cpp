@@ -184,22 +184,27 @@ void capture(const std::string& path, MNN::Tensor* tensor) {
 }
 
 int main(int argc, char** argv) {
-    if (argc < 5 || argc > 7) {
-        std::cerr << "bundleDir codes.json outputDir stock|gelu|cube [--trace] [--float-activation]\n";
+    if (argc < 5 || argc > 9) {
+        std::cerr << "bundleDir codes.json outputDir stock|gelu|cube [--trace] [--float-activation]"
+                     " [--reference-first-velocity paired-velocity.f32]\n";
         return 2;
     }
     bool traceNumerics = false, floatActivation = false;
+    std::string velocityReference;
     for (int arg = 5; arg < argc; ++arg) {
         const std::string flag = argv[arg];
         if (flag == "--trace" && !traceNumerics) traceNumerics = true;
         else if (flag == "--float-activation" && !floatActivation) floatActivation = true;
+        else if (flag == "--reference-first-velocity" && velocityReference.empty() && arg + 1 < argc)
+            velocityReference = argv[++arg];
         else return 2;
     }
     const std::string bundle = argv[1], output = argv[3], mode = argv[4];
     Json report = {{"success", false}, {"mode", mode}, {"fixture", "first 256 real music codes, fixed noise"},
                    {"precision", "CPU High"}, {"threads", 6}, {"batch", 2}, {"cfgScale", 1.5},
                    {"memoryMode", floatActivation ? "normal" : "low"},
-                   {"stepsPerRound", 2}, {"rounds", Json::array()}, {"checkpointTrace", traceNumerics}};
+                   {"stepsPerRound", 2}, {"rounds", Json::array()}, {"checkpointTrace", traceNumerics},
+                   {"usesReferenceFirstVelocity", !velocityReference.empty()}};
     if (std::filesystem::exists(output)) return 3;
     std::filesystem::create_directories(output);
     Trace trace;
@@ -242,6 +247,9 @@ int main(int argc, char** argv) {
         };
         const auto mu = conditioning(bundle, argv[2]);
         const auto masks = read(bundle + "/aux/mask.f32", 144);
+        const auto referenceVelocity = velocityReference.empty()
+            ? std::vector<float>() : read(velocityReference, 4 * frames * channels);
+        if (!referenceVelocity.empty()) peak(referenceVelocity);
         std::mt19937 random(2307);
         std::normal_distribution<float> normal;
         std::vector<float> noise(frames * channels);
@@ -257,7 +265,7 @@ int main(int argc, char** argv) {
         const std::vector<float> attention(2 * frames * frames, 1.f);
         std::ofstream reference(output + "/velocity.f32", std::ios::binary);
         Json checkpoints = Json::array();
-        for (int round = 0; round < (traceNumerics ? 1 : 3); ++round) {
+        for (int round = 0; round < (traceNumerics || !referenceVelocity.empty() ? 1 : 3); ++round) {
             auto latent = noise;
             Json steps = Json::array();
             for (int step = 0; step < 2; ++step) {
@@ -294,9 +302,10 @@ int main(int argc, char** argv) {
                 const double total = seconds(start);
                 const auto* velocity = host.host<float>();
                 for (int i = 0; i < host.elementSize(); ++i) require(std::isfinite(velocity[i]), "Non-finite velocity");
+                const float* update = step == 0 && !referenceVelocity.empty() ? referenceVelocity.data() : velocity;
                 for (size_t i = 0; i < latent.size(); ++i) {
-                    const float unconditioned = velocity[i];
-                    const float conditioned = velocity[i + latent.size()];
+                    const float unconditioned = update[i];
+                    const float conditioned = update[i + latent.size()];
                     latent[i] += .5f * (unconditioned + 1.5f * (conditioned - unconditioned));
                 }
                 if (round == 0) {

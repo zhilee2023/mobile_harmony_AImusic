@@ -63,3 +63,15 @@ LLM 使用固定 513 位置 Prefill 和 32 次 teacher-forced Decode。Prefill l
 进一步核对 W4 Dense 的输入准备。对 513 位置 Prefill 和首个 Decode token，在实际执行中记录 INT8 输入和 scale/zero-point 缓冲的摘要。Q/K/V 三路和 Up/Gate 两路，各自在两阶段的 28 层均一致，对应的 Pack A 参数也全部一致，且未进入依赖各投影权重的 bias 更新分支。证据支持优先验证 Q/K/V 复用。跨算子缓存的生命周期及合并后的时延仍需验证。
 
 `levo_dit_gelu_pricing` 的浮点参考使用 `stock --float-activation`。LLM 参考使用 `tools/run_llm_operator_lab.py --transport cli --memory normal`，同一模型和相同 teacher token 数的默认 Low 组用于比较。
+
+### 第二步共享 latent 对照
+
+使用 `--reference-first-velocity REFERENCE/velocity.f32` 把候选第二步的 latent 固定为参考组第一步更新结果。三个候选的第一步输出与原始对照逐元素一致。以下为同一首窗，两路 CFG 分支拼接后的原始 velocity 相对 L2。
+
+| 候选与参考 | 第一步 | 第二步各自 latent | 第二步共享参考 latent |
+| --- | ---: | ---: | ---: |
+| 动态 A8 对 FP32 执行，两边原版 GELU | 6.2900% | 11.9717% | 8.3582% |
+| GELU 融合对原版，两边动态 A8 | 4.2078% | 9.3262% | 5.8252% |
+| 两次乘法对原 Pow，两边动态 A8 | 2.8476% | 6.9507% | 5.6093% |
+
+共享 latent 后，两路仍存在单步执行差异。这个复测量化了首步反馈对该样本第二步误差的影响。误差范数之间的差值会受误差方向影响，不能当作独立误差分量。测试未改动 App 默认执行路径。
