@@ -95,12 +95,49 @@ class PricingTests(unittest.TestCase):
                      for candidate, gain in [('bc', 120), ('cd', 60), ('abcd', 190)]]
         master, _ = solve_packing(graph, existing)
         costs = {'costByPattern': {'abcd': 2}, 'remainingBudget': 2}
-        rank = _marginal_ranking(graph, master, existing, shortlist, candidates, 3, costs)
+        rank, status = _marginal_ranking(graph, master, existing, shortlist, candidates, 3, costs)
         self.assertEqual([(item['id'], item['predictedMarginalMs']) for item in rank],
                          [('cd', 60), ('abcd', 90), ('bc', 20)])
+        self.assertTrue(status['bestInDiscoveredPoolCertified'])
         costs.update(remainingBudget=1, blockedPatternIds=['cd'])
-        rank = _marginal_ranking(graph, master, existing, shortlist, candidates, 3, costs)
+        rank, _ = _marginal_ranking(graph, master, existing, shortlist, candidates, 3, costs)
         self.assertEqual([item['id'] for item in rank], ['bc'])
+
+    def test_negative_reduced_profit_can_have_the_largest_integer_marginal_gain(self):
+        graph = TensorGraph('toy', [node('a', 'UnaryOp', [], [0]), node('b', 'UnaryOp', [], [1]),
+            node('c', 'UnaryOp', [], [2]), node('ab', 'BinaryOp', [0, 1], [3]),
+            node('bc', 'BinaryOp', [1, 2], [4]), node('ca', 'BinaryOp', [2, 0], [5]),
+            node('d', 'UnaryOp', [], [6]), node('e', 'UnaryOp', [6], [7])])
+        existing = [Site('ab', frozenset({0, 1, 3}), 100), Site('bc', frozenset({1, 2, 4}), 100),
+                    Site('ca', frozenset({2, 0, 5}), 100)]
+        wide = Site('wide', frozenset(range(6)), 140)
+        side = Site('side', frozenset({6, 7}), 10)
+        candidates = {'wide': [wide], 'side': [side]}
+        self.assertTrue(all(graph.convex(s.region) for s in [*existing, wide, side]))
+        master, prices = solve_packing(graph, existing)
+        self.assertAlmostEqual(master['gainMs'], 100)
+        self.assertAlmostEqual(sum(prices.values()), 150)
+        reduced = wide.gain_ms - sum(prices.get(n, 0) for n in wide.region)
+        self.assertAlmostEqual(reduced, -10)
+        # The old top-1 rank used only positive reduced profit and chose 'side'.
+        proposals = [{'id': 'wide', 'priorityScoreMs': 0}, {'id': 'side', 'priorityScoreMs': 10}]
+        rank, status = _marginal_ranking(graph, master, existing, proposals, candidates, 1, None, prices=prices)
+        self.assertEqual(rank[0]['id'], 'wide')
+        self.assertEqual(rank[0]['predictedMarginalMs'], 40)
+        self.assertEqual(status['unresolvedUpperMsPerCost'], 10)
+        self.assertTrue(status['bestInDiscoveredPoolCertified'])
+
+    def test_budget_exhausted_rerank_does_not_certify_a_partial_choice(self):
+        graph = TensorGraph('toy', [node(str(i), 'UnaryOp', [i], [i+1]) for i in range(5)])
+        existing = [Site('ab', frozenset({0, 1}), 100)]
+        pool = {'bc': [Site('bc', frozenset({1, 2}), 101)],
+                'de': [Site('de', frozenset({3, 4}), 50)]}
+        master, _ = solve_packing(graph, existing)
+        proposals = [{'id': identifier} for identifier in pool]
+        rank, status = _marginal_ranking(graph, master, existing, proposals, pool, 1, None)
+        self.assertEqual(rank[0]['predictedMarginalMs'], 1)
+        self.assertEqual(status['unresolvedUpperMsPerCost'], 50)
+        self.assertFalse(status['bestInDiscoveredPoolCertified'])
 
     def test_stabilization_uses_same_graph_and_profile_without_changing_integer_master(self):
         graph, report = fixture([node('a', 'UnaryOp', [0], [1]), node('b', 'UnaryOp', [1], [2])])

@@ -310,25 +310,61 @@ def _development_settings(plan):
     return costs, default_cost, remaining, blocked
 
 
-def _marginal_ranking(graph, master, existing, proposals, new_sites, limit, plan):
-    if not limit or not master['optimal']:
-        return []
+def _cover_price_bound(prices, existing):
+    """Repair floating-point LP prices into a feasible coverage dual."""
+    cover = {node: max(0.0, value) for node, value in prices.items()}
+    for site in existing:
+        covered = math.fsum(cover.get(node, 0.0) for node in site.region)
+        if covered < site.gain_ms:
+            node = min(site.region)
+            cover[node] = math.nextafter(cover.get(node, 0.0) + (site.gain_ms - covered), math.inf)
+    return cover
+
+
+def _marginal_ranking(graph, master, existing, proposals, new_sites, limit, plan, *, prices=None):
+    if not master['optimal']:
+        return [], {'status': 'base_integer_optimum_unavailable', 'bestInDiscoveredPoolCertified': False}
     costs, default_cost, remaining, blocked = _development_settings(plan)
     shortlist = []
+    cover = _cover_price_bound(prices, existing) if prices is not None else None
+    gap = max(0.0, math.fsum(cover.values()) - master['gainMs']) if cover is not None else None
     for proposal in proposals:
         identifier = proposal['id']
         cost = costs.get(identifier, default_cost)
-        if identifier not in blocked and (remaining is None or cost <= remaining):
-            shortlist.append((proposal['priorityScoreMs'] / cost, identifier, cost))
+        if identifier in blocked or remaining is not None and cost > remaining:
+            continue
+        candidate_sites = new_sites[identifier]
+        # The existing part of any joint feasible deployment cannot outperform
+        # the existing integer optimum. The proposed part gains at most this sum.
+        upper = math.fsum(max(0, site.gain_ms) for site in candidate_sites)
+        if cover is not None:
+            positive_reduced = math.fsum(max(0, site.gain_ms -
+                math.fsum(cover.get(node, 0.0) for node in site.region)) for site in candidate_sites)
+            upper = min(upper, gap + positive_reduced)
+        shortlist.append((upper / cost, identifier, cost))
+    shortlist.sort(key=lambda item: (-item[0], item[1]))
     ranking = []
-    for _, identifier, cost in sorted(shortlist, key=lambda x: (-x[0], x[1]))[:limit]:
+    unresolved = [value for value, _, _ in shortlist[limit:]]
+    for upper_per_cost, identifier, cost in shortlist[:limit]:
         trial, _ = solve_packing(graph, existing + new_sites[identifier])
         gain = max(0.0, trial['gainMs'] - master['gainMs']) if trial['optimal'] else None
+        if gain is None:
+            unresolved.append(upper_per_cost)
         ranking.append({'id': identifier, 'predictedMarginalMs': gain, 'estimatedCost': cost,
                         'predictedMarginalMsPerCost': gain / cost if gain is not None else None,
+                        'marginalUpperMsPerCost': upper_per_cost,
                         'deploymentCostModelSolved': trial['optimal']})
-    return sorted(ranking, key=lambda r: (r['predictedMarginalMs'] is None,
+    ranking.sort(key=lambda r: (r['predictedMarginalMs'] is None,
         -(r['predictedMarginalMsPerCost'] or 0), r['id']))
+    best = ranking[0]['predictedMarginalMsPerCost'] if ranking else None
+    unresolved_upper = max(unresolved, default=None)
+    summary = {'status': 'evaluated' if ranking else 'none_evaluated',
+               'eligibleCandidates': len(shortlist), 'evaluatedCandidates': len(ranking),
+               'coverageLpGapUpperMs': gap, 'unresolvedUpperMsPerCost': unresolved_upper,
+               'bestInDiscoveredPoolCertified': (best is not None and
+                   (unresolved_upper is None or unresolved_upper <= best + 1e-9)),
+               'certificateScope': 'One next development choice, discovered candidates, additive input cost model'}
+    return ranking, summary
 
 
 def _smoothed_prices(prices, rows, previous, alpha):
@@ -410,13 +446,14 @@ def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
                 'selectedCalls': sum(locations[i]['calls'] for i in bundle['selected']),
                 'priorityScoreMs': bundle['gainMs'], 'bundleOptimal': bundle['optimal'],
                 'evidence': 'predicted_logical_traffic', 'fusionReady': False})
+        ranked, ranking_status = _marginal_ranking(graph, master, verified_sites, proposals,
+            new_sites, top_k, development, prices=prices if policy == 'dual' else None)
         phases[phase] = {'observedForwards': count, 'verifiedSites': len(verified_sites),
             'verifiedMaster': master, 'nonzeroDualRows': sum(v > 1e-9 for v in prices.values()),
             'dualRowsUsed': sum(v > 1e-9 for v in search.prices.values()),
             'searchDuals': {rows[i]['id']: v for i, v in active_prices.items() if v > 0},
             'levels': stats, 'proposals': sorted(proposals, key=lambda r: (-r['priorityScoreMs'], r['id'])),
-            'developmentRanking': _marginal_ranking(graph, master, verified_sites, proposals,
-                                                    new_sites, top_k, development)}
+            'developmentRanking': ranked, 'developmentRankingStatus': ranking_status}
     return {'schemaVersion': 1, 'modelId': native['modelId'], 'modelSha256': model_sha256,
         'profileSha256': profile_sha, 'graphSha256': graph_sha, 'policy': policy, 'beamWidth': width,
         'maxNodes': maximum, 'expansion': expansion, 'topK': top_k, 'dualAlpha': alpha,

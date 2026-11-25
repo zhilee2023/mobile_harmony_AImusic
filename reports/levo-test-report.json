@@ -167363,5 +167363,49 @@
     "defaultImplementation": "stock",
     "siteLatencyAddedToVerifiedMaster": false,
     "interpretation": "Direct gate removes the two materialized channel copies at every layer. Whole LLM latency remained within baseline variation. No music generated or RTF measured."
+  },
+  "llmDualRankingAudit20261125": {
+    "date": "2026-11-25",
+    "scope": "Algorithm audit and replay of an existing 0.6B operator profile. No new device timing.",
+    "problem": "LP reduced-profit truncation can skip a candidate with positive integer marginal gain.",
+    "counterexampleMs": {
+      "existingCoverLp": 150,
+      "existingInteger": 100,
+      "wideCandidateGain": 140,
+      "wideReducedProfit": -10,
+      "oldShortlistNextCandidateMarginal": 10,
+      "correctedShortlistNextCandidateMarginal": 40
+    },
+    "correction": "Bound marginal gain by both the sum of positive candidate gains and the current coverage dual gap plus summed positive reduced profits. Rerank with integer solves and report unresolved bounds.",
+    "deviceProfileReplay": {
+      "prefill": {
+        "proposals": 52,
+        "nonzeroDualRows": 0,
+        "rankingStatus": {
+          "status": "evaluated",
+          "eligibleCandidates": 52,
+          "evaluatedCandidates": 10,
+          "coverageLpGapUpperMs": 0.0,
+          "unresolvedUpperMsPerCost": 29.090846440795296,
+          "bestInDiscoveredPoolCertified": true,
+          "certificateScope": "One next development choice, discovered candidates, additive input cost model"
+        }
+      },
+      "decode": {
+        "proposals": 54,
+        "nonzeroDualRows": 0,
+        "rankingStatus": {
+          "status": "evaluated",
+          "eligibleCandidates": 54,
+          "evaluatedCandidates": 10,
+          "coverageLpGapUpperMs": 0.0,
+          "unresolvedUpperMsPerCost": 0.1134146060069992,
+          "bestInDiscoveredPoolCertified": true,
+          "certificateScope": "One next development choice, discovered candidates, additive input cost model"
+        }
+      }
+    },
+    "pythonTestsPassed": 129,
+    "scopeLimit": "Certificate covers one candidate choice, within discovered candidates and the additive cost model. No Beam completeness or physical speedup is certified."
   }
 }
