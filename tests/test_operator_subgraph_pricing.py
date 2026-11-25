@@ -2,7 +2,7 @@ import hashlib
 import importlib.util
 import unittest
 
-from levo_harmony.operator_lab.subgraph_pricing import Site, price_subgraphs, solve_packing
+from levo_harmony.operator_lab.subgraph_pricing import Site, _marginal_ranking, price_subgraphs, solve_packing
 from levo_harmony.operator_lab.subgraphs import TensorGraph, _json
 from test_operator_subgraphs import fixture, node
 
@@ -68,3 +68,55 @@ class PricingTests(unittest.TestCase):
         self.assertEqual(proposal['selectedCalls'], 2)
         self.assertEqual(proposal['locations'][0]['logicalRemovableBytesPerCall'], 4000)
         self.assertFalse(result['pricingComplete'])
+
+    def test_extension_bound_keeps_a_low_gain_prefix_for_larger_children(self):
+        nodes = [node('a', 'UnaryOp', [0], [1]), node('b', 'UnaryOp', [1], [2]),
+                 node('c', 'UnaryOp', [2], [3]), node('d', 'UnaryOp', [4], [5], opType='RELU'),
+                 node('e', 'UnaryOp', [5], [6])]
+        graph, report = fixture(nodes)
+        for row, seconds, logical in zip(report['native']['operators']['nodes'],
+                                         [.001, .001, .1, .01, .01], [10, 10, 10, 20000, 10]):
+            row.update(seconds=seconds, logicalOutputBytes=logical)
+        args = dict(model_sha256='test-model', bandwidth_gbps=.002, width=1, maximum=3)
+        current = price_subgraphs(graph, report, **args, expansion='current')
+        bound = price_subgraphs(graph, report, **args, expansion='bound')
+        self.assertEqual([p['exampleNodes'] for p in current['phases']['prefill']['proposals']], [['d', 'e']])
+        self.assertIn(['a', 'b', 'c'], [p['exampleNodes'] for p in bound['phases']['prefill']['proposals']])
+
+    def test_integer_marginal_gain_accounts_for_existing_fusion_and_remaining_budget(self):
+        graph = TensorGraph('toy', [node(str(i), 'UnaryOp', [i], [i+1]) for i in range(4)])
+        existing = [Site('ab', frozenset({0, 1}), 100)]
+        candidates = {
+            'bc': [Site('bc', frozenset({1, 2}), 120)],
+            'cd': [Site('cd', frozenset({2, 3}), 60)],
+            'abcd': [Site('abcd', frozenset(range(4)), 190)],
+        }
+        shortlist = [{'id': candidate, 'priorityScoreMs': gain}
+                     for candidate, gain in [('bc', 120), ('cd', 60), ('abcd', 190)]]
+        master, _ = solve_packing(graph, existing)
+        costs = {'costByPattern': {'abcd': 2}, 'remainingBudget': 2}
+        rank = _marginal_ranking(graph, master, existing, shortlist, candidates, 3, costs)
+        self.assertEqual([(item['id'], item['predictedMarginalMs']) for item in rank],
+                         [('cd', 60), ('abcd', 90), ('bc', 20)])
+        costs.update(remainingBudget=1, blockedPatternIds=['cd'])
+        rank = _marginal_ranking(graph, master, existing, shortlist, candidates, 3, costs)
+        self.assertEqual([item['id'] for item in rank], ['bc'])
+
+    def test_stabilization_uses_same_graph_and_profile_without_changing_integer_master(self):
+        graph, report = fixture([node('a', 'UnaryOp', [0], [1]), node('b', 'UnaryOp', [1], [2])])
+        verified = {
+            'scope': 'paired_device_measurements', 'modelSha256': 'test-model',
+            'profileSha256': hashlib.sha256(_json(report).encode()).hexdigest(),
+            'placements': [{'id': 'ab', 'phase': 'prefill', 'nodes': ['a', 'b'],
+                'nativeMsPerCall': 2, 'fusedMsPerCall': .5, 'relativeL2': 0,
+                'correctnessPassed': True, 'devicePassed': True}],
+        }
+        args = dict(model_sha256='test-model', bandwidth_gbps=.002, maximum=2)
+        measured = price_subgraphs(graph, report, **args, verified=verified)
+        smoothed = price_subgraphs(graph, report, **args, prior=measured, alpha=.5)
+        phase = smoothed['phases']['prefill']
+        self.assertEqual(phase['verifiedMaster']['gainMs'], 0.0)
+        self.assertEqual(phase['nonzeroDualRows'], 0)
+        self.assertAlmostEqual(sum(phase['searchDuals'].values()), .75)
+        with self.assertRaisesRegex(ValueError, 'different graph or profile'):
+            price_subgraphs(graph, report, **args, prior=dict(measured, graphSha256='other'), alpha=.5)

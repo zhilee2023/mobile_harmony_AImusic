@@ -31,6 +31,9 @@ def main(argv=None):
     p.add_argument('--beam-width',type=int,default=32);p.add_argument('--max-nodes',type=int,default=6)
     p.add_argument('--policy',choices=['dual','frequency'],default='dual')
     p.add_argument('--verified');p.add_argument('--epsilon',type=float,default=.001)
+    p.add_argument('--expansion',choices=['bound','current'],default='bound')
+    p.add_argument('--top-k',type=int,default=10);p.add_argument('--development-plan')
+    p.add_argument('--prior');p.add_argument('--dual-alpha',type=float,default=1.)
     args=parser.parse_args(argv)
     if args.command=='pool-study':
         pool=Pool.read(args.pool)
@@ -51,10 +54,13 @@ def main(argv=None):
     elif args.command=='price-subgraphs':
         from .subgraph_pricing import price_subgraphs
         verified=json.loads(Path(args.verified).read_text(encoding='utf-8')) if args.verified else None
+        plan=json.loads(Path(args.development_plan).read_text(encoding='utf-8')) if args.development_plan else None
+        prior=json.loads(Path(args.prior).read_text(encoding='utf-8')) if args.prior else None
         result=price_subgraphs(json.loads(Path(args.graph).read_text(encoding='utf-8')),
             json.loads(Path(args.profile).read_text(encoding='utf-8')),model_sha256=args.model_sha256,
             bandwidth_gbps=args.bandwidth_gbps,width=args.beam_width,maximum=args.max_nodes,
-            policy=args.policy,verified=verified,epsilon=args.epsilon)
+            policy=args.policy,verified=verified,epsilon=args.epsilon,expansion=args.expansion,
+            top_k=args.top_k,development=plan,prior=prior,alpha=args.dual_alpha)
         write_new(args.output,result)
         for phase,data in result['phases'].items():
             print(f"{phase}: {len(data['proposals'])} proposals, {data['nonzeroDualRows']} nonzero dual rows")

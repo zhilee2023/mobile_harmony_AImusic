@@ -165,21 +165,41 @@ class PhaseSearch:
         self.scores[region] = score
         return score
 
-    def _beam_priority(self, placements):
+    def extension_bound(self, region, maximum):
+        """Optimistic single-site bound for the additive callback cost model."""
+        remaining = maximum - len(region)
+        calls = self.calls(region)
+        seen, frontier = set(region), set(region)
+        for _ in range(remaining):
+            neighbors = set().union(*(self.graph.successors[i] | self.graph.predecessors[i]
+                                      for i in frontier))
+            frontier = {i for i in neighbors & self.eligible - seen if self.rows[i]['calls'] == calls}
+            seen.update(frontier)
+            if not frontier:
+                break
+
+        def weight(i):
+            return self.rows[i]['seconds'] * 1000 - self.prices.get(i, 0.0)
+
+        extras = sorted((max(0.0, weight(i)) for i in seen - region), reverse=True)
+        return sum(map(weight, region)) + sum(extras[:remaining])
+
+    @staticmethod
+    def _beam_priority(placements, values):
         # An inexpensive, disjoint estimate for beam ordering. CPLEX handles
         # overlaps and contraction legality when pricing the retained templates.
         used = set()
         score = 0.0
         for region in placements:
-            value = self.score(region)[0]
+            value = values[region]
             if value <= 0:
                 break
             if used.isdisjoint(region):
                 used.update(region)
                 score += value
-        return score if score else self.score(placements[0])[0]
+        return score if score else values[placements[0]]
 
-    def beam(self, width, maximum):
+    def beam(self, width, maximum, expansion):
         seeds = {frozenset((i,)) for i in self.eligible}
         stats = []
         discovered = []
@@ -194,8 +214,10 @@ class PhaseSearch:
                     continue
                 placements = self.matches(region)
                 visited.update(placements)
-                order = sorted(placements, key=lambda r: (-self.score(r)[0], tuple(sorted(r))))
-                groups.append((self._beam_priority(order), order))
+                values = {r: (self.extension_bound(r, maximum) if expansion == 'bound' and size < maximum
+                              else self.score(r)[0]) for r in placements}
+                order = sorted(placements, key=lambda r: (-values[r], tuple(sorted(r))))
+                groups.append((self._beam_priority(order, values), order))
             groups.sort(key=lambda g: (-g[0], tuple(sorted(g[1][0]))))
             # A nonconvex partial state can expand into a legal larger region.
             retained = groups[:width]
@@ -275,16 +297,68 @@ def _verified_sites(graph, rows, measurements, phase, epsilon):
     return sites
 
 
+def _development_settings(plan):
+    plan = plan or {}
+    costs = plan.get('costByPattern', {})
+    default_cost = plan.get('defaultCost', 1)
+    remaining = plan.get('remainingBudget')
+    blocked = set(plan.get('blockedPatternIds', []))
+    if any(not math.isfinite(v) or v <= 0 for v in (*costs.values(), default_cost)):
+        raise ValueError('Development costs must be finite and positive')
+    if remaining is not None and (not math.isfinite(remaining) or remaining < 0):
+        raise ValueError('Development budget must be finite and nonnegative')
+    return costs, default_cost, remaining, blocked
+
+
+def _marginal_ranking(graph, master, existing, proposals, new_sites, limit, plan):
+    if not limit or not master['optimal']:
+        return []
+    costs, default_cost, remaining, blocked = _development_settings(plan)
+    shortlist = []
+    for proposal in proposals:
+        identifier = proposal['id']
+        cost = costs.get(identifier, default_cost)
+        if identifier not in blocked and (remaining is None or cost <= remaining):
+            shortlist.append((proposal['priorityScoreMs'] / cost, identifier, cost))
+    ranking = []
+    for _, identifier, cost in sorted(shortlist, key=lambda x: (-x[0], x[1]))[:limit]:
+        trial, _ = solve_packing(graph, existing + new_sites[identifier])
+        gain = max(0.0, trial['gainMs'] - master['gainMs']) if trial['optimal'] else None
+        ranking.append({'id': identifier, 'predictedMarginalMs': gain, 'estimatedCost': cost,
+                        'predictedMarginalMsPerCost': gain / cost if gain is not None else None,
+                        'deploymentCostModelSolved': trial['optimal']})
+    return sorted(ranking, key=lambda r: (r['predictedMarginalMs'] is None,
+        -(r['predictedMarginalMsPerCost'] or 0), r['id']))
+
+
+def _smoothed_prices(prices, rows, previous, alpha):
+    ids = {row['id']: i for i, row in rows.items()}
+    if any(node not in ids or not math.isfinite(value) or value < 0 for node, value in previous.items()):
+        raise ValueError('Prior dual prices must match the same profiled nodes')
+    if not previous:
+        return prices
+    return {i: alpha * max(0.0, prices.get(i, 0)) + (1 - alpha) * previous.get(row['id'], 0)
+            for i, row in rows.items()}
+
+
 def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
-                    width=32, maximum=6, policy='dual', verified=None, epsilon=.001):
+                    width=32, maximum=6, policy='dual', verified=None, epsilon=.001,
+                    expansion='bound', top_k=10, development=None, prior=None, alpha=1.0):
     if not 2 <= maximum <= 6 or not 1 <= width <= 256:
         raise ValueError('Use 2–6 nodes and a beam width of 1–256')
     if not math.isfinite(bandwidth_gbps) or bandwidth_gbps <= 0 or not math.isfinite(epsilon) or epsilon < 0:
         raise ValueError('A finite positive bandwidth and nonnegative error bound are required')
     if policy not in {'dual', 'frequency'}:
         raise ValueError('Unknown search policy')
+    if expansion not in {'bound', 'current'} or not 0 <= top_k <= 30 or not 0 < alpha <= 1:
+        raise ValueError('Invalid expansion, shortlist size or dual smoothing factor')
+    _development_settings(development)
     native, forwards, context, lookup = profile_context(report, model_sha256)
     profile_sha = hashlib.sha256(_json(report).encode()).hexdigest()
+    graph_sha = hashlib.sha256(_json(export).encode()).hexdigest()
+    if prior is not None and (prior.get('profileSha256') != profile_sha or
+                              prior.get('modelSha256') != model_sha256 or prior.get('graphSha256') != graph_sha):
+        raise ValueError('Prior dual prices belong to a different graph or profile')
     measurements = []
     if verified is not None:
         if (verified.get('profileSha256') != profile_sha or verified.get('modelSha256') != model_sha256
@@ -301,24 +375,35 @@ def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
         rows = matched_profile_rows(graph, phase, lookup)
         verified_sites = _verified_sites(graph, rows, measurements, phase, epsilon)
         master, prices = solve_packing(graph, verified_sites, use_cplex=True)
-        search = PhaseSearch(graph, rows, bandwidth_gbps, prices if policy == 'dual' else {})
-        candidates, stats = search.beam(width, maximum)
+        previous = prior['phases'].get(phase, {}).get('searchDuals', {}) if prior else {}
+        active_prices = _smoothed_prices(prices, rows, previous, alpha) if policy == 'dual' else {}
+        search = PhaseSearch(graph, rows, bandwidth_gbps, active_prices)
+        candidates, stats = search.beam(width, maximum, expansion)
         proposals = []
+        new_sites = {}
+        measured_ids = {site.identifier for site in verified_sites}
         for group in candidates:
             groups = sorted(group, key=lambda r: tuple(sorted(r)))
             region = groups[0]
             contract, _ = graph.canonical(region, rows)
             signature = hashlib.sha256(_json([context, phase, contract]).encode()).hexdigest()
             sites = []
+            prospective = []
             locations = {}
             for index, placement in enumerate(groups):
                 identifier = str(index)
-                reduced, predicted, size = search.score(placement)
+                _, predicted, size = search.score(placement)
+                reduced = predicted - sum(prices.get(i, 0.0) for i in placement) if policy == 'dual' else predicted
                 sites.append(Site(identifier, placement, reduced))
+                proposed_id = signature + ':' + identifier
+                while proposed_id in measured_ids:
+                    proposed_id = 'proposal:' + proposed_id
+                prospective.append(Site(proposed_id, placement, predicted))
                 locations[identifier] = {'nodes': [graph.nodes[i]['name'] for i in sorted(placement)],
                     'covers': [rows[i]['id'] for i in sorted(placement)], 'calls': search.calls(placement),
                     'logicalRemovableBytesPerCall': size, 'proxyGainMs': predicted, 'priorityScoreMs': reduced}
             bundle, _ = solve_packing(graph, sites)
+            new_sites[signature] = prospective
             proposals.append({'id': signature, 'size': len(region), 'compatibleHints': len(groups),
                 'exampleNodes': locations['0']['nodes'], 'locations': list(locations.values()),
                 'selectedLocationIndices': [int(i) for i in bundle['selected']],
@@ -328,9 +413,13 @@ def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
         phases[phase] = {'observedForwards': count, 'verifiedSites': len(verified_sites),
             'verifiedMaster': master, 'nonzeroDualRows': sum(v > 1e-9 for v in prices.values()),
             'dualRowsUsed': sum(v > 1e-9 for v in search.prices.values()),
-            'levels': stats, 'proposals': sorted(proposals, key=lambda r: (-r['priorityScoreMs'], r['id']))}
+            'searchDuals': {rows[i]['id']: v for i, v in active_prices.items() if v > 0},
+            'levels': stats, 'proposals': sorted(proposals, key=lambda r: (-r['priorityScoreMs'], r['id'])),
+            'developmentRanking': _marginal_ranking(graph, master, verified_sites, proposals,
+                                                    new_sites, top_k, development)}
     return {'schemaVersion': 1, 'modelId': native['modelId'], 'modelSha256': model_sha256,
-        'profileSha256': profile_sha, 'policy': policy, 'beamWidth': width, 'maxNodes': maximum,
+        'profileSha256': profile_sha, 'graphSha256': graph_sha, 'policy': policy, 'beamWidth': width,
+        'maxNodes': maximum, 'expansion': expansion, 'topK': top_k, 'dualAlpha': alpha,
         'proxyBandwidthGBs': bandwidth_gbps, 'expansionSitesPerTemplate': 2, 'phases': phases,
         'pricingComplete': False, 'dualRelaxation': 'Primitive nonoverlap LP, before contraction cycle cuts',
         'scope': 'Finite beam and logical tensor traffic proxy; only supplied paired-device measurements enter the master. No end-to-end gain estimate.'}

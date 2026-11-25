@@ -166961,5 +166961,407 @@
     "existingMinerRegression": "Identical result with 46 repeated XY/XYZ groups",
     "pythonTestsPassed": 124,
     "numericalFusionOrDeviceSpeedupProven": false
+  },
+  "llmGateUpPairAndMarginalPricing20261125": {
+    "date": "2026-11-25",
+    "targetProduct": "CMM-AL00",
+    "modelId": "larkstudio-small-0.6b-v1",
+    "scope": "Same fixed 513-position prefix and 64 teacher-code forwards. CLI LLM only. Uninstrumented timing and separate callback diagnostics. RSS is sampled process memory.",
+    "recipe": {
+      "cpuPrecision": "high",
+      "threads": 4,
+      "bodyWeightBits": 4,
+      "groupSize": 64,
+      "headWeightBits": 8
+    },
+    "campaigns": {
+      "materializedSlice": {
+        "plan": {
+          "candidateWeightBytes": 251737602,
+          "inputWidth": 1024,
+          "pairedSites": 28,
+          "pairedWidth": 6144,
+          "scope": "Exact stacking of encoded Q4 rows and FP16 scales. MNN Slice and original MUL_SILU remain.",
+          "sourceWeightBytes": 251737602,
+          "success": true
+        },
+        "trials": [
+          {
+            "variant": "stock",
+            "prefillMs": 2020.5425,
+            "decodeMsPerToken": 17.877940695312496,
+            "totalMs": 3164.7307045,
+            "loadMs": 630.489844,
+            "rssPeakMiB": 511.44140625,
+            "batteryStartC": 28.0,
+            "batteryEndC": 28.0,
+            "numerics": {
+              "relativeL2": 0.0,
+              "maxForwardRelativeL2": 0.0,
+              "maxAbsolute": 0.0,
+              "argmaxMatches": 65,
+              "comparedForwards": 65
+            },
+            "binarySha256": "f4cc3c5a25d039e1fd6b6cae16dc1da2b8bf1dd5bf030b2c7121671cf88dea70",
+            "withinProcessRepeatLogitL2": 0,
+            "directGateCalls": 0
+          },
+          {
+            "variant": "pair",
+            "prefillMs": 2222.942422,
+            "decodeMsPerToken": 19.175317343750002,
+            "totalMs": 3450.162732,
+            "loadMs": 668.782969,
+            "rssPeakMiB": 518.015625,
+            "batteryStartC": 28.0,
+            "batteryEndC": 29.0,
+            "numerics": {
+              "relativeL2": 0.0,
+              "maxForwardRelativeL2": 0.0,
+              "maxAbsolute": 0.0,
+              "argmaxMatches": 65,
+              "comparedForwards": 65
+            },
+            "binarySha256": "f4cc3c5a25d039e1fd6b6cae16dc1da2b8bf1dd5bf030b2c7121671cf88dea70",
+            "withinProcessRepeatLogitL2": 0,
+            "directGateCalls": 0
+          },
+          {
+            "variant": "pair",
+            "prefillMs": 2186.8908595000003,
+            "decodeMsPerToken": 19.100946132812503,
+            "totalMs": 3409.3514120000004,
+            "loadMs": 653.604063,
+            "rssPeakMiB": 518.66796875,
+            "batteryStartC": 29.0,
+            "batteryEndC": 30.0,
+            "numerics": {
+              "relativeL2": 0.0,
+              "maxForwardRelativeL2": 0.0,
+              "maxAbsolute": 0.0,
+              "argmaxMatches": 65,
+              "comparedForwards": 65
+            },
+            "binarySha256": "f4cc3c5a25d039e1fd6b6cae16dc1da2b8bf1dd5bf030b2c7121671cf88dea70",
+            "withinProcessRepeatLogitL2": 0,
+            "directGateCalls": 0
+          },
+          {
+            "variant": "stock",
+            "prefillMs": 2058.3495315,
+            "decodeMsPerToken": 18.2013599140625,
+            "totalMs": 3223.2365659999996,
+            "loadMs": 651.39375,
+            "rssPeakMiB": 514.34765625,
+            "directGateCalls": 0,
+            "batteryStartC": 32.0,
+            "batteryEndC": 32.0,
+            "numerics": {
+              "relativeL2": 0.0,
+              "maxForwardRelativeL2": 0.0,
+              "maxAbsolute": 0.0,
+              "argmaxMatches": 65,
+              "comparedForwards": 65
+            },
+            "binarySha256": "f4cc3c5a25d039e1fd6b6cae16dc1da2b8bf1dd5bf030b2c7121671cf88dea70",
+            "withinProcessRepeatLogitL2": 0
+          }
+        ],
+        "means": {
+          "stock": {
+            "prefillMs": 2039.44601575,
+            "decodeMsPerToken": 18.0396503046875,
+            "totalMs": 3193.9836352499997,
+            "rssPeakMiB": 512.89453125,
+            "loadMs": 640.941797
+          },
+          "pair": {
+            "prefillMs": 2204.91664075,
+            "decodeMsPerToken": 19.138131738281253,
+            "totalMs": 3429.7570720000003,
+            "rssPeakMiB": 518.341796875,
+            "loadMs": 661.193516
+          }
+        },
+        "relativeWallMsChangePct": 7.381798521066818,
+        "variantAssetHashes": {
+          "lm/llm.mnn": "fb89615d21e457a7cf70407afe1cfc03c7dc3cdf14a47c0d0c8b6d7ae54aea14",
+          "lm/llm.mnn.weight": "34f0c6d485ecaf157f72275f6f0f52b32ee903343e3374343fe85e392384618b"
+        },
+        "diagnostic": {
+          "stock": {
+            "prefill": {
+              "projectionCalls": 56,
+              "gateCalls": 28,
+              "projectionCallbackMs": 504.79156400000005,
+              "gateCallbackMs": 26.505002,
+              "rasterCalls": 0,
+              "splitRasterCallbackMs": 0
+            },
+            "decode": {
+              "projectionCalls": 112,
+              "gateCalls": 56,
+              "projectionCallbackMs": 7.850154999999999,
+              "gateCallbackMs": 0.251876,
+              "rasterCalls": 0,
+              "splitRasterCallbackMs": 0
+            }
+          },
+          "pair": {
+            "prefill": {
+              "projectionCalls": 28,
+              "gateCalls": 28,
+              "projectionCallbackMs": 488.901406,
+              "gateCallbackMs": 25.327657,
+              "rasterCalls": 56,
+              "splitRasterCallbackMs": 180.935309
+            },
+            "decode": {
+              "projectionCalls": 56,
+              "gateCalls": 56,
+              "projectionCallbackMs": 7.602818,
+              "gateCallbackMs": 0.269214,
+              "rasterCalls": 112,
+              "splitRasterCallbackMs": 0.258441
+            }
+          },
+          "numerics": {
+            "relativeL2": 0.0,
+            "maxForwardRelativeL2": 0.0,
+            "maxAbsolute": 0.0,
+            "argmaxMatches": 3,
+            "comparedForwards": 3
+          }
+        },
+        "screenInterruptedTrialExcluded": true
+      },
+      "directGate": {
+        "plan": {
+          "candidateWeightBytes": 251737602,
+          "directGate": true,
+          "inputWidth": 1024,
+          "pairedSites": 28,
+          "pairedWidth": 6144,
+          "scope": "Exact Q4 repack plus direct packed-input MUL_SILU. Requires the experimental runner.",
+          "sourceWeightBytes": 251737602,
+          "success": true
+        },
+        "trials": [
+          {
+            "variant": "stock",
+            "prefillMs": 2075.9741405,
+            "decodeMsPerToken": 18.404998812499997,
+            "totalMs": 3253.8940645000002,
+            "loadMs": 663.89,
+            "rssPeakMiB": 510.21484375,
+            "directGateCalls": 0,
+            "batteryStartC": 30.0,
+            "batteryEndC": 30.0,
+            "numerics": {
+              "relativeL2": 0.0,
+              "maxForwardRelativeL2": 0.0,
+              "maxAbsolute": 0.0,
+              "argmaxMatches": 65,
+              "comparedForwards": 65
+            },
+            "binarySha256": "f4cc3c5a25d039e1fd6b6cae16dc1da2b8bf1dd5bf030b2c7121671cf88dea70",
+            "withinProcessRepeatLogitL2": 0
+          },
+          {
+            "variant": "pair",
+            "prefillMs": 2124.333203,
+            "decodeMsPerToken": 18.184155320312506,
+            "totalMs": 3288.119143500001,
+            "loadMs": 675.557968,
+            "rssPeakMiB": 509.453125,
+            "directGateCalls": 5460,
+            "batteryStartC": 30.0,
+            "batteryEndC": 31.0,
+            "numerics": {
+              "relativeL2": 0.0,
+              "maxForwardRelativeL2": 0.0,
+              "maxAbsolute": 0.0,
+              "argmaxMatches": 65,
+              "comparedForwards": 65
+            },
+            "binarySha256": "733a043c501e756910863c015882dd95cb59209b6c2e46f4ebc1cd1a4147d2f1",
+            "withinProcessRepeatLogitL2": 0
+          },
+          {
+            "variant": "pair",
+            "prefillMs": 2089.0885945,
+            "decodeMsPerToken": 18.82234986718751,
+            "totalMs": 3293.7189860000008,
+            "loadMs": 658.24,
+            "rssPeakMiB": 509.44921875,
+            "directGateCalls": 5460,
+            "batteryStartC": 31.0,
+            "batteryEndC": 31.0,
+            "numerics": {
+              "relativeL2": 0.0,
+              "maxForwardRelativeL2": 0.0,
+              "maxAbsolute": 0.0,
+              "argmaxMatches": 65,
+              "comparedForwards": 65
+            },
+            "binarySha256": "733a043c501e756910863c015882dd95cb59209b6c2e46f4ebc1cd1a4147d2f1",
+            "withinProcessRepeatLogitL2": 0
+          },
+          {
+            "variant": "stock",
+            "prefillMs": 2143.0617190000003,
+            "decodeMsPerToken": 18.627105718750002,
+            "totalMs": 3335.1964850000004,
+            "loadMs": 652.6793749999999,
+            "rssPeakMiB": 510.3203125,
+            "directGateCalls": 0,
+            "batteryStartC": 32.0,
+            "batteryEndC": 32.0,
+            "numerics": {
+              "relativeL2": 0.0,
+              "maxForwardRelativeL2": 0.0,
+              "maxAbsolute": 0.0,
+              "argmaxMatches": 65,
+              "comparedForwards": 65
+            },
+            "binarySha256": "f4cc3c5a25d039e1fd6b6cae16dc1da2b8bf1dd5bf030b2c7121671cf88dea70",
+            "withinProcessRepeatLogitL2": 0
+          }
+        ],
+        "means": {
+          "stock": {
+            "prefillMs": 2109.51792975,
+            "decodeMsPerToken": 18.516052265625,
+            "totalMs": 3294.5452747500003,
+            "rssPeakMiB": 510.267578125,
+            "loadMs": 658.2846875
+          },
+          "pair": {
+            "prefillMs": 2106.71089875,
+            "decodeMsPerToken": 18.503252593750005,
+            "totalMs": 3290.919064750001,
+            "rssPeakMiB": 509.451171875,
+            "loadMs": 666.8989839999999
+          }
+        },
+        "relativeWallMsChangePct": -0.11006708658070075,
+        "variantAssetHashes": {
+          "lm/llm.mnn": "6b2d3176f3e846297f2e3ed9ffec978dc39c5e0cd44d9380b3fbbc392026bd8d",
+          "lm/llm.mnn.weight": "34f0c6d485ecaf157f72275f6f0f52b32ee903343e3374343fe85e392384618b"
+        },
+        "diagnostic": {
+          "stock": {
+            "prefill": {
+              "projectionCalls": 56,
+              "gateCalls": 28,
+              "projectionCallbackMs": 512.1312529999999,
+              "gateCallbackMs": 27.455940000000002,
+              "rasterCalls": 0,
+              "splitRasterCallbackMs": 0
+            },
+            "decode": {
+              "projectionCalls": 112,
+              "gateCalls": 56,
+              "projectionCallbackMs": 8.040778,
+              "gateCallbackMs": 0.328438,
+              "rasterCalls": 0,
+              "splitRasterCallbackMs": 0
+            }
+          },
+          "pair": {
+            "prefill": {
+              "projectionCalls": 28,
+              "gateCalls": 28,
+              "projectionCallbackMs": 487.230621,
+              "gateCallbackMs": 22.067812999999997,
+              "rasterCalls": 0,
+              "splitRasterCallbackMs": 0
+            },
+            "decode": {
+              "projectionCalls": 56,
+              "gateCalls": 56,
+              "projectionCallbackMs": 7.562192,
+              "gateCallbackMs": 0.274218,
+              "rasterCalls": 0,
+              "splitRasterCallbackMs": 0
+            }
+          },
+          "numerics": {
+            "relativeL2": 0.0,
+            "maxForwardRelativeL2": 0.0,
+            "maxAbsolute": 0.0,
+            "argmaxMatches": 3,
+            "comparedForwards": 3
+          }
+        },
+        "screenInterruptedTrialExcluded": false
+      }
+    },
+    "structureSearch": {
+      "current": {
+        "prefill": {
+          "proposals": 58,
+          "scoredRegions": 1136,
+          "topKMarginalSolves": 10,
+          "nonzeroDualRows": 0
+        },
+        "decode": {
+          "proposals": 58,
+          "scoredRegions": 1136,
+          "topKMarginalSolves": 10,
+          "nonzeroDualRows": 0
+        }
+      },
+      "bound": {
+        "prefill": {
+          "proposals": 52,
+          "scoredRegions": 1402,
+          "topKMarginalSolves": 10,
+          "nonzeroDualRows": 0
+        },
+        "decode": {
+          "proposals": 54,
+          "scoredRegions": 1306,
+          "topKMarginalSolves": 10,
+          "nonzeroDualRows": 0
+        }
+      }
+    },
+    "developmentModel": "Expansion priority and integer marginal reranking with one-time estimated development cost",
+    "marginalRegressionExampleMs": {
+      "bcReplacingAb": 20,
+      "cdWithAb": 60,
+      "abcdReplacingAb": 90
+    },
+    "claudeAudit": {
+      "model": "glm-5.3-flash",
+      "status": "completed",
+      "usage": {
+        "input_tokens": 2001,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 1683,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard",
+        "fallback_credit": null
+      }
+    },
+    "pythonTestsPassed": 127,
+    "defaultImplementation": "stock",
+    "siteLatencyAddedToVerifiedMaster": false,
+    "interpretation": "Direct gate removes the two materialized channel copies at every layer. Whole LLM latency remained within baseline variation. No music generated or RTF measured."
   }
 }
