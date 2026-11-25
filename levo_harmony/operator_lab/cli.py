@@ -18,7 +18,8 @@ def main(argv=None):
     p=sub.add_parser('candidate');p.add_argument('--task',required=True);p.add_argument('--commands',required=True);p.add_argument('--workspace',required=True);p.add_argument('--epsilon',type=float,default=1e-3)
     p.add_argument('--max-compiles',type=int,default=100);p.add_argument('--max-device-profiles',type=int,default=100);p.add_argument('--max-seconds',type=float,default=3600);p.add_argument('--max-agent-tokens',type=int)
     p=sub.add_parser('pattern-plan');p.add_argument('--catalog',required=True);p.add_argument('--budget',type=float,required=True);p.add_argument('--spent',type=float,default=0)
-    p.add_argument('--mode',choices=['mip','cg','frequency-greedy'],default='mip');p.add_argument('--allow-predictions',action='store_true');p.add_argument('--output',required=True)
+    p.add_argument('--mode',choices=['mip','cg','frequency-greedy','chain-dp','chain-marginal'],default='mip');p.add_argument('--allow-predictions',action='store_true');p.add_argument('--output',required=True)
+    p.add_argument('--max-batch',type=int,choices=[1,2],default=1)
     p.add_argument('--workspace-budget',type=int);p.add_argument('--traffic-budget',type=float)
     p.add_argument('--allow-synthetic',action='store_true')
     p.add_argument('--development-weight',type=float,default=0.,
@@ -35,12 +36,13 @@ def main(argv=None):
     p.add_argument('--beam-width',type=int,default=32);p.add_argument('--max-nodes',type=int,default=6)
     p.add_argument('--policy',choices=['dual','frequency'],default='dual')
     p.add_argument('--verified');p.add_argument('--epsilon',type=float,default=.001)
-    p.add_argument('--expansion',choices=['bound','current'],default='bound')
+    p.add_argument('--expansion',choices=['bound','current','exhaustive'],default='bound')
     p.add_argument('--top-k',type=int,default=10);p.add_argument('--development-plan')
     p.add_argument('--prior');p.add_argument('--dual-alpha',type=float,default=1.)
     p.add_argument('--development-weight',type=float,
                    help='Rank by net marginal ms instead of by marginal ms per cost')
     p.add_argument('--expected-runs',type=int,default=1)
+    p.add_argument('--batch-shortlist',type=int,default=0)
     args=parser.parse_args(argv)
     if args.command=='pool-study':
         pool=Pool.read(args.pool)
@@ -58,6 +60,11 @@ def main(argv=None):
                     expected_runs=args.expected_runs)
         if args.mode=='cg':result=exact_catalog_cg(catalog,args.budget,**kwargs)
         elif args.mode=='frequency-greedy':result=frequency_greedy(catalog,args.budget,**kwargs)
+        elif args.mode in {'chain-dp','chain-marginal'}:
+            from .chain_planning import chain_dp,chain_marginal
+            if kwargs.pop('traffic_budget') is not None:parser.error('Chain modes do not model aggregate traffic')
+            if args.mode=='chain-dp':result=chain_dp(catalog,args.budget,**kwargs)
+            else:result=chain_marginal(catalog,args.budget,**kwargs,max_batch=args.max_batch)
         else:result=solve_master(catalog,args.budget,integer=True,**kwargs)
         result['inputScope']=data.get('scope','declared_cost_model');write_new(args.output,result);print(json.dumps(result,indent=2))
     elif args.command=='price-subgraphs':
@@ -70,7 +77,8 @@ def main(argv=None):
             bandwidth_gbps=args.bandwidth_gbps,width=args.beam_width,maximum=args.max_nodes,
             policy=args.policy,verified=verified,epsilon=args.epsilon,expansion=args.expansion,
             top_k=args.top_k,development=plan,prior=prior,alpha=args.dual_alpha,
-            development_weight=args.development_weight,expected_runs=args.expected_runs)
+            development_weight=args.development_weight,expected_runs=args.expected_runs,
+            batch_shortlist=args.batch_shortlist)
         write_new(args.output,result)
         for phase,data in result['phases'].items():
             print(f"{phase}: {len(data['proposals'])} proposals, {data['nonzeroDualRows']} nonzero dual rows")

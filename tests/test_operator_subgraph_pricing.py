@@ -2,7 +2,7 @@ import hashlib
 import importlib.util
 import unittest
 
-from levo_harmony.operator_lab.subgraph_pricing import Site, _marginal_ranking, price_subgraphs, solve_packing
+from levo_harmony.operator_lab.subgraph_pricing import Site, _marginal_ranking, price_subgraphs, rank_development_pairs, solve_packing
 from levo_harmony.operator_lab.subgraphs import TensorGraph, _json
 from test_operator_subgraphs import fixture, node
 
@@ -82,6 +82,24 @@ class PricingTests(unittest.TestCase):
         bound = price_subgraphs(graph, report, **args, expansion='bound')
         self.assertEqual([p['exampleNodes'] for p in current['phases']['prefill']['proposals']], [['d', 'e']])
         self.assertIn(['a', 'b', 'c'], [p['exampleNodes'] for p in bound['phases']['prefill']['proposals']])
+        exhaustive = price_subgraphs(graph, report, **args, expansion='exhaustive')
+        found = exhaustive['phases']['prefill']['proposals']
+        self.assertTrue(exhaustive['structuralEnumerationComplete'])
+        self.assertTrue({('a', 'b', 'c'), ('d', 'e')} <= {tuple(p['exampleNodes']) for p in found})
+
+    def test_pair_shortlist_keeps_candidates_with_zero_individual_marginal(self):
+        graph = TensorGraph('toy', [node(str(i), 'UnaryOp', [i], [i+1]) for i in range(4)])
+        existing = [Site('bc', frozenset({1, 2}), 10)]
+        new = {'ab': [Site('ab', frozenset({0, 1}), 6)], 'cd': [Site('cd', frozenset({2, 3}), 6)]}
+        master, prices = solve_packing(graph, existing)
+        _, single = _marginal_ranking(graph, master, existing, [{'id': i} for i in new],
+                                      new, 2, None, prices=prices, weight=.5)
+        self.assertIsNone(single['recommendedDevelopmentId'])
+        result = rank_development_pairs(graph, master, existing, new, 2, {'remainingBudget': 2}, .5)
+        self.assertEqual(result['best']['ids'], ['ab', 'cd'])
+        self.assertEqual(result['best']['predictedNetMs'], 1)
+        capped = rank_development_pairs(graph, master, existing, new, 2, {'remainingBudget': 1}, .5)
+        self.assertEqual(capped['evaluatedPairs'], 0)
 
     def test_integer_marginal_gain_accounts_for_existing_fusion_and_remaining_budget(self):
         graph = TensorGraph('toy', [node(str(i), 'UnaryOp', [i], [i+1]) for i in range(4)])

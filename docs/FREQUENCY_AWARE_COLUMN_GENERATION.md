@@ -155,6 +155,25 @@ D-Z_{IP}(K)+\sum_j\left(g_j-\sum_{i\in S_j}\pi_i\right)_+
 
 0.6B 真图宽度 32 的本地试跑中，当前收益扩展为 Prefill、Decode 各 58 个模板，按扩展潜力排序分别为 52、54 个。两条路径均找到了 28 处四算子 FFN 模式。36.4042 GB/s 来自此前复制测试，仍作为代理排序输入。此轮缺少可纳入主问题的逐位置配对耗时，真实图仍从零对偶启动。需比较相同开发预算下的整数边际收益和完整模型实测，才能判断哪种扩展策略更有效。
 
+## 链式精确对照与批量开发
+
+指令集扩展中的凸子图枚举和全局合法性检查，直接对应本项目的融合位置问题。串行固定顺序则允许把每个连续覆盖区间表示为前缀位置 DAG 上的一条边。带颜色最短路径文献提供了追踪已用标签的状态设计。本项目追踪的是已支付开发费的实现，且费用由硬预算和目标权重共同约束。[指令集扩展原文](https://www.epfl.ch/labs/lap/wp-content/uploads/2018/05/AtasuDec03_AutomaticApplicationSpecificInstructionSetExtensionsUnderMicroarchitecturalConstraints_IJPP.pdf) · [带颜色最短路径原文](https://link.springer.com/article/10.1007/s11590-020-01659-z)
+
+- `pattern-plan --mode chain-dp` 精确求解给定链式目录。状态为执行前缀与已付费实现集合，同一实现后续再用时延照计、开发费归零。24 个固定种子合成实例与 CPLEX 目标逐一一致。实现集合数最坏可指数增长，该模式供小实例对照。
+- `pattern-plan --mode chain-marginal --max-batch 2` 比较同一预算下的逐组重求和最短路径上界筛选。沿任一新路径将边长重标为 \(t_e+D(u)-D(v)\)，首尾势差抵消为原路径基线。已有边的标记非负，所以累计改善至多是所有新边的负标记绝对值之和。已知边长下可安全剔除这个上界低于当前最佳净值的候选。某个前缀不可达时禁用筛选。经验延迟作为输入时，结论只适用于给定的代理模型。
+- `price-subgraphs --expansion exhaustive` 枚举当前允许算子和阶段范围内的所有 2–6 节点结构，按依赖、凸性和同一调用次数过滤，再去重。与现有 Beam 使用相同的候选评分。`--batch-shortlist 8` 额外比较短名单内的候选对，候选即使单独无法改善也能入围。两个实现的新增成本一起扣除。重求部署时包含重叠约束与收缩环检查。
+
+已开发 BC 时，AB 或 CD 单独加入都无法缩短目前的 10 ms。两者同时开发可到 8 ms，按每次开发折合 0.5 ms 计，净收益为 1 ms。单步贪心停在原方案，而链式 DP、CPLEX 和双候选重求一致。在加入 12 个刻意较弱的候选后，筛选将重求次数从 105 减到 14，方案和净值相同。该下降率是受控算例结果。
+
+在 0.6B 的已有诊断上，每个阶段遍历 36,071 个连通区域，1,876 个位置通过结构筛选并聚成 72 个模板。宽度 32 的 Beam 分别发现 52、54 个模板。在相同的流量代理、时延等价开发成本 0.01 ms／实现下，本次两种搜索得到相同的最佳单候选净值，8 个候选内的最佳组合也没有超过单候选。结构发现的差异与真实部署性能是两套证据。
+
+随机算例设 AB、CD 独立以 65% 概率成功，失败照付 0.5 ms 等价成本。事先承诺两次的期望净收益是 −0.155 ms，先试一个且成功后才继续为 +0.020 ms。数值仅用于说明可观察失败如何改变选择。要在本项目拟合概率，需记录编译、正确性、实机性能和资源消耗的各阶段结果。MoKA 表 5 区分编译通过、`fast@1.0` 和 `fast@1.5`，这些统计依赖其基准与阈值。昂贵信息文献的近似界依赖可行集合等假设，而融合覆盖冲突一般不满足拟阵交换性质。[MoKA 原文](https://openreview.net/pdf?id=bTsMfGz85R) · [昂贵信息组合选择原文](https://arxiv.org/abs/2412.03860)
+
+```powershell
+python tools/operator_lab.py pattern-plan --catalog configs/operator_lab/batch_development_example.json `
+  --allow-synthetic --budget 2 --development-weight 0.5 --mode chain-marginal --max-batch 2 --output batch.json
+```
+
 ## 5. Frequency Greedy与实现质量
 
 实现`frequency_greedy`是次数加权的**边际收益Greedy＋当前已开发库的全局重新部署**，比简单按频次排序更强。

@@ -2,6 +2,7 @@
 from collections import Counter, defaultdict, deque
 from dataclasses import dataclass
 import hashlib
+from itertools import combinations
 import json
 import math
 import time
@@ -236,6 +237,26 @@ class PhaseSearch:
                 break
         return discovered, stats
 
+    def exhaustive(self, maximum):
+        seen = set()
+        groups = []
+        scanned, eligible = Counter(), Counter()
+        for region in self.graph.connected_sets(self.eligible, 2, maximum):
+            size = len(region)
+            scanned[size] += 1
+            if not self.calls(region) or not self.graph.convex(region):
+                continue
+            eligible[size] += 1
+            if region in seen:
+                continue
+            matches = {r for r in self.matches(region) if self.graph.convex(r)}
+            seen.update(matches)
+            groups.append(matches)
+        templates = Counter(len(next(iter(group))) for group in groups)
+        stats = [{'size': size, 'scored': scanned[size], 'legalPlacements': eligible[size],
+                  'retainedConvexTemplates': templates[size]} for size in range(2, maximum + 1)]
+        return groups, stats
+
     def matches(self, region):
         """Find known template placements via dependency-guided matching."""
         graph = self.graph
@@ -384,6 +405,46 @@ def _marginal_ranking(graph, master, existing, proposals, new_sites, limit, plan
     return ranking, summary
 
 
+def rank_development_pairs(graph, master, existing, new_sites, shortlist_size, plan, weight):
+    """Try committed pairs, including members with zero singleton marginal."""
+    if not master['optimal']:
+        return {'status': 'base_integer_optimum_unavailable', 'evaluatedPairs': 0, 'best': None}
+    costs, default_cost, remaining, blocked = _development_settings(plan)
+    candidates = []
+    for identifier, sites in new_sites.items():
+        cost = costs.get(identifier, default_cost)
+        if identifier in blocked or remaining is not None and cost > remaining:
+            continue
+        gross = math.fsum(max(0.0, site.gain_ms) for site in sites)
+        # Single-candidate marginal may vanish when both can jointly replace
+        # an incumbent, so build the shortlist without it.
+        candidates.append((gross - weight * cost, identifier, cost))
+    candidates.sort(key=lambda row: (-row[0], row[1]))
+    selected = candidates[:shortlist_size]
+    best = None
+    evaluated = unresolved = 0
+    for (upper_a, id_a, cost_a), (upper_b, id_b, cost_b) in combinations(selected, 2):
+        cost = cost_a + cost_b
+        if remaining is not None and cost > remaining:
+            continue
+        if upper_a + upper_b <= (best['predictedNetMs'] if best else 0.0) + 1e-9:
+            continue
+        trial, _ = solve_packing(graph, existing + new_sites[id_a] + new_sites[id_b])
+        evaluated += 1
+        if not trial['optimal']:
+            unresolved += 1
+            continue
+        gain = max(0., trial['gainMs'] - master['gainMs'])
+        net = gain - weight * cost
+        if net > (best['predictedNetMs'] if best else 0.0) + 1e-9:
+            best = {'ids': [id_a, id_b], 'predictedMarginalMs': gain, 'predictedNetMs': net,
+                    'developmentCost': cost, 'developmentPenaltyMs': weight * cost}
+    return {'status': 'evaluated', 'shortlistedCandidates': len(selected),
+            'eligibleCandidates': len(candidates), 'evaluatedPairs': evaluated,
+            'unresolvedSolves': unresolved, 'best': best,
+            'scope': 'Two committed developments in gross-gain shortlist; additive modeled costs'}
+
+
 def _smoothed_prices(prices, rows, previous, alpha):
     ids = {row['id']: i for i, row in rows.items()}
     if any(node not in ids or not math.isfinite(value) or value < 0 for node, value in previous.items()):
@@ -397,14 +458,15 @@ def _smoothed_prices(prices, rows, previous, alpha):
 def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
                     width=32, maximum=6, policy='dual', verified=None, epsilon=.001,
                     expansion='bound', top_k=10, development=None, prior=None, alpha=1.0,
-                    development_weight=None, expected_runs=1):
+                    development_weight=None, expected_runs=1, batch_shortlist=0):
     if not 2 <= maximum <= 6 or not 1 <= width <= 256:
         raise ValueError('Use 2–6 nodes and a beam width of 1–256')
     if not math.isfinite(bandwidth_gbps) or bandwidth_gbps <= 0 or not math.isfinite(epsilon) or epsilon < 0:
         raise ValueError('A finite positive bandwidth and nonnegative error bound are required')
     if policy not in {'dual', 'frequency'}:
         raise ValueError('Unknown search policy')
-    if expansion not in {'bound', 'current'} or not 0 <= top_k <= 30 or not 0 < alpha <= 1:
+    if (expansion not in {'bound', 'current', 'exhaustive'} or not 0 <= top_k <= 30
+            or not 0 < alpha <= 1 or not 0 <= batch_shortlist <= 16):
         raise ValueError('Invalid expansion, shortlist size or dual smoothing factor')
     weight = amortized_development_weight(0. if development_weight is None else development_weight, expected_runs)
     _development_settings(development)
@@ -433,7 +495,10 @@ def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
         previous = prior['phases'].get(phase, {}).get('searchDuals', {}) if prior else {}
         active_prices = _smoothed_prices(prices, rows, previous, alpha) if policy == 'dual' else {}
         search = PhaseSearch(graph, rows, bandwidth_gbps, active_prices)
-        candidates, stats = search.beam(width, maximum, expansion)
+        if expansion == 'exhaustive':
+            candidates, stats = search.exhaustive(maximum)
+        else:
+            candidates, stats = search.beam(width, maximum, expansion)
         proposals = []
         new_sites = {}
         measured_ids = {site.identifier for site in verified_sites}
@@ -474,11 +539,16 @@ def price_subgraphs(export, report, *, model_sha256, bandwidth_gbps,
             'searchDuals': {rows[i]['id']: v for i, v in active_prices.items() if v > 0},
             'levels': stats, 'proposals': sorted(proposals, key=lambda r: (-r['priorityScoreMs'], r['id'])),
             'developmentRanking': ranked, 'developmentRankingStatus': ranking_status}
+        if batch_shortlist:
+            phases[phase]['pairDevelopment'] = rank_development_pairs(
+                graph, master, verified_sites, new_sites, batch_shortlist, development, weight)
     return {'schemaVersion': 1, 'modelId': native['modelId'], 'modelSha256': model_sha256,
         'profileSha256': profile_sha, 'graphSha256': graph_sha, 'policy': policy, 'beamWidth': width,
         'maxNodes': maximum, 'expansion': expansion, 'topK': top_k, 'dualAlpha': alpha,
+        'batchShortlist': batch_shortlist,
         'developmentWeight': development_weight, 'expectedRuns': expected_runs,
         'effectiveDevelopmentWeight': weight if development_weight is not None else None,
         'proxyBandwidthGBs': bandwidth_gbps, 'expansionSitesPerTemplate': 2, 'phases': phases,
-        'pricingComplete': False, 'dualRelaxation': 'Primitive nonoverlap LP, before contraction cycle cuts',
-        'scope': 'Finite beam and logical tensor traffic proxy; only supplied paired-device measurements enter the master. No end-to-end gain estimate.'}
+        'pricingComplete': False, 'structuralEnumerationComplete': expansion == 'exhaustive',
+        'dualRelaxation': 'Primitive nonoverlap LP, before contraction cycle cuts',
+        'scope': 'Discrete 2–6 node structures under phase and eligibility filters; logical traffic is a proxy. Only paired-device measurements enter the master.'}

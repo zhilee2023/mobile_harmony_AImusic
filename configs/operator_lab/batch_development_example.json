@@ -1,0 +1,20 @@
+{
+  "scope": "synthetic_test",
+  "nodes": 4,
+  "budgetUnit": "candidate_build_attempts",
+  "kernels": [
+    {"id": "native", "development_cost": 0, "compatibility": "chain-v1", "native": true},
+    {"id": "BC", "development_cost": 1, "compatibility": "chain-v1", "developed": true},
+    {"id": "AB", "development_cost": 1, "compatibility": "chain-v1"},
+    {"id": "CD", "development_cost": 1, "compatibility": "chain-v1"}
+  ],
+  "placements": [
+    {"id": "a", "kernel": "native", "covers": [0], "frequency": 1, "latency_ms": 5, "compatibility": "chain-v1"},
+    {"id": "b", "kernel": "native", "covers": [1], "frequency": 1, "latency_ms": 5, "compatibility": "chain-v1"},
+    {"id": "c", "kernel": "native", "covers": [2], "frequency": 1, "latency_ms": 5, "compatibility": "chain-v1"},
+    {"id": "d", "kernel": "native", "covers": [3], "frequency": 1, "latency_ms": 5, "compatibility": "chain-v1"},
+    {"id": "bc", "kernel": "BC", "covers": [1, 2], "frequency": 1, "latency_ms": 0, "compatibility": "chain-v1"},
+    {"id": "ab", "kernel": "AB", "covers": [0, 1], "frequency": 1, "latency_ms": 4, "compatibility": "chain-v1"},
+    {"id": "cd", "kernel": "CD", "covers": [2, 3], "frequency": 1, "latency_ms": 4, "compatibility": "chain-v1"}
+  ]
+}

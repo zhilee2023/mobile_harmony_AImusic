@@ -167587,5 +167587,86 @@
     "pythonTestsPassed": 133,
     "newDevelopmentCostPaidOnce": true,
     "pastAttemptsStillUseHardBudget": true
+  },
+  "llmAdaptiveDevelopmentStudy20261125": {
+    "date": "2026-11-25",
+    "scope": "Synthetic solver validation and replay of an existing 0.6B MNN graph/profile. No new native timing.",
+    "pythonTestsPassed": 139,
+    "randomChainCasesMatchedCplex": 24,
+    "syntheticComplementarity": {
+      "currentMs": 10,
+      "singleStepMs": 10,
+      "batchRuntimeMs": 8,
+      "batchCombinedObjectiveMs": 9,
+      "batchNetGainMs": 1,
+      "developmentBudget": 2,
+      "developmentWeight": 0.5
+    },
+    "syntheticPruningControl": {
+      "candidates": 14,
+      "evaluatedExhaustive": 105,
+      "evaluatedScreened": 14,
+      "sameSelection": true
+    },
+    "syntheticUncertainty": {
+      "independentPerAttemptSuccessProbability": 0.65,
+      "eachAttemptEquivalentCostMs": 0.5,
+      "committedPairExpectedNetMs": -0.155,
+      "conditionalSecondAttemptExpectedNetMs": 0.02
+    },
+    "graphReplay": {
+      "proxyBandwidthGBs": 36.4042,
+      "developmentWeight": 0.01,
+      "beamWidth": 32,
+      "pairShortlist": 8,
+      "topK": 10,
+      "search": {
+        "exhaustive": {
+          "prefill": {
+            "templates": 72,
+            "candidatePlacements": 1876,
+            "statesScored": 36071,
+            "bestSingleModeledNetMs": 32.31316271199477,
+            "singleShortlistCertified": true,
+            "bestShortlistedPairModeledNetMs": 32.303162711994766,
+            "evaluatedPairs": 28,
+            "nonzeroDualRows": 0
+          },
+          "decode": {
+            "templates": 72,
+            "candidatePlacements": 1876,
+            "statesScored": 36071,
+            "bestSingleModeledNetMs": 0.11601622889666578,
+            "singleShortlistCertified": true,
+            "bestShortlistedPairModeledNetMs": 0.10601622889666577,
+            "evaluatedPairs": 28,
+            "nonzeroDualRows": 0
+          }
+        },
+        "bound": {
+          "prefill": {
+            "templates": 52,
+            "candidatePlacements": 1568,
+            "statesScored": 1402,
+            "bestSingleModeledNetMs": 32.31316271199477,
+            "singleShortlistCertified": true,
+            "bestShortlistedPairModeledNetMs": 32.303162711994766,
+            "evaluatedPairs": 28,
+            "nonzeroDualRows": 0
+          },
+          "decode": {
+            "templates": 54,
+            "candidatePlacements": 1622,
+            "statesScored": 1306,
+            "bestSingleModeledNetMs": 0.11601622889666578,
+            "singleShortlistCertified": true,
+            "bestShortlistedPairModeledNetMs": 0.10601622889666577,
+            "evaluatedPairs": 28,
+            "nonzeroDualRows": 0
+          }
+        }
+      }
+    },
+    "limitations": "No measured candidate pool for the graph replay. Exact structural enumeration does not certify predicted kernel performance or full-budget adaptive decisions."
   }
 }
