@@ -169396,5 +169396,353 @@
       }
     },
     "nativeProbeSha256": "cb732fcd148ada089bf9bc83bfc25fee40f0c4d081da14162211464967161358"
+  },
+  "vaeRuntimeFusionPricing20261125": {
+    "date": "2026-11-25",
+    "deviceModel": "CMM-AL00",
+    "scope": "Isolated VAE. Actual already-fused runtime DAG, candidate scores estimated offline. No App deploy or new candidate kernel execution.",
+    "recipe": {
+      "weights": "W8/group64",
+      "backend": "MNN CPU Low",
+      "threads": 6,
+      "frames": 256,
+      "warmupRuns": 1,
+      "nonProfiledWarmRuns": 3,
+      "profiledRuns": 1
+    },
+    "audioSecondsPerWindow": 10.24,
+    "fingerprints": {
+      "graphSha256": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "weightSha256": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc",
+      "probeSha256": "8656e3423f97e45375d1119bdbac5da6078faeeac416df741fd5242078b22081"
+    },
+    "modeOrder": [
+      "fused",
+      "baseline"
+    ],
+    "pcmByteIdenticalAcrossModes": true,
+    "modeResults": {
+      "baseline": {
+        "warmForwardAndCopiesSeconds": 5.668209166666667,
+        "warmModuleRtf": 0.5535360514322917,
+        "rssPeakMiB": 749.37109375,
+        "minimumSystemAvailableMiB": 3883.0,
+        "profiledCommands": 450,
+        "profileSha256": "addd549e407ec9bc2006e189167aeb5329008668fa63813bd5c6f2df2b0e3c6a",
+        "awakeControl": true,
+        "batteryC": [
+          30.0,
+          32.0
+        ]
+      },
+      "fused": {
+        "warmForwardAndCopiesSeconds": 4.386892864333333,
+        "warmModuleRtf": 0.4284075062825521,
+        "rssPeakMiB": 716.28125,
+        "minimumSystemAvailableMiB": 3820.0,
+        "profiledCommands": 162,
+        "profileSha256": "6223f3ba25dfcbfb21633fca64eba357fb2140a0d4adb9e02ced5cac2e880e16",
+        "awakeControl": true,
+        "batteryC": [
+          30.0,
+          30.0
+        ]
+      }
+    },
+    "rankingContext": {
+      "referenceBandwidthGBps": 36.4042,
+      "inspectedCommands": 162,
+      "knownTensorEdges": 176,
+      "eligibleCommands": 162,
+      "deployedSnakeSites": 36,
+      "profiledForwardMs": 4461.32,
+      "callbackMsByType": {
+        "Convolution": 2591.3234360000006,
+        "Deconvolution": 981.9337499999999,
+        "SnakeFP16": 652.5198439999999,
+        "Raster": 171.291249,
+        "BinaryOp": 56.791875000000005
+      },
+      "sameLayoutFullCopyBoundaries": [
+        {
+          "producer": "SnakeFP16",
+          "consumers": [
+            "Convolution"
+          ],
+          "copies": 31,
+          "callbackMs": 80.115312,
+          "outputStorageBytes": 1572864000
+        },
+        {
+          "producer": "Convolution",
+          "consumers": [
+            "SnakeFP16"
+          ],
+          "copies": 16,
+          "callbackMs": 37.880155,
+          "outputStorageBytes": 724566016
+        },
+        {
+          "producer": "Convolution",
+          "consumers": [
+            "BinaryOp"
+          ],
+          "copies": 15,
+          "callbackMs": 35.16578199999999,
+          "outputStorageBytes": 723517440
+        },
+        {
+          "producer": "Deconvolution",
+          "consumers": [
+            "BinaryOp",
+            "SnakeFP16"
+          ],
+          "copies": 5,
+          "callbackMs": 11.965312,
+          "outputStorageBytes": 241172480
+        },
+        {
+          "producer": "SnakeFP16",
+          "consumers": [
+            "Deconvolution"
+          ],
+          "copies": 5,
+          "callbackMs": 5.756094,
+          "outputStorageBytes": 116391936
+        }
+      ]
+    },
+    "searchMethods": {
+      "exhaustive": {
+        "scoredRegions": 2910,
+        "positiveTemplates": 595,
+        "sameTop10AsExhaustive": 10
+      },
+      "beam-gain": {
+        "scoredRegions": 522,
+        "positiveTemplates": 140,
+        "sameTop10AsExhaustive": 10
+      },
+      "beam-bound": {
+        "scoredRegions": 642,
+        "positiveTemplates": 80,
+        "sameTop10AsExhaustive": 10
+      }
+    },
+    "exhaustiveTop10": [
+      {
+        "rank": 1,
+        "kinds": [
+          "Raster",
+          "SnakeFP16",
+          "Raster",
+          "Convolution",
+          "Raster"
+        ],
+        "exampleOperators": [
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0"
+        ],
+        "matchingSites": 3,
+        "selectedSites": 3,
+        "optimisticProxyMsPerWindow": 82.9546832508337,
+        "potentiallyElidedBytesPerWindow": 3019898880,
+        "baselineCallbackMsPerWindow": 484.112967
+      },
+      {
+        "rank": 2,
+        "kinds": [
+          "Raster",
+          "SnakeFP16",
+          "Raster",
+          "Convolution",
+          "Raster",
+          "BinaryOp"
+        ],
+        "exampleOperators": [
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0"
+        ],
+        "matchingSites": 2,
+        "selectedSites": 2,
+        "optimisticProxyMsPerWindow": 69.12890270902808,
+        "potentiallyElidedBytesPerWindow": 2516582400,
+        "baselineCallbackMsPerWindow": 343.30265399999996
+      },
+      {
+        "rank": 3,
+        "kinds": [
+          "Raster",
+          "SnakeFP16",
+          "Raster",
+          "Convolution"
+        ],
+        "exampleOperators": [
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0"
+        ],
+        "matchingSites": 3,
+        "selectedSites": 3,
+        "optimisticProxyMsPerWindow": 62.216012438125276,
+        "potentiallyElidedBytesPerWindow": 2264924160,
+        "baselineCallbackMsPerWindow": 465.65202999999997
+      },
+      {
+        "rank": 4,
+        "kinds": [
+          "SnakeFP16",
+          "Raster",
+          "Convolution",
+          "Raster"
+        ],
+        "exampleOperators": [
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0"
+        ],
+        "matchingSites": 3,
+        "selectedSites": 3,
+        "optimisticProxyMsPerWindow": 62.216012438125276,
+        "potentiallyElidedBytesPerWindow": 2264924160,
+        "baselineCallbackMsPerWindow": 466.06687400000004
+      },
+      {
+        "rank": 5,
+        "kinds": [
+          "SnakeFP16",
+          "Raster",
+          "Convolution",
+          "Raster",
+          "BinaryOp"
+        ],
+        "exampleOperators": [
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0"
+        ],
+        "matchingSites": 2,
+        "selectedSites": 2,
+        "optimisticProxyMsPerWindow": 55.30312216722246,
+        "potentiallyElidedBytesPerWindow": 2013265920,
+        "baselineCallbackMsPerWindow": 330.90202899999997
+      },
+      {
+        "rank": 6,
+        "kinds": [
+          "SnakeFP16",
+          "Raster",
+          "Convolution",
+          "Raster",
+          "BinaryOp",
+          "SnakeFP16"
+        ],
+        "exampleOperators": [
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.0/Add_1_output_0"
+        ],
+        "matchingSites": 2,
+        "selectedSites": 2,
+        "optimisticProxyMsPerWindow": 55.30312216722246,
+        "potentiallyElidedBytesPerWindow": 2013265920,
+        "baselineCallbackMsPerWindow": 419.52171599999997
+      },
+      {
+        "rank": 7,
+        "kinds": [
+          "Raster",
+          "Convolution",
+          "Raster",
+          "BinaryOp",
+          "SnakeFP16",
+          "Raster"
+        ],
+        "exampleOperators": [
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.0/Add_1_output_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.1/Conv_output_0_raster_0"
+        ],
+        "matchingSites": 2,
+        "selectedSites": 2,
+        "optimisticProxyMsPerWindow": 55.30312216722246,
+        "potentiallyElidedBytesPerWindow": 2013265920,
+        "baselineCallbackMsPerWindow": 338.60609200000005
+      },
+      {
+        "rank": 8,
+        "kinds": [
+          "SnakeFP16",
+          "Raster"
+        ],
+        "exampleOperators": [
+          "/layers/layers.5/layers/layers.2/layers/layers.0/Add_1_output_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.1/Conv_output_0_raster_0"
+        ],
+        "matchingSites": 7,
+        "selectedSites": 7,
+        "optimisticProxyMsPerWindow": 48.390231896319655,
+        "potentiallyElidedBytesPerWindow": 1761607680,
+        "baselineCallbackMsPerWindow": 375.55968900000005
+      },
+      {
+        "rank": 9,
+        "kinds": [
+          "Raster",
+          "SnakeFP16",
+          "Raster",
+          "Convolution",
+          "Raster"
+        ],
+        "exampleOperators": [
+          "/layers/layers.4/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.2/Add_1_output_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0",
+          "/layers/layers.4/layers/layers.2/Add_output_0_raster_0"
+        ],
+        "matchingSites": 3,
+        "selectedSites": 3,
+        "optimisticProxyMsPerWindow": 41.47734162541685,
+        "potentiallyElidedBytesPerWindow": 1509949440,
+        "baselineCallbackMsPerWindow": 238.61890499999998
+      },
+      {
+        "rank": 10,
+        "kinds": [
+          "Raster",
+          "SnakeFP16",
+          "Raster"
+        ],
+        "exampleOperators": [
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0"
+        ],
+        "matchingSites": 3,
+        "selectedSites": 3,
+        "optimisticProxyMsPerWindow": 41.47734162541685,
+        "potentiallyElidedBytesPerWindow": 1509949440,
+        "baselineCallbackMsPerWindow": 173.462968
+      }
+    ],
+    "documentation": "docs/VAE_FUSION_PRICING.md"
   }
 }

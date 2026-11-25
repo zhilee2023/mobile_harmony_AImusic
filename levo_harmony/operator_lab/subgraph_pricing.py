@@ -70,8 +70,6 @@ def solve_packing(graph, sites, *, seconds=10, use_cplex=False):
     Cycle cuts only involve selected fused regions. Their distinct contractions
     remain distinct in any extension of this selection, so the cuts are valid.
     """
-    import cplex
-
     if len({site.identifier for site in sites}) != len(sites):
         raise ValueError('Duplicate site ID')
     profitable = [site for site in sites if site.gain_ms > 1e-9]
@@ -87,6 +85,8 @@ def solve_packing(graph, sites, *, seconds=10, use_cplex=False):
         prices = {min(site.region): site.gain_ms for site in profitable}
         return {'gainMs': sum(s.gain_ms for s in profitable), 'selected': list(ids),
                 'optimal': True, 'cycleCuts': 0}, prices
+    import cplex
+
     model = cplex.Cplex()
     try:
         for stream in ('log', 'results', 'warning', 'error'):
@@ -128,12 +128,13 @@ def solve_packing(graph, sites, *, seconds=10, use_cplex=False):
 
 
 class PhaseSearch:
-    def __init__(self, graph, rows, bandwidth_gbps, prices):
+    def __init__(self, graph, rows, bandwidth_gbps, prices, *, eligible_types=None):
         self.graph = graph
         self.rows = rows
         self.prices = prices
         self.bandwidth = bandwidth_gbps * 1e6  # GB/s to bytes/ms
-        self.eligible = {i for i in rows if graph.nodes[i]['type'] in PURE_TYPES}
+        allowed = PURE_TYPES if eligible_types is None else eligible_types
+        self.eligible = {i for i in rows if graph.nodes[i]['type'] in allowed}
         self.labels = {}
         self.nodes_by_label = defaultdict(set)
         self.scores = {}
