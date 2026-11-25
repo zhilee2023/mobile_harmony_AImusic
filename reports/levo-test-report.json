@@ -170174,5 +170174,386 @@
     ],
     "scopeOfEstimates": "Compare both scores against local Raster savings. Whole-window observations use interpolated adjacent controls; benchmark order and thermal drift preclude confirmed net acceleration.",
     "documentation": "docs/VAE_FUSION_PRICING.md"
+  },
+  "vaePrimitiveExecutorTrace20261125": {
+    "date": "2026-11-25",
+    "device": "CMM-AL00",
+    "scope": "One instrumented 10.24s VAE window at CPU Low / 6, W8 group64 with fused Snake. PCM equal to established reference. Phase and worker measurements only.",
+    "graph": {
+      "runtimeOperators": 162,
+      "tensorVersions": 163,
+      "eligibleSameLayoutRaster": 72
+    },
+    "recipe": {
+      "frames": 256,
+      "outputSeconds": 10.24,
+      "weights": "W8/group64",
+      "precision": "CPU Low",
+      "requestedThreads": 6
+    },
+    "fingerprints": {
+      "sourceSha256": {
+        "CPUDeconvolution.cpp": "ba60f6f61c1bd758ba9c0439be7af552fc5cedb5503f0917ed9881bdc05f8d56",
+        "ConvInt8TiledExecutor.cpp": "8a521f746b28f29e96b605af0766aa882aa4021e1e347a779530b77b97554c27"
+      },
+      "binarySha256": "e843ea936cbd4a7f0a96a19d73fedd458dc7b0b3c67efa2e26736ae43ccbda13"
+    },
+    "pcmBitIdentical": true,
+    "screenAwake": true,
+    "rssPeakMiB": 716.3125,
+    "warmTimingAcceptance": false,
+    "thermal": {
+      "startC": {
+        "battery": 32.0,
+        "back": 34.902,
+        "board": 34.54
+      },
+      "peakC": {
+        "battery": 32.0,
+        "back": 35.79,
+        "board": 39.832
+      },
+      "pendingPairControl": {
+        "status": "control-only",
+        "reason": "Back sensor did not return to 35 C in the subsequent cooling interval",
+        "startC": {
+          "battery": 32.0,
+          "back": 34.0,
+          "board": 33.718
+        },
+        "peakC": {
+          "battery": 32.0,
+          "back": 35.465,
+          "board": 42.658
+        },
+        "oneWarmWindowMs": 4635.589375
+      }
+    },
+    "dense": {
+      "ops": 32,
+      "w8DynamicA8": 32,
+      "a8BeforePack": 15,
+      "wallMs": 2752.29844,
+      "stages": {
+        "Quant": {
+          "calls": 294185,
+          "serialMs": 285.357342,
+          "slowestWorkerMs": 718.958694
+        },
+        "PackA": {
+          "calls": 428570,
+          "serialMs": 0.0,
+          "slowestWorkerMs": 207.641287
+        },
+        "GemmEpilogue": {
+          "calls": 539162,
+          "serialMs": 0.0,
+          "slowestWorkerMs": 1570.5521840000001
+        },
+        "InputSum": {
+          "calls": 428570,
+          "serialMs": 0.0,
+          "slowestWorkerMs": 30.367971
+        },
+        "OutputQuant": {
+          "calls": 0,
+          "serialMs": 0.0,
+          "slowestWorkerMs": 0.0
+        },
+        "WeightReorder": {
+          "calls": 0,
+          "serialMs": 0.0,
+          "slowestWorkerMs": 0.0
+        }
+      }
+    },
+    "transposed": [
+      {
+        "operator": "/layers/layers.1/layers/layers.1/ConvTranspose_output_0",
+        "inputChannels": 2048,
+        "outputChannels": 1024,
+        "inputElements": 524288,
+        "outputElements": 2621440,
+        "workers": 4,
+        "elementBytes": 2,
+        "packWidth": 8,
+        "inputTile": 12,
+        "kernel": 20,
+        "stride": 10,
+        "dilation": 1,
+        "outputBytes": 5242880,
+        "packBytesPerWorker": 49152,
+        "gemmBytesPerWorker": 491520,
+        "scratchBytes": 17891328,
+        "privateScatterBytes": 15728640,
+        "stageWallMs": [
+          156.346875,
+          0.642656
+        ],
+        "workerMs": [
+          {
+            "Clear": 5.07875,
+            "PackA": 0.123437,
+            "GEMM": 111.179376,
+            "Col2Im": 1.062656,
+            "Reduce": 0.519377,
+            "BiasClamp": 0.101561
+          },
+          {
+            "Clear": 6.024844,
+            "PackA": 0.126562,
+            "GEMM": 149.011565,
+            "Col2Im": 1.152655,
+            "Reduce": 0.494218,
+            "BiasClamp": 0.108593
+          },
+          {
+            "Clear": 6.408125,
+            "PackA": 0.12,
+            "GEMM": 143.932656,
+            "Col2Im": 1.290939,
+            "Reduce": 0.521717,
+            "BiasClamp": 0.098753
+          },
+          {
+            "Clear": 6.072031,
+            "PackA": 0.117657,
+            "GEMM": 102.958124,
+            "Col2Im": 0.853282,
+            "Reduce": 0.506874,
+            "BiasClamp": 0.101407
+          }
+        ]
+      },
+      {
+        "operator": "/layers/layers.2/layers/layers.1/ConvTranspose_output_0",
+        "inputChannels": 1024,
+        "outputChannels": 512,
+        "inputElements": 2621440,
+        "outputElements": 7864320,
+        "workers": 4,
+        "elementBytes": 2,
+        "packWidth": 8,
+        "inputTile": 12,
+        "kernel": 12,
+        "stride": 6,
+        "dilation": 1,
+        "outputBytes": 15728640,
+        "packBytesPerWorker": 24576,
+        "gemmBytesPerWorker": 147456,
+        "scratchBytes": 47874048,
+        "privateScatterBytes": 47185920,
+        "stageWallMs": [
+          123.812031,
+          2.245625
+        ],
+        "workerMs": [
+          {
+            "Clear": 0.237344,
+            "PackA": 0.654691,
+            "GEMM": 102.700617,
+            "Col2Im": 5.634691,
+            "Reduce": 1.523908,
+            "BiasClamp": 0.184218
+          },
+          {
+            "Clear": 7.637187,
+            "PackA": 0.579063,
+            "GEMM": 107.272815,
+            "Col2Im": 3.457496,
+            "Reduce": 1.998749,
+            "BiasClamp": 0.240782
+          },
+          {
+            "Clear": 9.242969,
+            "PackA": 0.615624,
+            "GEMM": 98.80172,
+            "Col2Im": 5.372499,
+            "Reduce": 1.51797,
+            "BiasClamp": 0.182499
+          },
+          {
+            "Clear": 9.22875,
+            "PackA": 0.606878,
+            "GEMM": 110.099526,
+            "Col2Im": 3.864376,
+            "Reduce": 1.982189,
+            "BiasClamp": 0.242187
+          }
+        ]
+      },
+      {
+        "operator": "/layers/layers.3/layers/layers.1/ConvTranspose_output_0",
+        "inputChannels": 512,
+        "outputChannels": 256,
+        "inputElements": 7864320,
+        "outputElements": 15728640,
+        "workers": 4,
+        "elementBytes": 2,
+        "packWidth": 8,
+        "inputTile": 12,
+        "kernel": 8,
+        "stride": 4,
+        "dilation": 1,
+        "outputBytes": 31457280,
+        "packBytesPerWorker": 12288,
+        "gemmBytesPerWorker": 49152,
+        "scratchBytes": 94617600,
+        "privateScatterBytes": 94371840,
+        "stageWallMs": [
+          193.686406,
+          4.899219
+        ],
+        "workerMs": [
+          {
+            "Clear": 18.668281,
+            "PackA": 1.992653,
+            "GEMM": 155.242506,
+            "Col2Im": 8.590626,
+            "Reduce": 4.263436,
+            "BiasClamp": 0.629845
+          },
+          {
+            "Clear": 1.095468,
+            "PackA": 2.219986,
+            "GEMM": 181.765009,
+            "Col2Im": 8.58157,
+            "Reduce": 4.270627,
+            "BiasClamp": 0.620936
+          },
+          {
+            "Clear": 0.822188,
+            "PackA": 1.752028,
+            "GEMM": 109.260317,
+            "Col2Im": 7.046713,
+            "Reduce": 3.272657,
+            "BiasClamp": 0.357342
+          },
+          {
+            "Clear": 15.748125,
+            "PackA": 2.066087,
+            "GEMM": 164.124529,
+            "Col2Im": 8.124853,
+            "Reduce": 2.928281,
+            "BiasClamp": 0.393281
+          }
+        ]
+      },
+      {
+        "operator": "/layers/layers.4/layers/layers.1/ConvTranspose_output_0",
+        "inputChannels": 256,
+        "outputChannels": 128,
+        "inputElements": 15728640,
+        "outputElements": 31457280,
+        "workers": 4,
+        "elementBytes": 2,
+        "packWidth": 8,
+        "inputTile": 12,
+        "kernel": 8,
+        "stride": 4,
+        "dilation": 1,
+        "outputBytes": 62914560,
+        "packBytesPerWorker": 6144,
+        "gemmBytesPerWorker": 24576,
+        "scratchBytes": 188866560,
+        "privateScatterBytes": 188743680,
+        "stageWallMs": [
+          172.905625,
+          14.693125
+        ],
+        "workerMs": [
+          {
+            "Clear": 37.535782,
+            "PackA": 3.512977,
+            "GEMM": 114.909698,
+            "Col2Im": 16.87983,
+            "Reduce": 13.09125,
+            "BiasClamp": 1.587813
+          },
+          {
+            "Clear": 2.454063,
+            "PackA": 3.605431,
+            "GEMM": 114.923308,
+            "Col2Im": 15.37594,
+            "Reduce": 13.004687,
+            "BiasClamp": 1.662345
+          },
+          {
+            "Clear": 2.730469,
+            "PackA": 3.496252,
+            "GEMM": 115.855953,
+            "Col2Im": 15.080766,
+            "Reduce": 13.095781,
+            "BiasClamp": 1.59172
+          },
+          {
+            "Clear": 26.840156,
+            "PackA": 3.633267,
+            "GEMM": 118.377661,
+            "Col2Im": 15.4061,
+            "Reduce": 13.039375,
+            "BiasClamp": 1.62828
+          }
+        ]
+      },
+      {
+        "operator": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+        "inputChannels": 128,
+        "outputChannels": 128,
+        "inputElements": 31457280,
+        "outputElements": 62914560,
+        "workers": 4,
+        "elementBytes": 2,
+        "packWidth": 8,
+        "inputTile": 12,
+        "kernel": 4,
+        "stride": 2,
+        "dilation": 1,
+        "outputBytes": 125829120,
+        "packBytesPerWorker": 3072,
+        "gemmBytesPerWorker": 12288,
+        "scratchBytes": 377548800,
+        "privateScatterBytes": 377487360,
+        "stageWallMs": [
+          255.957344,
+          31.367344
+        ],
+        "workerMs": [
+          {
+            "Clear": 6.950625,
+            "PackA": 7.860784,
+            "GEMM": 131.054053,
+            "Col2Im": 64.412804,
+            "Reduce": 21.866561,
+            "BiasClamp": 3.036876
+          },
+          {
+            "Clear": 7.976875,
+            "PackA": 8.063755,
+            "GEMM": 133.127645,
+            "Col2Im": 64.835933,
+            "Reduce": 26.902813,
+            "BiasClamp": 4.401875
+          },
+          {
+            "Clear": 6.962187,
+            "PackA": 7.542833,
+            "GEMM": 136.971424,
+            "Col2Im": 61.442774,
+            "Reduce": 19.280156,
+            "BiasClamp": 3.309843
+          },
+          {
+            "Clear": 33.719687,
+            "PackA": 7.916895,
+            "GEMM": 149.467982,
+            "Col2Im": 64.540907,
+            "Reduce": 26.983281,
+            "BiasClamp": 4.377656
+          }
+        ]
+      }
+    ],
+    "documentation": "docs/VAE_PRIMITIVE_COST_MODEL.md"
   }
 }

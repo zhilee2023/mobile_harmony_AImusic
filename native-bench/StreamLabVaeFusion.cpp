@@ -114,20 +114,21 @@ public:
 };
 }
 int main(int argc, char** argv) {
+    const bool once = argc == 6 && std::string(argv[5]) == "--once";
     bool profile = argc == 6 && std::string(argv[5]) == "--profile";
     bool sessionDebug = profile;
 #ifdef LEVO_VAE_LAYOUT_ALIAS
     const bool aliasPlan = argc == 7 && std::string(argv[5]) == "--alias-plan";
     sessionDebug |= aliasPlan;
 #endif
-    if (argc != 5 && !sessionDebug) return 2;
+    if (argc != 5 && !sessionDebug && !once) return 2;
     const std::string model = std::string(argv[1]) + "/vae/vae.mnn", fixture = argv[2], output = argv[3], mode = argv[4];
     Json report = {{"success", false}, {"mode", mode}, {"scope", "Current real VAE graph-level Snake fusion; original W8 weights, FP16 CPU6, NEON sine; no App deployment"}}; Trace trace;
     try {
         require(mode == "baseline" || mode == "fused", "Unknown mode"); require(!std::filesystem::exists(output), "Preserve previous output"); std::filesystem::create_directories(output);
 #ifdef LEVO_VAE_LAYOUT_ALIAS
         std::vector<std::string> aliases;
-        int rounds = 4;
+        int rounds = once ? 1 : 4;
         if (aliasPlan) {
             require(mode == "fused", "Alias plans use the deployed Snake baseline");
             std::ifstream input(argv[6]);
@@ -140,7 +141,7 @@ int main(int argc, char** argv) {
             report["requestedAliases"] = aliases;
         }
 #else
-        constexpr int rounds = 4;
+        const int rounds = once ? 1 : 4;
 #endif
         auto latent = read(fixture, 64 * 256); Json rewriteReport; auto graph = LevoSnakeFused::rewrite(model, rewriteReport); report["rewrite"] = rewriteReport;
         LevoSnakeFused::ensureRegistered();
