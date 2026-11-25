@@ -167823,5 +167823,220 @@
     },
     "pythonTestsPassed": 139,
     "decision": "Keep stock. Positive aggregate callback gains on four instrumented pairs and opposite directions on the two uninstrumented full-LLM pairs. The transformed graph runs on all layers in both phases. Per-layer subset replay is for sensitivity only."
+  },
+  "frameworkAwareArmExecutionPricing20261125": {
+    "date": "2026-11-25",
+    "device": "CMM-AL00",
+    "scope": "Independent DiT CLI two-step stage comparison and diagnostic 0.6B W4 CPU executor instrumentation.",
+    "dit": {
+      "weightRecipe": "W8/group64",
+      "threads": 6,
+      "cfgScale": 1.5,
+      "frameWindow": 256,
+      "maxAllowedRelativeL2": 0.001,
+      "comparisons": [
+        {
+          "variant": "gelu",
+          "stockMs": 3276.2010155,
+          "candidateMs": 2864.40773425,
+          "reductionPercent": 12.569231231593214,
+          "pairSavingsMs": [
+            329.15882850000025,
+            494.4277339999999
+          ],
+          "maxRelativeL2EachStep": [
+            0.04207830847051308,
+            0.09326203677506838
+          ],
+          "candidateAccepted": false,
+          "batteryC": [
+            27.0,
+            28.0
+          ],
+          "modelGraphSha256": "35886dc768304ef2f43e9186811bfe609c3b3bbe552a5e368093725648c0bebc",
+          "weightSha256": "3cae1ed224d5070d25bd814df9e6207ea4344e7fa68bbfd6e452570f4d21db15",
+          "probeSha256": "34bb2030e2a450cc09248cbc676159d9ee0a4958631943be4b4120af8cb8db99"
+        },
+        {
+          "variant": "cube",
+          "stockMs": 3303.3538285,
+          "candidateMs": 3013.071836,
+          "reductionPercent": 8.787493183308559,
+          "pairSavingsMs": [
+            231.60687450000023,
+            348.9571105
+          ],
+          "maxRelativeL2EachStep": [
+            0.02847595686436842,
+            0.06950663568263801
+          ],
+          "candidateAccepted": false,
+          "batteryC": [
+            29.0,
+            30.0
+          ],
+          "modelGraphSha256": "35886dc768304ef2f43e9186811bfe609c3b3bbe552a5e368093725648c0bebc",
+          "weightSha256": "3cae1ed224d5070d25bd814df9e6207ea4344e7fa68bbfd6e452570f4d21db15",
+          "probeSha256": "b6704b810ac73c7cc30e6d7bfc140fa165f124e6dfe84f687377af807cc4d4d9"
+        }
+      ],
+      "productionRoute": "stock",
+      "foldedQkvCount": 22
+    },
+    "w4": {
+      "phaseSummary": {
+        "prefillPositionsGt1": {
+          "calls": 392,
+          "onExecuteMs": 2751.630305,
+          "categories": {
+            "quant": {
+              "serialMs": 162.095779,
+              "workerSumMs": 0.0,
+              "maxWorkerPerExecutionSumMs": 0.0,
+              "calls": 392
+            },
+            "packA": {
+              "serialMs": 0.0,
+              "workerSumMs": 196.212852,
+              "maxWorkerPerExecutionSumMs": 76.737823,
+              "calls": 20384
+            },
+            "gemmWithEpilogue": {
+              "serialMs": 0.0,
+              "workerSumMs": 7069.571902,
+              "maxWorkerPerExecutionSumMs": 2520.795623,
+              "calls": 20384
+            },
+            "inputSum": {
+              "serialMs": 0.0,
+              "workerSumMs": 8.413564,
+              "maxWorkerPerExecutionSumMs": 2.993945,
+              "calls": 20384
+            },
+            "outputQuant": {
+              "serialMs": 0.0,
+              "workerSumMs": 0.0,
+              "maxWorkerPerExecutionSumMs": 0.0,
+              "calls": 0
+            },
+            "onlineWeightReorder": {
+              "serialMs": 0.0,
+              "workerSumMs": 0.0,
+              "maxWorkerPerExecutionSumMs": 0.0,
+              "calls": 0
+            }
+          },
+          "shapes": [
+            [
+              513,
+              1024,
+              1024
+            ],
+            [
+              513,
+              1024,
+              2048
+            ],
+            [
+              513,
+              1024,
+              3072
+            ],
+            [
+              513,
+              2048,
+              1024
+            ],
+            [
+              513,
+              3072,
+              1024
+            ]
+          ]
+        },
+        "M1": {
+          "calls": 12544,
+          "onExecuteMs": 664.203532,
+          "categories": {
+            "quant": {
+              "serialMs": 13.927857,
+              "workerSumMs": 0.0,
+              "maxWorkerPerExecutionSumMs": 0.0,
+              "calls": 12544
+            },
+            "packA": {
+              "serialMs": 18.375827,
+              "workerSumMs": 0.0,
+              "maxWorkerPerExecutionSumMs": 0.0,
+              "calls": 12544
+            },
+            "gemmWithEpilogue": {
+              "serialMs": 0.0,
+              "workerSumMs": 1910.105212,
+              "maxWorkerPerExecutionSumMs": 575.314479,
+              "calls": 50176
+            },
+            "inputSum": {
+              "serialMs": 2.919204,
+              "workerSumMs": 0.0,
+              "maxWorkerPerExecutionSumMs": 0.0,
+              "calls": 12544
+            },
+            "outputQuant": {
+              "serialMs": 0.0,
+              "workerSumMs": 0.0,
+              "maxWorkerPerExecutionSumMs": 0.0,
+              "calls": 0
+            },
+            "onlineWeightReorder": {
+              "serialMs": 0.0,
+              "workerSumMs": 0.0,
+              "maxWorkerPerExecutionSumMs": 0.0,
+              "calls": 0
+            }
+          },
+          "shapes": [
+            [
+              1,
+              1024,
+              1024
+            ],
+            [
+              1,
+              1024,
+              2048
+            ],
+            [
+              1,
+              1024,
+              3072
+            ],
+            [
+              1,
+              2048,
+              1024
+            ],
+            [
+              1,
+              3072,
+              1024
+            ]
+          ]
+        }
+      },
+      "threads": 4,
+      "timedRounds": 2,
+      "decodeTokensPerRound": 32,
+      "identicalLogits": true,
+      "archiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+      "binarySha256": "700051e0c232c00cc9f67b62b7e653d0c5c668308632cf2b1ef233e64f9ad9f7",
+      "proofScope": "Observed MNN W4 dense CPU executor. Separate additive worker durations, not wall fractions; GEMM includes epilogue where called. Dense-only, standalone unpack is not included."
+    },
+    "sharedInput": {
+      "llmQkvSites": 28,
+      "llmUpGateSites": 28,
+      "bothRequirePackAbiParity": true,
+      "scope": "Graph identity and current operator timings. Reuse performance not measured."
+    }
   }
 }
