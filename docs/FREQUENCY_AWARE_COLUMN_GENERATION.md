@@ -1,6 +1,6 @@
 # 执行频率、共享开发与两阶段列生成
 
-本版将“开发哪个实现”与“实现在哪里运行”分开。代码在`operator_lab/workload.py`、`patterns.py`及`mining.py`。
+本版将“开发哪个实现”与“实现在哪里运行”分开。代码在`operator_lab/workload.py`、`patterns.py`、`mining.py`及`subgraphs.py`。
 所有物理性能结论仍需完整模型复测；下面的LP／MIP最优性针对提供的有限成本表，不等于实机全局最优。
 
 ## 1. 运行次数不等于开发次数
@@ -69,6 +69,35 @@ bundle内必须处理位置冲突和共享启动费用；成功概率／Roofline
 Prefill、Decode、DiT步骤和VAE窗口应分成独立上下文；Attention还必须按KV长度分桶。
 短诊断向长Decode外推须显式允许，并标为估计，不能对5000个token套用头两个token的Attention延迟。
 
+### XY／XYZ连接子图挖掘（已实现）
+
+`mine-subgraphs`补充真实MNN张量边上的2／3节点枚举，支持链、分叉、汇合，不依赖日志排列顺序。
+它使用Op的`inputIndexes/outputIndexes`；按输入端口、共享外部输入、必要外部输出、算子子类型／属性、静态量化元数据、实际阶段Shape及后端记录匹配。
+不同层的权重不相等，但可以作为同一实现的不同参数：匹配保留参数长度和外部存储大小，去除权重值／文件偏移；不能共享错误的权重指针。
+常量输入的内容以摘要参与匹配，不把`ADD常数1`和`ADD常数2`合并；未知内容的外置常量保留存储身份摘要，不能仅凭大小合并。图和完整私有导出均不上传。
+
+只接受依赖连通且凸的区域：一条依赖路径若离开区域再进入，不能直接做成一个融合节点。
+区域内中间结果若仍有外部消费者或是图输出，必须作为融合输出保留，不能为了省读写删除。
+Attention／KV／控制流／Raster虚拟区域／未知Extra算子不自动纳入；当前回调缺乏子图scope，所以不匹配子图内的名字。
+未知运行时Layout／dtype／packing、alias、状态、workspace、目标Kernel支持仍须验证。
+因此`tensorDependenciesVerified=true`只指读取的声明张量边，**所有提示仍为`fusionReady=false`、`speedupProven=false`**。
+
+2026-11-25，对手机实际0.6B图（1116节点）与已有受控Prefill＋2次Decode诊断关联，找到46组重复连接模式（两个阶段分开）。
+例如：
+
+| 结构 | 每次前向的静态位置数 | 单次Prefill的回调成本合计 |
+| --- | ---: | ---: |
+| up_proj、gate_proj → MUL_SILU（三节点汇合） | 28 | 592.87 ms |
+| MUL_SILU → down_proj（两节点链） | 28 | 333.06 ms |
+
+这些数字是原算子在诊断中的累计成本，**不是可节省的时间，也不是已融合速度**。MNN原先已经融合SiLU与Mul，本轮发现的是扩大融合边界的候选。
+同一个primitive可能被多个模式覆盖，不能把两行成本相加当收益；组内也记录重叠和唯一覆盖成本。
+
+对接master时，每个位置保留自己的`covers`；同模板各位置的共享实现对应一个`y_k`，不把28个位置当成28次开发。
+若按静态位置建模，Prefill位置频率为1，Decode位置频率为目标Decode次数；**不再额外乘28**。
+融合实现实测前，候选延迟未知，不能把回调成本直接当融合成本送入精确定价。独立开发／数值验收后，填入各位置或可信调用类的实际延迟，再解重叠覆盖master并做整图验收。
+当前完成的是自动发现及计数，不是任意新结构的自动Kernel生成／部署；新的未知实现仍属于上述在线row／column问题。
+
 ## 5. Frequency Greedy与实现质量
 
 实现`frequency_greedy`是次数加权的**边际收益Greedy＋当前已开发库的全局重新部署**，比简单按频次排序更强。
@@ -92,6 +121,8 @@ Prefill、Decode、DiT步骤和VAE窗口应分成独立上下文；Attention还�
 
 ```powershell
 python tools/operator_lab.py mine-repetitions --profile PROFILE_JSON --output hints-new.json
+python tools/operator_lab.py mine-subgraphs --graph PRIVATE_GRAPH_JSON --profile PROFILE_JSON `
+  --model-sha256 SOURCE_MNN_SHA256 --output connected-hints-new.json
 python tools/operator_lab.py pattern-plan --catalog configs/operator_lab/frequency_example.json `
   --budget 2 --mode mip --allow-synthetic --allow-predictions --output plan-new.json
 python tools/operator_lab.py pattern-plan --catalog configs/operator_lab/frequency_example.json `
@@ -103,3 +134,7 @@ python tools/operator_lab.py pattern-plan --catalog configs/operator_lab/frequen
 示例明确是合成预测；真实部署必须用已测成本、误差门槛、实际开发账本和完整链路验收。
 原CG若已经展开全部调用，本来就隐含运行次数；不要未经能力审计就写“CG／MoKA不考虑频率”。本研究应控制同候选库／工具／预算，再隔离频率、复用、定价与全局组合的贡献。
 串行假设下累计延迟可作为目标；有异步流水线时还要建模关键路径和资源竞争，不能把所有模块耗时直接相加当作墙钟RTF。
+
+图导出可用新目标`llm_operator_graph_export INPUT.mnn OUTPUT.private.json`。它只验证和读取FlatBuffer，不创建MNN会话，不推理。
+保持导出器／原图／导出JSON的SHA与私有来源记录；CLI核对声明的原图SHA与诊断manifest，但不提供远端可信执行证明。
+121项Python测试通过，含XY／XYZ、汇合、端口顺序、共享输入、常量区别、非凸路径、外部fan-out、重复覆盖、控制流及证据门槛。

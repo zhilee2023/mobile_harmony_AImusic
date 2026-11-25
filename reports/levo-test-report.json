@@ -165769,5 +165769,1147 @@
       "docs/LLM_MULSILU_PILOT.md",
       "docs/FREQUENCY_AWARE_COLUMN_GENERATION.md"
     ]
+  },
+  "llmConnectedSubgraphMining20261125": {
+    "date": "2026-11-25",
+    "status": "repeated_connected_hints_mined_not_fused",
+    "scope": "Tensor-connected 2/3-node hints. Callback sums are diagnostic costs, not fused latency or speedup. Overlaps require exact-cover selection.",
+    "modelId": "larkstudio-small-0.6b-v1",
+    "modelSha256": "7a7c1541d4a2503e9c4ff432140a13a03951b208b6a32467b2320b14b7da3e3a",
+    "mnnArchiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c",
+    "exportEvidence": {
+      "sourceModelSha256": "7a7c1541d4a2503e9c4ff432140a13a03951b208b6a32467b2320b14b7da3e3a",
+      "nativeExporterSha256": "c98945e992d053876a588d952840b2bc295d01b864717a2bbda1540dc552abfa",
+      "rawExportSha256": "dc0d91a7476f922f4f228640efad7a08d7f253ec72877dc1c9693d0ff4f7fb41",
+      "canonicalExportSha256": "99c9b874b282064ace7878de08ed0bded09582b83ce752623cc4d56b583012e3"
+    },
+    "statistics": {
+      "staticNodes": 1116,
+      "profileMatchedNodes": 686,
+      "enumeratedConnectedRegions": 2664,
+      "rejectedNonconvex": 1206
+    },
+    "repeatedGroups": 46,
+    "patterns": [
+      {
+        "id": "cc43789eb22aab2f5f336c2df2b3653a1fa4ad9c53e4a04bcf7930c423350f08",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 56,
+        "observedInvocations": 56,
+        "observedForwards": 1,
+        "callsPerForward": 56.0,
+        "baselineCallbackTotalMs": 1027.134221,
+        "uniqueCoveredCallbackMs": 797.744535,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/post_attention_layernorm/Mul_1_output_0",
+          "/layers.0/self_attn/o_proj/Linear",
+          "/layers.0/mlp/gate_proj/Linear"
+        ]
+      },
+      {
+        "id": "08678c02db02c3dd629735f5194f20adcc35a93ee7c9a19a66043e17b6476eae",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "BinaryOp",
+          "Convolution"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 618.784063,
+        "uniqueCoveredCallbackMs": 618.784063,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/gate_proj/Linear",
+          "/layers.0/mlp/down_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "400db9dbf65169bbd39facbb103c06f92069ca90aa61f6910bc0626976acce08",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "BinaryOp",
+          "Convolution"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 615.69391,
+        "uniqueCoveredCallbackMs": 615.69391,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/up_proj/Linear",
+          "/layers.0/mlp/down_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "dd4beee95adf87acdd7cdd61abc0b952045ae06d31283bd07b7d59ae27c8ffdb",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "join",
+        "operatorTypes": [
+          "Convolution",
+          "Convolution",
+          "BinaryOp"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 592.8682869999999,
+        "uniqueCoveredCallbackMs": 592.868287,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/up_proj/Linear",
+          "/layers.0/mlp/gate_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "620bae530b2539c3fe9597de237d1bdd34b6d76d7a4b34a6e6b83bac8ed28c18",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 56,
+        "observedInvocations": 56,
+        "observedForwards": 1,
+        "callsPerForward": 56.0,
+        "baselineCallbackTotalMs": 616.293597,
+        "uniqueCoveredCallbackMs": 592.324223,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/post_attention_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/gate_proj/Linear"
+        ]
+      },
+      {
+        "id": "b8ff84ccc8ce7183d9082be23d7726f0bbd925b89c6478a8bd52b162dd9f383e",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "fork",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution",
+          "Convolution"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 592.324223,
+        "uniqueCoveredCallbackMs": 592.324223,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/post_attention_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/gate_proj/Linear",
+          "/layers.0/mlp/up_proj/Linear"
+        ]
+      },
+      {
+        "id": "a8c5c2a6bf55e06c628790c7d07c6ec66fdc13c8ee53631abc2246aeba261364",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 54,
+        "observedInvocations": 54,
+        "observedForwards": 1,
+        "callsPerForward": 54.0,
+        "baselineCallbackTotalMs": 845.949842,
+        "uniqueCoveredCallbackMs": 524.261874,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/down_proj/Linear",
+          "/layers.1/self_attn/k_proj/Linear"
+        ]
+      },
+      {
+        "id": "c5e59637894ff2b19b007e5431447d99549cca5f94901bfb0daeabc220f9fb47",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 27,
+        "observedInvocations": 27,
+        "observedForwards": 1,
+        "callsPerForward": 27.0,
+        "baselineCallbackTotalMs": 515.020314,
+        "uniqueCoveredCallbackMs": 515.020314,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/down_proj/Linear",
+          "/layers.1/self_attn/q_proj/Linear"
+        ]
+      },
+      {
+        "id": "5eec4648b0bc648c2348806c199bf6c3a301b37a22bff75aac11563aded3d4bb",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "fork",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution",
+          "Convolution"
+        ],
+        "staticOccurrences": 54,
+        "observedInvocations": 54,
+        "observedForwards": 1,
+        "callsPerForward": 54.0,
+        "baselineCallbackTotalMs": 636.2770359999998,
+        "uniqueCoveredCallbackMs": 419.425471,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.1/self_attn/k_proj/Linear",
+          "/layers.1/self_attn/q_proj/Linear"
+        ]
+      },
+      {
+        "id": "650f284f12ed882b57d4b5c1d0db86e47cad9f961a7c9fc3d6ca124f399f2a7b",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "BinaryOp",
+          "Convolution",
+          "LayerNorm"
+        ],
+        "staticOccurrences": 27,
+        "observedInvocations": 27,
+        "observedForwards": 1,
+        "callsPerForward": 27.0,
+        "baselineCallbackTotalMs": 345.280469,
+        "uniqueCoveredCallbackMs": 345.280469,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/down_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "bba30312dacaee78540f91133da1350578a0b201a5cdebb2f896aca7e2ec7e01",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "join",
+        "operatorTypes": [
+          "Convolution",
+          "Convolution",
+          "RoPE"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 334.029228,
+        "uniqueCoveredCallbackMs": 334.029228,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/self_attn/k_proj/Linear",
+          "/layers.0/self_attn/q_proj/Linear",
+          "/layers.0/self_attn/FusedRoPE"
+        ]
+      },
+      {
+        "id": "8b8ce1b829bd85e80468e1b6cba1e65e0d3614166fd7dcbad116f097cadbc00f",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "BinaryOp",
+          "Convolution"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 333.06156200000004,
+        "uniqueCoveredCallbackMs": 333.061562,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/down_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "0dee8e19f9f03111a2c929e84abca19a274a88d86bcc12400adaa459b5ea2582",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "LayerNorm"
+        ],
+        "staticOccurrences": 27,
+        "observedInvocations": 27,
+        "observedForwards": 1,
+        "callsPerForward": 27.0,
+        "baselineCallbackTotalMs": 321.68796800000007,
+        "uniqueCoveredCallbackMs": 321.687968,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/down_proj/Linear"
+        ]
+      },
+      {
+        "id": "6ebf26f11ec98632132793fb4da73f890a535e90e672affc5ca1abb335b77f4f",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "BinaryOp"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 310.23593900000003,
+        "uniqueCoveredCallbackMs": 310.235939,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/gate_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "0a4c679b712a6d844e377c0fda260bd856783f8423a43391c14ac1791ad919fd",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "BinaryOp"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 307.14578599999993,
+        "uniqueCoveredCallbackMs": 307.145786,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/up_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "4fec4b3eca202341a8aed07354276bad36d4e2929e712aa60f29012df8d2580b",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "RoPE"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 231.438913,
+        "uniqueCoveredCallbackMs": 231.43891299999999,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/self_attn/q_proj/Linear",
+          "/layers.0/self_attn/FusedRoPE"
+        ]
+      },
+      {
+        "id": "23b2d3bd32c1502fba896199c382414dc85ba9549a197b587c26ea47a337583d",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "LayerNorm"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 229.38968600000004,
+        "uniqueCoveredCallbackMs": 229.389686,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/post_attention_layernorm/Mul_1_output_0",
+          "/layers.0/self_attn/o_proj/Linear"
+        ]
+      },
+      {
+        "id": "e736741bac469e6244a2d5dfb5886177a958b1fcc3c6d18439fb24e006f207dd",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 54,
+        "observedInvocations": 54,
+        "observedForwards": 1,
+        "callsPerForward": 54.0,
+        "baselineCallbackTotalMs": 249.61234400000004,
+        "uniqueCoveredCallbackMs": 226.093125,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.1/self_attn/k_proj/Linear"
+        ]
+      },
+      {
+        "id": "cea1cb32cc655a3f32ed2cbb11673f2dfb7525fc0a56ffbd2beedf40a0a11621",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "fork",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution",
+          "Convolution"
+        ],
+        "staticOccurrences": 27,
+        "observedInvocations": 27,
+        "observedForwards": 1,
+        "callsPerForward": 27.0,
+        "baselineCallbackTotalMs": 226.09312500000001,
+        "uniqueCoveredCallbackMs": 226.093125,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.1/self_attn/k_proj/Linear",
+          "/layers.1/self_attn/v_proj/Linear"
+        ]
+      },
+      {
+        "id": "35b694da0a9ac8249ad6433be9c175ed37300817d99889df83ef0285cc832a6d",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 27,
+        "observedInvocations": 27,
+        "observedForwards": 1,
+        "callsPerForward": 27.0,
+        "baselineCallbackTotalMs": 216.851565,
+        "uniqueCoveredCallbackMs": 216.851565,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.1/self_attn/q_proj/Linear"
+        ]
+      },
+      {
+        "id": "ceef2c2453ef3c0cbf6ea8de1675d59d5114e19ebda1fbe4999216e40435a8b1",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "RoPE"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 28,
+        "observedForwards": 1,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 128.71110099999999,
+        "uniqueCoveredCallbackMs": 128.711101,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/self_attn/k_proj/Linear",
+          "/layers.0/self_attn/FusedRoPE"
+        ]
+      },
+      {
+        "id": "ac7c3d3f817c2803ff0180be1b5c73431fbb1ac67033fd80493db9a3afee21e9",
+        "phase": "prefill",
+        "size": 3,
+        "topology": "fork",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution",
+          "Convolution"
+        ],
+        "staticOccurrences": 2,
+        "observedInvocations": 2,
+        "observedForwards": 1,
+        "callsPerForward": 2.0,
+        "baselineCallbackTotalMs": 36.1575,
+        "uniqueCoveredCallbackMs": 22.684844,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/input_layernorm/Mul_1_output_0",
+          "/layers.0/self_attn/k_proj/Linear",
+          "/layers.0/self_attn/q_proj/Linear"
+        ]
+      },
+      {
+        "id": "f946864c41b229af40198baf9bfdf1443c37bd2fe4a09a4b2c036ccb728a657b",
+        "phase": "prefill",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 2,
+        "observedInvocations": 2,
+        "observedForwards": 1,
+        "callsPerForward": 2.0,
+        "baselineCallbackTotalMs": 12.185938,
+        "uniqueCoveredCallbackMs": 10.699063,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/input_layernorm/Mul_1_output_0",
+          "/layers.0/self_attn/k_proj/Linear"
+        ]
+      },
+      {
+        "id": "50317859527150c9e3a646a73f97c12fc19595bc51c5cbe9d5fe7cad10686d1a",
+        "phase": "decode",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 56,
+        "observedInvocations": 112,
+        "observedForwards": 2,
+        "callsPerForward": 56.0,
+        "baselineCallbackTotalMs": 13.487801999999999,
+        "uniqueCoveredCallbackMs": 10.591085,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/post_attention_layernorm/Mul_1_output_0",
+          "/layers.0/self_attn/o_proj/Linear",
+          "/layers.0/mlp/gate_proj/Linear"
+        ]
+      },
+      {
+        "id": "7b2774c511f45cdac4e1a7d7ff691299d7c8b7eee506b4a884cabd0ec04fa067",
+        "phase": "decode",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "BinaryOp",
+          "Convolution"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 8.142173999999999,
+        "uniqueCoveredCallbackMs": 8.142174,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/gate_proj/Linear",
+          "/layers.0/mlp/down_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "23600877ccd156a2cc924e49cff62ff4cbae58e6060e04937ce429cf873f359d",
+        "phase": "decode",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "BinaryOp",
+          "Convolution"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 8.125931999999999,
+        "uniqueCoveredCallbackMs": 8.125932,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/up_proj/Linear",
+          "/layers.0/mlp/down_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "13d9a0618526596cf401de319371bc11d91417aa423775677563c6b01cac8ccc",
+        "phase": "decode",
+        "size": 3,
+        "topology": "join",
+        "operatorTypes": [
+          "Convolution",
+          "Convolution",
+          "BinaryOp"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 7.960615,
+        "uniqueCoveredCallbackMs": 7.960615,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/up_proj/Linear",
+          "/layers.0/mlp/gate_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "ea8ba3a84db5d69b1051fb8a697e7be8cac7c8839a66e2ed0d3167f9b343d253",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 56,
+        "observedInvocations": 112,
+        "observedForwards": 2,
+        "callsPerForward": 56.0,
+        "baselineCallbackTotalMs": 7.920619999999998,
+        "uniqueCoveredCallbackMs": 7.807494,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/post_attention_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/gate_proj/Linear"
+        ]
+      },
+      {
+        "id": "ac3bcbaa5e847ca6f3443b7b34e1bde7c147ee20f64290e94e55e516f00c8d96",
+        "phase": "decode",
+        "size": 3,
+        "topology": "fork",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution",
+          "Convolution"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 7.807494000000001,
+        "uniqueCoveredCallbackMs": 7.807494,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/post_attention_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/gate_proj/Linear",
+          "/layers.0/mlp/up_proj/Linear"
+        ]
+      },
+      {
+        "id": "e030b2411b8ba51dec7c50ca5f5e47a5b45bcc64ec48bee0eae91ce1f3b6aff8",
+        "phase": "decode",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 27,
+        "observedInvocations": 54,
+        "observedForwards": 2,
+        "callsPerForward": 27.0,
+        "baselineCallbackTotalMs": 7.703285,
+        "uniqueCoveredCallbackMs": 7.703285,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/down_proj/Linear",
+          "/layers.1/self_attn/q_proj/Linear"
+        ]
+      },
+      {
+        "id": "988cded9b73adeccb052967e8fee7c331eb6d65b2ac6d8b124096719b726ac2c",
+        "phase": "decode",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 54,
+        "observedInvocations": 108,
+        "observedForwards": 2,
+        "callsPerForward": 54.0,
+        "baselineCallbackTotalMs": 10.996087000000001,
+        "uniqueCoveredCallbackMs": 7.014059,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/down_proj/Linear",
+          "/layers.1/self_attn/k_proj/Linear"
+        ]
+      },
+      {
+        "id": "0b008f957d6afe26562a284e0bedfb9da19d1c0f20dd172d833e3139972b9c04",
+        "phase": "decode",
+        "size": 3,
+        "topology": "fork",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution",
+          "Convolution"
+        ],
+        "staticOccurrences": 54,
+        "observedInvocations": 108,
+        "observedForwards": 2,
+        "callsPerForward": 54.0,
+        "baselineCallbackTotalMs": 10.685793000000004,
+        "uniqueCoveredCallbackMs": 6.858912,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.1/self_attn/k_proj/Linear",
+          "/layers.1/self_attn/q_proj/Linear"
+        ]
+      },
+      {
+        "id": "d1d037b0c5b22887eec387c37bf4160fb62973c9c82255df115dceb040be2139",
+        "phase": "decode",
+        "size": 3,
+        "topology": "join",
+        "operatorTypes": [
+          "Convolution",
+          "Convolution",
+          "RoPE"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 5.855474999999999,
+        "uniqueCoveredCallbackMs": 5.855475,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/self_attn/k_proj/Linear",
+          "/layers.0/self_attn/q_proj/Linear",
+          "/layers.0/self_attn/FusedRoPE"
+        ]
+      },
+      {
+        "id": "3f29b30aa640824d48cac6136aa16d4ca68cb66a1256d5cd3153133482b862ba",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "BinaryOp",
+          "Convolution"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 4.286869,
+        "uniqueCoveredCallbackMs": 4.286869,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/down_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "0b5f728cbf0a8ef3f9f27cdcf8dfc48baeec316a8a30d87cecd5caa9b3f86f35",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "RoPE"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 4.257973,
+        "uniqueCoveredCallbackMs": 4.257973,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/self_attn/q_proj/Linear",
+          "/layers.0/self_attn/FusedRoPE"
+        ]
+      },
+      {
+        "id": "724e88822b5679a88d62fc3831d17804ffaaab0bf089e551f1a9b9128f4c67c6",
+        "phase": "decode",
+        "size": 3,
+        "topology": "chain",
+        "operatorTypes": [
+          "BinaryOp",
+          "Convolution",
+          "LayerNorm"
+        ],
+        "staticOccurrences": 27,
+        "observedInvocations": 54,
+        "observedForwards": 2,
+        "callsPerForward": 27.0,
+        "baselineCallbackTotalMs": 4.237026,
+        "uniqueCoveredCallbackMs": 4.237026,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/down_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "fb2b06bf03e47f00dd62aa5c1fae87bcffd64bab722e46b36d4423ef23c181b0",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "BinaryOp"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 4.121552,
+        "uniqueCoveredCallbackMs": 4.121552,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/gate_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "b09049db5b3d4c2d397db689b8bcb4dfe4d489a69bba2401f4c9fc462ebd0816",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "BinaryOp"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 4.105310000000001,
+        "uniqueCoveredCallbackMs": 4.10531,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/mlp/up_proj/Linear",
+          "/blocks.0/mlp/Mul_output_0"
+        ]
+      },
+      {
+        "id": "5e7a3962395a0366700a0d119f6b730a81c20f07941c87d42b7e1962fcfb952f",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "LayerNorm"
+        ],
+        "staticOccurrences": 27,
+        "observedInvocations": 54,
+        "observedForwards": 2,
+        "callsPerForward": 27.0,
+        "baselineCallbackTotalMs": 3.9820279999999997,
+        "uniqueCoveredCallbackMs": 3.982028,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.0/mlp/down_proj/Linear"
+        ]
+      },
+      {
+        "id": "b932f2ceb551b1d6f40d72cbe5dd3a81dc37766d6486f921b5d9e389533e20fc",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 27,
+        "observedInvocations": 54,
+        "observedForwards": 2,
+        "callsPerForward": 27.0,
+        "baselineCallbackTotalMs": 3.8268809999999998,
+        "uniqueCoveredCallbackMs": 3.826881,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.1/self_attn/q_proj/Linear"
+        ]
+      },
+      {
+        "id": "5935d8c2070df137c8a53a7cd1227fc1a40f4016f1a3ad51812e7338ebf54806",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 54,
+        "observedInvocations": 108,
+        "observedForwards": 2,
+        "callsPerForward": 54.0,
+        "baselineCallbackTotalMs": 3.2432790000000002,
+        "uniqueCoveredCallbackMs": 3.137655,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.1/self_attn/k_proj/Linear"
+        ]
+      },
+      {
+        "id": "02541a845da3dd49023ee4185ce6e460814f9ea9ce24dfb5e7aec7790dff8c65",
+        "phase": "decode",
+        "size": 3,
+        "topology": "fork",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution",
+          "Convolution"
+        ],
+        "staticOccurrences": 27,
+        "observedInvocations": 54,
+        "observedForwards": 2,
+        "callsPerForward": 27.0,
+        "baselineCallbackTotalMs": 3.1376549999999996,
+        "uniqueCoveredCallbackMs": 3.137655,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.1/input_layernorm/Mul_1_output_0",
+          "/layers.1/self_attn/k_proj/Linear",
+          "/layers.1/self_attn/v_proj/Linear"
+        ]
+      },
+      {
+        "id": "d6b926bd19967074e10b0f679419f6392aab3d97189f64bd64545f52319bc52b",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "LayerNorm"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 2.8967169999999998,
+        "uniqueCoveredCallbackMs": 2.8967169999999998,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/post_attention_layernorm/Mul_1_output_0",
+          "/layers.0/self_attn/o_proj/Linear"
+        ]
+      },
+      {
+        "id": "242701478edb48e249be468b5d13bd92600bcfcc24cddc243657411d2ba7ea10",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "Convolution",
+          "RoPE"
+        ],
+        "staticOccurrences": 28,
+        "observedInvocations": 56,
+        "observedForwards": 2,
+        "callsPerForward": 28.0,
+        "baselineCallbackTotalMs": 2.033124,
+        "uniqueCoveredCallbackMs": 2.033124,
+        "overlappingOccurrences": false,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/layers.0/self_attn/k_proj/Linear",
+          "/layers.0/self_attn/FusedRoPE"
+        ]
+      },
+      {
+        "id": "e08d926ebfe4ec75ee7ec8d6db1703f8a6ebddf8b184ff1611349e599a9a6e06",
+        "phase": "decode",
+        "size": 3,
+        "topology": "fork",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution",
+          "Convolution"
+        ],
+        "staticOccurrences": 2,
+        "observedInvocations": 4,
+        "observedForwards": 2,
+        "callsPerForward": 2.0,
+        "baselineCallbackTotalMs": 0.31703000000000003,
+        "uniqueCoveredCallbackMs": 0.21218700000000001,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/input_layernorm/Mul_1_output_0",
+          "/layers.0/self_attn/k_proj/Linear",
+          "/layers.0/self_attn/q_proj/Linear"
+        ]
+      },
+      {
+        "id": "aa5ade8c7cbd0241d2fb363b94ea9e921df2551f85a937e32c19d3e8026d677a",
+        "phase": "decode",
+        "size": 2,
+        "topology": "chain",
+        "operatorTypes": [
+          "LayerNorm",
+          "Convolution"
+        ],
+        "staticOccurrences": 2,
+        "observedInvocations": 4,
+        "observedForwards": 2,
+        "callsPerForward": 2.0,
+        "baselineCallbackTotalMs": 0.114842,
+        "uniqueCoveredCallbackMs": 0.111093,
+        "overlappingOccurrences": true,
+        "fusionReady": false,
+        "speedupProven": false,
+        "exampleNodes": [
+          "/blocks.0/input_layernorm/Mul_1_output_0",
+          "/layers.0/self_attn/k_proj/Linear"
+        ]
+      }
+    ],
+    "validation": {
+      "pythonTestsPassed": 121,
+      "xyXyzTestsPassed": 17,
+      "nativeExporter": "Built and executed on actual phone model; FlatBuffer verified; no session created"
+    },
+    "limits": [
+      "No newly generated fused kernel or numerical/speedup result",
+      "Profile is one prefill plus two decode forwards; no extrapolation to long KV",
+      "Callbacks are diagnostic costs, not standalone latency or measured DRAM",
+      "Overlapping placements must share exact-cover primitive rows; do not add pattern costs",
+      "Learned parameters stay site-specific; runtime layout/dtype/packing/alias still require audit"
+    ],
+    "graphExportCanonicalSha256": "99c9b874b282064ace7878de08ed0bded09582b83ce752623cc4d56b583012e3"
   }
 }
