@@ -167668,5 +167668,160 @@
       }
     },
     "limitations": "No measured candidate pool for the graph replay. Exact structural enumeration does not certify predicted kernel performance or full-budget adaptive decisions."
+  },
+  "llmGateUpPlacementAnd256DecodeABBA20261125": {
+    "date": "2026-11-25",
+    "scope": "CMM-AL00 0.6B LLM fixed-history phone CLI, CPU High, 4 threads. 28-layer gate/up direct-gate implementation. Normal timing excludes model load. No sampling, DiT, VAE or music RTF.",
+    "recipe": {
+      "prefillPositions": 513,
+      "body": "W4/group64",
+      "head": "W8",
+      "threads": 4,
+      "precision": "high",
+      "profileDecodeForwards": 4,
+      "timingDecodeForwards": 256,
+      "timingRoundsPerProcess": 3,
+      "timingWarmRoundsPerProcess": 2,
+      "screenAcceptedAll": true
+    },
+    "hashes": {
+      "stock": {
+        "binarySha256": "f4cc3c5a25d039e1fd6b6cae16dc1da2b8bf1dd5bf030b2c7121671cf88dea70",
+        "modelGraphSha256": "7a7c1541d4a2503e9c4ff432140a13a03951b208b6a32467b2320b14b7da3e3a",
+        "mnnArchiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c"
+      },
+      "direct": {
+        "binarySha256": "733a043c501e756910863c015882dd95cb59209b6c2e46f4ebc1cd1a4147d2f1",
+        "modelGraphSha256": "6b2d3176f3e846297f2e3ed9ffec978dc39c5e0cd44d9380b3fbbc392026bd8d",
+        "mnnArchiveSha256": "fbaa87b8cae9cd451560803ee3837886fe7e44d48976fc12654654412226159c"
+      }
+    },
+    "diagnostic": {
+      "processes": 8,
+      "temperaturesC": [
+        29.0,
+        30.0
+      ],
+      "phases": {
+        "prefill": {
+          "modelProxyGainMs": 19.39389762719686,
+          "stockGroupMeanMs": 534.10558575,
+          "directGroupMeanMs": 519.875235,
+          "pairDeltasMs": [
+            3.969527999999986,
+            12.446411000000019,
+            15.815153000000002,
+            24.690310999999987
+          ],
+          "groupMeanSavingMs": 14.23035075,
+          "groupMedianSavingMs": 14.13078200000001,
+          "positivePairs": 4,
+          "discoveryPositiveSiteCount": 20,
+          "selectedSitesHeldoutPairDeltasMs": [
+            13.988745999999999,
+            9.891093999999992
+          ],
+          "heldoutAllSitesPairDeltasMs": [
+            15.815153000000002,
+            24.690310999999987
+          ],
+          "declaredCandidateLocations": 28
+        },
+        "decode": {
+          "modelProxyGainMs": 0.15121947467599894,
+          "stockGroupMeanMs": 16.431954750000003,
+          "directGroupMeanMs": 15.2990645,
+          "pairDeltasMs": [
+            1.1593759999999995,
+            1.2560790000000006,
+            1.1128230000000001,
+            1.0032829999999993
+          ],
+          "groupMeanSavingMs": 1.13289025,
+          "groupMedianSavingMs": 1.1360994999999998,
+          "positivePairs": 4,
+          "discoveryPositiveSiteCount": 27,
+          "selectedSitesHeldoutPairDeltasMs": [
+            1.0906360000000002,
+            0.8984369999999993
+          ],
+          "heldoutAllSitesPairDeltasMs": [
+            1.1128230000000001,
+            1.0032829999999993
+          ],
+          "declaredCandidateLocations": 28
+        }
+      }
+    },
+    "timing": {
+      "processes": 4,
+      "temperaturesC": [
+        30.0,
+        34.0
+      ],
+      "stock": {
+        "prefillMs": 2231.2760937499997,
+        "decodeMs": 5559.798395999998,
+        "decodeMsPerToken": 21.717962484374993,
+        "totalMs": 7791.074489749999,
+        "rssPeakMiB": 696.10546875,
+        "maxProcessRssPeakMiB": 704.8828125
+      },
+      "direct": {
+        "prefillMs": 2248.6286717499997,
+        "decodeMs": 5517.849099249999,
+        "decodeMsPerToken": 21.55409804394531,
+        "totalMs": 7766.477770999999,
+        "rssPeakMiB": 707.291015625,
+        "maxProcessRssPeakMiB": 714.57421875
+      },
+      "pairs": [
+        {
+          "stock": {
+            "prefillMs": 2122.0367969999998,
+            "decodeMs": 5426.656946999996,
+            "decodeMsPerToken": 21.197878699218734,
+            "totalMs": 7548.693743999996,
+            "rssPeakMiB": 687.328125
+          },
+          "direct": {
+            "prefillMs": 2179.8073434999997,
+            "decodeMs": 5483.655308999999,
+            "decodeMsPerToken": 21.420528550781246,
+            "totalMs": 7663.4626524999985,
+            "rssPeakMiB": 714.57421875
+          }
+        },
+        {
+          "stock": {
+            "prefillMs": 2340.5153904999997,
+            "decodeMs": 5692.939845000002,
+            "decodeMsPerToken": 22.238046269531257,
+            "totalMs": 8033.455235500001,
+            "rssPeakMiB": 704.8828125
+          },
+          "direct": {
+            "prefillMs": 2317.45,
+            "decodeMs": 5552.0428895,
+            "decodeMsPerToken": 21.687667537109373,
+            "totalMs": 7869.492889499999,
+            "rssPeakMiB": 700.0078125
+          }
+        }
+      ],
+      "savingPct": 0.3157038067388482,
+      "pairedTotalSavingsMs": [
+        -114.76890850000291,
+        163.96234600000207
+      ]
+    },
+    "precisionCheck": {
+      "maxRelativeL2": 0,
+      "maxAbsolute": 0,
+      "forwardsPerTimingProcess": 257,
+      "candidateInvocationsPerTimingProcess": 21588
+    },
+    "pythonTestsPassed": 139,
+    "decision": "Keep stock. Positive aggregate callback gains on four instrumented pairs and opposite directions on the two uninstrumented full-LLM pairs. The transformed graph runs on all layers in both phases. Per-layer subset replay is for sensitivity only."
   }
 }
