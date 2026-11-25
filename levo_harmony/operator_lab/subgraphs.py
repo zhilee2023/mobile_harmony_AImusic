@@ -95,54 +95,60 @@ class TensorGraph:
         for size in range(2, maximum + 1):
             larger = set()
             for region in frontier:
-                neighbors = set().union(*(self.successors[i] | self.predecessors[i] for i in region))
-                for i in (neighbors & eligible) - region:
-                    larger.add(region | {i})
+                larger.update(self.extensions(region, eligible))
             frontier = larger
             if size >= minimum:
                 yield from sorted(frontier, key=lambda s: tuple(sorted(s)))
+
+    def extensions(self, region, eligible):
+        neighbors = set().union(*(self.successors[i] | self.predecessors[i] for i in region))
+        return (region | {node} for node in (neighbors & eligible) - region)
 
     def convex(self, region):
         # Reject paths that leave the region and later reenter it.
         return not any(self.descendants[j] & region for i in region
                        for j in self.successors[i] - region)
 
+    def contract(self, order, rows):
+        region = frozenset(order)
+        slots = {node: slot for slot, node in enumerate(order)}
+        externals = {}
+        encoded = []
+        for i in order:
+            node, row = self.nodes[i], rows[i]
+            ins = []
+            for tensor in node.get('inputIndexes', []):
+                if tensor < 0:
+                    ins.append(['absent'])
+                elif tensor in self.producer and self.producer[tensor][0] in region:
+                    producer, port = self.producer[tensor]
+                    ins.append(['internal', slots[producer], port])
+                else:
+                    if tensor not in externals:
+                        externals[tensor] = len(externals)
+                    constant = None
+                    if tensor in self.producer:
+                        source = self.nodes[self.producer[tensor][0]]
+                        if source['type'] == 'Const':
+                            constant = _attrs(source.get('main', {}), constants=True)
+                    ins.append(['external', externals[tensor], constant])
+            outs = []
+            for tensor in node.get('outputIndexes', []):
+                outs.append({'externalConsumers': len(self.consumers[tensor] - region),
+                             'graphOutput': tensor in self.outputs})
+            encoded.append({'type': node['type'], 'mainType': node.get('main_type'),
+                'attrs': _attrs(node.get('main', {})),
+                'declaredLayout': node.get('defaultDimentionFormat', 'schema_default'),
+                'inputs': ins, 'outputs': outs, 'inputShapes': row['inputShapes'],
+                'outputShapes': row['outputShapes'],
+                'backendKeys': sorted(row['backendObservations'])})
+        return _json(encoded)
+
     def canonical(self, region, rows):
         best = None
         best_order = None
         for order in itertools.permutations(sorted(region)):
-            slots = {node: slot for slot, node in enumerate(order)}
-            externals = {}
-            encoded = []
-            for i in order:
-                node, row = self.nodes[i], rows[i]
-                ins = []
-                for tensor in node.get('inputIndexes', []):
-                    if tensor < 0:
-                        ins.append(['absent'])
-                    elif tensor in self.producer and self.producer[tensor][0] in region:
-                        producer, port = self.producer[tensor]
-                        ins.append(['internal', slots[producer], port])
-                    else:
-                        if tensor not in externals:
-                            externals[tensor] = len(externals)
-                        constant = None
-                        if tensor in self.producer:
-                            source = self.nodes[self.producer[tensor][0]]
-                            if source['type'] == 'Const':
-                                constant = _attrs(source.get('main', {}), constants=True)
-                        ins.append(['external', externals[tensor], constant])
-                outs = []
-                for tensor in node.get('outputIndexes', []):
-                    outs.append({'externalConsumers': len(self.consumers[tensor] - region),
-                                 'graphOutput': tensor in self.outputs})
-                encoded.append({'type': node['type'], 'mainType': node.get('main_type'),
-                    'attrs': _attrs(node.get('main', {})),
-                    'declaredLayout': node.get('defaultDimentionFormat', 'schema_default'),
-                    'inputs': ins, 'outputs': outs, 'inputShapes': row['inputShapes'],
-                    'outputShapes': row['outputShapes'],
-                    'backendKeys': sorted(row['backendObservations'])})
-            value = _json(encoded)
+            value = self.contract(order, rows)
             if best is None or value < best:
                 best, best_order = value, order
         return best, best_order
@@ -156,9 +162,7 @@ def _graphs(export):
         yield TensorGraph('subgraph:' + str(number), graph.get('nodes', []), graph.get('outputs', []))
 
 
-def mine_connected_subgraphs(export, report, *, model_sha256, minimum=2, maximum=3):
-    if not 2 <= minimum <= maximum <= 3:
-        raise ValueError('Bounded exact canonicalization supports 2/3-node motifs')
+def profile_context(report, model_sha256):
     native = report['native']
     if native['status'] != 'completed' or not native['instrumented']:
         raise ValueError('Need completed operator diagnostic')
@@ -175,26 +179,41 @@ def mine_connected_subgraphs(export, report, *, model_sha256, minimum=2, maximum
     lookup = defaultdict(list)
     for row in native['operators']['nodes']:
         lookup[row['phase'], row['name'], row['type']].append(row)
+    return native, forwards, context, lookup
+
+
+def matched_profile_rows(graph, phase, lookup):
+    if graph.scope != 'main':
+        return {}
+    # Profiles currently lack subgraph scope. Do not match ambiguous names.
+    name_count = Counter(n.get('name', '') for n in graph.nodes)
+    rows = {}
+    for i, node in enumerate(graph.nodes):
+        candidates = lookup.get((phase, node.get('name', ''), node['type']), [])
+        if name_count[node.get('name', '')] != 1 or len(candidates) != 1:
+            continue
+        row = candidates[0]
+        if len(row['inputShapes']) != len(node.get('inputIndexes', [])) or len(row['outputShapes']) != len(node.get('outputIndexes', [])):
+            continue
+        if type(row['calls']) is not int or row['calls'] <= 0 or not math.isfinite(row['seconds']) or row['seconds'] < 0:
+            raise ValueError('Invalid measured calls or timing')
+        rows[i] = row
+    return rows
+
+
+def mine_connected_subgraphs(export, report, *, model_sha256, minimum=2, maximum=3):
+    if not 2 <= minimum <= maximum <= 3:
+        raise ValueError('Bounded exact canonicalization supports 2/3-node motifs')
+    native, forwards, context, lookup = profile_context(report, model_sha256)
+    expected = context['modelSha256']
     groups = {}
     statistics = Counter()
     for graph in _graphs(export):
         statistics['staticNodes'] += len(graph.nodes)
-        # Profiles currently lack subgraph scope. Do not match ambiguous names.
-        name_count = Counter(n.get('name', '') for n in graph.nodes)
         for phase, count in forwards.items():
             if not count:
                 continue
-            rows = {}
-            for i, node in enumerate(graph.nodes):
-                candidates = lookup[phase, node.get('name', ''), node['type']]
-                if graph.scope != 'main' or name_count[node.get('name', '')] != 1 or len(candidates) != 1:
-                    continue
-                row = candidates[0]
-                if len(row['inputShapes']) != len(node.get('inputIndexes', [])) or len(row['outputShapes']) != len(node.get('outputIndexes', [])):
-                    continue
-                if type(row['calls']) is not int or row['calls'] <= 0 or not math.isfinite(row['seconds']) or row['seconds'] < 0:
-                    raise ValueError('Invalid measured calls or timing')
-                rows[i] = row
+            rows = matched_profile_rows(graph, phase, lookup)
             eligible = {i for i in rows if graph.nodes[i]['type'] in PURE_TYPES}
             statistics['profileMatchedNodes'] += len(rows)
             for region in graph.connected_sets(eligible, minimum, maximum):

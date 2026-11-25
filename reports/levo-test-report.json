@@ -166911,5 +166911,55 @@
       "Learned parameters stay site-specific; runtime layout/dtype/packing/alias still require audit"
     ],
     "graphExportCanonicalSha256": "99c9b874b282064ace7878de08ed0bded09582b83ce752623cc4d56b583012e3"
+  },
+  "llmDynamicSubgraphPricing20261125": {
+    "status": "bounded_search_validated_on_real_graph_cold_start",
+    "modelId": "larkstudio-small-0.6b-v1",
+    "modelSha256": "7a7c1541d4a2503e9c4ff432140a13a03951b208b6a32467b2320b14b7da3e3a",
+    "profileSha256": "daab29e7b9b5d328c0165a998307c831811b6af88908230aaf9768f5fc62f6ce",
+    "beamWidth": 32,
+    "maxNodes": 6,
+    "proxyBandwidthGBs": 36.4042,
+    "scope": "Reused actual phone graph and instrumented profile. Bandwidth is prior CPU copy reference. Logical traffic serves only as a ranking proxy.",
+    "phases": {
+      "prefill": {
+        "observedForwards": 1,
+        "proposalsByNodeCount": {
+          "2": 16,
+          "3": 15,
+          "4": 8,
+          "5": 10,
+          "6": 9
+        },
+        "regionStatesScored": 1136,
+        "measuredFusionSeeds": 0,
+        "nonzeroDualRows": 0,
+        "fullFfnStaticMatches": 28,
+        "fullFfnObservedCalls": 28
+      },
+      "decode": {
+        "observedForwards": 2,
+        "proposalsByNodeCount": {
+          "2": 16,
+          "3": 15,
+          "4": 8,
+          "5": 10,
+          "6": 9
+        },
+        "regionStatesScored": 1136,
+        "measuredFusionSeeds": 0,
+        "nonzeroDualRows": 0,
+        "fullFfnStaticMatches": 28,
+        "fullFfnObservedCalls": 56
+      }
+    },
+    "coldStartPoliciesIdentical": true,
+    "syntheticValidation": [
+      "Nonzero measured-cost fixture changes the beam under dual scoring",
+      "Disjoint convex regions with a contraction cycle are excluded by CPLEX"
+    ],
+    "existingMinerRegression": "Identical result with 46 repeated XY/XYZ groups",
+    "pythonTestsPassed": 124,
+    "numericalFusionOrDeviceSpeedupProven": false
   }
 }

@@ -24,6 +24,13 @@ def main(argv=None):
     p=sub.add_parser('mine-repetitions');p.add_argument('--profile',required=True);p.add_argument('--output',required=True)
     p=sub.add_parser('mine-subgraphs');p.add_argument('--profile',required=True);p.add_argument('--graph',required=True)
     p.add_argument('--model-sha256',required=True);p.add_argument('--output',required=True)
+    p=sub.add_parser('price-subgraphs')
+    p.add_argument('--profile',required=True);p.add_argument('--graph',required=True)
+    p.add_argument('--model-sha256',required=True);p.add_argument('--output',required=True)
+    p.add_argument('--bandwidth-gbps',type=float,required=True)
+    p.add_argument('--beam-width',type=int,default=32);p.add_argument('--max-nodes',type=int,default=6)
+    p.add_argument('--policy',choices=['dual','frequency'],default='dual')
+    p.add_argument('--verified');p.add_argument('--epsilon',type=float,default=.001)
     args=parser.parse_args(argv)
     if args.command=='pool-study':
         pool=Pool.read(args.pool)
@@ -41,6 +48,16 @@ def main(argv=None):
         elif args.mode=='frequency-greedy':result=frequency_greedy(catalog,args.budget,**kwargs)
         else:result=solve_master(catalog,args.budget,integer=True,**kwargs)
         result['inputScope']=data.get('scope','declared_cost_model');write_new(args.output,result);print(json.dumps(result,indent=2))
+    elif args.command=='price-subgraphs':
+        from .subgraph_pricing import price_subgraphs
+        verified=json.loads(Path(args.verified).read_text(encoding='utf-8')) if args.verified else None
+        result=price_subgraphs(json.loads(Path(args.graph).read_text(encoding='utf-8')),
+            json.loads(Path(args.profile).read_text(encoding='utf-8')),model_sha256=args.model_sha256,
+            bandwidth_gbps=args.bandwidth_gbps,width=args.beam_width,maximum=args.max_nodes,
+            policy=args.policy,verified=verified,epsilon=args.epsilon)
+        write_new(args.output,result)
+        for phase,data in result['phases'].items():
+            print(f"{phase}: {len(data['proposals'])} proposals, {data['nonzeroDualRows']} nonzero dual rows")
     elif args.command=='mine-subgraphs':
         from .subgraphs import mine_connected_subgraphs
         result=mine_connected_subgraphs(json.loads(Path(args.graph).read_text(encoding='utf-8')),

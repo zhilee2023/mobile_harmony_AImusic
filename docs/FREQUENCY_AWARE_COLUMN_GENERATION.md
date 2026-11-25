@@ -98,6 +98,24 @@ Attention／KV／控制流／Raster虚拟区域／未知Extra算子不自动纳�
 融合实现实测前，候选延迟未知，不能把回调成本直接当融合成本送入精确定价。独立开发／数值验收后，填入各位置或可信调用类的实际延迟，再解重叠覆盖master并做整图验收。
 当前完成的是自动发现及计数，不是任意新结构的自动Kernel生成／部署；新的未知实现仍属于上述在线row／column问题。
 
+### 有限开发预算下的动态子图定价
+
+`price-subgraphs`实现了在线定价的首版。先在已验收位置上求集合打包 LP，再沿实际 MNN 张量边扩展至 2–6 个节点。每层保留指定数量的结构模板，每个模板最多选两个代表位置继续扩展。非凸中间状态可以扩展，提交的融合区域必须凸。模板按算子语义、张量端口、输入别名、输出边界、阶段 Shape 和后端信息匹配其余出现位置。
+
+对于位置 \(j\)，LP 使用 \(g_j=f_j(b_j-t_j)\) 最大化累计收益，每个原始位置至多被一次融合覆盖，未覆盖的算子运行 MNN 原生实现。节点约束的对偶 \(\pi_i\ge 0\)，搜索优先级采用 \(\widehat q_j=\widehat g_j-\sum_{i\in S_j}\pi_i\)。当前 \(\widehat g_j\) 用内部且可省物化的单输出张量逻辑字节估算，参考带宽由参数传入，并以原算子回调成本封顶。Prefill 和 Decode 独立使用已观察的次数。通用算子实现的开发费用仍在外层预算中按实现记账。
+
+同一模板的位置有冲突时，对保留的模板解小规模打包问题。最终选择已测位置时也检查收缩后的 DAG。两个单独凸且互不重叠的区域仍可能相互依赖，如数据边 \(a\to b,c\to d,a\to d,c\to b\) 上同时收缩 \(\{a,b\},\{c,d\}\)。发现环后添加约束，排除同时选择该环上的全部融合区域。当前对偶来自添加环约束前的覆盖 LP 松弛。
+
+配对实验结果可通过 `--verified` 加入下一轮，目录字段为 `scope=paired_device_measurements`、`modelSha256`、`profileSha256` 和 `placements`。每个位置包含 `id`、`phase`、`nodes`、`nativeMsPerCall`、`fusedMsPerCall`、`relativeL2`、`correctnessPassed`、`devicePassed`。采样输入、精度和设备条件应由已有候选验证链保证。CLI 校验目录标识、节点和误差，并记录提供的数据来源。候选评分与已测位置分开；冷启动对偶为零，`--policy frequency` 可关闭对偶作为同预算对照。
+
+```powershell
+python tools/operator_lab.py price-subgraphs --graph PRIVATE_GRAPH_JSON --profile PROFILE_JSON `
+  --model-sha256 SOURCE_MNN_SHA256 --bandwidth-gbps 36.4042 --beam-width 32 --max-nodes 6 `
+  --policy dual --output proposals-new.json
+```
+
+0.6B 实际图按宽度 32 搜索，Prefill、Decode 各得 58 个模板，其中各有 27 个由 4–6 个算子组成。完整 FFN 的四节点模式匹配 28 处。36.4042 GB/s 是此前复制测试的参考值，算出的代理收益只用于排序。搜索宽度和代表位置会限制候选空间。严格分支定界可另用同一时间口径的原算子成本减对偶，取剩余节点数允许加入的最大正权重之和，再扣除可证明的融合运行成本下界。经验带宽和 Roofline 估计用于排序，不能据此认证剪枝或全局最优。随后仍需对入选方案开发 Kernel、进行真机 A/B 并复测整图。
+
 ## 5. Frequency Greedy与实现质量
 
 实现`frequency_greedy`是次数加权的**边际收益Greedy＋当前已开发库的全局重新部署**，比简单按频次排序更强。
