@@ -68,6 +68,7 @@ def rank(graph, rows, bandwidth, max_nodes, beam_width):
                'beam-bound': search.beam(beam_width, max_nodes, 'bound')}
     result = {}
     exhaustive_order = set()
+    exhaustive_candidates = []
     for method, (groups, levels) in methods.items():
         candidates = []
         seen = set()
@@ -87,6 +88,7 @@ def rank(graph, rows, bandwidth, max_nodes, beam_width):
             sample = sorted(selected[0])
             candidates.append({
                 'positions': [list(region) for region in regions],
+                'selectedPositions': [sorted(region) for region in selected],
                 'kinds': [graph.nodes[i]['type'] for i in sample],
                 'exampleOperators': [graph.nodes[i]['name'] for i in sample],
                 'exampleOutputs': [rows[i]['outputShapes'] for i in sample],
@@ -102,16 +104,16 @@ def rank(graph, rows, bandwidth, max_nodes, beam_width):
         top_keys = {tuple(map(tuple, row['positions'])) for row in top}
         if method == 'exhaustive':
             exhaustive_order = top_keys
+            exhaustive_candidates = candidates
         result[method] = dict(levels=levels, positiveTemplates=len(candidates), top10=top,
                               sameTop10AsExhaustive=len(top_keys & exhaustive_order))
-    return result
+    return result, exhaustive_candidates
 
 
-def full_copy_boundaries(graph, profile):
-    """Price current copy callbacks alone, without claiming storage can alias."""
+def full_copy_sites(graph, profile):
+    """Find complete packed CPU copies eligible for the isolated alias probe."""
     tensors = profile['tensors']
-    boundaries = {}
-    for node, command in zip(graph.nodes, profile['commands'], strict=True):
+    for index, (node, command) in enumerate(zip(graph.nodes, profile['commands'], strict=True)):
         if node['type'] != 'Raster' or len(command['rasterRegions']) != 1 or len(node['outputIndexes']) != 1:
             continue
         region = command['rasterRegions'][0]
@@ -120,20 +122,46 @@ def full_copy_boundaries(graph, profile):
         if src not in graph.producer or dst in graph.outputs or not graph.consumers[dst]:
             continue
         source, target = tensors[src], tensors[dst]
+        x, y = source['shape'], target['shape']
         if (region['sourceOffset'] != 0 or region['outputOffset'] != 0
                 or region['sourceStride'] != region['outputStride'] or region['sourceStride'][-1] != 1
-                or region['size'] != [1, 1, math.prod(target['shape'])]
-                or math.prod(source['shape']) != math.prod(target['shape'])
-                or layout(source)[1:] != layout(target)[1:] or not target['storageBytes']):
+                or region['size'] != [1, 1, math.prod(y)] or math.prod(x) != math.prod(y)
+                or layout(source)[1:] != layout(target)[1:] or target['backend'] != 13
+                or target['format'] != 'NC4HW4' or target['storageBytes'] != 2 * math.prod(y)
+                or len(x) < 3 or len(y) < 3 or x[0] != 1 or y[0] != 1 or x[1] != y[1] or x[1] % 8):
             continue
         producer = graph.nodes[graph.producer[src][0]]['type']
         consumers = tuple(sorted(graph.nodes[i]['type'] for i in graph.consumers[dst]))
+        yield index, producer, consumers, target['storageBytes']
+
+
+def full_copy_boundaries(profile, sites):
+    """Price current copies without assuming the runtime rewrite always pays off."""
+    boundaries = {}
+    for index, producer, consumers, storage in sites:
         entry = boundaries.setdefault((producer, consumers), dict(
             producer=producer, consumers=consumers, copies=0, callbackMs=0.0, outputStorageBytes=0))
         entry['copies'] += 1
-        entry['callbackMs'] += command['seconds'] * 1000
-        entry['outputStorageBytes'] += target['storageBytes']
+        entry['callbackMs'] += profile['commands'][index]['seconds'] * 1000
+        entry['outputStorageBytes'] += storage
     return sorted(boundaries.values(), key=lambda item: -item['callbackMs'])
+
+
+def price_layout_actions(top, profile, eligible):
+    """Deduplicate equivalent layouts and price only the operations the code changes."""
+    commands = profile['commands']
+    plans = {}
+    for priority, candidate in enumerate(top, 1):
+        ids = set().union(*map(set, candidate['selectedPositions']))
+        copies = tuple(sorted(i for i in ids if commands[i]['type'] == 'Raster'))
+        if not copies or not set(copies) <= eligible:
+            continue
+        if copies not in plans:
+            plans[copies] = dict(priorRanks=[], calls=len(copies),
+                                 rasterNames=[commands[i]['name'] for i in copies],
+                                 copyOnlyProxyMs=1000 * math.fsum(commands[i]['seconds'] for i in copies))
+        plans[copies]['priorRanks'].append(priority)
+    return sorted(plans.values(), key=lambda row: (-row['copyOnlyProxyMs'], row['priorRanks']))
 
 
 def main():
@@ -159,13 +187,18 @@ def main():
     hotspots = defaultdict(float)
     for node, command in zip(graph.nodes, profile['commands'], strict=True):
         hotspots[node['type']] += command['seconds'] * 1000
+    methods, exhaustive_candidates = rank(graph, rows, args.bandwidth_gbps, args.max_nodes, args.beam_width)
+    copy_sites = list(full_copy_sites(graph, profile))
+    copy_ids = {index for index, _, _, _ in copy_sites}
     data = dict(mode=result['mode'], referenceBandwidthGBps=args.bandwidth_gbps,
                 inspectedCommands=len(graph.nodes), knownTensorEdges=sum(len(x) for x in graph.successors.values()),
                 eligibleCommands=len(rows), deployedSnakeSites=len(snake_names),
                 profiledForwardMs=profile['profiledForwardSeconds'] * 1000,
                 callbackMsByType=dict(sorted(hotspots.items(), key=lambda pair: -pair[1])),
-                sameLayoutFullCopyBoundaries=full_copy_boundaries(graph, profile),
-                methods=rank(graph, rows, args.bandwidth_gbps, args.max_nodes, args.beam_width))
+                sameLayoutFullCopyBoundaries=full_copy_boundaries(profile, copy_sites),
+                rerankedLayoutActions=price_layout_actions(methods['exhaustive']['top10'], profile, copy_ids),
+                layoutTop10AcrossExhaustive=price_layout_actions(exhaustive_candidates, profile, copy_ids)[:10],
+                methods=methods)
     with args.output.open('x', encoding='utf-8') as output:
         json.dump(data, output, ensure_ascii=False, indent=2)
 

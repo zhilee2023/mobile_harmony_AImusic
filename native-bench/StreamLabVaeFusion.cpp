@@ -1,6 +1,9 @@
 // Real graph-level Snake fusion, no callbacks/snapshots in timed forwards.
 #include "../runtime/include/levo/experimental/StreamLab.hpp"
 #include "../runtime/include/levo/kernels/SnakeFusionGraph.hpp"
+#ifdef LEVO_VAE_LAYOUT_ALIAS
+#include "VaeLayoutAlias.hpp"
+#endif
 
 namespace {
 class Decoder {
@@ -111,19 +114,58 @@ public:
 };
 }
 int main(int argc, char** argv) {
-    const bool profile = argc == 6 && std::string(argv[5]) == "--profile";
-    if (argc != 5 && !profile) return 2;
+    bool profile = argc == 6 && std::string(argv[5]) == "--profile";
+    bool sessionDebug = profile;
+#ifdef LEVO_VAE_LAYOUT_ALIAS
+    const bool aliasPlan = argc == 7 && std::string(argv[5]) == "--alias-plan";
+    sessionDebug |= aliasPlan;
+#endif
+    if (argc != 5 && !sessionDebug) return 2;
     const std::string model = std::string(argv[1]) + "/vae/vae.mnn", fixture = argv[2], output = argv[3], mode = argv[4];
     Json report = {{"success", false}, {"mode", mode}, {"scope", "Current real VAE graph-level Snake fusion; original W8 weights, FP16 CPU6, NEON sine; no App deployment"}}; Trace trace;
     try {
         require(mode == "baseline" || mode == "fused", "Unknown mode"); require(!std::filesystem::exists(output), "Preserve previous output"); std::filesystem::create_directories(output);
+#ifdef LEVO_VAE_LAYOUT_ALIAS
+        std::vector<std::string> aliases;
+        int rounds = 4;
+        if (aliasPlan) {
+            require(mode == "fused", "Alias plans use the deployed Snake baseline");
+            std::ifstream input(argv[6]);
+            Json plan; input >> plan;
+            aliases = plan.at("rasterNames").get<std::vector<std::string>>();
+            rounds = plan.value("rounds", 4);
+            profile = plan.value("captureProfile", false);
+            require(rounds >= 2 && rounds <= 6, "Invalid benchmark rounds");
+            LevoVaeAlias::configure(aliases);
+            report["requestedAliases"] = aliases;
+        }
+#else
+        constexpr int rounds = 4;
+#endif
         auto latent = read(fixture, 64 * 256); Json rewriteReport; auto graph = LevoSnakeFused::rewrite(model, rewriteReport); report["rewrite"] = rewriteReport;
         LevoSnakeFused::ensureRegistered();
-        Decoder decoder(model, mode == "fused" ? &graph : nullptr, report["setup"], profile);
+        Decoder decoder(model, mode == "fused" ? &graph : nullptr, report["setup"], sessionDebug);
+#ifdef LEVO_VAE_LAYOUT_ALIAS
+        if (aliasPlan) {
+            auto installed = LevoVaeAlias::installed();
+            require(LevoVaeAlias::setupError().empty(), LevoVaeAlias::setupError());
+            require(installed.size() == aliases.size(), "Missing alias commands at resize");
+            report["installedAliases"] = installed;
+        }
+#endif
         report["runs"] = Json::array(); std::vector<float> reference;
-        for (int repeat = 0; repeat < 4; ++repeat) {
+        for (int repeat = 0; repeat < rounds; ++repeat) {
+#ifdef LEVO_VAE_LAYOUT_ALIAS
+            const auto before = LevoVaeAlias::calls();
+#endif
             LevoStreamLab::check(); Json row; auto pcm = decoder.run(latent, row); row["mode"] = repeat ? "warm" : "first";
             if (mode == "fused") require(row["customCalls"] == 36, "Fused node fallback or missing chain");
+#ifdef LEVO_VAE_LAYOUT_ALIAS
+            if (aliasPlan) {
+                row["aliasCalls"] = LevoVaeAlias::calls() - before;
+                require(row["aliasCalls"] == aliases.size(), "Alias fallback or missing copy");
+            }
+#endif
             if (repeat == 0) {reference = pcm; std::ofstream file(output + "/pcm.f32", std::ios::binary); file.write(reinterpret_cast<const char*>(pcm.data()), pcm.size() * 4);}
             row["sameSessionRepeatL2"] = relative(pcm, reference); report["runs"].push_back(row); trace.sample();
             std::ofstream(output + "/result.json") << report.dump(2); std::cout << "VAE_FUSION_RUN " << row.dump() << std::endl;
@@ -131,6 +173,9 @@ int main(int argc, char** argv) {
         if (profile) std::ofstream(output + "/profile.json") << decoder.profile(latent, reference).dump(2);
         report["success"] = true; report["fusedElements"] = LevoSnakeFused::elements.load();
     } catch (const std::exception& e) {report["error"] = e.what();}
+#ifdef LEVO_VAE_LAYOUT_ALIAS
+    if (!LevoVaeAlias::setupError().empty()) report["aliasSetupError"] = LevoVaeAlias::setupError();
+#endif
     trace.sample(); report["rssPeakMiB"] = trace.maxRss.load() / 1024.; report["minimumAvailableMiB"] = trace.minAvailable.load() / 1024.;
     if (std::filesystem::is_directory(output)) std::ofstream(output + "/result.json") << report.dump(2);
     std::cout << "VAE_FUSION_DONE " << report.dump() << std::endl; return report["success"] == true ? 0 : 1;

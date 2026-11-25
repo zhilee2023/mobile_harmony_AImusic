@@ -81,6 +81,12 @@ add_executable(levo_stream_vae_fusion StreamLabVaeFusion.cpp ../runtime/SnakeFus
 levo_target_mnn(levo_stream_vae_fusion "${MNN_ROOT}" "${MNN_STATIC_LIBRARY}")
 target_compile_options(levo_stream_vae_fusion PRIVATE -ffp-contract=off)
 target_link_options(levo_stream_vae_fusion PRIVATE -Wl,--wrap=_ZN3MNN13OpCommonUtils20opCompabilityForLowpEPKNS_2OpEi)
+add_executable(levo_stream_vae_alias StreamLabVaeFusion.cpp VaeLayoutAlias.cpp ../runtime/SnakeFusedLowp.cpp)
+levo_target_mnn(levo_stream_vae_alias "${MNN_ROOT}" "${MNN_STATIC_LIBRARY}")
+target_compile_definitions(levo_stream_vae_alias PRIVATE LEVO_VAE_LAYOUT_ALIAS)
+target_compile_options(levo_stream_vae_alias PRIVATE -ffp-contract=off)
+target_link_options(levo_stream_vae_alias PRIVATE
+  -Wl,--wrap=_ZN3MNN13OpCommonUtils20opCompabilityForLowpEPKNS_2OpEi -Wl,--wrap=_ZN3MNN8Pipeline11allocMemoryEbb)
 add_executable(levo_stream_vae_activation StreamLabVaeActivation.cpp ../runtime/SnakeFusedLowp.cpp)
 levo_target_mnn(levo_stream_vae_activation "${MNN_ROOT}" "${MNN_STATIC_LIBRARY}")
 target_compile_definitions(levo_stream_vae_activation PRIVATE LEVO_SNAKE_FUSION LEVO_VAE_ACTIVATION_RESEARCH)

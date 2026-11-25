@@ -169744,5 +169744,435 @@
       }
     ],
     "documentation": "docs/VAE_FUSION_PRICING.md"
+  },
+  "vaeRasterAliasValidation20261125": {
+    "date": "2026-11-25",
+    "deviceModel": "CMM-AL00",
+    "scope": "W8/group64 CPU Low, 6 threads. Fixed 256-frame real latent, 10.24 seconds. Tested copy elimination in the ten ranked subgraphs with existing compute kernels. Not an App deployment or complete inter-kernel fusion.",
+    "modeOrder": [
+      "control-0",
+      "rank-01",
+      "rank-08",
+      "control-1",
+      "rank-05",
+      "rank-02",
+      "control-2",
+      "rank-09",
+      "rank-03",
+      "control-3",
+      "rank-10",
+      "rank-07",
+      "control-4",
+      "rank-04",
+      "rank-06",
+      "control-5"
+    ],
+    "controls": [
+      {
+        "tag": "control-0",
+        "warmTrialMs": [
+          4025.31,
+          4748.947500000001
+        ],
+        "warmMedianMs": 4387.128750000001,
+        "rssPeakMiB": 716.3828125,
+        "minAvailableMiB": 3752.0,
+        "batteryC": [
+          30.0,
+          30.0
+        ]
+      },
+      {
+        "tag": "control-1",
+        "warmTrialMs": [
+          4686.930313,
+          4806.909845
+        ],
+        "warmMedianMs": 4746.9200789999995,
+        "rssPeakMiB": 716.4765625,
+        "minAvailableMiB": 4104.0,
+        "batteryC": [
+          33.0,
+          34.0
+        ]
+      },
+      {
+        "tag": "control-2",
+        "warmTrialMs": [
+          4916.096718,
+          5249.782814
+        ],
+        "warmMedianMs": 5082.9397659999995,
+        "rssPeakMiB": 719.0625,
+        "minAvailableMiB": 4126.0,
+        "batteryC": [
+          35.0,
+          35.0
+        ]
+      },
+      {
+        "tag": "control-3",
+        "warmTrialMs": [
+          5140.361563,
+          5111.976094
+        ],
+        "warmMedianMs": 5126.1688285,
+        "rssPeakMiB": 719.28125,
+        "minAvailableMiB": 3571.0,
+        "batteryC": [
+          37.0,
+          37.0
+        ]
+      },
+      {
+        "tag": "control-4",
+        "warmTrialMs": [
+          5145.387968999999,
+          5016.001094
+        ],
+        "warmMedianMs": 5080.694531499999,
+        "rssPeakMiB": 718.234375,
+        "minAvailableMiB": 4430.0,
+        "batteryC": [
+          38.0,
+          38.0
+        ]
+      },
+      {
+        "tag": "control-5",
+        "warmTrialMs": [
+          5604.200624,
+          5559.897501
+        ],
+        "warmMedianMs": 5582.0490625,
+        "rssPeakMiB": 718.0,
+        "minAvailableMiB": 4052.0,
+        "batteryC": [
+          39.0,
+          39.0
+        ]
+      }
+    ],
+    "fingerprints": {
+      "graphSha256": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "weightSha256": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc",
+      "binarySha256": "225eabac49e4c7c93db2d05ee3f71f733490f82b2ab641e98bf6b56ec23e71cf"
+    },
+    "pcmBitIdentical": true,
+    "awakeControl": true,
+    "batteryC": [
+      30,
+      39
+    ],
+    "candidateRows": [
+      {
+        "tag": "rank-01",
+        "rank": 1,
+        "warmTrialMs": [
+          4799.81203,
+          4822.163905999999
+        ],
+        "warmMedianMs": 4810.9879679999995,
+        "rssPeakMiB": 720.12890625,
+        "minAvailableMiB": 3973.0,
+        "aliases": 9,
+        "batteryC": [
+          30.0,
+          32.0
+        ],
+        "priorFullRegionProxyMs": 82.9546832508337,
+        "copyOnlyProxyMs": 54.730467999999995,
+        "interpolatedControlMs": 4507.059193000001,
+        "observedWholeVaeDeltaMs": -303.9287749999985,
+        "controlDriftMs": 359.79132899999877,
+        "pcmBitIdentical": true,
+        "measuredLocalCopyDeltaMs": 62.52171833333334,
+        "warmModuleRtf": 0.46982304374999995
+      },
+      {
+        "tag": "rank-02",
+        "rank": 2,
+        "warmTrialMs": [
+          5016.622967,
+          5064.441563
+        ],
+        "warmMedianMs": 5040.532265,
+        "rssPeakMiB": 716.25,
+        "minAvailableMiB": 4136.0,
+        "aliases": 6,
+        "batteryC": [
+          34.0,
+          35.0
+        ],
+        "priorFullRegionProxyMs": 69.12890270902808,
+        "copyOnlyProxyMs": 36.804062,
+        "interpolatedControlMs": 4970.933203666666,
+        "observedWholeVaeDeltaMs": -69.59906133333425,
+        "controlDriftMs": 336.019687,
+        "pcmBitIdentical": true,
+        "measuredLocalCopyDeltaMs": 40.56452866666667,
+        "warmModuleRtf": 0.49223947900390624
+      },
+      {
+        "tag": "rank-03",
+        "rank": 3,
+        "warmTrialMs": [
+          5220.005311999999,
+          5401.506561999999
+        ],
+        "warmMedianMs": 5310.755936999999,
+        "rssPeakMiB": 716.44140625,
+        "minAvailableMiB": 3220.0,
+        "aliases": 6,
+        "batteryC": [
+          36.0,
+          37.0
+        ],
+        "priorFullRegionProxyMs": 62.216012438125276,
+        "copyOnlyProxyMs": 36.269531,
+        "interpolatedControlMs": 5111.7591409999995,
+        "observedWholeVaeDeltaMs": -198.99679599999945,
+        "controlDriftMs": 43.22906250000051,
+        "pcmBitIdentical": true,
+        "measuredLocalCopyDeltaMs": 47.486666666666665,
+        "warmModuleRtf": 0.5186285094726562
+      },
+      {
+        "tag": "rank-04",
+        "rank": 4,
+        "warmTrialMs": [
+          5456.497969,
+          5535.450626
+        ],
+        "warmMedianMs": 5495.9742975,
+        "rssPeakMiB": 716.37109375,
+        "minAvailableMiB": 4447.0,
+        "aliases": 6,
+        "batteryC": [
+          38.0,
+          39.0
+        ],
+        "priorFullRegionProxyMs": 62.216012438125276,
+        "copyOnlyProxyMs": 36.684374999999996,
+        "interpolatedControlMs": 5247.8127085,
+        "observedWholeVaeDeltaMs": -248.16158900000028,
+        "controlDriftMs": 501.35453100000086,
+        "pcmBitIdentical": true,
+        "measuredLocalCopyDeltaMs": 44.48249866666667,
+        "warmModuleRtf": 0.5367162399902343
+      },
+      {
+        "tag": "rank-05",
+        "rank": 5,
+        "warmTrialMs": [
+          4850.267499999999,
+          4820.800469
+        ],
+        "warmMedianMs": 4835.5339845,
+        "rssPeakMiB": 716.3984375,
+        "minAvailableMiB": 4121.0,
+        "aliases": 4,
+        "batteryC": [
+          34.0,
+          34.0
+        ],
+        "priorFullRegionProxyMs": 55.30312216722246,
+        "copyOnlyProxyMs": 24.403437,
+        "interpolatedControlMs": 4858.9266413333335,
+        "observedWholeVaeDeltaMs": 23.392656833333604,
+        "controlDriftMs": 336.019687,
+        "pcmBitIdentical": true,
+        "measuredLocalCopyDeltaMs": 27.149322,
+        "warmModuleRtf": 0.4722201156738281
+      },
+      {
+        "tag": "rank-06",
+        "rank": 6,
+        "warmTrialMs": [
+          5343.341094,
+          5391.871875
+        ],
+        "warmMedianMs": 5367.6064845,
+        "rssPeakMiB": 719.18359375,
+        "minAvailableMiB": 4445.0,
+        "aliases": 4,
+        "batteryC": [
+          39.0,
+          39.0
+        ],
+        "priorFullRegionProxyMs": 55.30312216722246,
+        "copyOnlyProxyMs": 24.403437,
+        "interpolatedControlMs": 5414.9308855,
+        "observedWholeVaeDeltaMs": 47.32440099999985,
+        "controlDriftMs": 501.35453100000086,
+        "pcmBitIdentical": true,
+        "measuredLocalCopyDeltaMs": 28.145469,
+        "warmModuleRtf": 0.5241803207519531
+      },
+      {
+        "tag": "rank-07",
+        "rank": 7,
+        "warmTrialMs": [
+          5102.258438,
+          5099.252969
+        ],
+        "warmMedianMs": 5100.7557035,
+        "rssPeakMiB": 716.32421875,
+        "minAvailableMiB": 4415.0,
+        "aliases": 6,
+        "batteryC": [
+          37.0,
+          38.0
+        ],
+        "priorFullRegionProxyMs": 55.30312216722246,
+        "copyOnlyProxyMs": 36.401405999999994,
+        "interpolatedControlMs": 5095.8526305,
+        "observedWholeVaeDeltaMs": -4.903073000000404,
+        "controlDriftMs": -45.47429700000066,
+        "pcmBitIdentical": true,
+        "measuredLocalCopyDeltaMs": 44.328957333333335,
+        "warmModuleRtf": 0.4981206741699219
+      },
+      {
+        "tag": "rank-08",
+        "rank": 8,
+        "warmTrialMs": [
+          4689.368751,
+          4564.206563
+        ],
+        "warmMedianMs": 4626.787657,
+        "rssPeakMiB": 716.625,
+        "minAvailableMiB": 4092.0,
+        "aliases": 7,
+        "batteryC": [
+          32.0,
+          33.0
+        ],
+        "priorFullRegionProxyMs": 48.390231896319655,
+        "copyOnlyProxyMs": 45.779689,
+        "interpolatedControlMs": 4626.989636,
+        "observedWholeVaeDeltaMs": 0.20197900000039226,
+        "controlDriftMs": 359.79132899999877,
+        "pcmBitIdentical": true,
+        "measuredLocalCopyDeltaMs": 49.79354166666666,
+        "warmModuleRtf": 0.45183473212890624
+      },
+      {
+        "tag": "rank-09",
+        "rank": 9,
+        "warmTrialMs": [
+          5105.0451570000005,
+          5431.826875
+        ],
+        "warmMedianMs": 5268.436016,
+        "rssPeakMiB": 686.484375,
+        "minAvailableMiB": 4157.0,
+        "aliases": 9,
+        "batteryC": [
+          35.0,
+          36.0
+        ],
+        "priorFullRegionProxyMs": 41.47734162541685,
+        "copyOnlyProxyMs": 31.769686999999998,
+        "interpolatedControlMs": 5097.3494535,
+        "observedWholeVaeDeltaMs": -171.08656249999967,
+        "controlDriftMs": 43.22906250000051,
+        "pcmBitIdentical": true,
+        "measuredLocalCopyDeltaMs": 34.10562466666667,
+        "warmModuleRtf": 0.5144957046874999
+      },
+      {
+        "tag": "rank-10",
+        "rank": 10,
+        "warmTrialMs": [
+          4974.436249999999,
+          4826.998594
+        ],
+        "warmMedianMs": 4900.717422,
+        "rssPeakMiB": 716.296875,
+        "minAvailableMiB": 4379.0,
+        "aliases": 6,
+        "batteryC": [
+          37.0,
+          37.0
+        ],
+        "priorFullRegionProxyMs": 41.47734162541685,
+        "copyOnlyProxyMs": 36.269531,
+        "interpolatedControlMs": 5111.0107295,
+        "observedWholeVaeDeltaMs": 210.29330750000008,
+        "controlDriftMs": -45.47429700000066,
+        "pcmBitIdentical": true,
+        "measuredLocalCopyDeltaMs": 44.445416,
+        "warmModuleRtf": 0.47858568574218746
+      }
+    ],
+    "pricingComparison": {
+      "distinctValidatedPlans": 8,
+      "copyOnlyMaeMs": 5.820956395833338,
+      "priorFullRegionProxyMaeMs": 15.56313829598542,
+      "comparisonTarget": "Measured Raster callback savings only"
+    },
+    "rerankedCopyOnly": [
+      {
+        "priorRanks": [
+          1
+        ],
+        "calls": 9,
+        "copyOnlyProxyMs": 54.730467999999995
+      },
+      {
+        "priorRanks": [
+          8
+        ],
+        "calls": 7,
+        "copyOnlyProxyMs": 45.779689
+      },
+      {
+        "priorRanks": [
+          2
+        ],
+        "calls": 6,
+        "copyOnlyProxyMs": 36.804062
+      },
+      {
+        "priorRanks": [
+          4
+        ],
+        "calls": 6,
+        "copyOnlyProxyMs": 36.684374999999996
+      },
+      {
+        "priorRanks": [
+          7
+        ],
+        "calls": 6,
+        "copyOnlyProxyMs": 36.401405999999994
+      },
+      {
+        "priorRanks": [
+          3,
+          10
+        ],
+        "calls": 6,
+        "copyOnlyProxyMs": 36.269531
+      },
+      {
+        "priorRanks": [
+          9
+        ],
+        "calls": 9,
+        "copyOnlyProxyMs": 31.769686999999998
+      },
+      {
+        "priorRanks": [
+          5,
+          6
+        ],
+        "calls": 4,
+        "copyOnlyProxyMs": 24.403437
+      }
+    ],
+    "scopeOfEstimates": "Compare both scores against local Raster savings. Whole-window observations use interpolated adjacent controls; benchmark order and thermal drift preclude confirmed net acceleration.",
+    "documentation": "docs/VAE_FUSION_PRICING.md"
   }
 }
