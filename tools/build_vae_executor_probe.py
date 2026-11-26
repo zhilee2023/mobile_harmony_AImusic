@@ -83,6 +83,52 @@ class CPUDeconvolutionCreator''')
     return '#include "VaeDeconvolutionTrace.hpp"\n' + source
 
 
+def instrument_epilogue(source):
+    """Time dispatch phases on both routes and enable the alternate epilogue by environment."""
+    second = '    auto second = std::make_pair([ocC4, src_height, src_width, threadNumber, batch, biasTensor, this, outputSize, core]'
+    source = once(source, second, '''    const auto* switchValue = std::getenv("LEVO_VAE_REDUCE_BIAS");
+    const bool fusedEpilogue = switchValue && std::strcmp(switchValue, "1") == 0 &&
+        core->bytes == 2 && core->pack == 8 && threadNumber == 4 && mPostParameters[1] == 1.0f;
+    std::printf("LEVO_VAE_EPILOGUE_SETUP %d %d %d %zu %d\\n", output->channel(), src_width * src_height * batch,
+                threadNumber, static_cast<std::size_t>(outputSize), int(fusedEpilogue));
+''' + second[:-1] + ', fusedEpilogue]')
+    anchor = '''            auto dstZ = outputPtr + z * src_height * src_width * batch * unitBytes;
+            if (threadNumber > 1) {'''
+    source = once(source, anchor, '''            auto dstZ = outputPtr + z * src_height * src_width * batch * unitBytes;
+            if (fusedEpilogue) {
+                const std::size_t positions = std::size_t(src_height) * src_width * batch;
+                const auto* partials = mExtraOutput.ptr() + z * positions * unitBytes;
+                LevoDeconvEpilogue::run(dstZ, partials, outputSize, biasPtr + unitBytes * z,
+                                      positions, mPostParameters.data());
+                continue;
+            }
+            if (threadNumber > 1) {''')
+    start = '''    for (auto& unit : mExecuteFuntion) {
+        MNN_CONCURRENCY_BEGIN(tId, unit.second) {'''
+    source = once(source, start, '''    std::array<uint64_t, 2> duration{};
+    std::size_t phase = 0;
+    for (auto& unit : mExecuteFuntion) {
+        const auto phaseStart = std::chrono::steady_clock::now();
+        MNN_CONCURRENCY_BEGIN(tId, unit.second) {''')
+    end = '''        MNN_CONCURRENCY_END();
+    }
+    return NO_ERROR;
+}
+class CPUDeconvolutionCreator'''
+    source = once(source, end, '''        MNN_CONCURRENCY_END();
+        duration.at(phase++) = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::steady_clock::now() - phaseStart).count();
+    }
+    std::printf("LEVO_VAE_EPILOGUE_PHASES %d %d %llu %llu\\n", outputs[0]->channel(),
+                outputs[0]->elementSize() / outputs[0]->channel(),
+                static_cast<unsigned long long>(duration[0]), static_cast<unsigned long long>(duration[1]));
+    return NO_ERROR;
+}
+class CPUDeconvolutionCreator''')
+    return ('#include "VaeDeconvolutionEpilogue.hpp"\n#include <array>\n#include <chrono>\n'
+            '#include <cstdio>\n#include <cstdlib>\n#include <cstring>\n' + source)
+
+
 def instrument_convolution(source):
     symbol = 'ErrorCode DenseConvInt8TiledExecutor::onExecute('
     prefix, body = source.split(symbol)
@@ -138,6 +184,8 @@ def main():
     for name in ('mnn_root', 'mnn_build', 'native_build', 'ninja', 'output'):
         parser.add_argument(name, type=Path)
     parser.add_argument('--with-convolution', action='store_true')
+    parser.add_argument('--epilogue-comparison', action='store_true',
+                        help='Compare original and single-pass FP16 Reduce/Bias with phase-only timers')
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
@@ -149,7 +197,8 @@ def main():
         return subprocess.check_output([str(args.ninja), '-C', str(build), '-t', 'commands', target],
                                        text=True).strip().splitlines()[-1]
 
-    recipes = [('source/backend/cpu/CPUDeconvolution.cpp', instrument)]
+    deconvolution_probe = instrument_epilogue if args.epilogue_comparison else instrument
+    recipes = [('source/backend/cpu/CPUDeconvolution.cpp', deconvolution_probe)]
     if args.with_convolution:
         recipes.append(('source/backend/cpu/compute/ConvInt8TiledExecutor.cpp', instrument_convolution))
     objects, compile_lines, hashes = [], [], {}
@@ -161,7 +210,9 @@ def main():
         line = command(args.mnn_build, f'mnn/CMakeFiles/MNNCPU.dir/{path}.o')
         if not line.endswith(source.as_posix()) or ' -MD -MT ' not in line:
             raise ValueError('Unexpected pinned MNN compile command')
-        compile_lines.append(line.split(' -MD -MT ', 1)[0] + f' -I"{source.parent}" -I"{root / "native-bench"}" '
+        fp16_flag = ' -march=armv8.2-a+fp16' if inject is instrument_epilogue else ''
+        compile_lines.append(line.split(' -MD -MT ', 1)[0] + fp16_flag
+                             + f' -I"{source.parent}" -I"{root / "native-bench"}" '
                              f'-o "{obj}" -c "{rewritten}"')
         objects.append(f'"{obj}"')
         hashes[source.name] = digest(source)
