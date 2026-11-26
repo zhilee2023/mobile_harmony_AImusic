@@ -10,7 +10,7 @@ from run_vae_alias_benchmark import plans, read
 from vae_storage_graph import storage_peak
 
 
-def solve(columns, accept=None):
+def solve(columns, accept=None, max_actions=None):
     import cplex
 
     names = list(columns)
@@ -26,6 +26,9 @@ def solve(columns, accept=None):
         solver.linear_constraints.add(lin_expr=[cplex.SparsePair(choices, [1.] * len(choices))
                                                for choices in covering.values()],
                                       senses='L' * len(covering), rhs=[1.] * len(covering))
+        if max_actions is not None:
+            solver.linear_constraints.add(lin_expr=[cplex.SparsePair(names, [1.] * len(names))],
+                                          senses='L', rhs=[float(max_actions)])
         solver.solve()
         if solver.solution.get_status() != solver.solution.status.optimal:
             raise RuntimeError('LP did not reach an optimum')
@@ -56,10 +59,16 @@ def main():
         parser.add_argument(name, type=Path)
     parser.add_argument('--primitive-graph', type=Path)
     parser.add_argument('--max-modeled-peak-mib', type=float)
+    parser.add_argument('--objective', choices=('measured', 'frequency', 'traffic'), default='measured')
+    parser.add_argument('--max-actions', type=int)
     args = parser.parse_args()
     cap = args.max_modeled_peak_mib
     if cap is not None and (not args.primitive_graph or not math.isfinite(cap) or cap <= 0):
         parser.error('A positive finite memory cap requires --primitive-graph')
+    if args.objective == 'traffic' and not args.primitive_graph:
+        parser.error('The traffic objective requires --primitive-graph')
+    if args.max_actions is not None and args.max_actions < 0:
+        parser.error('The action limit must be nonnegative')
     source = plans(read(args.ranking), read(args.profile))
     layout = read(args.layout_trials)
     epilogue = read(args.epilogue_trials)
@@ -88,9 +97,29 @@ def main():
     def fits(chosen):
         return storage_peak(graph, aliases(chosen))['peak']['modeledBytes'] <= cap * 2**20
 
-    relaxed, integer, chosen, rejected = solve(columns, fits if cap is not None else None)
-    result = dict(lpMs=relaxed, mipMs=integer, columns=len(columns), chosen=chosen,
+    costs = columns
+    units = 'Ms'
+    if args.objective == 'frequency':
+        # Each eligible rewrite site fires once per fixed VAE window.
+        costs = {name: (operations, len(operations)) for name, (operations, _) in columns.items()}
+        units = 'Calls'
+    elif args.objective == 'traffic':
+        sizes = {tensor['tensor']: tensor['storageBytes'] for tensor in graph['tensors']}
+        traffic = {site['name']: 2 * sizes[site['destinationTensor']] for site in graph['copyAliases']}
+        deconv = [op['local']['executorMeasurement'] for op in graph['operators'] if op['type'] == 'Deconvolution']
+        if len(deconv) != 5 or any(op['workers'] != 4 for op in deconv):
+            raise ValueError('Expected five four-worker deconvolutions for the measured epilogue')
+        # A four-worker fused epilogue eliminates six accesses per output element.
+        traffic.update({f'deconvolution-{index}': 6 * op['outputBytes'] for index, op in enumerate(deconv)})
+        costs = {name: (operations, sum(traffic[op] for op in operations) / 2**20)
+                 for name, (operations, _) in columns.items()}
+        units = 'LogicalTrafficMiB'
+    relaxed, integer, chosen, rejected = solve(costs, fits if cap is not None else None, args.max_actions)
+    result = dict(columns=len(columns), chosen=chosen,
                   rasterNames=aliases(chosen), epilogue=epilogue_name in chosen)
+    result.update({f'lp{units}': relaxed, f'mip{units}': integer})
+    if args.objective != 'measured':
+        result['priorLocalSavingsMs'] = sum(columns[name][1] for name in chosen) if integer is not None else None
     if graph is not None:
         result['modeledStorage'] = dict(baseline=storage_peak(graph, [])['peak'],
                                         selected=storage_peak(graph, aliases(chosen))['peak'] if integer is not None else None,

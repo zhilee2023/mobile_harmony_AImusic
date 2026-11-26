@@ -171775,5 +171775,979 @@
       }
     ],
     "documentation": "docs/VAE_PRIMITIVE_COST_MODEL.md"
+  },
+  "vaeFrequencyAndWindowReplay20261126": {
+    "date": "2026-11-26",
+    "deviceModel": "CMM-AL00",
+    "audioSeconds": 10.24,
+    "scope": "Offline objective ablation, and independent whole-window warm runs for the common unrestricted optimum.",
+    "plan": {
+      "lpMs": 117.54999950000001,
+      "mipMs": 117.54999950000001,
+      "columns": 9,
+      "chosen": [
+        "layout-1",
+        "layout-5",
+        "deconvolution-epilogue"
+      ],
+      "rasterNames": [
+        "/layers/layers.4/layers/layers.2/Add_output_0_raster_0",
+        "/layers/layers.4/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+        "/layers/layers.4/layers/layers.3/Add_output_0_raster_0",
+        "/layers/layers.4/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.4/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+        "/layers/layers.4/layers/layers.4/Add_output_0_raster_0",
+        "/layers/layers.4/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.4/layers/layers.4/layers/layers.3/Conv_output_0_raster_0",
+        "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+        "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+        "/layers/layers.5/layers/layers.3/Add_output_0_raster_0",
+        "/layers/layers.5/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+        "/layers/layers.5/layers/layers.4/Add_output_0_raster_0",
+        "/layers/layers.5/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0_raster_0"
+      ],
+      "epilogue": true,
+      "modeledStorage": {
+        "baseline": {
+          "command": 129,
+          "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+          "liveTensorBytes": 188743680,
+          "tracedScratchBytes": 377548800,
+          "modeledBytes": 566292480
+        },
+        "selected": {
+          "command": 129,
+          "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+          "liveTensorBytes": 188743680,
+          "tracedScratchBytes": 377548800,
+          "modeledBytes": 566292480
+        },
+        "capMiB": 550.0,
+        "rejectedCombinations": 0,
+        "feasible": true,
+        "lpIncludesMemoryCap": false
+      }
+    },
+    "runs": [
+      {
+        "name": "p1-1-baseline",
+        "mode": "baseline",
+        "startC": {
+          "batteryC": 28.0,
+          "backC": 30.1,
+          "boardC": 29.913
+        },
+        "peakC": {
+          "batteryC": 28.0,
+          "backC": 31.808,
+          "boardC": 39.436
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4418.6756239999995,
+        "peakRssMiB": 716.61328125,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 130.681562,
+            "epilogueMs": 0.648594
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 129.836719,
+            "epilogueMs": 2.359219
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 201.358282,
+            "epilogueMs": 4.66625
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 165.442969,
+            "epilogueMs": 14.349219
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 212.056719,
+            "epilogueMs": 31.217343
+          }
+        ]
+      },
+      {
+        "name": "p1-2-fused",
+        "mode": "fused",
+        "startC": {
+          "batteryC": 28.0,
+          "backC": 32.469,
+          "boardC": 39.513
+        },
+        "peakC": {
+          "batteryC": 28.0,
+          "backC": 33.184,
+          "boardC": 43.11
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4523.817343,
+        "peakRssMiB": 686.2734375,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 135.053281,
+            "epilogueMs": 0.604844
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 163.803593,
+            "epilogueMs": 2.278438
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 176.41,
+            "epilogueMs": 4.357188
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 143.290625,
+            "epilogueMs": 9.001406
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 255.990938,
+            "epilogueMs": 16.401875
+          }
+        ]
+      },
+      {
+        "name": "p2-1-fused",
+        "mode": "fused",
+        "startC": {
+          "batteryC": 28.0,
+          "backC": 33.184,
+          "boardC": 42.931
+        },
+        "peakC": {
+          "batteryC": 29.0,
+          "backC": 33.812,
+          "boardC": 45.111
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4589.797812000001,
+        "peakRssMiB": 686.36328125,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 127.150781,
+            "epilogueMs": 0.628594
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 206.395156,
+            "epilogueMs": 2.130469
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 175.921718,
+            "epilogueMs": 4.26125
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 153.887969,
+            "epilogueMs": 8.671094
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 277.330312,
+            "epilogueMs": 16.367968
+          }
+        ]
+      },
+      {
+        "name": "p2-2-baseline",
+        "mode": "baseline",
+        "startC": {
+          "batteryC": 29.0,
+          "backC": 33.812,
+          "boardC": 45.084
+        },
+        "peakC": {
+          "batteryC": 29.0,
+          "backC": 34.895,
+          "boardC": 46.42
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 5011.752188000001,
+        "peakRssMiB": 716.3125,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 117.292656,
+            "epilogueMs": 0.6875
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 205.076875,
+            "epilogueMs": 2.245156
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 195.619063,
+            "epilogueMs": 4.951406
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 158.310782,
+            "epilogueMs": 13.83625
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 275.235468,
+            "epilogueMs": 32.898125
+          }
+        ]
+      },
+      {
+        "name": "p1-1-fused",
+        "mode": "fused",
+        "startC": {
+          "batteryC": 32.0,
+          "backC": 34.127,
+          "boardC": 33.255
+        },
+        "peakC": {
+          "batteryC": 32.0,
+          "backC": 34.186,
+          "boardC": 41.717
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4400.360468000001,
+        "peakRssMiB": 686.35546875,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 116.898438,
+            "epilogueMs": 0.665
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 241.829531,
+            "epilogueMs": 2.037344
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 191.222813,
+            "epilogueMs": 4.162032
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 220.982812,
+            "epilogueMs": 8.318125
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 212.148594,
+            "epilogueMs": 16.531407
+          }
+        ]
+      },
+      {
+        "name": "p1-2-baseline",
+        "mode": "baseline",
+        "startC": {
+          "batteryC": 30.0,
+          "backC": 34.186,
+          "boardC": 41.48
+        },
+        "peakC": {
+          "batteryC": 30.0,
+          "backC": 34.915,
+          "boardC": 45.248
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4767.611094,
+        "peakRssMiB": 716.41796875,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 91.85375,
+            "epilogueMs": 0.658437
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 169.326563,
+            "epilogueMs": 2.230157
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 196.728125,
+            "epilogueMs": 4.758281
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 201.897343,
+            "epilogueMs": 13.76375
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 214.948906,
+            "epilogueMs": 33.316406
+          }
+        ]
+      },
+      {
+        "name": "p2-1-baseline",
+        "mode": "baseline",
+        "startC": {
+          "batteryC": 31.0,
+          "backC": 34.975,
+          "boardC": 34.731
+        },
+        "peakC": {
+          "batteryC": 31.0,
+          "backC": 35.316,
+          "boardC": 42.851
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4482.377187,
+        "peakRssMiB": 716.28515625,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 121.887656,
+            "epilogueMs": 0.62875
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 177.841406,
+            "epilogueMs": 2.144688
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 186.120313,
+            "epilogueMs": 4.454219
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 199.397031,
+            "epilogueMs": 13.388906
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 231.540937,
+            "epilogueMs": 31.628125
+          }
+        ]
+      },
+      {
+        "name": "p2-2-fused",
+        "mode": "fused",
+        "startC": {
+          "batteryC": 31.0,
+          "backC": 35.316,
+          "boardC": 42.829
+        },
+        "peakC": {
+          "batteryC": 31.0,
+          "backC": 35.986,
+          "boardC": 45.979
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4813.0090629999995,
+        "peakRssMiB": 687.4609375,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 130.339531,
+            "epilogueMs": 0.692031
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 211.038907,
+            "epilogueMs": 2.232969
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 214.582813,
+            "epilogueMs": 4.060938
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 168.779063,
+            "epilogueMs": 8.59125
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 229.440781,
+            "epilogueMs": 16.85125
+          }
+        ]
+      }
+    ],
+    "pairs": [
+      {
+        "pair": 1,
+        "order": [
+          "baseline",
+          "fused"
+        ],
+        "epilogueSavedMs": 20.596874,
+        "epilogueSavedByLayerMs": [
+          0.043749999999999956,
+          0.08078099999999999,
+          0.30906199999999995,
+          5.347813,
+          14.815468
+        ],
+        "wholeWindowSavedMs": -105.1417190000002
+      },
+      {
+        "pair": 2,
+        "order": [
+          "fused",
+          "baseline"
+        ],
+        "epilogueSavedMs": 22.559061999999997,
+        "epilogueSavedByLayerMs": [
+          0.058906000000000014,
+          0.11468699999999998,
+          0.690156,
+          5.165156,
+          16.530157
+        ],
+        "wholeWindowSavedMs": 421.9543760000006
+      },
+      {
+        "pair": 3,
+        "order": [
+          "fused",
+          "baseline"
+        ],
+        "epilogueSavedMs": 23.013123,
+        "epilogueSavedByLayerMs": [
+          -0.0065629999999999855,
+          0.19281300000000012,
+          0.5962490000000003,
+          5.445625,
+          16.784999
+        ],
+        "wholeWindowSavedMs": 367.2506259999991
+      },
+      {
+        "pair": 4,
+        "order": [
+          "baseline",
+          "fused"
+        ],
+        "epilogueSavedMs": 19.81625,
+        "epilogueSavedByLayerMs": [
+          -0.06328099999999992,
+          -0.08828100000000028,
+          0.393281,
+          4.797656,
+          14.776875
+        ],
+        "wholeWindowSavedMs": -330.63187599999947
+      }
+    ],
+    "summary": {
+      "pairs": 4,
+      "windowByMode": {
+        "baseline": {
+          "medianMs": 4624.9941405,
+          "observedP95Ms": 4975.131023900001,
+          "rtf": 0.4516595840332031
+        },
+        "fused": {
+          "medianMs": 4556.8075775,
+          "observedP95Ms": 4779.52737535,
+          "rtf": 0.4450007399902344
+        }
+      },
+      "pairedSavingsMs": [
+        -105.1417190000002,
+        421.9543760000006,
+        367.2506259999991,
+        -330.63187599999947
+      ],
+      "medianSavingMs": 131.05445349999945,
+      "exploratoryBootstrap95Ms": [
+        -330.63187599999947,
+        421.9543760000006
+      ]
+    },
+    "objectiveAblation": {
+      "frequency-1": {
+        "columns": 9,
+        "chosen": [
+          "layout-1"
+        ],
+        "rasterNames": [
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0_raster_0"
+        ],
+        "epilogue": false,
+        "lpCalls": 9.0,
+        "mipCalls": 9.0,
+        "priorLocalSavingsMs": 62.52171833333334,
+        "modeledStorage": {
+          "baseline": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "selected": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "capMiB": 550.0,
+          "rejectedCombinations": 0,
+          "feasible": true,
+          "lpIncludesMemoryCap": false
+        }
+      },
+      "frequency-2": {
+        "columns": 9,
+        "chosen": [
+          "layout-1",
+          "layout-5"
+        ],
+        "rasterNames": [
+          "/layers/layers.4/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0_raster_0"
+        ],
+        "epilogue": false,
+        "lpCalls": 18.0,
+        "mipCalls": 18.0,
+        "priorLocalSavingsMs": 96.62734300000001,
+        "modeledStorage": {
+          "baseline": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "selected": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "capMiB": 550.0,
+          "rejectedCombinations": 0,
+          "feasible": true,
+          "lpIncludesMemoryCap": false
+        }
+      },
+      "measured-1": {
+        "columns": 9,
+        "chosen": [
+          "layout-1"
+        ],
+        "rasterNames": [
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0_raster_0"
+        ],
+        "epilogue": false,
+        "lpMs": 62.52171833333334,
+        "mipMs": 62.52171833333334,
+        "modeledStorage": {
+          "baseline": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "selected": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "capMiB": 550.0,
+          "rejectedCombinations": 0,
+          "feasible": true,
+          "lpIncludesMemoryCap": false
+        }
+      },
+      "measured-2": {
+        "columns": 9,
+        "chosen": [
+          "layout-1",
+          "layout-5"
+        ],
+        "rasterNames": [
+          "/layers/layers.4/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0_raster_0"
+        ],
+        "epilogue": false,
+        "lpMs": 96.62734300000001,
+        "mipMs": 96.62734300000001,
+        "modeledStorage": {
+          "baseline": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "selected": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "capMiB": 550.0,
+          "rejectedCombinations": 0,
+          "feasible": true,
+          "lpIncludesMemoryCap": false
+        }
+      },
+      "traffic-1": {
+        "columns": 9,
+        "chosen": [
+          "layout-1"
+        ],
+        "rasterNames": [
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0_raster_0"
+        ],
+        "epilogue": false,
+        "lpLogicalTrafficMiB": 2160.0,
+        "mipLogicalTrafficMiB": 2160.0,
+        "priorLocalSavingsMs": 62.52171833333334,
+        "modeledStorage": {
+          "baseline": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "selected": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "capMiB": 550.0,
+          "rejectedCombinations": 0,
+          "feasible": true,
+          "lpIncludesMemoryCap": false
+        }
+      },
+      "traffic-2": {
+        "columns": 9,
+        "chosen": [
+          "layout-1",
+          "deconvolution-epilogue"
+        ],
+        "rasterNames": [
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0_raster_0"
+        ],
+        "epilogue": true,
+        "lpLogicalTrafficMiB": 3540.0,
+        "mipLogicalTrafficMiB": 3540.0,
+        "priorLocalSavingsMs": 83.44437483333334,
+        "modeledStorage": {
+          "baseline": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "selected": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "capMiB": 550.0,
+          "rejectedCombinations": 0,
+          "feasible": true,
+          "lpIncludesMemoryCap": false
+        }
+      },
+      "traffic-all": {
+        "columns": 9,
+        "chosen": [
+          "layout-1",
+          "layout-5",
+          "deconvolution-epilogue"
+        ],
+        "rasterNames": [
+          "/layers/layers.4/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0_raster_0"
+        ],
+        "epilogue": true,
+        "lpLogicalTrafficMiB": 4620.0,
+        "mipLogicalTrafficMiB": 4620.0,
+        "priorLocalSavingsMs": 117.54999950000001,
+        "modeledStorage": {
+          "baseline": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "selected": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "capMiB": 550.0,
+          "rejectedCombinations": 0,
+          "feasible": true,
+          "lpIncludesMemoryCap": false
+        }
+      },
+      "frequency-all": {
+        "columns": 9,
+        "chosen": [
+          "layout-1",
+          "layout-5",
+          "deconvolution-epilogue"
+        ],
+        "rasterNames": [
+          "/layers/layers.4/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.4/layers/layers.4/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/Add_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+          "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0_raster_0"
+        ],
+        "epilogue": true,
+        "lpCalls": 23.0,
+        "mipCalls": 23.0,
+        "priorLocalSavingsMs": 117.54999950000001,
+        "modeledStorage": {
+          "baseline": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "selected": {
+            "command": 129,
+            "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+            "liveTensorBytes": 188743680,
+            "tracedScratchBytes": 377548800,
+            "modeledBytes": 566292480
+          },
+          "capMiB": 550.0,
+          "rejectedCombinations": 0,
+          "feasible": true,
+          "lpIncludesMemoryCap": false
+        }
+      }
+    },
+    "discardedAttempts": [
+      {
+        "reason": "screen state changed during a trial",
+        "excluded": 1
+      }
+    ],
+    "fingerprints": {
+      "graphSha256": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "weightSha256": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc",
+      "binarySha256": "39b98744f6e4ae06e98c56b112dc94d1256b5dbe6e0a8b55b327bbbb4d61dc13"
+    },
+    "documentation": "docs/VAE_PRIMITIVE_COST_MODEL.md"
   }
 }

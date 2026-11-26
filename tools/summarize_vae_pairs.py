@@ -24,7 +24,30 @@ def summarize(campaign, seed=42):
                 exploratoryBootstrap95Ms=[bounds[0], bounds[-1]])
 
 
+def summarize_factorial(campaign):
+    cells = ('00', '10', '01', '11')
+    runs = {cell: [run for run in campaign['runs'] if run['mode'] == cell] for cell in cells}
+    if not campaign['pairs'] or any(len(sample) != len(campaign['pairs']) for sample in runs.values()):
+        raise ValueError('Every block must contain all four rewrite combinations')
+    if not all(run['screenAwake'] and run['pcmBitIdentical'] for run in campaign['runs']):
+        raise ValueError('Every trial must pass screen and PCM checks')
+    blocks = []
+    for pair in campaign['pairs']:
+        baseline, alias, epilogue, both = (pair['windowMs'][cell] for cell in cells)
+        blocks.append(dict(aliasWithoutEpilogueMs=baseline - alias, aliasWithEpilogueMs=epilogue - both,
+                           epilogueWithoutAliasMs=baseline - epilogue, epilogueWithAliasMs=alias - both,
+                           interactionSavingMs=alias + epilogue - baseline - both))
+    return dict(blocks=blocks,
+                cells={cell: dict(medianMs=median(row['windowMs'] for row in sample),
+                                  peakRssMiB=max(row['peakRssMiB'] for row in sample))
+                       for cell, sample in runs.items()})
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('campaign', type=Path)
-    print(json.dumps(summarize(json.loads(parser.parse_args().campaign.read_bytes())), indent=2))
+    parser.add_argument('--factorial', action='store_true')
+    args = parser.parse_args()
+    report = json.loads(args.campaign.read_bytes())
+    result = summarize_factorial(report) if args.factorial else summarize(report)
+    print(json.dumps(result, indent=2))
