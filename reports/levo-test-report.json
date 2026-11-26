@@ -171150,5 +171150,565 @@
       "holdoutCalibratedMaeMs": 2.0054675
     },
     "documentation": "docs/VAE_PRIMITIVE_COST_MODEL.md"
+  },
+  "vaeFullCombinationPilot20261126": {
+    "plan": {
+      "lpMs": 117.54999950000001,
+      "mipMs": 117.54999950000001,
+      "columns": 9,
+      "chosen": [
+        "layout-1",
+        "layout-5",
+        "deconvolution-epilogue"
+      ],
+      "rasterNames": [
+        "/layers/layers.4/layers/layers.2/Add_output_0_raster_0",
+        "/layers/layers.4/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.4/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+        "/layers/layers.4/layers/layers.3/Add_output_0_raster_0",
+        "/layers/layers.4/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.4/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+        "/layers/layers.4/layers/layers.4/Add_output_0_raster_0",
+        "/layers/layers.4/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.4/layers/layers.4/layers/layers.3/Conv_output_0_raster_0",
+        "/layers/layers.5/layers/layers.2/Add_output_0_raster_0",
+        "/layers/layers.5/layers/layers.2/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.5/layers/layers.2/layers/layers.3/Conv_output_0_raster_0",
+        "/layers/layers.5/layers/layers.3/Add_output_0_raster_0",
+        "/layers/layers.5/layers/layers.3/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.5/layers/layers.3/layers/layers.3/Conv_output_0_raster_0",
+        "/layers/layers.5/layers/layers.4/Add_output_0_raster_0",
+        "/layers/layers.5/layers/layers.4/layers/layers.2/Add_1_output_0_raster_0",
+        "/layers/layers.5/layers/layers.4/layers/layers.3/Conv_output_0_raster_0"
+      ],
+      "epilogue": true
+    },
+    "audioSeconds": 10.24,
+    "runs": [
+      {
+        "name": "p1-1-baseline",
+        "mode": "baseline",
+        "startC": {
+          "batteryC": 27.0,
+          "backC": 29.096,
+          "boardC": 28.928
+        },
+        "peakC": {
+          "batteryC": 27.0,
+          "backC": 30.671,
+          "boardC": 35.348
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4245.435469,
+        "peakRssMiB": 716.484375,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 115.9025,
+            "epilogueMs": 0.772813
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 204.14875,
+            "epilogueMs": 2.06875
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 176.824844,
+            "epilogueMs": 4.569219
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 195.673906,
+            "epilogueMs": 14.571094
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 229.31875,
+            "epilogueMs": 32.355469
+          }
+        ]
+      },
+      {
+        "name": "p1-2-fused",
+        "mode": "fused",
+        "startC": {
+          "batteryC": 27.0,
+          "backC": 30.671,
+          "boardC": 35.653
+        },
+        "peakC": {
+          "batteryC": 27.0,
+          "backC": 33.048,
+          "boardC": 43.478
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 5223.9731249999995,
+        "peakRssMiB": 686.50390625,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 109.836875,
+            "epilogueMs": 0.67875
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 220.304375,
+            "epilogueMs": 2.481562
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 221.478281,
+            "epilogueMs": 6.042031
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 169.730625,
+            "epilogueMs": 9.317031
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 236.132813,
+            "epilogueMs": 17.614844
+          }
+        ]
+      },
+      {
+        "name": "p2-1-fused",
+        "mode": "fused",
+        "startC": {
+          "batteryC": 27.0,
+          "backC": 33.048,
+          "boardC": 43.748
+        },
+        "peakC": {
+          "batteryC": 28.0,
+          "backC": 34.754,
+          "boardC": 45.48
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4918.896407,
+        "peakRssMiB": 682.84765625,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 152.015625,
+            "epilogueMs": 1.094844
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 179.384531,
+            "epilogueMs": 2.010156
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 159.751562,
+            "epilogueMs": 4.295313
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 179.474375,
+            "epilogueMs": 8.125938
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 240.293438,
+            "epilogueMs": 16.563282
+          }
+        ]
+      },
+      {
+        "name": "p2-2-baseline",
+        "mode": "baseline",
+        "startC": {
+          "batteryC": 28.0,
+          "backC": 34.754,
+          "boardC": 45.358
+        },
+        "peakC": {
+          "batteryC": 28.0,
+          "backC": 36.057,
+          "boardC": 46.295
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4924.079063000001,
+        "peakRssMiB": 718.50390625,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 169.497032,
+            "epilogueMs": 0.695469
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 168.306563,
+            "epilogueMs": 2.34875
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 213.310156,
+            "epilogueMs": 4.748906
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 195.7075,
+            "epilogueMs": 13.52875
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 221.056563,
+            "epilogueMs": 32.371719
+          }
+        ]
+      },
+      {
+        "name": "p3-1-baseline",
+        "mode": "baseline",
+        "startC": {
+          "batteryC": 29.0,
+          "backC": 33.959,
+          "boardC": 35.32
+        },
+        "peakC": {
+          "batteryC": 30.0,
+          "backC": 33.959,
+          "boardC": 42.586
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4306.97078,
+        "peakRssMiB": 716.3515625,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 141.323125,
+            "epilogueMs": 0.640625
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 136.618907,
+            "epilogueMs": 2.315313
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 161.376093,
+            "epilogueMs": 4.661719
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 175.464531,
+            "epilogueMs": 13.51625
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 200.996094,
+            "epilogueMs": 31.628906
+          }
+        ]
+      },
+      {
+        "name": "p3-2-fused",
+        "mode": "fused",
+        "startC": {
+          "batteryC": 30.0,
+          "backC": 33.548,
+          "boardC": 42.334
+        },
+        "peakC": {
+          "batteryC": 30.0,
+          "backC": 34.613,
+          "boardC": 45.234
+        },
+        "screenAwake": true,
+        "pcmBitIdentical": true,
+        "windowMs": 4658.908593,
+        "peakRssMiB": 686.23046875,
+        "layers": [
+          {
+            "channels": 1024,
+            "positions": 2560,
+            "privateScatterMiB": 15.0,
+            "scatterMs": 93.632031,
+            "epilogueMs": 0.638125
+          },
+          {
+            "channels": 512,
+            "positions": 15360,
+            "privateScatterMiB": 45.0,
+            "scatterMs": 201.295,
+            "epilogueMs": 1.960469
+          },
+          {
+            "channels": 256,
+            "positions": 61440,
+            "privateScatterMiB": 90.0,
+            "scatterMs": 183.311718,
+            "epilogueMs": 4.256406
+          },
+          {
+            "channels": 128,
+            "positions": 245760,
+            "privateScatterMiB": 180.0,
+            "scatterMs": 232.643281,
+            "epilogueMs": 8.701094
+          },
+          {
+            "channels": 128,
+            "positions": 491520,
+            "privateScatterMiB": 360.0,
+            "scatterMs": 184.198125,
+            "epilogueMs": 17.037031
+          }
+        ]
+      }
+    ],
+    "pairs": [
+      {
+        "pair": 1,
+        "order": [
+          "baseline",
+          "fused"
+        ],
+        "epilogueSavedMs": 18.203127,
+        "epilogueSavedByLayerMs": [
+          0.09406300000000001,
+          -0.41281199999999973,
+          -1.4728119999999993,
+          5.254063,
+          14.740624999999998
+        ],
+        "wholeWindowSavedMs": -978.5376559999995
+      },
+      {
+        "pair": 2,
+        "order": [
+          "fused",
+          "baseline"
+        ],
+        "epilogueSavedMs": 21.604060999999998,
+        "epilogueSavedByLayerMs": [
+          -0.3993749999999999,
+          0.33859400000000006,
+          0.4535929999999997,
+          5.402812000000001,
+          15.808436999999998
+        ],
+        "wholeWindowSavedMs": 5.182656000000861
+      },
+      {
+        "pair": 3,
+        "order": [
+          "baseline",
+          "fused"
+        ],
+        "epilogueSavedMs": 20.169688,
+        "epilogueSavedByLayerMs": [
+          0.0024999999999999467,
+          0.35484400000000016,
+          0.4053129999999996,
+          4.815156,
+          14.591875000000002
+        ],
+        "wholeWindowSavedMs": -351.93781300000046
+      }
+    ],
+    "deviceModel": "CMM-AL00",
+    "fingerprints": {
+      "graphSha256": "c258bf4797bc2a1505c155a9d926e057d861045c56e2b9894192842f94ed9f89",
+      "weightSha256": "3b5e270d34e76de0c4322a88771f67e314e8192f5d3bd0cecd6760e8f6d5e1bc",
+      "binarySha256": "39b98744f6e4ae06e98c56b112dc94d1256b5dbe6e0a8b55b327bbbb4d61dc13"
+    },
+    "date": "2026-11-26",
+    "summary": {
+      "pairs": 3,
+      "windowByMode": {
+        "baseline": {
+          "medianMs": 4306.97078,
+          "observedP95Ms": 4862.368234700001,
+          "rtf": 0.420602615234375
+        },
+        "fused": {
+          "medianMs": 4918.896407,
+          "observedP95Ms": 5193.4654531999995,
+          "rtf": 0.4803609772460938
+        }
+      },
+      "pairedSavingsMs": [
+        -978.5376559999995,
+        5.182656000000861,
+        -351.93781300000046
+      ],
+      "medianSavingMs": -351.93781300000046,
+      "exploratoryBootstrap95Ms": [
+        -978.5376559999995,
+        5.182656000000861
+      ]
+    },
+    "copyCalibration": {
+      "rows": [
+        {
+          "workers": 1,
+          "bytesPerWorker": 4096,
+          "workingSetBytes": 8192,
+          "effectiveReadWriteGBps": 60.9821
+        },
+        {
+          "workers": 1,
+          "bytesPerWorker": 65536,
+          "workingSetBytes": 131072,
+          "effectiveReadWriteGBps": 62.495
+        },
+        {
+          "workers": 1,
+          "bytesPerWorker": 1048576,
+          "workingSetBytes": 2097152,
+          "effectiveReadWriteGBps": 32.7285
+        },
+        {
+          "workers": 1,
+          "bytesPerWorker": 8388608,
+          "workingSetBytes": 16777216,
+          "effectiveReadWriteGBps": 38.9725
+        },
+        {
+          "workers": 1,
+          "bytesPerWorker": 25165824,
+          "workingSetBytes": 50331648,
+          "effectiveReadWriteGBps": 4.58078
+        },
+        {
+          "workers": 6,
+          "bytesPerWorker": 4096,
+          "workingSetBytes": 49152,
+          "effectiveReadWriteGBps": 163.722
+        },
+        {
+          "workers": 6,
+          "bytesPerWorker": 65536,
+          "workingSetBytes": 786432,
+          "effectiveReadWriteGBps": 138.932
+        },
+        {
+          "workers": 6,
+          "bytesPerWorker": 1048576,
+          "workingSetBytes": 12582912,
+          "effectiveReadWriteGBps": 123.171
+        },
+        {
+          "workers": 6,
+          "bytesPerWorker": 8388608,
+          "workingSetBytes": 100663296,
+          "effectiveReadWriteGBps": 21.4103
+        },
+        {
+          "workers": 6,
+          "bytesPerWorker": 25165824,
+          "workingSetBytes": 301989888,
+          "effectiveReadWriteGBps": 29.8095
+        }
+      ],
+      "before": {
+        "batteryC": 30.0,
+        "backC": 33.514,
+        "boardC": 33.345,
+        "policyKHz": [
+          [
+            557000,
+            1550000
+          ],
+          [
+            970000,
+            2050000
+          ],
+          [
+            1200000,
+            2503000
+          ],
+          [
+            1200000,
+            3000000
+          ]
+        ]
+      },
+      "after": {
+        "batteryC": 30.0,
+        "backC": 33.483,
+        "boardC": 33.661,
+        "policyKHz": [
+          [
+            417000,
+            1550000
+          ],
+          [
+            1084000,
+            2050000
+          ],
+          [
+            1200000,
+            2503000
+          ],
+          [
+            1200000,
+            3000000
+          ]
+        ]
+      }
+    },
+    "scope": "Combined raster aliases and reduction/bias over the whole VAE, deployment Snake as baseline, one enrolled 256-frame latent",
+    "documentation": "docs/VAE_PRIMITIVE_COST_MODEL.md"
   }
 }

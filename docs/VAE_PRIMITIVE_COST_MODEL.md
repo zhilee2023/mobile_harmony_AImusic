@@ -88,3 +88,21 @@
 只用前两对校准这一动作，取实测平均省时除以前一轮的 29.37 ms，得到系数 0.748。后两对的局部预测平均绝对误差从 9.40 ms 降到 2.01 ms。该系数来自同机型、同输入和同一实现的小样本，可作为此动作的经验定价。使用其他布局、工作集或线程数时需重新采样。
 
 复现时给 `tools/build_vae_executor_probe.py` 增加 `--epilogue-comparison`，在设备执行 `vae-executor-profile BUNDLE_ROOT LATENT OUTPUT_DIR fused --once`，分别设置 `LEVO_VAE_REDUCE_BIAS=0` 和 `LEVO_VAE_REDUCE_BIAS=1`。日志中的 `LEVO_VAE_EPILOGUE_SETUP` 记录分支，`LEVO_VAE_EPILOGUE_PHASES` 记录每层两阶段墙钟的纳秒值。统一报告条目为 `vaeDeconvolutionEpilogue20261126`。
+
+## 完整 VAE 组合与 Phase 0–2 首轮校准
+
+`tools/select_vae_combination.py` 对八种去重后的 Raster 改写和一个归约融合方案求解 CPLEX 集合打包。同一执行位置最多由一个方案覆盖。局部省时使用前一轮配对实测。LP 松弛和整数解的目标均为 117.55 ms。选中的两个 Raster 方案共覆盖 18 处拷贝，加上五层转置卷积归约融合。
+
+`tools/build_vae_executor_probe.py --epilogue-comparison --layout-alias` 可将两类改写链接到同一个探针。对照采用部署版 Snake，试验组在其上启用选中的 18 处消拷贝和五层归约融合。CMM-AL00 每次加载后预热一窗，记录第二窗的执行及输出拷贝，共三个交错配对。256 latent 帧对应 10.24 秒输出。六次 PCM 与既有参考逐字节相同。
+
+| 整窗指标 | 部署版 Snake | CPLEX 组合 |
+| --- | ---: | ---: |
+| 中位数 | 4.307 s | 4.919 s |
+| VAE RTF | 0.421 | 0.480 |
+| 进程峰值 RSS | 718.50 MiB | 686.50 MiB |
+
+按对计算的整窗省时为 −979、+5、−352 ms。首轮从电池 27°C、背部 29.10°C 开始，三个配对中背部峰值 36.06°C、板级峰值 46.30°C。相反顺序的配对最接近持平，本轮无法分离温度、顺序与改写的效应。`tools/summarize_vae_pairs.py` 输出中位数、样本 P95、配对差和探索性 bootstrap 区间。三对样本仍处于测量试点阶段，尚不足以判定 50 ms 量级的变化。
+
+构建并执行 `vae_copy_calibration` 得到 Phase 2 的首组连续复制样本。每个工作集预热一次，取后五次中位数，按源和目标的逻辑读写总量计费。六线程在工作集 48 KiB、12 MiB、96 MiB、288 MiB 处分别测得 163.72、123.17、21.41、29.81 GB/s。复制样本可用于分工作集初始估价，缓存层级仍待计数器或单独的缓存探针验证。采样的 CPU 频率来自探针前后四个 cpufreq policy。执行器内部的 Packing、Scatter 与 GEMM 仍分别使用已采集的原语计时。
+
+统一报告条目为 `vaeFullCombinationPilot20261126`，包含配对结果和十个复制样本。

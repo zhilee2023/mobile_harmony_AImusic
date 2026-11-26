@@ -1,0 +1,72 @@
+"""Select nonconflicting, measured VAE rewrites with CPLEX."""
+import argparse
+from collections import defaultdict
+import json
+from pathlib import Path
+from statistics import median
+
+from run_vae_alias_benchmark import plans, read
+
+
+def solve(columns):
+    import cplex
+
+    names = list(columns)
+    with cplex.Cplex() as solver:
+        for stream in ('log', 'results', 'warning', 'error'):
+            getattr(solver, 'set_' + stream + '_stream')(None)
+        solver.objective.set_sense(solver.objective.sense.maximize)
+        solver.variables.add(names=names, lb=[0.] * len(names), obj=[columns[name][1] for name in names])
+        covering = defaultdict(list)
+        for name, (operations, _) in columns.items():
+            for operation in operations:
+                covering[operation].append(name)
+        solver.linear_constraints.add(lin_expr=[cplex.SparsePair(choices, [1.] * len(choices))
+                                               for choices in covering.values()],
+                                      senses='L' * len(covering), rhs=[1.] * len(covering))
+        solver.solve()
+        if solver.solution.get_status() != solver.solution.status.optimal:
+            raise RuntimeError('LP did not reach an optimum')
+        relaxed = solver.solution.get_objective_value()
+        solver.variables.set_types([(name, 'B') for name in names])
+        solver.solve()
+        if solver.solution.get_status() != solver.solution.status.MIP_optimal:
+            raise RuntimeError('MILP did not reach an optimum')
+        return relaxed, solver.solution.get_objective_value(), [name for name in names if solver.solution.get_values(name) > .5]
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    for name in ('ranking', 'profile', 'layout_trials', 'epilogue_trials', 'output'):
+        parser.add_argument(name, type=Path)
+    args = parser.parse_args()
+    source = plans(read(args.ranking), read(args.profile))
+    layout = read(args.layout_trials)
+    epilogue = read(args.epilogue_trials)
+    if layout['status'] != 'complete' or epilogue['status'] != 'complete':
+        raise ValueError('Complete measurements are required')
+    if any(layout['fingerprints'][key] != epilogue['fingerprints'][key]
+           for key in ('graphSha256', 'weightSha256', 'latentSha256')):
+        raise ValueError('Measurements use different VAE files or inputs')
+    samples = defaultdict(list)
+    for row in layout['candidates']:
+        if row['pcmBitIdentical']:
+            rasters = tuple(source[row['rank']]['rasterNames'])
+            samples[rasters].append(row['measuredLocalCopyDeltaMs'])
+    if {run['mode'] for run in epilogue['runs']} != {'baseline', 'fused'} or not all(
+            run['pcmBitIdentical'] for run in epilogue['runs']):
+        raise ValueError('Expected an exact PCM epilogue comparison')
+    columns = {f'layout-{index}': (names, median(times)) for index, (names, times) in enumerate(samples.items(), 1)}
+    epilogue_name = 'deconvolution-epilogue'
+    columns[epilogue_name] = (tuple(f'deconvolution-{index}' for index in range(5)),
+                               median(pair['epilogueSavedMs'] for pair in epilogue['pairs']))
+    relaxed, integer, chosen = solve(columns)
+    result = dict(lpMs=relaxed, mipMs=integer, columns=len(columns), chosen=chosen,
+                  rasterNames=sorted(op for name in chosen if name != epilogue_name for op in columns[name][0]),
+                  epilogue=epilogue_name in chosen)
+    with args.output.open('x', encoding='utf-8') as output:
+        json.dump(result, output, indent=2)
+
+
+if __name__ == '__main__':
+    main()

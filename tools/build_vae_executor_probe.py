@@ -186,6 +186,7 @@ def main():
     parser.add_argument('--with-convolution', action='store_true')
     parser.add_argument('--epilogue-comparison', action='store_true',
                         help='Compare original and single-pass FP16 Reduce/Bias with phase-only timers')
+    parser.add_argument('--layout-alias', action='store_true', help='Link the existing layout alias probe')
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
@@ -216,8 +217,9 @@ def main():
                              f'-o "{obj}" -c "{rewritten}"')
         objects.append(f'"{obj}"')
         hashes[source.name] = digest(source)
-    link_line = command(args.native_build, 'levo_stream_vae_fusion')
-    prefix, suffix, anchor = ' /C "cd . && ', ' && cd ."', ' -o levo_stream_vae_fusion '
+    target = 'levo_stream_vae_alias' if args.layout_alias else 'levo_stream_vae_fusion'
+    link_line = command(args.native_build, target)
+    prefix, suffix, anchor = ' /C "cd . && ', ' && cd ."', f' -o {target} '
     if prefix not in link_line or not link_line.endswith(suffix) or link_line.count(anchor) != 1:
         raise ValueError('Unexpected isolated VAE link command')
     link_line = link_line.split(prefix, 1)[1].removesuffix(suffix).replace(anchor, f' {" ".join(objects)} -o "{binary}" ')
