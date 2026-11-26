@@ -2,13 +2,15 @@
 import argparse
 from collections import defaultdict
 import json
+import math
 from pathlib import Path
 from statistics import median
 
 from run_vae_alias_benchmark import plans, read
+from vae_storage_graph import storage_peak
 
 
-def solve(columns):
+def solve(columns, accept=None):
     import cplex
 
     names = list(columns)
@@ -29,17 +31,35 @@ def solve(columns):
             raise RuntimeError('LP did not reach an optimum')
         relaxed = solver.solution.get_objective_value()
         solver.variables.set_types([(name, 'B') for name in names])
-        solver.solve()
-        if solver.solution.get_status() != solver.solution.status.MIP_optimal:
-            raise RuntimeError('MILP did not reach an optimum')
-        return relaxed, solver.solution.get_objective_value(), [name for name in names if solver.solution.get_values(name) > .5]
+        rejected = 0
+        while True:
+            solver.solve()
+            status = solver.solution.get_status()
+            if status == solver.solution.status.MIP_infeasible:
+                return relaxed, None, [], rejected
+            if status != solver.solution.status.MIP_optimal:
+                raise RuntimeError('MILP did not reach an optimum')
+            chosen = [name for name in names if solver.solution.get_values(name) > .5]
+            if accept is None or accept(chosen):
+                return relaxed, solver.solution.get_objective_value(), chosen, rejected
+            # Exclude this exact assignment. Shared storage makes the memory
+            # bound depend on the combination, so retain its subsets and supersets.
+            weights = [1. if name in chosen else -1. for name in names]
+            solver.linear_constraints.add(lin_expr=[cplex.SparsePair(names, weights)], senses='L',
+                                          rhs=[len(chosen) - 1.])
+            rejected += 1
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('ranking', 'profile', 'layout_trials', 'epilogue_trials', 'output'):
         parser.add_argument(name, type=Path)
+    parser.add_argument('--primitive-graph', type=Path)
+    parser.add_argument('--max-modeled-peak-mib', type=float)
     args = parser.parse_args()
+    cap = args.max_modeled_peak_mib
+    if cap is not None and (not args.primitive_graph or not math.isfinite(cap) or cap <= 0):
+        parser.error('A positive finite memory cap requires --primitive-graph')
     source = plans(read(args.ranking), read(args.profile))
     layout = read(args.layout_trials)
     epilogue = read(args.epilogue_trials)
@@ -60,10 +80,22 @@ def main():
     epilogue_name = 'deconvolution-epilogue'
     columns[epilogue_name] = (tuple(f'deconvolution-{index}' for index in range(5)),
                                median(pair['epilogueSavedMs'] for pair in epilogue['pairs']))
-    relaxed, integer, chosen = solve(columns)
+    def aliases(chosen):
+        return sorted(op for name in chosen if name != epilogue_name for op in columns[name][0])
+
+    graph = read(args.primitive_graph) if args.primitive_graph else None
+
+    def fits(chosen):
+        return storage_peak(graph, aliases(chosen))['peak']['modeledBytes'] <= cap * 2**20
+
+    relaxed, integer, chosen, rejected = solve(columns, fits if cap is not None else None)
     result = dict(lpMs=relaxed, mipMs=integer, columns=len(columns), chosen=chosen,
-                  rasterNames=sorted(op for name in chosen if name != epilogue_name for op in columns[name][0]),
-                  epilogue=epilogue_name in chosen)
+                  rasterNames=aliases(chosen), epilogue=epilogue_name in chosen)
+    if graph is not None:
+        result['modeledStorage'] = dict(baseline=storage_peak(graph, [])['peak'],
+                                        selected=storage_peak(graph, aliases(chosen))['peak'] if integer is not None else None,
+                                        capMiB=cap, rejectedCombinations=rejected, feasible=integer is not None,
+                                        lpIncludesMemoryCap=False)
     with args.output.open('x', encoding='utf-8') as output:
         json.dump(result, output, indent=2)
 

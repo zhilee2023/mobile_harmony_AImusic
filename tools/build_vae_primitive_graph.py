@@ -178,8 +178,11 @@ def fuse_graph(profile, source, result, executor_log=None):
             row['operatorParameters']['weightQuantMetadata'] = bool(node['main'].get('quanParameter'))
         regions.append(row)
     action_sites = [index for index, _, _, _ in full_copy_sites(runtime, profile)]
+    copy_aliases = [dict(command=index, name=runtime.nodes[index]['name'],
+                         sourceTensor=profile['commands'][index]['rasterRegions'][0]['source'],
+                         destinationTensor=runtime.nodes[index]['outputIndexes'][0]) for index in action_sites]
     return dict(windowSeconds=10.24, graphOutputs=outputs, operators=regions, tensors=tensors,
-                copyElisionSites=action_sites,
+                copyElisionSites=action_sites, copyAliases=copy_aliases,
                 evidence='A device callback graph and traced executor phases when present. Storage sizes and logical access counts are not physical cache/DRAM traffic.')
 
 

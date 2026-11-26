@@ -171710,5 +171710,70 @@
     },
     "scope": "Combined raster aliases and reduction/bias over the whole VAE, deployment Snake as baseline, one enrolled 256-frame latent",
     "documentation": "docs/VAE_PRIMITIVE_COST_MODEL.md"
+  },
+  "vaeStorageLifetimeReplay20261126": {
+    "date": "2026-11-26",
+    "scope": "Offline lifetime replay on the captured VAE graph. Counts visible tensor storage and traced scratch only.",
+    "graphOperators": 162,
+    "knownAliasEdges": 72,
+    "baselinePeak": {
+      "command": 129,
+      "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+      "liveTensorBytes": 188743680,
+      "tracedScratchBytes": 377548800,
+      "modeledBytes": 566292480
+    },
+    "selectedPeak": {
+      "command": 129,
+      "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+      "liveTensorBytes": 188743680,
+      "tracedScratchBytes": 377548800,
+      "modeledBytes": 566292480
+    },
+    "groups": [
+      163,
+      145
+    ],
+    "reducedLiveBytesByExecutionPointCount": {
+      "62914560": 9,
+      "125829120": 9
+    },
+    "caps": [
+      {
+        "baseline": {
+          "command": 129,
+          "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+          "liveTensorBytes": 188743680,
+          "tracedScratchBytes": 377548800,
+          "modeledBytes": 566292480
+        },
+        "selected": null,
+        "capMiB": 530.0,
+        "rejectedCombinations": 32,
+        "feasible": false,
+        "lpIncludesMemoryCap": false
+      },
+      {
+        "baseline": {
+          "command": 129,
+          "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+          "liveTensorBytes": 188743680,
+          "tracedScratchBytes": 377548800,
+          "modeledBytes": 566292480
+        },
+        "selected": {
+          "command": 129,
+          "name": "/layers/layers.5/layers/layers.1/ConvTranspose_output_0",
+          "liveTensorBytes": 188743680,
+          "tracedScratchBytes": 377548800,
+          "modeledBytes": 566292480
+        },
+        "capMiB": 550.0,
+        "rejectedCombinations": 0,
+        "feasible": true,
+        "lpIncludesMemoryCap": false
+      }
+    ],
+    "documentation": "docs/VAE_PRIMITIVE_COST_MODEL.md"
   }
 }
